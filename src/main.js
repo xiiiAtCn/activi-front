@@ -9,9 +9,9 @@ import router from './router'
 Vue.use(iView)
 // Vue.config.silent = false;
 
-import vueResource from 'vue-resource'
+// import vueResource from 'vue-resource'
 
-Vue.use(vueResource)
+// Vue.use(vueResource)
 /* eslint-disable no-new */
 // new Vue({
 //  el: '#app',

@@ -1,0 +1,14 @@
+html, body {
+}
+
+#app {
+    margin-bottom: 20px;
+}
+
+.pull-right {
+    text-align: right;
+}
+
+.container90 {
+    margin: 15px 30px auto;
+}
