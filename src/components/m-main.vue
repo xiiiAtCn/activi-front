@@ -91,8 +91,8 @@
     },
     components: {
       mTable: function (resolve) {
-//                require(['./m-table.vue'], resolve);
-        require(['./m-table-shim.js'], resolve)
+        require(['./m-table.vue'], resolve)
+//        require(['./m-table-shim.js'], resolve)
       },
       mTab: function (resolve) {
         require(['./m-tab.vue'], resolve)
