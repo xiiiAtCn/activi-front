@@ -1,7 +1,7 @@
 {
   "name": "vue2",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "vue部分重构；不再包括服务器端代码",
   "author": "sunbo <17131007@qq.com>",
   "private": true,
   "scripts": {
