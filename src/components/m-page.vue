@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <Row>
-      <Col span="4" style="width: 200px;height: 1000px;border-right: 1px solid #ddd;" class="out-use-menu-vertical">
+  <div class="full-height">
+    <Row class="full-height">
+      <Col span="3" class="full-height out-use-menu-vertical">
       <m-head :user="username"></m-head>
       </Col>
-      <Col span="20">
+      <Col span="21">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
