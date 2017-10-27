@@ -12,7 +12,6 @@ for(let i of Reflect.ownKeys(Request.prototype)) {
     continue
   Vue.prototype[i] = Request.prototype[i]
 }
-
 Vue.use(iView)
 // Vue.config.silent = false;
 

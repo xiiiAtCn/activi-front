@@ -18,7 +18,7 @@
         </Menu-item>
         <!--我的桌面隐藏,再改动就把它删掉了-->
         <Menu-item name="04" class="uselessMenu" key="04" id="04">
-          <router-link class="business-module" to=""></router-link>
+          <!--<router-link class="business-module" to=""></router-link>-->
         </Menu-item>
       </div>
     </Menu>
