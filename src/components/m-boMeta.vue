@@ -16,13 +16,10 @@
   </div>
 </template>
 <script>
-  //  import Vue from 'vue'
-  //  import utils from '../utils/utils'
   import { dispatch } from '../utils/skipUtils'
   import _ from 'lodash'
 
   export default {
-
     props: {'define': {type: Object}},
     computed: {
       items: function () {
