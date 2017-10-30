@@ -78,7 +78,7 @@ const router = new VueRouter({
     {path: '/inventory', component: inventory},
     {path: '/notice', component: notice},
     {path: '/userManage', component: userManage},
-    {path: '/workbench', component: workbench},
+    // {path: '/workbench', component: workbench},
     {path: '/job', component: job},
     {path: '/mEntry', component: mEntry},
     {path: '/p', component: mEntry},
@@ -104,6 +104,10 @@ const router = new VueRouter({
         {
           path: 'page',
           component: mMain
+        },
+        {
+          path: '/layoutContent/:id/workbench',
+          component: workbench
         },
         {
           path: '/layoutContent/:id/allMenu',
