@@ -1,24 +1,20 @@
 <template>
-  <div class="s-nav" style="height: 100%; background: #3e4a58">
-    <Menu active-name="" theme="light" style="width: 100%; background: white;">
-      <li class="layout-logo" style="border-bottom:5px solid #e5e8f0;">
-        <div style="position: relative">
-          <img src="../assets/img/yushi-logo.png" alt="" style="width: 100px; height: 70px; border-radius: 50%; float: left; margin: 0 69px 0 0;margin-left:15px;">
-          <a href="http://www.sohu.com/" target="_blank" style="position: absolute; right: 20px; top: 13px; color: #333333;">[ 主 页 ]</a>
-          <a href="/layoutContent/04/workbench" class="deskStyle" style="position: absolute; right: 20px; top: 38px; color: #333333;">[ 桌 面 ]</a>
+  <div class="s-nav">
+    <Menu active-name="" theme="light" class="themeLight">
+      <li class="layout-logo">
+        <div class="posRea">
+          <img src="../assets/img/yushi-logo.png" alt="">
+          <a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>
+          <a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>
         </div>
         <div style="clear: both"></div>
       </li>
-      <div class="custom-menu" style="background: #3e4a58; ">
-        <Menu-item v-for="item in items" :name="item.code" style="height:56px;" :key="item.code" :id="item.code">
+      <div class="custom-menu">
+        <Menu-item v-for="item in items" :name="item.code" class="customItem" :key="item.code" :id="item.code">
           <router-link class="business-module" :to="'/layoutContent/' + item.code">
             <Icon :type="item.icon" class="item-icon"></Icon>
             <span class="func-title">{{item.title}}</span>
           </router-link>
-        </Menu-item>
-        <!--我的桌面隐藏,再改动就把它删掉了-->
-        <Menu-item name="04" style="height:5px; width: 1%; background: rgb(89,89,89); border-left: 1px solid rgb(89,89,89)" key="04" id="04">
-          <router-link class="business-module" to=""></router-link>
         </Menu-item>
       </div>
     </Menu>
@@ -113,9 +109,18 @@
   }
 
 
+  .layout-logo {
+    border-bottom: 5px solid #e5e8f0;
+  }
+
   .layout-logo img {
-    height: 60px;
     position: relative;
+    width: 100px;
+    height: 70px;
+    border-radius: 50%;
+    float: left;
+    margin: 0 69px 0 0;
+    margin-left:15px;
   }
 
   .layout-assistant {
@@ -153,6 +158,12 @@
 
   .custom-menu {
     border-top: 1px solid #ddd;
+    background: #3e4a58;
+  }
+
+
+  .customItem {
+    height:56px;
   }
 
   .custom-menu a {
@@ -182,10 +193,8 @@
   }
 
   .s-nav {
-    /*position: fixed;*/
-    /*left: 0;*/
-    /*bottom: 0;*/
-    /*top: 0;*/
+    height: 100%;
+    background: #3e4a58
   }
 
   .s-nav a {
@@ -216,5 +225,26 @@
   }
   .ivu-menu-vertical.ivu-menu-light:after{
     width: 0;
+  }
+
+  .themeLight {
+    width: 100%;
+    background: white;
+  }
+
+  .posRea {
+    position: relative;
+  }
+  .aMain {
+    position: absolute;
+    right: 20px;
+    top: 13px;
+    color: #333333;
+  }
+  .deskStyle {
+    position: absolute;
+    right: 20px;
+    top: 38px;
+    color: #333333;
   }
 </style>

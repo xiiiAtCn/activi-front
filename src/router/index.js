@@ -56,6 +56,18 @@ const workflowDetail = resolve => require(['../components/businessModule/workflo
 
 // 报价路由
 const productPrice = resolve => require(['../components/businessModule/m-productPrice.vue'], resolve)
+
+// bo关系 部门人员
+const boTree = resolve => require(['../components/businessModule/boTree/boTree.vue'], resolve)
+// const boTreeDetail = resolve => require(['../components/businessModule/boTree/boTreeDetail.vue'], resolve)
+
+// bo关系 物料档案
+const fileTree = resolve => require(['../components/businessModule/boTree/fileTree.vue'], resolve)
+// const fileTreeDetail = resolve => require(['../components/businessModule/boTree/fileTreeDetail.vue'], resolve)
+
+// bo关系 bo视图
+const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
+
 Vue.use(VueRouter)
 Vue.use(iView)
 
@@ -100,6 +112,24 @@ const router = new VueRouter({
         {
           path: '/layoutContent/:id/inventory',
           component: inventory
+        },
+        //bo关系树 部门人员
+        {
+          path:'/layoutContent/:id/boTree', component: boTree,
+          // children: [
+          //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
+          // ]
+        },
+        //bo关系树 物料档案
+        {
+          path:'/layoutContent/:id/fileTree', component: fileTree,
+          // children: [
+          //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
+          // ]
+        },
+        //bo关系 bo视图
+        {
+          path:'/layoutContent/:id/boTreeView', component: boTreeView
         },
         // 工作中心
         {
