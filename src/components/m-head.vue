@@ -9,7 +9,7 @@
         </div>
         <div style="clear: both"></div>
       </li>
-      <div class="custom-menu" style="background: #3e4a58">
+      <div class="custom-menu" style="background: #3e4a58; ">
         <Menu-item v-for="item in items" :name="item.code" style="height:56px;" :key="item.code" :id="item.code">
           <router-link class="business-module" :to="'/layoutContent/' + item.code">
             <Icon :type="item.icon" class="item-icon"></Icon>
@@ -182,8 +182,10 @@
   }
 
   .s-nav {
-    /*position: fixed;
-      left:0;*/
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*top: 0;*/
   }
 
   .s-nav a {

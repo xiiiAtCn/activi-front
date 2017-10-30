@@ -1,8 +1,9 @@
 html, body {
+  height: 100%;
 }
 
 #app {
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
 }
 
 .pull-right {
