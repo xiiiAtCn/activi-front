@@ -1,12 +1,14 @@
 <template>
   <Row :gutter="gutter" :type="type">
-    <transition-group name="fade" mode="out-in">
-      <Col :span="item.span" :push="item.offset" v-for="item in define" :key="item.linkedId">
-      <component :is="content[item.linkedId].ui_type" :uid="content[item.linkedId].ui_id" :define="content[item.linkedId].ui_define"
-                 :content="content[item.linkedId].ui_content"></component>
-      <!--{{content[item.linkedId]}}-->
-      </Col>
-    </transition-group>
+      <transition-group name="fade" mode="out-in">
+          <Col :span="item.ui_define.col" :push="item.ui_define.offset" v-for="item in content" :key="item.ui_id">
+              <component :is="item.ui_content[0].ui_type"
+                         :uid="item.ui_content[0].ui_id"
+                         :define="item.ui_content[0].ui_define"
+                         :content="item.ui_content[0].ui_content"></component>
+              <!--{{content[item.linkedId]}}-->
+          </Col>
+      </transition-group>
   </Row>
 </template>
 <script>

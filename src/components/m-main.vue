@@ -94,6 +94,10 @@
         require(['./m-table.vue'], resolve)
 //        require(['./m-table-shim.js'], resolve)
       },
+      mTableF: function (resolve) {
+        require(['./m-table-f.vue'], resolve)
+        require(['./m-table-f-shim.js'], resolve)
+      },
       mTab: function (resolve) {
         require(['./m-tab.vue'], resolve)
       },
@@ -183,7 +187,8 @@
       $route () {
         this.meta = null
         console.log('this.$route.query', this.$route.query)
-        fetch(this.$route.query, (err, post) => {
+        let query = this.$route.query.url
+        fetch(query, (err, post) => {
           if (err) {
             this.errorMessage = err.message
           } else {
@@ -194,7 +199,7 @@
             document.title = _.get(this.define, 'title', '')
             store.dispatch('initValidStatus')
             store.dispatch('clearData', {})
-            let url = this.define.data_url
+            let url = query
             store.dispatch('putData', {'url': url})
           }
         })
