@@ -59,13 +59,9 @@
             }
         },
         mounted() {
-            if(this.cols){
-                this.handleDefine()
-                this.handleContent()
-                console.log("config run")
-            }
+            this.handleDefine()
+            this.handleContent()
             console.log("mTableF run")
-
         },
         methods: {
             //配置表格
