@@ -397,6 +397,13 @@
   }
 </script>
 
+<style>
+    /*显示父级组件*/
+    .out-use-menu-vertical, .out-use-menu-horizontal {
+        display: block;
+    }
+</style>
+
 <style lang="css">
 
   /*vue-transition*/
