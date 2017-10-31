@@ -2,8 +2,7 @@
     <div>
         <Row :gutter="16" style="padding: 0 10px">
             <Row v-for="item in items" style="margin: 10px 0 30px 0">
-                <Button v-if="!!item.template" icon="navicon-round" type="info" style="border-radius: 0"
-                        @click="getMeta(item.template.url)">{{item.template.title}}
+                <Button v-if="!!item.template" icon="navicon-round" type="info" style="border-radius: 0">{{item.template.title}}
                 </Button>
                 <div style="border-bottom: 1px solid #2db7f5; margin-bottom: 16px"></div>
                 <Col v-for="boMeta in item.children" :key="item.ui_id"

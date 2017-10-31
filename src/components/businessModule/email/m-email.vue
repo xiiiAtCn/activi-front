@@ -123,13 +123,6 @@
     }
 </script>
 
-<style>
-    /*隐藏父级组件*/
-    .out-use-menu-vertical, .out-use-menu-horizontal {
-        display: none;
-    }
-</style>
-
 <style scoped>
     /*路由*/
     .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title {

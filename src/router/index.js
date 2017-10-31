@@ -252,7 +252,7 @@ const router = new VueRouter({
         {
             path:'/functionLog', component: functionLog
         },
-        //邮件路由
+        // 邮件路由
         {
             path:'/email',
             component: mEmail,
