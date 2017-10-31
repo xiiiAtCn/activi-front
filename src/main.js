@@ -4,7 +4,8 @@ import './assets/css/base.css'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import Vue from 'vue'
-import router from './router'
+// import './components'
+import router from './router/index'
 import Request from 'utils/request-addon'
 
 for(let i of Reflect.ownKeys(Request.prototype)) {

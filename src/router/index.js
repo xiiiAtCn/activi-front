@@ -6,9 +6,9 @@ import VueRouter from 'vue-router'
 
 import iView from 'iview'
 
-const mEntry = resolve => require(['../components/m-entry.vue'], resolve)
+// const mEntry = resolve => require(['../components/m-entry.vue'], resolve)
 const mMain = resolve => require(['../components/m-main.vue'], resolve)
-const mLayout = resolve => require(['../components/m-layout.vue'], resolve)
+// const mLayout = resolve => require(['../components/m-layout.vue'], resolve)
 const mContent = resolve => require(['../components/m-main-content.vue'], resolve)
 const mLayoutContent = resolve => require(['../components/m-layout-content.vue'], resolve)
 const mLayoutContentDefault = resolve => require(['../components/m-layout-content-default.vue'], resolve)
@@ -39,6 +39,9 @@ const taskSteps = resolve => require(['../components/businessModule/project/m-ta
 // const isBuilding = resolve => require(['../components/m-isBuilding.vue'], resolve)
 const Test = resolve => require(['../components/base/m-number.vue'], resolve)
 
+// 登录页
+const mLogin = resolve => require(['../components/m-login.vue'], resolve)
+
 // 工作中心路由
 const mWorkCenter = resolve => require(['../components/businessModule/workCenter/m-workCenter.vue'], resolve)
 const workCenter = resolve => require(['../components/businessModule/workCenter/workCenter.vue'], resolve)
@@ -56,142 +59,218 @@ const workflowDetail = resolve => require(['../components/businessModule/workflo
 
 // 报价路由
 const productPrice = resolve => require(['../components/businessModule/m-productPrice.vue'], resolve)
+
+// bo关系 部门人员
+const boTree = resolve => require(['../components/businessModule/boTree/boTree.vue'], resolve)
+// const boTreeDetail = resolve => require(['../components/businessModule/boTree/boTreeDetail.vue'], resolve)
+
+// bo关系 物料档案
+const fileTree = resolve => require(['../components/businessModule/boTree/fileTree.vue'], resolve)
+// const fileTreeDetail = resolve => require(['../components/businessModule/boTree/fileTreeDetail.vue'], resolve)
+
+// bo关系 bo视图
+const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
+
+// 功能日志
+const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
+
+//邮件路由
+const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
+const emailHome = resolve => require(['../components/businessModule/email/emailHome.vue'], resolve)
+const writeEmail = resolve => require(['../components/businessModule/email/writeEmail.vue'], resolve)
+const checkEmail = resolve => require(['../components/businessModule/email/checkEmail.vue'], resolve)
+const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
+const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
+
 Vue.use(VueRouter)
 Vue.use(iView)
 
 const router = new VueRouter({
-  mode: 'history',
-  base: __dirname,
-  routes: [
-    {path: '/inventory', component: inventory},
-    {path: '/notice', component: notice},
-    {path: '/userManage', component: userManage},
-    {path: '/workbench', component: workbench},
-    {path: '/job', component: job},
-    {path: '/mEntry', component: mEntry},
-    {path: '/p', component: mEntry},
-    {path: '/page', component: mMain},
-    {
-      path: '/layout',
-      component: mLayout,
-      children: [
+    mode: 'history',
+    base: __dirname,
+    routes: [
+        {path: '/', component: mLogin},
+        // // 这些暂时不用了
+        // {path: '/inventory', component: inventory},
+        // {path: '/notice', component: notice},
+        // {path: '/userManage', component: userManage},
+        // {path: '/job', component: job},
+        // {path: '/mEntry', component: mEntry},
+        // {path: '/p', component: mEntry},
+        // {path: '/page', component: mMain},
+        // {
+        //     path: '/layout',
+        //     component: mLayout,
+        //     children: [
+        //         {
+        //             path: 'page',
+        //             component: mMain
+        //         }
+        //     ]
+        // },
         {
-          path: 'page',
-          component: mMain
+            path: '/layoutContent/:id',
+            component: mLayoutContent,
+            children: [
+                {
+                    path: '/',
+                    component: mLayoutContentDefault
+                },
+                {
+                    path: 'page',
+                    component: mMain
+                },
+                {
+                    path: '/layoutContent/:id/workbench',
+                    component: workbench
+                },
+                {
+                    path: '/layoutContent/:id/allMenu',
+                    component: mContent
+                },
+                {
+                    path: '/layoutContent/:id/inventory',
+                    component: inventory
+                },
+                //bo关系树 部门人员
+                {
+                    path: '/layoutContent/:id/boTree', component: boTree,
+                    // children: [
+                    //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
+                    // ]
+                },
+                //bo关系树 物料档案
+                {
+                    path: '/layoutContent/:id/fileTree', component: fileTree,
+                    // children: [
+                    //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
+                    // ]
+                },
+                //bo关系 bo视图
+                {
+                    path: '/layoutContent/:id/boTreeView', component: boTreeView
+                },
+                // 工作中心
+                {
+                    path: '/layoutContent/:id/mWorkCenter', component: mWorkCenter
+                },
+                {
+                    path: '/layoutContent/:id/mWorkCenter/:cid/workCenter', component: workCenter
+                },
+                {
+                    path: '/layoutContent/:id/mWorkCenter/:sid/workDesk', component: workDesk
+                },
+                // 任务中心
+                {
+                    path: '/layoutContent/:id/taskCenter', component: taskCenter
+                },
+                // 文档中心
+                {
+                    path: '/layoutContent/:id/documentCenter', component: documentCenter
+                },
+                // 工作流程
+                {
+                    path: '/layoutContent/:id/workflow', component: workflow
+                },
+                {
+                    path: '/:id/workflowDetail', component: workflowDetail
+                },
+                {
+                    path: '/layoutContent/:id/projectSummary', component: projectSummary
+                },
+                {
+                    path: '/layoutContent/:id/:title/projectOut',
+                    component: projectOut,
+                    children: [
+                        {path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails},
+                        {path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson},
+                        {path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps}
+                    ]
+                },
+                {
+                    path: '/layoutContent/:id/monitor',
+                    component: monitor,
+                    children: [
+                        {
+                            path: '/layoutContent/:id/monitor/levelClassify',
+                            component: levelClassify,
+                            children: [
+                                {path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap},
+                                {path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid},
+                                {
+                                    path: '/layoutContent/:id/monitor/levelClassify/tabFaultHistory',
+                                    component: tabFaultHistory
+                                },
+                                {path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow}
+                            ]
+                        },
+                        {
+                            path: '/layoutContent/:id/monitor/levelProvince',
+                            component: levelProvince
+                        },
+                        {
+                            path: '/layoutContent/:id/monitor/levelCity',
+                            component: levelCity
+                        },
+                        {
+                            path: '/layoutContent/:id/monitor/levelCommunity',
+                            component: levelCommunity
+                        },
+                        {
+                            path: '/layoutContent/:id/monitor/levelDistrict',
+                            component: levelDistrict
+                        },
+                        {
+                            path: '/layoutContent/:id/monitor/levelPump',
+                            component: levelPump,
+                            children: [
+                                {
+                                    path: '/layoutContent/:id/monitor/levelPump/tabFaultHistory/:pumpGroupId',
+                                    component: tabFaultHistory
+                                },
+                                {
+                                    path: '/layoutContent/:id/monitor/levelPump/tabProduceMonitor/:pumpGroupId',
+                                    component: tabProduceMonitor
+                                },
+                                {
+                                    path: '/layoutContent/:id/monitor/levelPump/tabStartStopAnls/:pumpGroupId',
+                                    component: tabStartStopAnls
+                                },
+                                {
+                                    path: '/layoutContent/:id/monitor/levelPump/tabCurveNow/:pumpGroupId',
+                                    component: tabCurveNow
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            path: '/test', component: Test
+        },
+        {
+            path:'/functionLog', component: functionLog
+        },
+        // 邮件路由
+        {
+            path:'/email',
+            component: mEmail,
+            children: [
+                {   path:'/email/home', component: emailHome   },
+                {   path:'/email/writeEmail', component: writeEmail   },
+                {   path:'/email/checkEmail', component: checkEmail   },
+                {   path:'/email/emailDetail', component: emailDetail   },
+                {   path:'/email/emailDirectory', component: emailDirectory   },
+            ]
+        },
+        // 报价路由
+        {
+            path: '/productPrice',
+            component: productPrice
         }
-      ]
-    },
-    {
-      path: '/layoutContent/:id',
-      component: mLayoutContent,
-      children: [
-        {
-          path: '/layoutContent/:id/',
-          component: mLayoutContentDefault
-        },
-        {
-          path: 'page',
-          component: mMain
-        },
-        {
-          path: '/layoutContent/:id/allMenu',
-          component: mContent
-        },
-        {
-          path: '/layoutContent/:id/inventory',
-          component: inventory
-        },
-        // 工作中心
-        {
-          path: '/layoutContent/:id/mWorkCenter', component: mWorkCenter
-        },
-        {
-          path: '/layoutContent/:id/mWorkCenter/:cid/workCenter', component: workCenter
-        },
-        {
-          path: '/layoutContent/:id/mWorkCenter/:sid/workDesk', component: workDesk
-        },
-        // 任务中心
-        {
-          path: '/layoutContent/:id/taskCenter', component: taskCenter
-        },
-        // 文档中心
-        {
-          path: '/layoutContent/:id/documentCenter', component: documentCenter
-        },
-        // 工作流程
-        {
-          path: '/layoutContent/:id/workflow', component: workflow
-        },
-        {
-          path: '/:id/workflowDetail', component: workflowDetail
-        },
-        {
-          path: '/layoutContent/:id/projectSummary', component: projectSummary
-        },
-        {
-          path: '/layoutContent/:id/:title/projectOut',
-          component: projectOut,
-          children: [
-            {path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails},
-            {path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson},
-            {path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps}
-          ]
-        },
-        {
-          path: '/layoutContent/:id/monitor',
-          component: monitor,
-          children: [
-            {
-              path: '/layoutContent/:id/monitor/levelClassify',
-              component: levelClassify,
-              children: [
-                {path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap},
-                {path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid},
-                {path: '/layoutContent/:id/monitor/levelClassify/tabFaultHistory', component: tabFaultHistory},
-                {path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow}
-              ]
-            },
-            {
-              path: '/layoutContent/:id/monitor/levelProvince',
-              component: levelProvince
-            },
-            {
-              path: '/layoutContent/:id/monitor/levelCity',
-              component: levelCity
-            },
-            {
-              path: '/layoutContent/:id/monitor/levelCommunity',
-              component: levelCommunity
-            },
-            {
-              path: '/layoutContent/:id/monitor/levelDistrict',
-              component: levelDistrict
-            },
-            {
-              path: '/layoutContent/:id/monitor/levelPump',
-              component: levelPump,
-              children: [
-                {path: '/layoutContent/:id/monitor/levelPump/tabFaultHistory/:pumpGroupId', component: tabFaultHistory},
-                {path: '/layoutContent/:id/monitor/levelPump/tabProduceMonitor/:pumpGroupId', component: tabProduceMonitor},
-                {path: '/layoutContent/:id/monitor/levelPump/tabStartStopAnls/:pumpGroupId', component: tabStartStopAnls},
-                {path: '/layoutContent/:id/monitor/levelPump/tabCurveNow/:pumpGroupId', component: tabCurveNow}
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      path: '/test', component: Test
-    },
-    // 报价路由
-    {
-      path: '/productPrice',
-      component: productPrice
-    }
-
-  ]
+    
+    ]
 })
 
 router.beforeEach((to, from, next) => {

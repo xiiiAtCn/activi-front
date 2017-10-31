@@ -397,6 +397,13 @@
   }
 </script>
 
+<style>
+    /*显示父级组件*/
+    .out-use-menu-vertical, .out-use-menu-horizontal {
+        display: block;
+    }
+</style>
+
 <style lang="css">
 
   /*vue-transition*/
@@ -446,7 +453,7 @@
   }
 
   .layout-content-main {
-    padding-left: 60px;
+    padding: 0 20px 0 20px;
   }
 
   .ivu-card-head {

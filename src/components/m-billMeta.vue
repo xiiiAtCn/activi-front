@@ -1,7 +1,7 @@
 <template>
   <Row :gutter="16" style="padding: 0 10px">
     <Row v-for="item in items" style="margin: 10px 0 30px 0">
-      <Button icon="navicon-round" class="warnBtn" @click="getMeta(item.template.url)">{{item.template.title}}</Button>
+      <Button icon="navicon-round" class="warnBtn">{{item.template.title}}</Button>
       <div style="border-bottom: 1px solid #fabf8f; margin-bottom: 16px"></div>
       <Col v-for="boMeta in item.children" :key="item.ui_id" style="display: inline-block; margin-right: 12px">
       <Button-group>

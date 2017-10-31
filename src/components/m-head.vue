@@ -1,220 +1,249 @@
 <template>
-  <div class="s-nav" style="height: 100%; background: #3e4a58">
-    <Menu active-name="" theme="light" style="width: 100%; background: white;">
-      <li class="layout-logo" style="border-bottom:5px solid #e5e8f0;">
-        <div style="position: relative">
-          <img src="../assets/img/yushi-logo.png" alt="" style="width: 100px; height: 70px; border-radius: 50%; float: left; margin: 0 69px 0 0;margin-left:15px;">
-          <a href="http://www.sohu.com/" target="_blank" style="position: absolute; right: 20px; top: 13px; color: #333333;">[ 主 页 ]</a>
-          <a href="/layoutContent/04/workbench" class="deskStyle" style="position: absolute; right: 20px; top: 38px; color: #333333;">[ 桌 面 ]</a>
-        </div>
-        <div style="clear: both"></div>
-      </li>
-      <div class="custom-menu" style="background: #3e4a58; ">
-        <Menu-item v-for="item in items" :name="item.code" style="height:56px;" :key="item.code" :id="item.code">
-          <router-link class="business-module" :to="'/layoutContent/' + item.code">
-            <Icon :type="item.icon" class="item-icon"></Icon>
-            <span class="func-title">{{item.title}}</span>
-          </router-link>
-        </Menu-item>
-        <!--我的桌面隐藏,再改动就把它删掉了-->
-        <Menu-item name="04" style="height:5px; width: 1%; background: rgb(89,89,89); border-left: 1px solid rgb(89,89,89)" key="04" id="04">
-          <router-link class="business-module" to=""></router-link>
-        </Menu-item>
-      </div>
-    </Menu>
-  </div>
+    <div class="s-nav">
+        <Menu active-name="" theme="light" class="themeLight">
+            <li class="layout-logo">
+                <div class="posRea">
+                    <img src="../assets/img/yushi-logo.png" alt="">
+                    <a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>
+                    <a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>
+                </div>
+                <div style="clear: both"></div>
+            </li>
+            <div class="custom-menu">
+                <Menu-item v-for="item in items" :name="item.code" class="customItem" :key="item.code" :id="item.code">
+                    <router-link class="business-module" :to="'/layoutContent/' + item.code">
+                        <Icon :type="item.icon" class="item-icon"></Icon>
+                        <span class="func-title">{{item.title}}</span>
+                    </router-link>
+                </Menu-item>
+            </div>
+        </Menu>
+    </div>
 </template>
 
 <script>
-  export default {
-    data: function () {
-      return {
-        items: [],
-        username: 'developer'
-      }
-    },
-    mounted: function () {
-      this.getLeftMenu()
-    },
-    methods: {
-      getLeftMenu () {
-        this.setUrl('/api/module/topMenu').forGet(res => {
-          this.items = res
-        })
-      },
-      chooseId () {
-        document.getElementById(this.$router.currentRoute.params.id).click()
-      },
-    },
-    watch: {
-      '$route': function () {
-        this.chooseId()
-      }
+    export default {
+        data: function () {
+            return {
+                items: [],
+                username: 'developer'
+            }
+        },
+        mounted: function () {
+            this.getLeftMenu()
+        },
+        methods: {
+            getLeftMenu () {
+                this.setUrl('/api/module/topMenu').forGet(res => {
+                    this.items = res
+                })
+            },
+            chooseId () {
+                document.getElementById(this.$router.currentRoute.params.id).click()
+            },
+        },
+        watch: {
+            '$route': function () {
+                this.chooseId()
+            }
+        }
     }
-  }
 </script>
 
 <style scoped>
-  /*背景： #595959*/
+    /*背景： #595959*/
 
-  .ivu-menu-vertical .ivu-menu-item:hover,
-  .ivu-menu-vertical .ivu-menu-submenu-title:hover {
-    background: #364558 !important;
-  }
+    .ivu-menu-vertical .ivu-menu-item:hover,
+    .ivu-menu-vertical .ivu-menu-submenu-title:hover {
+        background: #364558 !important;
+    }
 
-  .business-module:hover {
-    /*background: #dddddd;*/
-  }
+    .business-module:hover {
+        /*background: #dddddd;*/
+    }
 
-  .business-module:hover .func-title {
-    /*color: #454c5b;*/
-  }
+    .business-module:hover .func-title {
+        /*color: #454c5b;*/
+    }
 
+    /*分割*/
 
-  /*分割*/
+    .ivu-menu-vertical.ivu-menu-light:after {
+        background: white;
+    }
 
-  .ivu-menu-vertical.ivu-menu-light:after {
-    background: white;
-  }
+    .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+        border-left: 6px solid #117aec;
+        border-right: 0;
+    }
 
-  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-    border-left: 6px solid #117aec;
-    border-right: 0;
-  }
+    .ivu-menu-item:hover a span,
+    .ivu-menu-item:hover a i {
+        color: #fff;
+    }
 
-  .ivu-menu-item:hover a span,
-  .ivu-menu-item:hover a i {
-    color: #fff;
-  }
+    .ivu-menu-item-selected {
+        background: #364558;
+        color: #fff !important;
+    }
 
-  .ivu-menu-item-selected {
-    background: #364558;
-    color: #fff !important;
-  }
+    .ivu-menu-item-selected i {
+        color: #fff !important;
+    }
 
-  .ivu-menu-item-selected i {
-    color: #fff !important;
-  }
+    .ivu-menu-item-selected span {
+        color: #fff !important;
+        font-weight: bold;
+    }
 
-  .ivu-menu-item-selected span {
-    color: #fff !important;
-    font-weight: bold;
-  }
+    .func-title {
+        color: #fff;
+        line-height: 26px;
+    }
 
+    .ivu-menu-item-selected .func-title,
+    .ivu-menu-item-selected .item-icon {
+        color: #ed3f14;
+    }
 
-  .func-title {
-    color: #fff;
-    line-height: 26px;
-  }
+    .layout-logo {
+        border-bottom: 5px solid #e5e8f0;
+    }
 
-  .ivu-menu-item-selected .func-title,
-  .ivu-menu-item-selected .item-icon {
-    color: #ed3f14;
-  }
+    .layout-logo img {
+        position: relative;
+        width: 100px;
+        height: 70px;
+        border-radius: 50%;
+        float: left;
+        margin: 0 69px 0 0;
+        margin-left: 15px;
+    }
 
+    .layout-assistant {
+        width: 300px;
+        margin: 0 auto;
+        height: inherit;
+    }
 
-  .layout-logo img {
-    height: 60px;
-    position: relative;
-  }
+    .layout-breadcrumb {
+        padding: 10px 15px 0;
+    }
 
-  .layout-assistant {
-    width: 300px;
-    margin: 0 auto;
-    height: inherit;
-  }
+    .layout-content {
+        min-height: 850px;
+        margin: 15px 0;
+        overflow: hidden;
+        background: #fff;
+        border-radius: 5px;
+    }
 
-  .layout-breadcrumb {
-    padding: 10px 15px 0;
-  }
+    .layout-content-main {
+        padding: 10px;
+    }
 
-  .layout-content {
-    min-height: 850px;
-    margin: 15px 0;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 5px;
-  }
+    .layout-copy {
+        text-align: center;
+        padding: 10px 0 20px;
+        color: #9ea7b4;
+    }
 
-  .layout-content-main {
-    padding: 10px;
-  }
+    .layout-ceiling-main {
+        /*float: right;
+            margin-right: 15px;*/
+    }
 
-  .layout-copy {
-    text-align: center;
-    padding: 10px 0 20px;
-    color: #9ea7b4;
-  }
+    .custom-menu {
+        border-top: 1px solid #ddd;
+        background: #3e4a58;
+    }
 
-  .layout-ceiling-main {
-    /*float: right;
-        margin-right: 15px;*/
-  }
+    .customItem {
+        height: 56px;
+    }
 
-  .custom-menu {
-    border-top: 1px solid #ddd;
-  }
+    .custom-menu a {
+        display: inline-block;
+        line-height: 15px;
+    }
 
-  .custom-menu a {
-    display: inline-block;
-    line-height: 15px;
-  }
+    .custom-menu .ivu-menu-item {
+        padding: 0;
+    }
 
-  .custom-menu .ivu-menu-item {
-    padding: 0;
-  }
+    .custom-menu .ivu-menu-item a {
+        padding: 14px 24px;
+    }
 
-  .custom-menu .ivu-menu-item a {
-    padding: 14px 24px;
-  }
+    .custom-menu a img {
+        margin-top: 5px;
+    }
 
-  .custom-menu a img {
-    margin-top: 5px;
-  }
+    .ivu-menu-horizontal .ivu-menu-item {
+        float: left;
+        padding: 0 10px;
+        position: relative;
+        cursor: pointer;
+        z-index: 3;
+        transition: all .2s ease-in-out;
+    }
 
-  .ivu-menu-horizontal .ivu-menu-item {
-    float: left;
-    padding: 0 10px;
-    position: relative;
-    cursor: pointer;
-    z-index: 3;
-    transition: all .2s ease-in-out;
-  }
+    .s-nav {
+        height: 100%;
+        background: #3e4a58
+    }
 
-  .s-nav {
-    /*position: fixed;*/
-    /*left: 0;*/
-    /*bottom: 0;*/
-    /*top: 0;*/
-  }
+    .s-nav a {
+        color: #999;
+        display: block;
+    }
 
-  .s-nav a {
-    color: #999;
-    display: block;
-  }
+    .s-nav .ivu-menu-item:hover a,
+    .s-nav .ivu-menu-item.ivu-menu-item-active a {
+        color: #117aec;
+    }
 
-  .s-nav .ivu-menu-item:hover a,
-  .s-nav .ivu-menu-item.ivu-menu-item-active a {
-    color: #117aec;
-  }
+    .item-icon {
+        margin-top: 3px;
+        font-size: 20px;
+        width: 30px;
+        color: #fff !important;
+    }
 
-  .item-icon {
-    margin-top: 3px;
-    font-size: 20px;
-    width: 30px;
-    color: #fff !important;
-  }
+    .func-title.dropdown {
+        position: absolute;
+        left: 21px;
+        top: 16px;
+    }
 
-  .func-title.dropdown {
-    position: absolute;
-    left: 21px;
-    top: 16px;
-  }
+    .nav-dropdown .ivu-menu-submenu-title i {
+        margin-right: -20px;
+    }
 
-  .nav-dropdown .ivu-menu-submenu-title i {
-    margin-right: -20px;
-  }
-  .ivu-menu-vertical.ivu-menu-light:after{
-    width: 0;
-  }
+    .ivu-menu-vertical.ivu-menu-light:after {
+        width: 0;
+    }
+
+    .themeLight {
+        width: 100%;
+        background: white;
+    }
+
+    .posRea {
+        position: relative;
+    }
+
+    .aMain {
+        position: absolute;
+        right: 20px;
+        top: 13px;
+        color: #333333;
+    }
+
+    .deskStyle {
+        position: absolute;
+        right: 20px;
+        top: 38px;
+        color: #333333;
+    }
 </style>
