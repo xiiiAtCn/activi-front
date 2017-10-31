@@ -6,7 +6,7 @@
          <Row class="show_workflow">
                 <Row class="tab_workCenter">
                     <Button type="info" >文字信息</Button>
-                    <Button type="info" >图形信息</Button>
+                    <Button type="info" @click="showFrame">图形信息</Button>
                 </Row>
                  <h4 style="margin:10px 0;">{{this.name}} -->{{this.person}}</h4>
                   <p>目标：成果物META-NAME/BO-META-NAME</p>
@@ -43,7 +43,13 @@
 </template>
 <script>
 export default {
-  data: function () {
+    props:{
+      statusId:{
+        type: Number,
+        default: null
+      }
+    },
+    data: function () {
     return {
       showFlag : false,
       total : 0,
@@ -167,6 +173,9 @@ export default {
           } else {
             this.steps.active = 0
           }
+      },
+      showFrame(){
+
       }
     },
     mounted() {

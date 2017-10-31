@@ -58,7 +58,7 @@
         name: _.get(this.define, 'name', ''),
         label: _.get(this.define, 'label', false),
         hidden: _.get(this.define, 'hidden', false),
-        typeString: _.get(this.define, 'type', 'string'),
+        typeString: _.get(this.define, 'typeString', 'string'),
         labelWidth: _.get(this.define, 'labelWidth', 0)
       }
     },
