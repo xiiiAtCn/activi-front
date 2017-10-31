@@ -6,10 +6,10 @@
                 <h5 style="color: #3a9eda">您有5封未读邮件!</h5>
             </div>
             <div class="home_list">
-                <!--<div class="home_listitem" v-for="item in menuList">-->
-                    <!--<img :src="item.title" :value="item.title" :key="item.title">-->
-                    <!--<span>{{item.name}}</span>-->
-                <!--</div>-->
+                <div class="home_listitem" v-for="item in menuList">
+                    <img :src="item.title" :value="item.title" :key="item.title">
+                    <span>{{item.name}}</span>
+                </div>
             </div>
             <div class="home_bottom">
                 <span>欢迎登陆昱石科技邮件系统</span>
@@ -22,13 +22,13 @@
     export default {
         data() {
             return {
-//                menuList: [
-//                	{ 'title': require('../../../assets/img/mail/1-write.png'), 'name': '写信' },
-//                    { 'title': require('../../../assets/img/mail/2-receiving.png'), 'name': '收信(5)' },
-//                    { 'title': require('../../../assets/img/mail/3-Contact.png'), 'name': '通讯录' },
-//                    { 'title': require('../../../assets/img/mail/4-labelling.png'), 'name': '标签组' },
-//                    { 'title': require('../../../assets/img/mail/5-mails.png'), 'name': '群邮件' },
-//                ],
+                menuList: [
+                	{ 'title': require('../../../assets/img/mail/1-write.png'), 'name': '写信' },
+                    { 'title': require('../../../assets/img/mail/2-receiving.png'), 'name': '收信(5)' },
+                    { 'title': require('../../../assets/img/mail/3-Contact.png'), 'name': '通讯录' },
+                    { 'title': require('../../../assets/img/mail/4-labelling.png'), 'name': '标签组' },
+                    { 'title': require('../../../assets/img/mail/5-mails.png'), 'name': '群邮件' },
+                ],
                 screenWidth: document.body.clientWidth
             }
         },

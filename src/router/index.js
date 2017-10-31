@@ -54,8 +54,9 @@ const taskCenter = resolve => require(['../components/businessModule/m-taskCente
 const documentCenter = resolve => require(['../components/businessModule/m-documentCenter.vue'], resolve)
 
 // 工作流程路由
-const workflow = resolve => require(['../components/businessModule/m-workflow.vue'], resolve)
-const workflowDetail = resolve => require(['../components/businessModule/workflow.vue'], resolve)
+const workflow = resolve => require(['../components/businessModule/workflow/workflow.vue'], resolve)
+const workflowDetails = resolve => require(['../components/businessModule/workflow/workflowDetails.vue'], resolve)
+const workflowCheck = resolve => require(['../components/businessModule/workflow/workflowCheck.vue'], resolve)
 
 // 报价路由
 const productPrice = resolve => require(['../components/businessModule/m-productPrice.vue'], resolve)
@@ -170,10 +171,14 @@ const router = new VueRouter({
                 },
                 // 工作流程
                 {
-                    path: '/layoutContent/:id/workflow', component: workflow
+                    path:'/layoutContent/:id/workflow', component: workflow,
+                    children: [
+                        { path:'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
+                    ]
                 },
+                // 工作流程 查看
                 {
-                    path: '/:id/workflowDetail', component: workflowDetail
+                    path:'/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
                 },
                 {
                     path: '/layoutContent/:id/projectSummary', component: projectSummary

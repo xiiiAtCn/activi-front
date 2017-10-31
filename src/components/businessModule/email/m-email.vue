@@ -2,37 +2,49 @@
     <div class="layout">
         <Menu mode="horizontal" active-name="1">
             <div class="layout-assistant">
-                 <div style="height:60px;float:left">
-                      <img src="../../../assets/img/yushi-logo.png" style="width:100px;height:60px;margin-left:50px;float:left"/>
-                      <div style="float:left;height:60px;">
-                        <p style="height:30px;line-height: 30px;"><span>宇宙无敌美少女</span><span> <1506461525@qq.com></span></p>
-                        <p style="height:30px;line-height: 30px;font-size:12px;"><a href="/email/home">邮箱首页</a>  <span style="margin:0 8px">|</span>  <a>设置</a></p>
-                      </div>
-                 </div>
-                 <div style="height:60px;float:right">
-                     <p style="font-size: 12px;"><a href="">帮助中心</a><span style="margin:0 8px">|</span><a style="margin-right:10px;margin-top:-5px;" @click="goback">退出</a> </p>
-                 </div>
+                <div style="height:60px;float:left">
+                    <img src="../../../assets/img/yushi-logo.png" style="width:100px;height:60px;margin-left:50px;float:left"/>
+                    <div style="float:left;height:60px;">
+                        <p style="height:60px;line-height: 60px;font-size:12px;margin-left:60px;">
+                            <a href="/email/home">邮箱首页</a>
+                            <span style="margin:0 8px">|</span>
+                            <a>设置</a>
+                        </p>
+                    </div>
+                </div>
+                <div style="height:60px;float:right;">
+                    <img src="../../../assets/img/mail/user-guojiajia.png">
+                    <div style="float:right;height:60px;">
+                        <p style="height:60px;line-height:60px;font-size:12px;">
+                            <span style="margin-right:100px;">朱珊珊</span>
+                            <a href="">帮助中心</a>
+                            <span style="margin:0 8px">|</span>
+                            <a href="javascript:window.close()" style="margin-right:10px;">退出</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </Menu>
         <div class="layout-content">
             <Row>
-                <Col span="3">
-                    <Menu active-name="0" style="width: 83%;height:95%">
-                        <MenuGroup>
-                            <MenuItem :name="index" v-for="(item,index) in routers" :key="item.code" style="height:62px;line-height: 62px;text-align:center">
-                                <router-link :to="item.url" style="padding:0">
-                                    {{item.text}}
-                                </router-link>
-                            </MenuItem>
-                        </MenuGroup>
-                    </Menu>
+                <Col span="3" class="layout_title">
+                <Menu active-name="0" style="width: 100%;height:95%">
+                    <MenuGroup>
+                        <MenuItem :name="index" v-for="(item,index) in routers" :key="item.code" style="height:62px;line-height: 62px;text-align:center;padding-top:10px">
+                            <router-link :to="item.url" style="padding:0">
+                                <Icon :type="item.icon" style="font-size:20px;margin-right:10px;text-align:right;"></Icon>
+                                <span>{{item.text}}</span>
+                            </router-link>
+                        </MenuItem>
+                    </MenuGroup>
+                </Menu>
                 </Col>
-                <Col span="20">
-                    <div class="layout-content-main">
-                        <transition name="fade" mode="out-in">
-                            <router-view></router-view>
-                        </transition>
-                    </div>
+                <Col span="21">
+                <div class="layout-content-main">
+                    <transition name="fade" mode="out-in">
+                        <router-view></router-view>
+                    </transition>
+                </div>
                 </Col>
             </Row>
         </div>
@@ -43,8 +55,10 @@
 </template>
 
 <script>
-  /* eslint-disable */
+    import Vue from 'vue'
     import {dispatch} from  '../../../utils/skipUtils'
+    import VueQuillEditor from 'vue-quill-editor'
+    Vue.use(VueQuillEditor)
     export default {
         data () {
             return {
@@ -53,13 +67,8 @@
         },
         methods: {
             changetitle() {
-                document.title = this.$route.params.title
+                document.title ='邮件'
             },
-            goback(){
-                this.$router.push({
-                    path:'/workbench'
-                });
-            }
         },
         mounted () {
             this.changetitle();
@@ -68,51 +77,61 @@
             });
             let urls = [
                 {
-                    text: '写信',
+                    icon:'android-create',
+                    text: '写 信',
                     url: '/email/writeEmail',
                     code: '101'
                 },
                 {
-                    text: '收信',
+                    icon:'email-unread',
+                    text: '收 信',
                     url: '/email/checkEmail',
                     code: '102'
                 },
                 {
+                    icon:'person-stalker',
                     text: '通讯录',
-                    url: '',
+                    url: '/email/emailDirectory',
                     code: '103'
                 },
                 {
+                    icon:'android-archive',
                     text: '收件箱',
                     url: '',
                     code: '104'
                 },
                 {
-                    text: '星标邮件',
+                    icon:'pricetags',
+                    text: '标签组',
                     url: '',
                     code: '105'
                 },
                 {
+                    icon:'chatboxes',
                     text: '群邮件',
                     url: '',
                     code: '106'
                 },
                 {
+                    icon:'filing',
                     text: '草稿箱 ',
                     url: '',
                     code: '107'
                 },
                 {
+                    icon:'ios-upload',
                     text: '已发送',
                     url: '',
                     code: '108'
                 },
                 {
+                    icon:'trash-a',
                     text: '已删除',
                     url: '',
                     code: '109'
                 },
                 {
+                    icon:'trash-b',
                     text: '垃圾箱',
                     url: '',
                     code: '110'
@@ -125,6 +144,22 @@
 
 <style scoped>
     /*路由*/
+    .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+        border-right:1px solid #e0e3e6;
+    }
+
+    .router-link-active{
+        width:70%;
+        height:40px;
+        line-height: 40px;
+        border-radius: 20px;
+        background:#65bef2;
+        margin:0 auto;
+        color:#fff !important;
+    }
+    .router-link-active a{
+        color:#fff !important;
+    }
     .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title {
         padding: 0
     }
@@ -133,29 +168,26 @@
         padding: 14px 24px;
         color: #aaa;
     }
-    .ivu-menu-item-selected a {
-        color: #2d8cf0;
-    }
     .layout{
-        background: #89b5e9;
-        width: 120%;
+        background: #d9dfe8;
+        width: 100%;
         height:100%;
     }
     .layout-assistant{
-       height:60px;
+        height:60px;
     }
     .layout-breadcrumb{
         padding: 10px 15px 0;
     }
     .layout-content{
-        margin: 15px;
+        margin: 5px;
         background: #fff;
         border-radius: 4px;
         height:785px;
     }
     .layout-content-main{
-        padding: 10px;
-        margin-left:20px;
+        /*  padding: 10px;
+          margin-left:20px;*/
     }
     .layout-copy{
         height:65px;
@@ -168,4 +200,19 @@
         bottom:0;
         left:0;
     }
+    .layout-content ul{
+        background:#fff;
+    }
+
+    .layout-content ul li a:hover{
+        background:#fff
+    }
+    .layout-content ul li a:hover span{
+        color:#65bef2;
+    }
+    .layout-content ul li a:hover i{
+        color:#65bef2;
+    }
+
+
 </style>
