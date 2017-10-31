@@ -190,7 +190,7 @@
                 {
                     icon: 'ios-clock',
                     text: '浏览记录',
-                    url: '',
+                    url: '/layoutContent/01/workBench',
                 },
                 {
                     icon: 'ios-help',
