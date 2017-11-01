@@ -11,6 +11,10 @@ const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
 }
 
+const mBoTree = resolve => {
+    require(['./m-boTree.vue'], resolve)
+}
+
 // const mBillMeta = resolve => {
 //   require(['./m-billMeta.vue'], resolve)
 // }
@@ -161,6 +165,7 @@ const mTree = resolve => {
 // }
 
 Vue.component('mBoTemplate', mBoTemplate)
+Vue.component('mBoTree', mBoTree)
 // Vue.component('mBillMeta', mBillMeta)
 // Vue.component('mBoMeta', mBoMeta)
 Vue.component('mBottomModal', mBottomModal)
