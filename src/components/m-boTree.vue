@@ -62,8 +62,7 @@
                 })
             },
             selectedCurrentNode (currentNode) {
-                let item = currentNode[0]
-                this.getChildInfo(item.infoUrl)
+                this.getChildInfo(currentNode[0]['infoUrl'])
             },
             getChildInfo (infoUrl) {
                 this.setUrl(infoUrl).forGet(res => {
@@ -74,7 +73,7 @@
             }
         },
         mounted () {
-            this.getChildInfo(this.treeData[0].infoUrl)
+            this.getChildInfo(this.treeData[0]['infoUrl'])
         }
     }
 </script>
