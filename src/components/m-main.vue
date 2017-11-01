@@ -133,9 +133,9 @@
 //                require(['./m-listView.vue'], resolve)
                 require(['./m-detailView-shim.js'], resolve)
             },
-//            mBoTree: function (resolve) {
-//                require(['./base/m-boTree.vue'], resolve)
-//            },
+            mBoTree: function (resolve) {
+                require(['./m-boTree.vue'], resolve)
+            },
             mSteps: function (resolve) {
                 require(['./base/m-steps.vue'], resolve)
             },

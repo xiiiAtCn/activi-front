@@ -7,13 +7,17 @@ import './businessModule'
 // 自定义指令
 import './custom-directive'
 
-const mBillMeta = resolve => {
-  require(['./m-billMeta.vue'], resolve)
+const mBoTemplate = resolve => {
+    require(['./m-boTemplate.vue'], resolve)
 }
 
-const mBoMeta = resolve => {
-  require(['./m-boMeta.vue'], resolve)
-}
+// const mBillMeta = resolve => {
+//   require(['./m-billMeta.vue'], resolve)
+// }
+//
+// const mBoMeta = resolve => {
+//   require(['./m-boMeta.vue'], resolve)
+// }
 
 const mBottomModal = resolve => {
   require(['./m-bottomModal.vue'], resolve)
@@ -152,13 +156,13 @@ const mTree = resolve => {
   require(['./m-tree.vue'], resolve)
 }
 
-const Layer = resolve => {
-  require(['./m-zpSlideLayer'], resolve)
-}
+// const Layer = resolve => {
+//   require(['./m-zpSlideLayer'], resolve)
+// }
 
-
-Vue.component('mBillMeta', mBillMeta)
-Vue.component('mBoMeta', mBoMeta)
+Vue.component('mBoTemplate', mBoTemplate)
+// Vue.component('mBillMeta', mBillMeta)
+// Vue.component('mBoMeta', mBoMeta)
 Vue.component('mBottomModal', mBottomModal)
 Vue.component('mCard', mCard)
 Vue.component('mCoin', mCoin)
@@ -193,5 +197,5 @@ Vue.component('mTable', mTable)
 Vue.component('mTable2', mTable2)
 Vue.component('mTableF', mTableF)
 Vue.component('mTree', mTree)
-Vue.component('mLayer', Layer)
+// Vue.component('mLayer', Layer)
 
