@@ -56,7 +56,6 @@
 <script>
     import Vue from 'vue';
     import { dispatch } from '../utils/skipUtils'
-    import { default as fetch, post } from '../utils/DefineFetcher'
     export default {
         data() {
             return {
