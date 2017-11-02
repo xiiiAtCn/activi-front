@@ -29,7 +29,6 @@
         methods: {
             getMenu: function () {
                 this.setUrl('/api/module/topMenu').forGet(res => {
-                	console.log('图片数组： ', res)
                     this.details = res
                 })
             },
