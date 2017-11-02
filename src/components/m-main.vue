@@ -68,7 +68,7 @@
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
 
-    import {dispatch} from '../utils/skipUtils'
+    import {dispatch} from '../utils/actionUtils'
     import * as _ from 'lodash'
 
     export default {

@@ -19,7 +19,7 @@
 </template>
 <script>
     import bus from '../router/bus'
-    import { dispatch } from '../utils/skipUtils'
+    import { dispatch } from '../utils/actionUtils'
 
     export default {
         props: {

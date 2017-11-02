@@ -79,7 +79,7 @@
 </template>
 <script>
     import Vue from 'vue'
-    import { dispatch } from '../../../utils/skipUtils'
+    import { dispatch } from '../../../utils/actionUtils'
 
     export default {
         data() {

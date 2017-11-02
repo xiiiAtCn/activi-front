@@ -15,7 +15,7 @@
 
 <script>
     import Vue from 'vue'
-    import {dispatch} from  '../../../utils/skipUtils'
+    import {dispatch} from  '../../../utils/actionUtils'
     import _ from 'lodash'
     import VueResource from 'vue-resource'
     Vue.use(VueResource);

@@ -51,7 +51,7 @@
   //  import Vue from 'vue'
   import _ from 'lodash'
   import bus from '../router/bus'
-  import { dispatch } from '../utils/skipUtils'
+  import { dispatch } from '../utils/actionUtils'
   import { default as fetch } from '../utils/DefineFetcher'
   import mForm from './base/m-form.vue'
 

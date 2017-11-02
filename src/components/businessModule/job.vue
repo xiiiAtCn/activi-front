@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {dispatch} from  '../../utils/skipUtils'
+import {dispatch} from  '../../utils/actionUtils'
 import Vue from 'vue';
 //import VueResource from 'vue-resource'
 //Vue.use(VueResource);

@@ -56,7 +56,7 @@
 
 <script>
     import Vue from 'vue'
-    import {dispatch} from  '../../../utils/skipUtils'
+    import {dispatch} from  '../../../utils/actionUtils'
     import VueQuillEditor from 'vue-quill-editor'
     Vue.use(VueQuillEditor)
     export default {

@@ -16,7 +16,7 @@
 </template>
 <script>
   //  import Vue from 'vue'
-  import { dispatch } from '../utils/skipUtils'
+  import { dispatch } from '../utils/actionUtils'
   //  import bus from '../router/bus'
   //  import store from '../vuex/store'
   //  import router from '../routers/routers'

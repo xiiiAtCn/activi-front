@@ -6,7 +6,7 @@
 
 <script>
 /* eslint-disable */
-    import {dispatch} from  '../../../utils/skipUtils'
+    import {dispatch} from  '../../../utils/actionUtils'
     export default {
         data () {
             return {
