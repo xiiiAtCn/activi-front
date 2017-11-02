@@ -4,7 +4,7 @@ import './assets/css/base.css'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import Vue from 'vue'
-// import './components'
+import './components'
 import router from './router/index'
 import Request from 'utils/request-addon'
 
