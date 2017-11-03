@@ -1,23 +1,23 @@
 <template>
     <div class="layout">
         <Col span="4">
-        <div class="leftMenu">
-            <Tree :data="baseData" @on-select-change="onSelected" @on-toggle-expand="onExpend"></Tree>
-        </div>
+            <div class="leftMenu">
+                <Tree :data="baseData" @on-select-change="onSelected" @on-toggle-expand="onExpend"></Tree>
+            </div>
         </Col>
         <Col span="20">
-        <div class="rightContent">
-            <Row>
-                <Table :columns="columns" :data="data"></Table>
-            </Row>
-            <Row class="toTop">
-                <Tabs type="card" :animated="noCssTransition" v-if="childInfo.length > 0">
-                    <TabPane v-for="(item,index) in childInfo" :label="item.childMeta">
-                        <Table :columns="item.childColumns" :data="item.childData"></Table>
-                    </TabPane>
-                </Tabs>
-            </Row>
-        </div>
+            <div class="rightContent">
+                <Row>
+                    <Table :columns="columns" :data="data"></Table>
+                </Row>
+                <Row class="toTop">
+                    <Tabs type="card" :animated="noCssTransition" v-if="childInfo.length > 0">
+                        <TabPane v-for="(item,index) in childInfo" :label="item.childMeta">
+                            <Table :columns="item.childColumns" :data="item.childData"></Table>
+                        </TabPane>
+                    </Tabs>
+                </Row>
+            </div>
         </Col>
     </div>
 </template>

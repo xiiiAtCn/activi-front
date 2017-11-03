@@ -1,12 +1,9 @@
 <template>
   <div>
-    <div v-if="!define" id="aaaa"></div>
-    <div v-else>
       <transition-group name="fade" mode="out-in">
-        <component :key="item.ui_id" :is="item.ui_type" v-for="item in content" :define="item.ui_define"
-                   :content="item.ui_content"></component>
+          <component :key="item.ui_id" :is="item.ui_type" v-for="item in content" :define="item.ui_define"
+                     :content="item.ui_content"></component>
       </transition-group>
-    </div>
   </div>
 </template>
 <script>

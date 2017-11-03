@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<base href="/">
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="css/base.css">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" type="text/css" href="css/animate.css">
+	<link rel="stylesheet" type="text/css" href="css/fpnotify.css">
+	<link rel="stylesheet" type="text/css" href="css/pnotify.brighttheme.min.css">
+	<link rel="stylesheet" type="text/css" href="css/pnotify.custom.css">
+	<link rel="stylesheet" href="css/listFilter.css">
+
+
+	<link rel="stylesheet" type="text/css" href="css/file/fileCenter.css">
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+
+	<script type="text/javascript" src="js/pace.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap/bootbox.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap/bootstrap-treeview.js"></script>
+
+	<!-- 本文件用 -->
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="js/template.js" type="text/javascript"></script>
+	<script src="js/listFilter.js" type="text/javascript"></script>
+
+	<script src="js/canvasExpand.js"></script>
+	<script src="js/chartComm.js"></script>
+	<script src="js/LinkType.js"></script>
+	<script src="js/drawBizChart.js"></script>
+
+	<title>楼层展示</title>
+
+	<script type="text/javascript">
+        // ajax事件
+        $(document).ajaxStart(function() {
+            Pace.restart();
+        });
+
+        // Initialize the widget when the DOM is ready
+	</script>
+</head>
+
+<body>
+<nav class="w-header navbar navbar-default">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="logo navbar-brand"><img src="" alt=""></a>
+	</div>
+	<div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="w-nav nav navbar-nav">
+			<li class="w-nav-item workbench"><a href="workbench">工作台</a></li>
+		</ul>
+		<img id="funcIcon" src="img/func-icon/poma-func-form-obj-view.png" style="float: left; width: 45px; height: 45px; margin-left: 95px; padding: 5px 5px 0px 0px; visibility: visible;">
+		<p id="funcTitle" style="float: left; color: #fff; font-weight: 800; font-size: 16px; line-height: 50px; margin: 0 0 0 0;"></p>
+		<i id="funcArrow" class="fa fa-caret-up" style="position: absolute; font-size: 25px; top: 35px; left: 397px; display: none;"></i>
+		<ul class="nav navbar-nav navbar-right">
+			<li class="menu"><a href="logout">退出</a></li>
+			<li class="menu"><a href="desktop" class="nav-desktop-link">桌面</a></li>
+			<li class="menu account"><a id="username" href="toAccountManagement">欢迎你</a></li>
+		</ul>
+	</div>
+</nav>
+<div class="container " style="padding:30px;">
+
+	<div id="platTreeNav" class="listFilter"></div>
+
+	<div class="row" style="height: 100%;">
+		<div class="col-sm-12" style="height: 100%;">
+    		<div>
+    			<canvas id="BizChartCanvas" position="absolute" height="600px" width="800px" style="border:1px solid #000000;">
+       			</canvas>
+    		</div>
+    	</div>
+    </div>
+</div>
+
+<div class="modal fade" id="bizChartInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">房屋信息</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script id="bizChartTmpl" type="text/html">
+	<form role="form" class="form-horizontal">
+		<div class="form-group">
+			<div class="col-sm-6">
+				<label class="control-label">公司名称</label>
+				<span class="label label-info">{{name}}</span>
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">公司简称</label>
+				<span class="label label-info">{{shortName}}</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-6">
+				<label class="control-label">公司人数</label>
+				<span class="label label-info">{{staffNum}}</span>
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">租赁期限</label>
+				<span class="label label-info">{{timeRange}}</span>
+			</div>
+		</div>
+	</form>
+</script>
+
+<script type="text/javascript">
+    $("#funcTitle").text("楼层展示");
+    $("#funcArrow").css("color","#f5f5f5").show();
+    $("#funcIcon").attr("src", "img/dsktop-img/louceng.png").css("visibility","visible");
+    $('.nav-desktop-link').click(function(e){
+        if(GetParam("idx")!=null){
+            e.preventDefault();
+            location = $(this).attr('href') + '?idx='+GetParam("idx");
+        }
+    });
+    function GetParam(name)
+    {
+         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+         var r = window.location.search.substr(1).match(reg);
+         if(r!=null)return  unescape(r[2]); return null;
+    }
+</script>
+
+</body>
+</html>

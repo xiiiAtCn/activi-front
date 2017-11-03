@@ -35,9 +35,7 @@ module.exports = {
           '^/api': '/api'
         }
       },
-      '/entitygrid': {
-        target:  'http://192.168.1.97:9104/entitygrid/'
-      }
+      
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
