@@ -31,6 +31,8 @@ const notice = resolve => require(['../components/businessModule/notice.vue'], r
 const userManage = resolve => require(['../components/businessModule/userManage.vue'], resolve)
 const job = resolve => require(['../components/businessModule/job.vue'], resolve)
 const workbench = resolve => require(['../components/businessModule/workbench.vue'], resolve)
+
+// 项目管理
 const projectSummary = resolve => require(['../components/businessModule/project/m-projectSummary.vue'], resolve)
 const projectOut = resolve => require(['../components/businessModule/project/m-projectOut.vue'], resolve)
 const projectDetails = resolve => require(['../components/businessModule/project/m-projectDetails.vue'], resolve)
