@@ -15,15 +15,6 @@ const mBoTree = resolve => {
     require(['./m-boTree.vue'], resolve)
 }
 
-<<<<<<< HEAD
-// const mBillMeta = resolve => {
-//   require(['./m-billMeta.vue'], resolve)
-// }
-//
-// const mBoMeta = resolve => {
-//   require(['./m-boMeta.vue'], resolve)
-// }
-=======
 const mBillMeta = resolve => {
   require(['./m-billMeta.vue'], resolve)
 }
@@ -31,7 +22,6 @@ const mBillMeta = resolve => {
 const mBoMeta = resolve => {
   require(['./m-boMeta.vue'], resolve)
 }
->>>>>>> f594f1677f4fd8de8884a5edd547292b939612b7
 
 const mBottomModal = resolve => {
   require(['./m-bottomModal.vue'], resolve)
@@ -145,15 +135,9 @@ const mSection = resolve => {
   require(['./m-section.vue'], resolve)
 }
 
-<<<<<<< HEAD
-const mSlideout = resolve => {
-  require(['./m-slideout.vue'], resolve)
-}
-=======
 // const mSlideout = resolve => {
 //   require(['./m-slideout.vue'], resolve)
 // }
->>>>>>> f594f1677f4fd8de8884a5edd547292b939612b7
 
 const mTab = resolve => {
   require(['./m-tab.vue'], resolve)
@@ -182,13 +166,8 @@ const mTree = resolve => {
 
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBoTree', mBoTree)
-<<<<<<< HEAD
-// Vue.component('mBillMeta', mBillMeta)
-// Vue.component('mBoMeta', mBoMeta)
-=======
 Vue.component('mBillMeta', mBillMeta)
 Vue.component('mBoMeta', mBoMeta)
->>>>>>> f594f1677f4fd8de8884a5edd547292b939612b7
 Vue.component('mBottomModal', mBottomModal)
 Vue.component('mCard', mCard)
 Vue.component('mCoin', mCoin)
@@ -217,11 +196,7 @@ Vue.component('mNavigation', mNavigation)
 Vue.component('mPage', mPage)
 Vue.component('mPriceTable', mPriceTable)
 Vue.component('mSection', mSection)
-<<<<<<< HEAD
-Vue.component('mSlideout', mSlideout)
-=======
 // Vue.component('mSlideout', mSlideout)
->>>>>>> f594f1677f4fd8de8884a5edd547292b939612b7
 Vue.component('mTab', mTab)
 Vue.component('mTable', mTable)
 Vue.component('mTable2', mTable2)

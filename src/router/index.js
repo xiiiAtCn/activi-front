@@ -88,17 +88,6 @@ const checkEmail = resolve => require(['../components/businessModule/email/check
 const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 
-// 功能日志
-const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
-
-//邮件路由
-const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
-const emailHome = resolve => require(['../components/businessModule/email/emailHome.vue'], resolve)
-const writeEmail = resolve => require(['../components/businessModule/email/writeEmail.vue'], resolve)
-const checkEmail = resolve => require(['../components/businessModule/email/checkEmail.vue'], resolve)
-const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
-const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
-
 Vue.use(VueRouter)
 Vue.use(iView)
 
