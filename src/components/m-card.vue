@@ -19,7 +19,7 @@
   //  import Vue from 'vue'
   //  import utils from '../utils/utils'
   import _ from 'lodash'
-  import { dispatch } from '../utils/skipUtils'
+  import { dispatch } from '../utils/actionUtils'
 
   export default {
 

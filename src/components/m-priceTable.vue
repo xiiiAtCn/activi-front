@@ -42,7 +42,7 @@
 <script>
   //  import Vue from 'vue'
   //  import utils from '../utils/utils'
-  //  import { dispatch } from '../utils/skipUtils'
+  //  import { dispatch } from '../utils/actionUtils'
   import { default as fetch } from '../utils/DefineFetcher'
   import _ from 'lodash'
 

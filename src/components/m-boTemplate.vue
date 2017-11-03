@@ -16,7 +16,7 @@
 
 <script>
     import _ from 'lodash'
-    import {dispatch} from  '../utils/skipUtils'
+    import {dispatch} from  '../utils/actionUtils'
     export default{
         props: {
             define: {

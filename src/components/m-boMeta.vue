@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-    import {dispatch} from '../utils/skipUtils'
+    import {dispatch} from '../utils/actionUtils'
     import _ from 'lodash'
 
     export default {
