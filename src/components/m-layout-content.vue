@@ -120,7 +120,8 @@
                         text: '退出',
                         url: '',
                     },
-                ]
+                ],
+                ids: []
             }
         },
         methods: {
@@ -135,7 +136,9 @@
                     this.firstShow = true
                     this.secondShow = true
                     this.setUrl('/api/module/topMenu').forGet(res => {
+                        this.ids = []
                         for (let i of res) {
+                            this.ids.push(i.code)
                             if (i.code === currentId) {
                                 this.secondTitle = i.title
                                 this.secondIcon = i.icon
@@ -145,8 +148,8 @@
                 }
             },
             getTopBread() {
-                let chooseUrl = this.$route.query.url
-                let path = this.$route.path
+                let chooseUrl = this.$route.query.url;
+                let path = this.$route.path;
                 if (chooseUrl) {
                     this.setUrl('/api/module/leftMenu?id={id}').setPathVariables({
                         id: this.$route.params.id
@@ -157,10 +160,15 @@
                                 this.thirdIcon = i.icon
                             }
                         }
-                        this.thirdShow = true
+                        this.thirdShow = true;
                     })
                 } else {
-                    this.thirdShow = false
+                    for (let i of this.ids){
+                        let currentPath = `/layoutContent/${i}`
+                        if (currentPath === path){
+                            this.thirdShow = false
+                        }
+                    }
                 }
             },
             showDesign() {
