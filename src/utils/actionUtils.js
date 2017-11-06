@@ -74,13 +74,13 @@ function deepCopy(object) {
 function asBus (action) {
   console.log('client event', JSON.stringify(action))
   let url, method = 'GET', params, eventId, body, source
-  eventId = action.eventId, source
+  eventId = action.eventId
   if (typeof action.link === 'string') {
       url = action.link
   } else if (typeof action.link === 'object') {
       source = action.source
-      url =  action.link.url
-      method = action.link.method 
+      url = action.link.url
+      method = action.link.method
       params = action.link.params || {}
       if (method === 'POST') {
           source = body = params
@@ -123,8 +123,6 @@ export const  getData = (action, callback) => {
   else 
       request.setUrl(url).forGet((result, err) => callback(result, err)) 
 }
-
-
 /**
  * url动作
  * @param action
