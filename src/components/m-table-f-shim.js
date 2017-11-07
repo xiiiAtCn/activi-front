@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import mTableF from "./m-table-f.vue"
-import {default as fetch, post} from '../utils/DefineFetcher'
 
 let tableFShim = Vue.component('tableF-Shim', {
     render: function (h) {
@@ -31,6 +30,7 @@ let tableFShim = Vue.component('tableF-Shim', {
     },
     mounted: function () {
         this.initialize()
+        console.log("m-table-f-shim run")
     },
     methods: {
         detDetailData: function (url) {

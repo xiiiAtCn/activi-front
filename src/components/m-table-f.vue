@@ -50,17 +50,15 @@
         },
         watch:{
             cols(){
-                //console.log("mTableF watch cols")
+                console.log("mTableF watch cols")
                 this.handleDefine()
             },
             rowsContent(){
-                //console.log("mTableF watch rowsContent")
+                console.log("mTableF watch rowsContent")
                 this.handleContent()
             }
         },
         mounted() {
-            this.handleDefine()
-            this.handleContent()
             console.log("mTableF run")
         },
         methods: {

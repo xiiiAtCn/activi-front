@@ -6,40 +6,45 @@
             </Col>
             <Col span="13" push="1">
                 <Row>
-                    <Button type="info">文字信息</Button>
-                    <Button type="success">图形信息</Button>
+                    <Button type="info" @click="showMsg = false">文字信息</Button>
+                    <Button type="success" @click="showMsg = true">图形信息</Button>
                 </Row>
                 <div class="detailsBox top_16">
-                    <Row>
-                        <ButtonGroup>
-                            <Button>检查项</Button>
-                            <Button>CHECK-LIST</Button>
-                            <Button>输入单据</Button>
-                            <Button>输出单据</Button>
-                            <Button>状态转换</Button>
-                            <Button>单据转换规则</Button>
-                        </ButtonGroup>
-                    </Row>
-                    <Row class="top_16">
-                        <h3 class="lh_24">{{ flowName }} --> 负责人：{{ leaderName }}</h3>
-                        <h3 class="lh_24">目标：</h3>
-                    </Row>
-                    <Row class="top_16">
-                        <h3 class="lh_24">CHECK-LIST一览：</h3>
-                        <Table :columns="columns" :data="data_1" :border="tableBorder"></Table>
-                    </Row>
-                    <Row class="top_16">
-                        <h3 class="lh_24">关联实体：</h3>
-                        <Table :columns="columns" :data="data_1" :border="tableBorder"></Table>
-                    </Row>
-                    <Row class="top_16">
-                        <h3 class="lh_24">输入单据：</h3>
-                        <Table :columns="columns" :data="inputObjList" :border="tableBorder"></Table>
-                    </Row>
-                    <Row class="top_16">
-                        <h3 class="lh_24">输出单据：</h3>
-                        <Table :columns="columns" :data="outputObjList" :border="tableBorder"></Table>
-                    </Row>
+                    <div v-if="!showMsg">
+                        <Row>
+                            <ButtonGroup>
+                                <Button>检查项</Button>
+                                <Button>CHECK-LIST</Button>
+                                <Button>输入单据</Button>
+                                <Button>输出单据</Button>
+                                <Button>状态转换</Button>
+                                <Button>单据转换规则</Button>
+                            </ButtonGroup>
+                        </Row>
+                        <Row class="top_16">
+                            <h3 class="lh_24">{{ flowName }} --> 负责人：{{ leaderName }}</h3>
+                            <h3 class="lh_24">目标：</h3>
+                        </Row>
+                        <Row class="top_16">
+                            <h3 class="lh_24">CHECK-LIST一览：</h3>
+                            <Table :columns="columns" :data="data_1" :border="tableBorder"></Table>
+                        </Row>
+                        <Row class="top_16">
+                            <h3 class="lh_24">关联实体：</h3>
+                            <Table :columns="columns" :data="data_1" :border="tableBorder"></Table>
+                        </Row>
+                        <Row class="top_16">
+                            <h3 class="lh_24">输入单据：</h3>
+                            <Table :columns="columns" :data="inputObjList" :border="tableBorder"></Table>
+                        </Row>
+                        <Row class="top_16">
+                            <h3 class="lh_24">输出单据：</h3>
+                            <Table :columns="columns" :data="outputObjList" :border="tableBorder"></Table>
+                        </Row>
+                    </div>
+                    <div v-else>
+                        <iframe id="is-iframe" src="https://www.baidu.com" frameborder="0" scrolling="no"></iframe>
+                    </div>
                 </div>
             </Col>
         </Row>
@@ -50,6 +55,12 @@
 
 <script>
     export default{
+        props: {
+            showChart: {
+                type: Boolean,
+                default:false
+            }
+        },
         data(){
             return {
                 urls: {
@@ -80,6 +91,8 @@
                 inputObjList: [],
                 // 输出单据
                 outputObjList: [],
+                //切换信息
+                showMsg:false
             }
         },
         computed: {
@@ -126,6 +139,7 @@
         mounted(){
             this.getRequest(this.urls.getCheckColumns, '', 'checkColumns', '')
             this.getRequest(this.urls.getCheckData, this.$route.params.rowId, 'checkData', '')
+            this.showMsg=this.showChart
         }
     }
 </script>
@@ -145,5 +159,16 @@
     }
     .lh_24 {
         line-height: 24px;
+    }
+    /*iframe 配置*/
+    .detailsBox{
+        position: relative;
+    }
+    #is-iframe{
+        border: 1px solid #000 ;
+        width:800px;
+        height:600px;
+        position: absolute;
+        right: 0;
     }
 </style>
