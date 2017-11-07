@@ -24,7 +24,7 @@
         </Button-group>
         </Col>
       </Row>
-      <Row class="flexCenter" v-for="item in otherInfos">
+      <Row class="flexCenter" v-for="item in otherInfos" :key="item.title">
         <Col span="2">
         <h3>{{item.title}}</h3>
         </Col>
