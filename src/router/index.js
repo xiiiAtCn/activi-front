@@ -31,6 +31,8 @@ const notice = resolve => require(['../components/businessModule/notice.vue'], r
 const userManage = resolve => require(['../components/businessModule/userManage.vue'], resolve)
 const job = resolve => require(['../components/businessModule/job.vue'], resolve)
 const workbench = resolve => require(['../components/businessModule/workbench.vue'], resolve)
+
+// 项目管理
 const projectSummary = resolve => require(['../components/businessModule/project/m-projectSummary.vue'], resolve)
 const projectOut = resolve => require(['../components/businessModule/project/m-projectOut.vue'], resolve)
 const projectDetails = resolve => require(['../components/businessModule/project/m-projectDetails.vue'], resolve)
@@ -62,18 +64,24 @@ const workflowCheck = resolve => require(['../components/businessModule/workflow
 const productPrice = resolve => require(['../components/businessModule/m-productPrice.vue'], resolve)
 
 // bo关系 部门人员
-const boTree = resolve => require(['../components/businessModule/boTree/boTree.vue'], resolve)
+// const boTree = resolve => require(['../components/businessModule/boTree/boTree.vue'], resolve)
 // const boTreeDetail = resolve => require(['../components/businessModule/boTree/boTreeDetail.vue'], resolve)
 
 // bo关系 物料档案
-const fileTree = resolve => require(['../components/businessModule/boTree/fileTree.vue'], resolve)
+// const fileTree = resolve => require(['../components/businessModule/boTree/fileTree.vue'], resolve)
 // const fileTreeDetail = resolve => require(['../components/businessModule/boTree/fileTreeDetail.vue'], resolve)
 
 // bo关系 bo视图
-const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
+// const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
+
+// bo 树
+const boTree = resolve => require(['../components/m-boTree.vue'], resolve)
 
 // 功能日志
 const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
+
+// 功能日志
+const taskPlan = resolve => require(['../components/businessModule/taskPlan.vue'], resolve)
 
 //邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
@@ -133,24 +141,34 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/inventory',
                     component: inventory
                 },
-                //bo关系树 部门人员
+                // 任务计划
                 {
-                    path: '/layoutContent/:id/boTree', component: boTree,
+                    path: '/layoutContent/:id/taskPlan',
+                    component: taskPlan
+                },
+                // bo 树
+                {
+                    path: '/layoutContent/:id/boTree/:nodeId/:nodeMetaId',
+                    component: boTree
+                },
+                // bo关系树 部门人员
+                // {
+                    // path: '/layoutContent/:id/boTree', component: boTree,
                     // children: [
                     //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
                     // ]
-                },
-                //bo关系树 物料档案
-                {
-                    path: '/layoutContent/:id/fileTree', component: fileTree,
+                // },
+                // bo关系树 物料档案
+                // {
+                //     path: '/layoutContent/:id/fileTree', component: fileTree,
                     // children: [
                     //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
                     // ]
-                },
-                //bo关系 bo视图
-                {
-                    path: '/layoutContent/:id/boTreeView', component: boTreeView
-                },
+                // },
+                // bo关系 bo视图
+                // {
+                //     path: '/layoutContent/:id/boTreeView', component: boTreeView
+                // },
                 // 工作中心
                 {
                     path: '/layoutContent/:id/mWorkCenter', component: mWorkCenter

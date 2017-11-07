@@ -15,6 +15,7 @@ import extend from 'node.extend'
 import { default as fetch, post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
+import Request, {replace, addQuery} from './request-addon'
 
 // import _ from 'lodash'
 
@@ -38,6 +39,7 @@ export function dispatch () {
     (arg0.type === 'link' ? asLink
       : arg0.type === 'submit' ? asSubmit
         : arg0.type === 'serverAction' ? asServerAction
+          : arg0.type === 'deliver' ? asBus
           : asMessage)(arg0)
   } else {
     console.log('路由分发参数错误 1 ', arguments)
@@ -46,12 +48,81 @@ export function dispatch () {
   console.groupEnd()
 }
 
-/***
- * 客户端事件 (遇到了再说）
- */
-// function asBus (action) {
-// }
 
+function deepCopy(object) {
+  return JSON.parse(JSON.stringify(object))
+}
+/***
+ * 客户端事件 (遇到了再说)
+ * {
+ *    type: 'deliver',
+ *    action: '',
+ *    eventId: '',
+ *    targetId: '事件名' + id,
+ *    link: {
+ *        method: 'POST',
+ *        url: '',
+ *        params: {},
+ *        body: {}
+ *    },
+ *    source: {
+ *        sourceId: ''
+ *    }
+ *
+ * }
+ */
+function asBus (action) {
+  console.log('client event', JSON.stringify(action))
+  let url, method = 'GET', params, eventId, body, source
+  eventId = action.eventId
+  if (typeof action.link === 'string') {
+      url = action.link
+  } else if (typeof action.link === 'object') {
+      source = action.source
+      url = action.link.url
+      method = action.link.method
+      params = action.link.params || {}
+      if (method === 'POST') {
+          source = body = params
+      } else {
+          source = deepCopy(params)
+          url = replace(url, params)
+          url = addQuery(url, params)
+      }
+  }
+  let request = new Request()
+  if (method === 'GET') {
+      request.setUrl(url).forGet(data => {
+          bus.$emit(eventId, data, source)
+      })
+  } else {
+      request.setUrl(url).setBody(body).forPost(data => {
+          bus.$emit(eventId, data, source)
+      })
+  }
+}
+
+export const  getData = (action, callback) => {
+  let url, request = new Request(), method = 'GET', body
+  if (typeof action === 'string') {
+      url = action
+  } else if (Object.prototype.toString.apply(action) === '[object Object]'){
+      url = action.url
+      if (action.method === 'POST') {  
+          body = action.params
+          method = 'POST'
+      } else {
+          url = replace(url, action.params || {})
+          url = addQuery(url, action.params || {})
+      }
+  } else {
+      throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
+  }   
+  if (method === 'POST')
+      request.setUrl(url).setBody(body).forPost((result, err) => callback(result, err))
+  else 
+      request.setUrl(url).forGet((result, err) => callback(result, err)) 
+}
 /**
  * url动作
  * @param action

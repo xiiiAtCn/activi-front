@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-  import { dispatch } from '../utils/skipUtils'
+  import { dispatch } from '../utils/actionUtils'
   import router from '../router'
 
   export default {

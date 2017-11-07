@@ -26,7 +26,7 @@
 <script>
   //  import Vue from 'vue'
   //  import VueResource from 'vue-resource'
-  import { dispatch } from '../utils/skipUtils'
+  import { dispatch } from '../utils/actionUtils'
   import axios from 'axios'
 
   //  Vue.use(VueResource)

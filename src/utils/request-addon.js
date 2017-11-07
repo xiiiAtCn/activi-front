@@ -136,8 +136,10 @@ Request.prototype.setPostConfig = function(config) {
 export function replace(url, pathVariables) {
     pureObjectCheck(pathVariables)
     let regex = /\{([^{^}]*)\}/g
-    return url.replace(regex, (match) => {
-        return pathVariables[match.substring(1, match.length - 1)]
+    return url.replace(regex, (match, $1) => {
+        let variable = pathVariables[$1]
+        delete pathVariables[$1]
+        return variable
     })
 }
 

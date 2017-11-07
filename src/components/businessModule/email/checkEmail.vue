@@ -37,7 +37,7 @@
     </div>
 </template>
 <script>
-    import { dispatch } from '../../../utils/skipUtils'
+    import { dispatch } from '../../../utils/actionUtils'
     export default {
         data() {
             return {

@@ -1,10 +1,9 @@
 <template>
     <div class="layout">
         <Col span="4">
-        <div class="leftMenu">
-            {{treeData}}
-            <!--<Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>-->
-        </div>
+            <div class="leftMenu">
+                <Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>
+            </div>
         </Col>
         <Col span="20">
         <div class="rightContent">
@@ -28,7 +27,7 @@
 
 <script>
     import _ from 'lodash'
-    import {dispatch} from  '../utils/actionUtils'
+    import {dispatch} from  '../../utils/actionUtils'
     export default{
         data () {
             return {
@@ -36,23 +35,49 @@
                     // 获取跟节点
                     getRootNode: '/api/tree/root-node'
                 },
-                // 关闭tab切换滑动效果
-                noCssTransition: false,
                 // 定义树
-                treeData: [],
-                columns: [],
-                data: [],
-                // 定义子节点详细
-                childInfo: []
+                treeData: [
+                    {
+                        title: 'parent1',
+                        loading: false,
+                        children: []
+                    },
+                    {
+                        title: 'parent2'
+                    },
+                    {
+                        title: 'parent3'
+                    },
+                    {
+                        title: 'parent4',
+                        loading: false,
+                        children: []
+                    }
+                ],
             }
         },
         methods: {
             getChildNode (item, callback) {
-                this.setUrl(item.childUrl).forGet(res => {
-                    setTimeout(() => {
-                        callback(res)
-                    }, 400)
-                })
+//                this.setUrl(item.childUrl).forGet(res => {
+//                    setTimeout(() => {
+//                        callback(res)
+//                    }, 400)
+//                })
+                setTimeout(() => {
+                    const data = [
+                        {
+                            title: 'children',
+                            loading: false,
+                            children: []
+                        },
+                        {
+                            title: 'children',
+                            loading: false,
+                            children: []
+                        }
+                    ];
+                    callback(data);
+                }, 400)
             },
             selectedCurrentNode (currentNode) {
                 dispatch(currentNode[0]['action'])
@@ -66,11 +91,11 @@
             }
         },
         mounted () {
-            this.getRootNode(
-                this.urls.getRootNode,
-                this.$route.params['nodeId'],
-                this.$route.params['nodeMetaId']
-            )
+//            this.getRootNode(
+//                this.urls.getRootNode,
+//                this.$route.params['nodeId'],
+//                this.$route.params['nodeMetaId']
+//            )
         }
     }
 </script>
