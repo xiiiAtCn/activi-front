@@ -7,6 +7,8 @@ import Vue from 'vue'
 // 自定义指令
 // import './custom-directive'
 
+import './boFilterNEW_vuex'
+
 const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
 }

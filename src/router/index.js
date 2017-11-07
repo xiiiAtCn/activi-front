@@ -88,6 +88,9 @@ const checkEmail = resolve => require(['../components/businessModule/email/check
 const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 
+// bo过滤
+const boFilter = resolve => require(['../components/boFilterNEW_vuex/m-boFilterPage.vue'], resolve)
+
 Vue.use(VueRouter)
 Vue.use(iView)
 
@@ -257,6 +260,9 @@ const router = new VueRouter({
                             ]
                         }
                     ]
+                },
+                {
+                    path: '/layoutContent/:id/boFilter', component: boFilter
                 }
             ]
         },
