@@ -75,13 +75,13 @@ const productPrice = resolve => require(['../components/businessModule/m-product
 // const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
 
 // bo 树
-const boTree = resolve => require(['../components/m-boTree.vue'], resolve)
+const boTree = resolve => require(['../components/taskPlan/m-boTree.vue'], resolve)
 
 // 功能日志
 const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
 
 // 功能日志
-const taskPlan = resolve => require(['../components/businessModule/taskPlan/taskPlan.vue'], resolve)
+const taskPlan = resolve => require(['../components/taskPlan/taskPlan.vue'], resolve)
 
 //邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)

@@ -2,13 +2,16 @@
     <div class="layout">
         <Col span="4">
             <div class="leftMenu">
+                <!--节点树部分-->
+                <mBoTree></mBoTree>
                 <Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>
             </div>
         </Col>
         <Col span="20">
         <div class="rightContent">
             <Row>
-                <tableF-Shim/>
+                <!--table一览部分-->
+                <tableF-Shim></tableF-Shim>
             </Row>
         </div>
         </Col>
@@ -16,8 +19,7 @@
 </template>
 
 <script>
-    import _ from 'lodash'
-    import {dispatch} from  '../../../utils/actionUtils'
+
     export default{
         data () {
             return {
@@ -48,26 +50,7 @@
         },
         methods: {
             getChildNode (item, callback) {
-//                this.setUrl(item.childUrl).forGet(res => {
-//                    setTimeout(() => {
-//                        callback(res)
-//                    }, 400)
-//                })
-                setTimeout(() => {
-                    const data = [
-                        {
-                            title: '还有',
-                            loading: false,
-                            children: []
-                        },
-                        {
-                            title: '其实还有',
-                            loading: false,
-                            children: []
-                        }
-                    ];
-                    callback(data);
-                }, 400)
+
             },
             selectedCurrentNode (currentNode) {
                 dispatch(currentNode[0]['action'])
