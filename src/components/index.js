@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-// import './base'
+import './base'
 // import './projectManage'
 // import './businessModule'
 //
@@ -135,10 +135,6 @@ const mSection = resolve => {
   require(['./m-section.vue'], resolve)
 }
 
-// const mSlideout = resolve => {
-//   require(['./m-slideout.vue'], resolve)
-// }
-
 const mTab = resolve => {
   require(['./m-tab.vue'], resolve)
 }
@@ -159,10 +155,6 @@ const mTableF = resolve => {
 const mTree = resolve => {
   require(['./m-tree.vue'], resolve)
 }
-
-// const Layer = resolve => {
-//   require(['./m-zpSlideLayer'], resolve)
-// }
 
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBoTree', mBoTree)
@@ -196,11 +188,9 @@ Vue.component('mNavigation', mNavigation)
 Vue.component('mPage', mPage)
 Vue.component('mPriceTable', mPriceTable)
 Vue.component('mSection', mSection)
-// Vue.component('mSlideout', mSlideout)
 Vue.component('mTab', mTab)
 Vue.component('mTable', mTable)
 Vue.component('mTable2', mTable2)
 Vue.component('mTableF', mTableF)
 Vue.component('mTree', mTree)
-// Vue.component('mLayer', Layer)
 
