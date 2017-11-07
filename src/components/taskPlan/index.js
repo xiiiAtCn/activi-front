@@ -1,4 +1,7 @@
-
+/**
+ * ydy
+ * create: 2017-11-07
+ */
 import Vue from 'vue'
 
 const mTaskPlan = resolve => {

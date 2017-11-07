@@ -55,10 +55,17 @@ const mixin = {
                 let componentData = this.$store.state.componentPageData
                 for (let key of Object.keys(param)) {
                     data[key] = componentData[param[key].value] || param[key].defaultValue
+                    if (data[key] === null) {
+                        delete data[key]         
+                    }
                 }
             }
             return data
-        }
+        },
+        /**
+         * 组件受影响后会调用此方法
+         */
+        watchValuesChanged () {}
     },
     computed: {
         id () {
@@ -80,6 +87,13 @@ const mixin = {
         dataLink () {
             return _.get(this.define, 'dataLink', {})
         },
+    },
+    watch: {
+        relationData (newVal, oldVal) {
+            if (!_.isEqual(newVal, oldVal)) {
+                this.watchValuesChanged()
+            }
+        }
     },
     beforeDestroy () {
         this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {id: this.id})

@@ -3,123 +3,117 @@
         <Col span="4">
             <div class="leftMenu">
                 <!--节点树部分-->
-                <mBoTree></mBoTree>
-                <Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>
+                <mBoTree :define="treeDefine"></mBoTree>
             </div>
         </Col>
         <Col span="20">
-        <div class="rightContent">
-            <Row>
-                <!--table一览部分-->
-                <tableF-Shim></tableF-Shim>
-            </Row>
-        </div>
+            <div class="rightContent">
+                <Row>
+                    <!--section部分-->
+                    <!--<mSection></mSection>-->
+                    <!--table一览部分-->
+                    <tableF-Shim></tableF-Shim>
+                </Row>
+            </div>
         </Col>
     </div>
 </template>
 
 <script>
+    const urlList = {
+        treeUrl: '/api/tree/node-list',
+        tableDefineUrl: '',
+        tableDataUrl: ''
+    }
+
+    const ids = {
+        treeId: 'treeId',
+        tableId: 'tableId'
+    }
 
     export default{
         data () {
             return {
-                urls: {
-                    // 获取跟节点
-                    getRootNode: '/api/tree/root-node'
+
+                treeDefine: {
+                    isRelated: true,
+                    relation: [ids.treeId],
+                    dataLink: [
+                        {
+                            attr: 'treeData',
+                            link: {
+                                method: 'GET',
+                                url: urlList.treeUrl,
+                                pathParams: {},
+                                queryParams: {
+                                    id: {
+                                        value: ids.treeId,
+                                        defaultValue: null
+                                    }
+                                },
+                                body: {}
+                            }
+                        }
+                    ],
+                    id: ids.treeId,
                 },
-                // 定义树
-                treeData: [
-                    {
-                        title: '有',
-                        loading: false,
-                        children: []
-                    },
-                    {
-                        title: '无'
-                    },
-                    {
-                        title: '无'
-                    },
-                    {
-                        title: '有',
-                        loading: false,
-                        children: []
-                    }
-                ],
+
+                tableDefine: {
+                    isRelated: true,
+                    relation: [ids.treeId],
+                    dataLink: [
+                        {
+                            attr: 'tableDefine',
+                            link: {
+                                method: 'GET',
+                                url: urlList.tableDefineUrl,
+                                pathParams: {},
+                                queryParams: {
+                                    id: {
+                                        value: ids.tableId,
+                                        defaultValue: ''
+                                    }
+                                },
+                                body: {}
+                            }
+                        },
+                        {
+                            attr: 'tableData',
+                            link: {
+                                method: 'POST',
+                                url: urlList.tableDataUrl,
+                                pathParams: {},
+                                queryParams: {},
+                                body: {
+                                    id: {
+                                        value: ids.tableId,
+                                        defaultValue: ''
+                                    },
+                                    condition: {
+                                        value: ids.tableId,
+                                        defaultValue: {}
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    id: ids.tableId,
+                }
+
             }
         },
         methods: {
-            getChildNode (item, callback) {
 
-            },
-            selectedCurrentNode (currentNode) {
-                dispatch(currentNode[0]['action'])
-            },
-            getRootNode (rootNodeUrl, id, boMetaId, rootBoole = true) {
-                let url = `${rootNodeUrl}?id=${id}&boMetaId=${boMetaId}&isRoot=${rootBoole}`
-                this.setUrl(url).forGet(body => {
-                    console.log('cs：', body)
-                    this.treeData = body
-                })
-            }
         },
         mounted () {
-//            this.getRootNode(
-//                this.urls.getRootNode,
-//                this.$route.params['nodeId'],
-//                this.$route.params['nodeMetaId']
-//            )
+
         }
     }
 </script>
-
-<style>
-    /*树菜单样式*/
-    .ivu-tree ul li {
-        /*margin: 12px 0;*/
-        font-size: 16px;
-    }
-    .ivu-tree-arrow {
-        width: 26px;
-        height: 26px;
-        display: block;
-        float: left;
-        text-align: center;
-    }
-    .ivu-tree-title {
-        border: 1px solid #d5e8fc;
-        padding: 0 10px;
-    }
-    .ivu-tree-title-selected {
-        background: #2d8cf0;
-        color: white;
-        border: 1px solid #2d8cf0;
-    }
-    .ivu-tree-title-selected, .ivu-tree-title-selected:hover {
-        border: 1px solid #2d8cf0;
-        background: #2d8cf0;
-    }
-</style>
 
 <style scoped>
     /*外层*/
     .layout{
         padding: 20px 24px;
-    }
-    /*左侧树菜单*/
-    .leftMenu {
-        width: 100%;
-        min-height: 600px;
-    }
-    /*右侧动态路由*/
-    .rightContent {
-        width: 100%;
-        min-height: 600px;
-        margin: 8px 0;
-        padding: 10px;
-        /*border-left: 1px solid #dddddd;*/
-    }
-    .toTop {
-        margin-top: 26px;
     }
 </style>
