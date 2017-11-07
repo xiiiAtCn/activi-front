@@ -1,37 +1,37 @@
 <template>
     <div>
         <Row class="top-content">
-            <Col span="16">
-                <div v-for="item in operation"  class="button-container" >
-                     <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
-                </div>
-                <div  class='button-container' >
-                    <Poptip placement="bottom">
-                        <Button type="ghost"><Icon type="grid" style="font-size: 16px"></Icon></Button>
-                        <div class="api" slot="content">
-                            <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                                <Checkbox :indeterminate="indeterminate"
-                                          :value="checkAll"
-                                          @click.prevent.native="handleCheckAll">全选</Checkbox>
-                            </div>
-                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-                                <div v-for='item in dataList'>
-                                    <Checkbox :label="item.label"></Checkbox>
-                                </div>
-                            </CheckboxGroup>
+            <Col span="2" offset="22">
+            <Poptip placement="bottom">
+                <Button type="primary" icon="grid"></Button>
+                <div class="api" slot="content">
+                    <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                        <Checkbox :indeterminate="indeterminate"
+                                  :value="checkAll"
+                                  @click.prevent.native="handleCheckAll">全选</Checkbox>
+                    </div>
+                    <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                        <div v-for='item in dataList'>
+                            <Checkbox :label="item.label"></Checkbox>
                         </div>
-                    </Poptip>
+                    </CheckboxGroup>
+                </div>
+            </Poptip>
+            </Col>
+            <Col span="14">
+                <div v-for="item in operation"  class="button-container" >
+                    <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
                 </div>
             </Col>
             <Col span="8" v-show="search">
                 <div class="search">
                     <Input v-model="valueSearch" placeholder="筛选">
-                        <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
+                    <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
                     </Input>
                 </div>
             </Col>
         </Row>
-        <div style="overflow-x:scroll;">
+        <div>
             <Table border :columns="columnsData" :data="dataTable"></Table>
         </div>
     </div>
@@ -39,6 +39,7 @@
 <script>
     import bus from '../router/bus'
     import { dispatch } from 'utils/actionUtils'
+    import _ from 'lodash'
 
     export default {
         props: {
@@ -57,9 +58,6 @@
             search:{
                 type: Boolean,
                 default: false
-            },
-            tableWidth:{
-                default:undefined
             }
         },
         data() {
@@ -68,6 +66,7 @@
                 columnsDataCopy:[],
                 dataTable:[],
                 valueSearch:'',
+
                 //列选择控制
                 indeterminate: false,
                 checkAll: true,
@@ -103,6 +102,7 @@
                     this.columnsData[i]={
                         title: val.text,
                         key: val.field,
+                        width: val.text.length*14+40,
                         render: (h, params) => {
                             if(val.icon){
                                 return h('div', [
@@ -129,16 +129,19 @@
                     }
                     this.testList[i]=val.text
                 })
-                this.columnsDataCopy=this.columnsData
+                this.columnsDataCopy = _.clone(this.columnsData, true)
                 this.checkAllGroup = this.testList
+                this.dataListChange = this.testList
             },
             //配置操作的按钮
             showButton(smb){
-                if(this.columnsData[this.columnsData.length-1].key === 'action'){return}
+                if(this.columnsData[this.columnsData.length-1].key === 'action'){
+                    return
+                }
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: 150,
+                    width: 120,
                     align: 'center',
                     render: (h, params) => {
                         let buttonList = []
@@ -172,7 +175,7 @@
 
             //处理顶部按钮
             handleTopButton(url){
-              dispatch(url)
+                dispatch(url)
             },
             //发送搜索事件数据
             handleTopSearch(){
@@ -180,8 +183,8 @@
                 console.log(this.valueSearch)
             },
             //处理表内按钮点击
-            handleButtonClick(params){
-                dispatch(params.row._actions.view.url)
+            handleButtonClick(params,row){
+                dispatch(params.row._actions[row.field])
             },
 
             //筛选列
@@ -195,13 +198,14 @@
 
                 if (this.checkAll) {
                     this.checkAllGroup = this.testList;
+                    this.columnsData = this.columnsDataCopy
                 } else {
                     this.checkAllGroup = [];
+                    this.columnsData =[]
                 }
-                this.handleColumnsData();
             },
             checkAllGroupChange (data) {
-                this.dataListChange = data
+
                 if (data.length === this.dataList.length) {
                     this.indeterminate = false;
                     this.checkAll = true;
@@ -212,10 +216,55 @@
                     this.indeterminate = false;
                     this.checkAll = false;
                 }
-                this.handleColumnsData();
-            },
-            handleColumnsData(){
 
+                let obj=this.judgeArr(this.dataListChange,data)
+                this.handleColumnsData(obj);
+                this.dataListChange = data
+            },
+            handleColumnsData(obj){
+                if(!obj){
+                    return
+                } else if(obj.method === 'remove'){
+                    this.columnsData.forEach((val,i)=>{
+                        if(val.title === obj.str){
+                            this.columnsData.splice(i, 1)
+                        }
+                    })
+                }else if(obj.method === 'add'){
+                    this.columnsDataCopy.forEach((val)=>{
+                        if(val.title === obj.str){
+                            this.columnsData.push(val)
+                        }
+                    })
+                }
+
+            },
+            //判断数组不同值
+            judgeArr(arr1,arr2){
+                let str = '',obj={method:'remove'}
+                if(arr1.length < arr2.length){
+                    let Arr=arr1
+                    arr1=arr2
+                    arr2=Arr
+                    obj.method='add'
+                }else if(arr1.length === arr2.length){
+                    return
+                }
+                for(let i=0;i<arr1.length;i++){
+                    let val = arr1[i]
+                    str = val
+                    for(let j=0;j<arr2.length;j++){
+                        if(val === arr2[j]){
+                            str =''
+                            break
+                        }
+                    }
+                    if(str !== ''){
+                        break
+                    }
+                }
+                obj.str= str
+                return obj
             }
         }
     }
