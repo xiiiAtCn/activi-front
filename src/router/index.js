@@ -80,6 +80,9 @@ const boTree = resolve => require(['../components/m-boTree.vue'], resolve)
 // 功能日志
 const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
 
+// 功能日志
+const taskPlan = resolve => require(['../components/businessModule/taskPlan.vue'], resolve)
+
 //邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
 const emailHome = resolve => require(['../components/businessModule/email/emailHome.vue'], resolve)
@@ -141,9 +144,15 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/inventory',
                     component: inventory
                 },
+                // 任务计划
+                {
+                    path: '/layoutContent/:id/taskPlan',
+                    component: taskPlan
+                },
                 // bo 树
                 {
-                    path: '/layoutContent/:id/boTree', component: boTree
+                    path: '/layoutContent/:id/boTree/:nodeId/:nodeMetaId',
+                    component: boTree
                 },
                 // bo关系树 部门人员
                 // {

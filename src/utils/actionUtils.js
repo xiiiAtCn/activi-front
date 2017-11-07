@@ -54,75 +54,83 @@ function deepCopy(object) {
 }
 /***
  * 客户端事件 (遇到了再说)
- * {
- *    type: 'deliver',
- *    action: '',
- *    eventId: '',
- *    targetId: '事件名' + id,
- *    link: {
- *        method: 'POST',
- *        url: '',
- *        params: {},
- *        body: {}
- *    },
- *    source: {
- *        sourceId: ''
- *    }
- *
- * }
  */
 function asBus (action) {
-  console.log('client event', JSON.stringify(action))
-  let url, method = 'GET', params, eventId, body, source
-  eventId = action.eventId
-  if (typeof action.link === 'string') {
-      url = action.link
-  } else if (typeof action.link === 'object') {
-      source = action.source
-      url = action.link.url
-      method = action.link.method
-      params = action.link.params || {}
-      if (method === 'POST') {
-          source = body = params
-      } else {
-          source = deepCopy(params)
-          url = replace(url, params)
-          url = addQuery(url, params)
-      }
-  }
-  let request = new Request()
-  if (method === 'GET') {
-      request.setUrl(url).forGet(data => {
-          bus.$emit(eventId, data, source)
-      })
-  } else {
-      request.setUrl(url).setBody(body).forPost(data => {
-          bus.$emit(eventId, data, source)
-      })
-  }
+  // console.log('client event', JSON.stringify(action))
+  // let url, method = 'GET', params, eventId, body, source
+  // eventId = action.eventId
+  // if (typeof action.link === 'string') {
+  //     url = action.link
+  // } else if (typeof action.link === 'object') {
+  //     source = action.source
+  //     url = action.link.url
+  //     method = action.link.method
+  //     params = action.link.params || {}
+  //     if (method === 'POST') {
+  //         source = body = params
+  //     } else {
+  //         source = deepCopy(params)
+  //         url = replace(url, params)
+  //         url = addQuery(url, params)
+  //     }
+  // }
+  // let request = new Request()
+  // if (method === 'GET') {
+  //     request.setUrl(url).forGet(data => {
+  //         bus.$emit(eventId, data, source)
+  //     })
+  // } else {
+  //     request.setUrl(url).setBody(body).forPost(data => {
+  //         bus.$emit(eventId, data, source)
+  //     })
+  // }
 }
 
+/**
+ * 获取数据
+ */
+let stack = 0
 export const  getData = (action, callback) => {
-  let url, request = new Request(), method = 'GET', body
-  if (typeof action === 'string') {
-      url = action
-  } else if (Object.prototype.toString.apply(action) === '[object Object]'){
-      url = action.url
-      if (action.method === 'POST') {  
-          body = action.params
-          method = 'POST'
-      } else {
-          url = replace(url, action.params || {})
-          url = addQuery(url, action.params || {})
-      }
-  } else {
-      throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
-  }   
-  if (method === 'POST')
-      request.setUrl(url).setBody(body).forPost((result, err) => callback(result, err))
-  else 
-      request.setUrl(url).forGet((result, err) => callback(result, err)) 
+    let url, request = new Request(), method = 'GET', body
+    if(typeof action === 'string') {
+        url = action
+    } else if(Object.prototype.toString.apply(action) === '[object Object]'){
+        url = action.url
+        if(action.method === 'POST') {
+            body = action.params
+            method = 'POST'
+        } else {
+            url = replace(url, action.params || {})
+            url = addQuery(url, action.params || {})
+        }
+    } else {
+        throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
+    }   
+
+    if(stack === 0) {
+        bus.$emit('show-my-full-loading')
+    }
+    stack++
+    setTimeout(() => {
+        if(stack !== 0)
+            bus.$emit('hide-my-full-loading')
+    }, 10000)
+    if(method === 'POST')
+        request.setUrl(url).setBody(body).forPost((result, err) => {
+            stack--
+            if(stack === 0)
+                bus.$emit('hide-my-full-loading')
+            callback(result, err)
+        })
+    else 
+        request.setUrl(url).forGet((result, err) => {
+            stack--
+            if(stack === 0)
+                bus.$emit('hide-my-full-loading')
+            callback(result, err)
+        }) 
 }
+
 /**
  * url动作
  * @param action
