@@ -7,6 +7,7 @@ import Vue from 'vue'
 import './components'
 import router from './router/index'
 import Request from 'utils/request-addon'
+import store from './vuex/store'
 
 for(let i of Reflect.ownKeys(Request.prototype)) {
   if(i === 'constructor')
@@ -29,6 +30,7 @@ Vue.use(iView)
 const app = new Vue({
   el: '#app',
   router,
+  store,
   data: function () {
     return {username: 'demo用户'}
   },

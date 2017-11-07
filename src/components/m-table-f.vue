@@ -19,7 +19,7 @@
 </template>
 <script>
     import bus from '../router/bus'
-    import { dispatch } from '../utils/actionUtils'
+    import { dispatch } from 'utils/actionUtils'
 
     export default {
         props: {
@@ -70,8 +70,9 @@
             },
             //columnsData存入设置
             getColumnsDataWay(c){
+                let columnsData = []
                 c.forEach((val,i)=> {
-                    this.columnsData[i]={
+                    columnsData[i]={
                         title: val.text,
                         key: val.field,
                         render: (h, params) => {
@@ -93,7 +94,9 @@
                             }
                         }
                     }
+
                 })
+                this.columnsData = columnsData
             },
             //顶部按钮数据存入
             pushTopButtonMsg(opt){

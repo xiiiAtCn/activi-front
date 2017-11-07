@@ -81,7 +81,7 @@ const boTree = resolve => require(['../components/m-boTree.vue'], resolve)
 const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
 
 // 功能日志
-const taskPlan = resolve => require(['../components/businessModule/taskPlan.vue'], resolve)
+const taskPlan = resolve => require(['../components/businessModule/taskPlan/taskPlan.vue'], resolve)
 
 //邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
@@ -90,6 +90,9 @@ const writeEmail = resolve => require(['../components/businessModule/email/write
 const checkEmail = resolve => require(['../components/businessModule/email/checkEmail.vue'], resolve)
 const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
+
+// bo过滤
+const boFilter = resolve => require(['../components/boFilterNEW_vuex/m-boFilterPage.vue'], resolve)
 
 Vue.use(VueRouter)
 Vue.use(iView)
@@ -266,6 +269,9 @@ const router = new VueRouter({
                             ]
                         }
                     ]
+                },
+                {
+                    path: '/layoutContent/:id/boFilter', component: boFilter
                 }
             ]
         },

@@ -7,6 +7,8 @@ import './base'
 // 自定义指令
 // import './custom-directive'
 
+import './boFilterNEW_vuex'
+
 const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
 }
@@ -156,6 +158,14 @@ const mTree = resolve => {
   require(['./m-tree.vue'], resolve)
 }
 
+const mLayer = resolve => {
+  require(['./m-zpSlideLayer'], resolve)
+}
+
+const tableFShim = resolve => {
+  require(['./m-table-f-shim'], resolve)
+}
+
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBoTree', mBoTree)
 Vue.component('mBillMeta', mBillMeta)
@@ -193,4 +203,6 @@ Vue.component('mTable', mTable)
 Vue.component('mTable2', mTable2)
 Vue.component('mTableF', mTableF)
 Vue.component('mTree', mTree)
+Vue.component('mLayer', mLayer)
+Vue.component('tableFShim', tableFShim)
 

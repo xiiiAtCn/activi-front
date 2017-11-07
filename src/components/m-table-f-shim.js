@@ -1,57 +1,83 @@
 import Vue from 'vue'
 import _ from 'lodash'
-import mTableF from "./m-table-f.vue"
+import mTableF from './m-table-f.vue'
+import { getData } from 'utils/actionUtils'
+import { deepCopy } from 'utils/utils'
+import mixin from './mixin'
 
 let tableFShim = Vue.component('tableF-Shim', {
     render: function (h) {
         return h(mTableF, {
-            props: { "showModalBtn": this.showModalBtn, "operation": this.operation, "cols": this.cols, "rowsContent": this.rowsContent,"search":this.showSearch, }
+            props: { 
+                showModalBtn: this.showModalBtn, 
+                operation: this.operation, 
+                cols: this.cols, 
+                rowsContent: this.rowsContent,
+                search:this.showSearch, }
         })
     },
+    mixins: [mixin],
     data() {
         return {
-            url: "",
+            url: '',
             showModalBtn:[],
             rowsContent: [],
             operation: [],
             cols:[],
-            showSearch:false
+            showSearch:false,
+            tableDefine: {}
         }
     },
     props: {
         uid: {
             type: String,
-            default: "m-TableF"
+            default: ''
         },
         define: {
             type: Object,
-            default: {}
-        }
-    },
-    mounted: function () {
-        this.initialize()
-        console.log("m-table-f-shim run")
+            default () {
+                return {}
+            }
+        },
     },
     methods: {
-        detDetailData: function (url) {
-            let self = this;
-            this.setUrl(url).forGet((body , error)=>{
-                if (!error || error === null){
-                  self.rowsContent = body;
-                  self.userUrl = true;
+        initialize(def) {
+            this.operation = _.get(def, ['ui_define', 'operation'], [])
+            this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
+            this.cols = _.get(def, ['ui_define', 'cols'], [])
+            this.url = _.get(def, ['ui_define', 'data_url'], null)
+        },
+        getTableDefine () {
+            let obj = _.filter(this.dataLink, (item) => {
+                return item.attr === 'tableDefine'
+            })[0]
+            // 设置组件请求参数
+            obj.link.params = this.param
+            getData(obj.link, (data, err) =>{
+                if (data) {
+                    this.initialize(data)
                 }
             })
         },
-        initialize() {
-            this.operation = _.get(this.define, "operation", [])
-            this.showModalBtn = _.get(this.define, "showModalBtn", [])
-            this.cols = _.get(this.define, "cols", [])
-            this.url = _.get(this.define, "data_url", null)
-            if (this.url !== null) {
-                this.detDetailData(this.url)
-            }
+        getTableData () {
+            let obj = _.filter(this.dataLink, (item) => {
+                return item.attr === 'tableData'
+            })[0]
+            // 设置组件请求参数
+            obj.link.params = this.param
+            getData(obj.link, (data, err) =>{
+                if (data) {
+                    this.rowsContent = data
+                }
+            })
         }
-    }
+    },
+    watch: {
+        relationData () {
+            this.getTableDefine()
+            this.getTableData()
+        }
+    },
 })
 
 export default tableFShim
