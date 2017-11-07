@@ -55,6 +55,9 @@ const mixin = {
                 let componentData = this.$store.state.componentPageData
                 for (let key of Object.keys(param)) {
                     data[key] = componentData[param[key].value] || param[key].defaultValue
+                    if (data[key] === null) {
+                        delete data[key]         
+                    }
                 }
             }
             return data
