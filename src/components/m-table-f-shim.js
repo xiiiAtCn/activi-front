@@ -8,12 +8,14 @@ import mixin from './mixin'
 let tableFShim = Vue.component('tableF-Shim', {
     render: function (h) {
         return h(mTableF, {
-            props: { 
-                showModalBtn: this.showModalBtn, 
-                operation: this.operation, 
-                cols: this.cols, 
+            props: {
+                showModalBtn: this.showModalBtn,
+                operation: this.operation,
+                cols: this.cols,
                 rowsContent: this.rowsContent,
-                search:this.showSearch, }
+                search:this.showSearch,
+                tableWidth:this.tableWidth
+            }
         })
     },
     mixins: [mixin],
@@ -25,7 +27,8 @@ let tableFShim = Vue.component('tableF-Shim', {
             operation: [],
             cols:[],
             showSearch:false,
-            tableDefine: {}
+            tableDefine: {},
+            tableWidth:undefined
         }
     },
     props: {
@@ -46,6 +49,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
             this.cols = _.get(def, ['ui_define', 'cols'], [])
             this.url = _.get(def, ['ui_define', 'data_url'], null)
+            this.tableWidth = _.get(def, ['ui_define', 'tableWidth'], undefined)
         },
         getTableDefine () {
             let obj = _.filter(this.dataLink, (item) => {

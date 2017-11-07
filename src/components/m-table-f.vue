@@ -14,7 +14,7 @@
                 </div>
             </Col>
         </Row>
-        <Table border :columns="columnsData" :data="dataTable"></Table>
+        <Table border :columns="columnsData" :data="dataTable" :width="tableWidth"></Table>
     </div>
 </template>
 <script>
@@ -38,6 +38,9 @@
             search:{
                 type: Boolean,
                 default: false
+            },
+            tableWidth:{
+                default:undefined
             }
         },
         data() {
