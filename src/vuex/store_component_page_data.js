@@ -10,16 +10,19 @@
  * 哈哈哈哈隔
  */
 import Vue from 'vue'
+import Mutations from './Mutation'
 
 export default {
-    state: {
-    },
+    state: {},
     mutations: {
-        'SET_COMPONENT_DATA' (state, payload) {
+        [Mutations.SET_COMPONENT_DATA] (state, payload) {
             Vue.set(state, payload.id, payload.data)
             if (payload.callback) {
                 payload.callback()
             }
         },
+        [Mutations.CLEAR_COMPONENT_DATA] (state, payload) {
+            delete state[payload.id] 
+        }
     },
 }

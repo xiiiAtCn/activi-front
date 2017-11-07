@@ -36,6 +36,7 @@ import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 import { getData } from 'utils/actionUtils'
 import mixin from '../mixin'
+import Mutations from 'store/Mutation'
 
 export default {
     mixins: [mixin],
@@ -59,9 +60,9 @@ export default {
             // 清除选中之后的数据
             this.tempSelect.splice(i + 1, this.tempSelect.length - i)
             if (this.$store.state.componentPageData[this.id] === this.currentId) {
-                this.getSelectData()
+                // this.getSelectData()
             } else {
-                this.$store.commit('SET_COMPONENT_DATA', {id: this.id, data: this.currentId})
+                this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
             }
         },
         // 根据id找出对应位置
@@ -87,9 +88,6 @@ export default {
                 }
             })
         },
-    },
-    mounted () {
-        // this.getSelectData()
     },
     watch: {
         relationData () {

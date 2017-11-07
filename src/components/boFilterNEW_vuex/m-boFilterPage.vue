@@ -5,7 +5,6 @@
             <mNavSelect
                 :define="navSelectDefine"/>
         </Row>
-        
         <!-- filter部分 -->
         <mBoFilter
             :define="filterDefine"/>
@@ -32,7 +31,8 @@ const reqCountFlag = {
 
 const idObj = {
     navSelectId: 'select',
-    filterId: 'filterId'
+    filterId: 'filterId',
+    tableId: 'tableId'
 }
 
 export default{
@@ -98,7 +98,7 @@ export default{
                         }
                     }
                 ],
-                id: idObj.filterId,
+                id: idObj.tableId,
             }
         }
     }

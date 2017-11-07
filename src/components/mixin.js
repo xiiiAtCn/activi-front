@@ -10,6 +10,8 @@
  * 哈哈哈哈隔
  */
 import _ from 'lodash'
+import Mutations from 'store/Mutation'
+
 const mixin = {
     props: {
         define: {
@@ -45,6 +47,9 @@ const mixin = {
             return result
         },
     },
+    beforeDestroy () {
+        this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {id: this.id})
+    }
 }
 
 export default mixin
