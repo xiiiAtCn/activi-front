@@ -82,7 +82,7 @@ export default {
         // 关闭layer
         closeLayer () {
             this.visible = false
-            this.$emit('input', false);
+            this.$emit('input', false)
         },
         ok () {
             if (this.loading) {
@@ -133,14 +133,14 @@ export default {
             if (!val) {
                 this.buttonLoading = false
             }
-        },
+        }
     },
     mounted () {
-         document.addEventListener('keydown', this.EscClose)
+        document.addEventListener('keydown', this.EscClose)
     },
     beforeDestroy () {
         document.removeEventListener('keydown', this.EscClose)
-    },
+    }
 }
 </script>
 <style scoped>

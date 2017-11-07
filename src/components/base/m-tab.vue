@@ -15,10 +15,10 @@
             }
         },
         computed: {
-            items() {
+            items () {
                 return _.get(this.define, 'items', [])
             },
-            model() {
+            model () {
                 return _.get(this.define, 'active', '')
             }
         }

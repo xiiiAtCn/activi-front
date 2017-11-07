@@ -19,7 +19,6 @@
 </template>
 
 <script>
-
     export default{
         data () {
             return {
@@ -45,7 +44,7 @@
                         loading: false,
                         children: []
                     }
-                ],
+                ]
             }
         },
         methods: {

@@ -20,28 +20,27 @@
 <script>
     import {dispatch} from '../../../utils/actionUtils'
     export default {
-        data() {
+        data () {
             return {
                 menuList: [
                 	{ 'title': require('../../../assets/img/mail/1-write.png'), 'name': '写信' },
                     { 'title': require('../../../assets/img/mail/2-receiving.png'), 'name': '收信(5)' },
                     { 'title': require('../../../assets/img/mail/3-Contact.png'), 'name': '通讯录' },
                     { 'title': require('../../../assets/img/mail/4-labelling.png'), 'name': '标签组' },
-                    { 'title': require('../../../assets/img/mail/5-mails.png'), 'name': '群邮件' },
+                    { 'title': require('../../../assets/img/mail/5-mails.png'), 'name': '群邮件' }
                 ],
                 screenWidth: document.body.clientWidth
             }
         },
         computed: {
-            iconSize() {
+            iconSize () {
             }
         },
         methods: {},
-        mounted() {
+        mounted () {
 
         },
         watch: {}
-
 
     }
 </script>

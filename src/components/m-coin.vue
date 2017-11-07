@@ -13,19 +13,19 @@
 </template>
 <script>
   export default {
-    props: ['coindatas', 'selected', 'getSelect'],
-    mounted: function () {
-    },
-    data: function () {
-      return {
-        coin: ''
+      props: ['coindatas', 'selected', 'getSelect'],
+      mounted: function () {
+      },
+      data: function () {
+          return {
+              coin: ''
+          }
+      },
+      methods: {
+          checkCoin: function (coin, id) {
+              this.coin = coin
+              this.getSelect(id)
+          }
       }
-    },
-    methods: {
-      checkCoin: function (coin, id) {
-        this.coin = coin
-        this.getSelect(id)
-      }
-    }
   }
 </script>

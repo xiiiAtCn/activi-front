@@ -29,8 +29,8 @@
         methods: {
 //            进行对比的数组, 参数ary为数组,key为要对比的key值
             unqAry: function (ary, key) {
-                let newAry = [];
-                for (let i of ary){
+                let newAry = []
+                for (let i of ary) {
                     newAry.push(i[key])
                 }
                 return newAry
@@ -47,21 +47,21 @@
                     this.columns = res.body.columns
                     this.data = res.body.data
                     let existArr = res.body.childInfo
-                    if (existArr.length > 0){
-                        let arr = [];
+                    if (existArr.length > 0) {
+                        let arr = []
                         arr.push(existArr[0])
-                        existArr.splice(0,1)
+                        existArr.splice(0, 1)
                         let difference = this.getDifference(arr, existArr, 'childMeta')
-                        for (let i of arr){
-                            for (let j of existArr){
-                                if (i.childMeta === j.childMeta){
+                        for (let i of arr) {
+                            for (let j of existArr) {
+                                if (i.childMeta === j.childMeta) {
                                     i.childData.push(j.childData[0])
                                 }
                             }
                         }
-                        for (let o of existArr){
-                            for (let k of difference){
-                                if (o.childMeta === k){
+                        for (let o of existArr) {
+                            for (let k of difference) {
+                                if (o.childMeta === k) {
                                     arr.push(o)
                                 }
                             }
@@ -73,12 +73,12 @@
                 })
             }
         },
-        mounted(){
-            this.getQuery(this.$route.query);
-        },
+        mounted () {
+            this.getQuery(this.$route.query)
+    },
         watch: {
             '$route' () {
-                this.getQuery(this.$route.query);
+                this.getQuery(this.$route.query)
             }
         }
     }

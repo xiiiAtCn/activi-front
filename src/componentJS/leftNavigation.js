@@ -6,7 +6,7 @@ import mMenu from '../components/m-menu.vue'
 import router from '../router'
 
 new Vue({
-  el: '#nav',
-  router,
-  render: h => h(mMenu)
+    el: '#nav',
+    router,
+    render: h => h(mMenu)
 }).$mount('#app')

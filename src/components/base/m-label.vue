@@ -5,9 +5,9 @@
 </template>
 <script>
   export default {
-    props: ['data'],
-    data: function () {
-      return {}
-    }
+      props: ['data'],
+      data: function () {
+          return {}
+      }
   }
 </script>

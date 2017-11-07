@@ -15,7 +15,7 @@
                 // 关闭tab切换滑动效果
                 noCssTransition: false,
                 // 定义树
-                treeData: [],
+                treeData: []
             }
         },
         methods: {
@@ -37,8 +37,8 @@
                             loading: false,
                             children: []
                         }
-                    ];
-                    callback(data);
+                    ]
+                    callback(data)
                 }, 400)
             },
             selectedCurrentNode () {

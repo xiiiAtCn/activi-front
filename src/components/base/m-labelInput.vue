@@ -19,79 +19,79 @@
   import _ from 'lodash'
 
   export default {
-    store,
-    props: ['define', 'content', 'uid'],
-    components: {
-      mInput: function (resolve) {
-        require(['./m-input.vue'], resolve)
-      },
-      mDate: function (resolve) {
-        require(['./m-date.vue'], resolve)
-      },
-      mTime: function (resolve) {
-        require(['./m-time.vue'], resolve)
-      },
-      mBoolean: function (resolve) {
-        require(['./m-radio.vue'], resolve)
-      },
-      mBo: function (resolve) {
-        require(['./m-bo.vue'], resolve)
-      },
-      mTracker: function (resolve) {
-        require(['./m-select.vue'], resolve)
-      },
-      mAttribute: function (resolve) {
-        require(['./m-attribute.vue'], resolve)
-      },
+      store,
+      props: ['define', 'content', 'uid'],
+      components: {
+          mInput: function (resolve) {
+              require(['./m-input.vue'], resolve)
+          },
+          mDate: function (resolve) {
+              require(['./m-date.vue'], resolve)
+          },
+          mTime: function (resolve) {
+              require(['./m-time.vue'], resolve)
+          },
+          mBoolean: function (resolve) {
+              require(['./m-radio.vue'], resolve)
+          },
+          mBo: function (resolve) {
+              require(['./m-bo.vue'], resolve)
+          },
+          mTracker: function (resolve) {
+              require(['./m-select.vue'], resolve)
+          },
+          mAttribute: function (resolve) {
+              require(['./m-attribute.vue'], resolve)
+          },
 //            mInteger: function (resolve) {
 //                require(['./m-number.vue'], resolve);
 //            },
-      mNumber: function (resolve) {
-        require(['./m-number.vue'], resolve)
-      },
-      mDecimal: function (resolve) {
-        require(['./m-number.vue'], resolve)
-      }
-    },
-    data: function () {
-      return {
-        name: _.get(this.define, 'name', ''),
-        label: _.get(this.define, 'label', false),
-        hidden: _.get(this.define, 'hidden', false),
-        typeString: _.get(this.define, 'typeString', 'string'),
-        labelWidth: _.get(this.define, 'labelWidth', 0)
-      }
-    },
-    computed: {
-      inputDefine: function () {
-        let filtedDefine = {}
-        _.forIn(this.define, function (value, key) {
-          if (key !== 'label') {
-            filtedDefine[key] = value
+          mNumber: function (resolve) {
+              require(['./m-number.vue'], resolve)
+          },
+          mDecimal: function (resolve) {
+              require(['./m-number.vue'], resolve)
           }
-        })
-        return filtedDefine
       },
-      itemType: function () {
-        if (this.typeString === 'string') return 'mInput'
-        if (this.typeString === 'date') return 'mDate'
-        if (this.typeString === 'time') return 'mTime'
-        if (this.typeString === 'boolean') return 'mBoolean'
-        if (this.typeString === 'number') return 'mNumber'
-        if (this.typeString === 'tracker') return 'mTracker'
-        if (this.typeString === 'attribute') return 'mAttribute'
-        if (this.typeString === 'bo') return 'mBo'
-        return 'mInput'
+      data: function () {
+          return {
+              name: _.get(this.define, 'name', ''),
+              label: _.get(this.define, 'label', false),
+              hidden: _.get(this.define, 'hidden', false),
+              typeString: _.get(this.define, 'typeString', 'string'),
+              labelWidth: _.get(this.define, 'labelWidth', 0)
+          }
       },
-      value: {  // 专门为hidden类型的input用。
-        get () {
-          return _.get(this.$store.state.pageData.data, this.name, '')
-        },
-        set (value) {
-          this.$store.commit('updateItem', {name: this.name, value: value})
-        }
+      computed: {
+          inputDefine: function () {
+              let filtedDefine = {}
+              _.forIn(this.define, function (value, key) {
+                  if (key !== 'label') {
+                      filtedDefine[key] = value
+                  }
+              })
+              return filtedDefine
+          },
+          itemType: function () {
+              if (this.typeString === 'string') return 'mInput'
+              if (this.typeString === 'date') return 'mDate'
+              if (this.typeString === 'time') return 'mTime'
+              if (this.typeString === 'boolean') return 'mBoolean'
+              if (this.typeString === 'number') return 'mNumber'
+              if (this.typeString === 'tracker') return 'mTracker'
+              if (this.typeString === 'attribute') return 'mAttribute'
+              if (this.typeString === 'bo') return 'mBo'
+              return 'mInput'
+          },
+          value: {  // 专门为hidden类型的input用。
+              get () {
+                  return _.get(this.$store.state.pageData.data, this.name, '')
+              },
+              set (value) {
+                  this.$store.commit('updateItem', {name: this.name, value: value})
+              }
+          }
       }
-    }
   }
 </script>
 

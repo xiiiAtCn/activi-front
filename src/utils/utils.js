@@ -5,24 +5,21 @@
  * @param propertyKeys   待逐层判断的属性key
  * @returns {*}
  */
-export default function ifNullThen(ob, defaultValue, ...propertyKeys) {
+export default function ifNullThen (ob, defaultValue, ...propertyKeys) {
+    if (!ob) return defaultValue
+    if (!propertyKeys) return defaultValue
 
-    if (!ob) return defaultValue;
-    if (!propertyKeys) return defaultValue;
-
-    let current = ob;
-
+    let current = ob
 
     for (let item of propertyKeys) {
-        if (typeof current[item] === "undefined") {
-            return typeof defaultValue === "function" ? defaultValue(current) : defaultValue;
+        if (typeof current[item] === 'undefined') {
+            return typeof defaultValue === 'function' ? defaultValue(current) : defaultValue
         } else {
-            current = current[item];
+            current = current[item]
         }
     }
-    return current;
+    return current
 }
-
 
 // 复制对象
 export function deepCopy (source) {
@@ -32,4 +29,4 @@ export function deepCopy (source) {
 // 判断对象是否为空
 export function isEmptyObj (obj) {
     return Object.keys(obj).length === 0
-} 
+}

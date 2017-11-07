@@ -59,29 +59,29 @@
 <script>
     import { dispatch } from '../../../utils/actionUtils'
     export default {
-        data() {
+        data () {
             return {
                 listMenu: [
                     { 'name': '开发项目组(35)' },
                     { 'name': '界面设计组(12)' },
                     { 'name': '财务库房(12)' },
                     { 'name': '特别关注(45)' },
-                    { 'name': '新建分组1(8)' },
+                    { 'name': '新建分组1(8)' }
                 ],
                 contactList: [{
                     'title': require('../../../assets/img/mail/1-jieke.png'),
                     'name': '杰克'
                 },
-                    {
-                        'title': require('../../../assets/img/mail/2-wangyu.png'),
-                        'name': '王宇'
-                    },
+                {
+                    'title': require('../../../assets/img/mail/2-wangyu.png'),
+                    'name': '王宇'
+                },
                     { 'title': require('../../../assets/img/mail/3-taojiajia.png'), 'name': '陶佳佳' },
                     { 'title': require('../../../assets/img/mail/4-zhuli.png'), 'name': '朱莉' },
                     { 'title': require('../../../assets/img/mail/5-laiangnaduo.png'), 'name': '雷奥纳多' },
                     { 'title': require('../../../assets/img/mail/6-hailun.png'), 'name': '海伦' },
                     { 'title': require('../../../assets/img/mail/7-simisi.png'), 'name': '露丝' },
-                    { 'title': require('../../../assets/img/mail/8-weiweian.png'), 'name': '杰克' },
+                    { 'title': require('../../../assets/img/mail/8-weiweian.png'), 'name': '杰克' }
                 ],
                 active: '',
                 columns1: [{
@@ -89,82 +89,82 @@
                     width: 60,
                     align: 'center'
                 },
-                    {
-                        title: '姓名',
-                        key: 'name',
-                        width: 200,
-                        align: 'center'
-                    },
-                    {
-                        title: '邮箱',
-                        key: 'mail',
-                        align: 'left',
-                    },
+                {
+                    title: '姓名',
+                    key: 'name',
+                    width: 200,
+                    align: 'center'
+                },
+                {
+                    title: '邮箱',
+                    key: 'mail',
+                    align: 'left'
+                }
 
                 ],
                 data1: [{
                     name: '王小明',
                     mail: '1357853@qq.com'
                 },
-                    {
-                        name: '张小刚',
-                        mail: '1357853@163.com'
-                    },
-                    {
-                        name: '李小红',
-                        mail: '1357853@163.com'
-                    },
-                    {
-                        name: '周小伟',
-                        mail: '1357ee53@qq.com'
-                    }
+                {
+                    name: '张小刚',
+                    mail: '1357853@163.com'
+                },
+                {
+                    name: '李小红',
+                    mail: '1357853@163.com'
+                },
+                {
+                    name: '周小伟',
+                    mail: '1357ee53@qq.com'
+                }
                 ],
                 addGroupModal: false,
-                deleteDataModal:false
+                deleteDataModal: false
             }
         },
         computed: {
 
         },
         methods: {
-            addGroup() {
+            addGroup () {
                 this.addGroupModal = true
             },
-            ok() {
+            ok () {
                 let groupVal = this.$refs.groupVal.currentValue
                 this.listMenu.push({ 'name': groupVal })
                 console.log(groupVal)
             },
-            cancel() {
+            cancel () {
                 this._cleanData()
-                this.$Message.info('点击了取消');
+                this.$Message.info('点击了取消')
             },
-            _cleanData() {
-                this.$refs.groupVal.currentValue = ""
+            _cleanData () {
+                this.$refs.groupVal.currentValue = ''
             },
-            add() {
+            add () {
 
             },
-            tool() {
+            tool () {
 
             },
-            deleteData(){
-                this.deleteDataModal=true
+            deleteData () {
+                this.deleteDataModal = true
             },
-            deleteConfirm(){
-                this.$Message.info('点击了确定');
+            deleteConfirm () {
+                this.$Message.info('点击了确定')
             },
-            deleteCancel(){
-                this.$Message.info('点击了取消');
+            deleteCancel () {
+                this.$Message.info('点击了取消')
             },
-            selected(name) {
-                this.active = name;
+            selected (name) {
+                this.active = name
             },
-            search(){
+            search () {
                 let contactMan = this.$refs.contactMan.currentValue
                 console.log(contactMan)
-            },
-        },
+            }
+        }
 
     }
 </script>

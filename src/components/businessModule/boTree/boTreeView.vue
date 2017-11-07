@@ -57,8 +57,8 @@
 //            初始加载节点
             getInitNode: function () {
                 this.setUrl(this.initNOdeUrl).forGet(res => {
-                    this.baseData = res;
-                    this.requestChildNode(res, 'selected');
+                    this.baseData = res
+                    this.requestChildNode(res, 'selected')
                     this.requestCurrentNodeInfo(res)
                 })
             },
@@ -66,10 +66,10 @@
             getArray: function (data, child) {
                 for (let i in data) {
                     if (data[i].selected === true) {
-                        data[i].children = child;
-                        break;
+                        data[i].children = child
+                        break
                     } else {
-                        this.getArray(data[i].children, child);
+                        this.getArray(data[i].children, child)
                     }
                 }
             },
@@ -77,7 +77,7 @@
             getHaveChild: function (data, child) {
                 for (let i in data) {
                     if (data[i].addChild === true) {
-                        data[i].children = child;
+                        data[i].children = child
                         break
                     } else {
                         this.getHaveChild(data[i].children, child)
@@ -87,7 +87,7 @@
             cleanAddChild: function (data) {
                 for (let i in data) {
                     if (data[i].addChild === true) {
-                        delete data[i].addChild;
+                        delete data[i].addChild
                         break
                     } else {
                         this.cleanAddChild(data[i].children)
@@ -98,10 +98,10 @@
             requestChildNode: function (ary, style) {
                 let url = `this.getNodeUrl${ary[0]['id']}`
                 this.setUrl(url).forGet(res => {
-                    if (style === 'selected'){
-                      this.getArray(this.baseData, res)
-                    } else if (style === 'expend'){
-                      this.getHaveChild(this.baseData, res)
+                    if (style === 'selected') {
+                        this.getArray(this.baseData, res)
+                    } else if (style === 'expend') {
+                        this.getHaveChild(this.baseData, res)
                     }
                 })
             },
@@ -115,9 +115,9 @@
                 })
             }
         },
-        mounted(){
-            this.getInitNode();
-        }
+        mounted () {
+            this.getInitNode()
+    }
     }
 </script>
 

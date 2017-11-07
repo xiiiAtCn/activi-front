@@ -9,11 +9,11 @@ import componentPageData from './store_component_page_data'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  modules: {
-    pageData,
-    pageStatus,
-    validStatus,
-    componentPageData
-  }
+    modules: {
+        pageData,
+        pageStatus,
+        validStatus,
+        componentPageData
+    }
 })
 export default store

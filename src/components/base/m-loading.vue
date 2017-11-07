@@ -85,39 +85,36 @@
                 default: 'hide-full-loading'
             },
             position: {
-                default() {
+                default () {
                     return {}
                 }
             }
         },
-        data() {
+        data () {
             return {
                 showing: false
             }
         },
         watch: {
-            show(val){
+            show (val) {
                 this.showing = val
             }
         },
         methods: {
-            showMe() {
+            showMe () {
                 this.showing = true
             },
-            hideMe() {
+            hideMe () {
                 this.showing = false
             },
             // Register eventBus methods.
-            registerBusMethods()
-            {
-                this.eventBus.$on(this.eventShow, this.showMe);
-                this.eventBus.$on(this.eventHide, this.hideMe);
+            registerBusMethods () {
+                this.eventBus.$on(this.eventShow, this.showMe)
+                this.eventBus.$on(this.eventHide, this.hideMe)
             }
         },
-        mounted() {
-            if (this.eventBus)
-                this.registerBusMethods()
-
+        mounted () {
+            if (this.eventBus) { this.registerBusMethods() }
         }
     }
 </script>

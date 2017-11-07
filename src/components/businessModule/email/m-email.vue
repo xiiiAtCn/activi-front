@@ -56,89 +56,89 @@
 
 <script>
     import Vue from 'vue'
-    import {dispatch} from  '../../../utils/actionUtils'
+    import {dispatch} from '../../../utils/actionUtils'
     import VueQuillEditor from 'vue-quill-editor'
     Vue.use(VueQuillEditor)
     export default {
         data () {
             return {
-                routers: [],
+                routers: []
             }
         },
         methods: {
-            changetitle() {
-                document.title ='邮件'
-            },
+            changetitle () {
+                document.title = '邮件'
+            }
         },
         mounted () {
-            this.changetitle();
+            this.changetitle()
             this.$router.push({
-                path:'/email/home'
-            });
+                path: '/email/home'
+            })
             let urls = [
                 {
-                    icon:'android-create',
+                    icon: 'android-create',
                     text: '写 信',
                     url: '/email/writeEmail',
                     code: '101'
                 },
                 {
-                    icon:'email-unread',
+                    icon: 'email-unread',
                     text: '收 信',
                     url: '/email/checkEmail',
                     code: '102'
                 },
                 {
-                    icon:'person-stalker',
+                    icon: 'person-stalker',
                     text: '通讯录',
                     url: '/email/emailDirectory',
                     code: '103'
                 },
                 {
-                    icon:'android-archive',
+                    icon: 'android-archive',
                     text: '收件箱',
                     url: '',
                     code: '104'
                 },
                 {
-                    icon:'pricetags',
+                    icon: 'pricetags',
                     text: '标签组',
                     url: '',
                     code: '105'
                 },
                 {
-                    icon:'chatboxes',
+                    icon: 'chatboxes',
                     text: '群邮件',
                     url: '',
                     code: '106'
                 },
                 {
-                    icon:'filing',
+                    icon: 'filing',
                     text: '草稿箱 ',
                     url: '',
                     code: '107'
                 },
                 {
-                    icon:'ios-upload',
+                    icon: 'ios-upload',
                     text: '已发送',
                     url: '',
                     code: '108'
                 },
                 {
-                    icon:'trash-a',
+                    icon: 'trash-a',
                     text: '已删除',
                     url: '',
                     code: '109'
                 },
                 {
-                    icon:'trash-b',
+                    icon: 'trash-b',
                     text: '垃圾箱',
                     url: '',
                     code: '110'
-                },
-            ];
-            this.routers = urls;
-        }
+                }
+            ]
+            this.routers = urls
+    }
     }
 </script>
 

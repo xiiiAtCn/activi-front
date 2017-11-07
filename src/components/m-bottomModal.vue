@@ -21,34 +21,34 @@
 
 <script>
   export default {
-    name: 'm-bottomModal',
-    data () {
-      return {
-        styleObject: {
-          display: 'none'
-        }
-      }
-    },
-    computed: {
-      'serverName': function () {
-        return this.name
-      }
-    },
-    mounted: function () {
-    },
-    props: {
-      headerText: {type: String, 'default': ''}
-//            footerText: {type: String, 'default': 'foot'},
-    },
-    methods: {
-      open: function () {
-        this.styleObject.display = 'block'
+      name: 'm-bottomModal',
+      data () {
+          return {
+              styleObject: {
+                  display: 'none'
+              }
+          }
       },
-      close: function () {
-        this.styleObject.display = 'none'
-      }
-    },
-    watch: {}
+      computed: {
+          'serverName': function () {
+              return this.name
+          }
+      },
+      mounted: function () {
+      },
+      props: {
+          headerText: {type: String, 'default': ''}
+//            footerText: {type: String, 'default': 'foot'},
+      },
+      methods: {
+          open: function () {
+              this.styleObject.display = 'block'
+          },
+          close: function () {
+              this.styleObject.display = 'none'
+          }
+      },
+      watch: {}
   }
 
 </script>

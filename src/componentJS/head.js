@@ -6,11 +6,11 @@ import Vue from 'vue'
 import mHead from '../components/m-head.vue'
 
 new Vue({
-  el: '#head',
-  data: function () {
-    return {username: '11111'}
-  },
-  components: {
-    mHead
-  }
+    el: '#head',
+    data: function () {
+        return {username: '11111'}
+    },
+    components: {
+        mHead
+    }
 })

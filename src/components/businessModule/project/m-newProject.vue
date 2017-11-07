@@ -102,7 +102,7 @@ import Vue from 'vue'
 import { dispatch } from '../../../utils/skipUtils'
 import { default as fetch, post } from '../../../utils/DefineFetcher'
 export default {
-    data() {
+    data () {
         return {
             projectMsg: {
                 'name': '',
@@ -116,7 +116,7 @@ export default {
                 'planenddate': '',
                 'realstartdate': '',
                 'realenddate': '',
-                'projecttype': '',
+                'projecttype': ''
 
             },
             ruleValidate: {
@@ -127,7 +127,7 @@ export default {
                     { required: true, type: 'date', message: '请选择立项时间', trigger: 'blur' }
                 ],
                 leader: [
-                    { required: true,  message: '请输入负责人', trigger: 'blur' }
+                    { required: true, message: '请输入负责人', trigger: 'blur' }
                 ],
                 // importantlevel: [
                 //     { required: true,  message: '请选择重要度', trigger: 'blur' }
@@ -135,15 +135,15 @@ export default {
                 // prioritylevel: [
                 //     { required: true, message: '请选择优先度', trigger: 'blur' }
                 // ],
-                projecttype:[
+                projecttype: [
                     { required: true, message: '请输入项目类型', trigger: 'blur' }
                 ],
-                executor:[
-                    { required: true,  message: '请输入执行人', trigger: 'blur' }
+                executor: [
+                    { required: true, message: '请输入执行人', trigger: 'blur' }
                 ],
-                budget:[
-                    { required: true,  message: '请输入预算', trigger: 'blur' }
-                ],
+                budget: [
+                    { required: true, message: '请输入预算', trigger: 'blur' }
+                ]
                 // planstartdate:[
                 //     { required: true, type: 'date', message: '请选择计划开始时间', trigger: 'blur' }
                 // ],
@@ -160,22 +160,22 @@ export default {
         }
     },
     computed: {
-        iconSize() {}
+        iconSize () {}
     },
     methods: {
-        handleSubmit(name) {
+        handleSubmit (name) {
             this.$refs[name].validate((valid) => {
                 if (valid) {
                     this._startProject()
                 } else {
-                    this.$Message.error('表单验证失败!');
+                    this.$Message.error('表单验证失败!')
                 }
             })
         },
-        handleReset(name) {
-            this.$refs[name].resetFields();
+        handleReset (name) {
+            this.$refs[name].resetFields()
         },
-        _startProject() {
+        _startProject () {
             let createdate = (new Date(this.projectMsg.createdate)).getTime()
             this.projectMsg.createdate = createdate
             let planstartdate = (new Date(this.projectMsg.planstartdate)).getTime()
@@ -187,29 +187,29 @@ export default {
             let realenddate = (new Date(this.projectMsg.realenddate)).getTime()
             this.projectMsg.realenddate = realenddate
             console.log(this.projectMsg)
-            let url = "/api/aoengine/project"
+            let url = '/api/aoengine/project'
             let data = this.projectMsg
             post(url, data, (status, res) => {
                 if (status) {
-                    this.$Message.error("数据 保存失败")
+                    this.$Message.error('数据 保存失败')
                 } else {
-                    this.$Message.info("数据保存成功")
+                    this.$Message.info('数据保存成功')
                     this.cleanData('projectMsg')
                 }
             })
         },
-        cleanData(dataName) {
+        cleanData (dataName) {
             for (let key in this[dataName]) {
                 if (typeof this[dataName][key] === 'object') {
-                    this.$set(this[dataName], key, []);
+                    this.$set(this[dataName], key, [])
                 } else {
-                    this.$set(this[dataName], key, '');
+                    this.$set(this[dataName], key, '')
                 }
             }
             // 清除验证状态
-            this.$refs[dataName].resetFields();
-        },
-    },
+            this.$refs[dataName].resetFields()
+        }
+    }
 
 }
 </script>

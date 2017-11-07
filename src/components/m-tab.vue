@@ -20,25 +20,25 @@
   import mTable from './m-table.vue'
 
   export default {
-    components: {mTable},
-    props: ['define', 'content'],
-    methods: {
-      changeTab: function (id) {
-        var define = this.define
-        for (var key in define) {
-          if (key === id) {
-            document.getElementById(id).className = 'active'
-            document.getElementById('tab' + id).className = 'tab-pane fade in active'
-          } else {
-            document.getElementById(key).className = ''
-            document.getElementById('tab' + key).className = 'tab-pane fade'
+      components: {mTable},
+      props: ['define', 'content'],
+      methods: {
+          changeTab: function (id) {
+              var define = this.define
+              for (var key in define) {
+                  if (key === id) {
+                      document.getElementById(id).className = 'active'
+                      document.getElementById('tab' + id).className = 'tab-pane fade in active'
+                  } else {
+                      document.getElementById(key).className = ''
+                      document.getElementById('tab' + key).className = 'tab-pane fade'
+                  }
+              }
           }
-        }
+      },
+      data: function () {
+          return {}
       }
-    },
-    data: function () {
-      return {}
-    }
   }
 
 </script>

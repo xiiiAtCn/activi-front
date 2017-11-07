@@ -97,7 +97,7 @@ export default {
             } else {
                 return ''
             }
-        },
+        }
     },
     mounted () {
         this.getSelectData()

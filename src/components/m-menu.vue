@@ -17,20 +17,20 @@
 </template>
 <script>
   export default {
-    props: ['define', 'content'],
-    mounted: function () {
-      let clickObj = document.getElementById('0')
-      clickObj.click()
-    },
-    data: function () {
-      return {
-        action: 0
+      props: ['define', 'content'],
+      mounted: function () {
+          let clickObj = document.getElementById('0')
+          clickObj.click()
+      },
+      data: function () {
+          return {
+              action: 0
+          }
+      },
+      methods: {
+          change: function (id) {
+              this.action = id
+          }
       }
-    },
-    methods: {
-      change: function (id) {
-        this.action = id
-      }
-    }
   }
 </script>

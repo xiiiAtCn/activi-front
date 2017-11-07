@@ -19,13 +19,13 @@
   import _ from 'lodash'
 
   export default {
-    components: {mTree, mSection, mLabelInput, mMenu},
-    props: ['define', 'content'],
-    data: function () {
-      return {
-        gutter: _.get(this.define, 'gutter', 5),
-        type: _.get(this.define, 'type', null)
+      components: {mTree, mSection, mLabelInput, mMenu},
+      props: ['define', 'content'],
+      data: function () {
+          return {
+              gutter: _.get(this.define, 'gutter', 5),
+              type: _.get(this.define, 'type', null)
+          }
       }
-    }
   }
 </script>

@@ -10,19 +10,19 @@
   import mSteps from './base/m-steps.vue'
 
   export default {
-    components: {mTable, mTab, mRow, mSteps},
-    mounted: function () {
-      let _this = this
-      let url = _this.$route.query.url
-      _this.$http.get(url).then(function (result) {
-        _this.data = result.body
-      })
-    },
-    data: function () {
-      return {
-        'data': []
+      components: {mTable, mTab, mRow, mSteps},
+      mounted: function () {
+          let _this = this
+          let url = _this.$route.query.url
+          _this.$http.get(url).then(function (result) {
+              _this.data = result.body
+          })
+      },
+      data: function () {
+          return {
+              'data': []
+          }
       }
-    }
   }
 </script>
 

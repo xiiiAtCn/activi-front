@@ -5,7 +5,7 @@
  * Author: ZhaoPeng
  * -----
  * 上次修改时间: 2017-11-06
- * Modified By: 
+ * Modified By:
  * -----
  * 哈哈哈哈隔
  */
@@ -36,13 +36,13 @@ const mixin = {
             obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
             obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
             obj.link.body = this.getRealParamData(obj.link.body)
-            getData(obj.link, (data, err) =>{
+            getData(obj.link, (data, err) => {
                 callback(data, err)
             })
         },
         /**
          * 将id替换为真实数据
-         * @param {*} param 
+         * @param {*} param
          * id: {
          *      value: idObj.navSelectId,
          *      defaultValue: ''
@@ -56,7 +56,7 @@ const mixin = {
                 for (let key of Object.keys(param)) {
                     data[key] = componentData[param[key].value] || param[key].defaultValue
                     if (data[key] === null) {
-                        delete data[key]         
+                        delete data[key]
                     }
                 }
             }
@@ -72,7 +72,7 @@ const mixin = {
             return _.get(this.define, 'id', '')
         },
         isRelated () {
-            return _.get(this.define, 'isRelated', false)    
+            return _.get(this.define, 'isRelated', false)
         },
         relationData () {
             if (!this.isRelated) {
@@ -86,7 +86,7 @@ const mixin = {
         },
         dataLink () {
             return _.get(this.define, 'dataLink', {})
-        },
+        }
     },
     watch: {
         relationData (newVal, oldVal) {

@@ -22,52 +22,52 @@
   //  import Step from 'iview'
 
   export default {
-    props: ['define', 'content'],
-    data () {
-      return {
-        hasError: false,
-        errorMessage: '',
-        number: -1,
-        jobList: [],
-        num: -1
-      }
-    },
-    mounted () {
-      let _this = this
-      let url = this.define.data_url
-      if (url) {
-        fetch(url, (error, body) => {
-          if (error === null) {
-            console.log('boddd', body)
-            _this.number = body.current
-            _this.jobList = body.jobList
-            setTimeout(function () {
-              _this.number = body.current + 1
-            }, 0)
-            setTimeout(function () {
-              _this.number = body.current
-            }, 0)
+      props: ['define', 'content'],
+      data () {
+          return {
+              hasError: false,
+              errorMessage: '',
+              number: -1,
+              jobList: [],
+              num: -1
           }
-        })
-      } else {
-        _this.number = 0
-        _this.jobList = []
-      }
-    },
-    computed: {
-      name () {
-        return _.get(this.define, 'name', '')
       },
-      storeValue: {
-        get () {
-          return _.get(this.$store.state.pageData.data, [this.name, 'value'], '')
-        },
-        set (value) {
-          this.$store.commit('updateItem', {name: this.name, exContent: this.exContent, value: value})
-        }
-      }
-    },
-    methods: {}
+      mounted () {
+          let _this = this
+          let url = this.define.data_url
+          if (url) {
+              fetch(url, (error, body) => {
+                  if (error === null) {
+                      console.log('boddd', body)
+                      _this.number = body.current
+                      _this.jobList = body.jobList
+                      setTimeout(function () {
+                          _this.number = body.current + 1
+                      }, 0)
+                      setTimeout(function () {
+                          _this.number = body.current
+                      }, 0)
+                  }
+              })
+          } else {
+              _this.number = 0
+              _this.jobList = []
+          }
+      },
+      computed: {
+          name () {
+              return _.get(this.define, 'name', '')
+          },
+          storeValue: {
+              get () {
+                  return _.get(this.$store.state.pageData.data, [this.name, 'value'], '')
+              },
+              set (value) {
+                  this.$store.commit('updateItem', {name: this.name, exContent: this.exContent, value: value})
+              }
+          }
+      },
+      methods: {}
   }
 </script>
 <style>

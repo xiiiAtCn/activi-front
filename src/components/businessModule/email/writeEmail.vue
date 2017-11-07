@@ -82,14 +82,14 @@
     import { dispatch } from '../../../utils/actionUtils'
 
     export default {
-        data() {
+        data () {
             return {
                 listMenu: [
                     { 'name': '开发项目组(35)' },
                     { 'name': '界面设计组(12)' },
                     { 'name': '财务库房(12)' },
                     { 'name': '特别关注(45)' },
-                    { 'name': '新建分组1(8)' },
+                    { 'name': '新建分组1(8)' }
                 ],
                 active: '',
                 groupMail: [{
@@ -97,26 +97,26 @@
                     label: '开发项目组',
                     mailAdd: ['1506461525@qq.com', '13704263835@163.com']
                 },
-                    {
-                        value: '2',
-                        label: '界面设计组',
-                        mailAdd: ['1506461525@qq.com', 'shanc@winice.cn']
-                    },
-                    {
-                        value: '3',
-                        label: '财务库房',
-                        mailAdd: ['congshanwawa@qq.com', '13704263835@163.com']
-                    },
-                    {
-                        value: '4',
-                        label: '特别关注',
-                        mailAdd: ['1506461525@qq.com', '13704263835@163.com']
-                    },
-                    {
-                        value: '5',
-                        label: '新建分组',
-                        mailAdd: ['1506461525@qq.com', '13704263835@163.com']
-                    },
+                {
+                    value: '2',
+                    label: '界面设计组',
+                    mailAdd: ['1506461525@qq.com', 'shanc@winice.cn']
+                },
+                {
+                    value: '3',
+                    label: '财务库房',
+                    mailAdd: ['congshanwawa@qq.com', '13704263835@163.com']
+                },
+                {
+                    value: '4',
+                    label: '特别关注',
+                    mailAdd: ['1506461525@qq.com', '13704263835@163.com']
+                },
+                {
+                    value: '5',
+                    label: '新建分组',
+                    mailAdd: ['1506461525@qq.com', '13704263835@163.com']
+                }
                 ],
                 // content: '<h2>I am Example</h2>',
                 editorOption: {
@@ -149,58 +149,58 @@
                     ],
                     subject: [
                         { required: true, message: '主题不能为空', trigger: 'blur' }
-                    ],
+                    ]
                 }
             }
         },
         computed: {
-            iconSize() {},
+            iconSize () {}
         },
         methods: {
-            changeTabs(value) {
+            changeTabs (value) {
                 console.log(value)
                 if (value === 'name1') {
-                    this.activeTab = 1;
+                    this.activeTab = 1
                     this.cleanData('manyModal')
                 }
                 if (value === 'name2') {
-                    this.activeTab = 2;
+                    this.activeTab = 2
                     this.cleanData('normalModal')
                 }
             },
-            addGroup() {
+            addGroup () {
                 this.addGroupModal = true
             },
-            ok() {
+            ok () {
                 let groupVal = this.$refs.groupVal._data.currentValue
                 this.listMenu.push({ 'name': groupVal })
                 this.cleanData(groupVal)
                 this._cleanData()
             },
-            cancel() {
+            cancel () {
                 this._cleanData()
-                this.$Message.info('点击了取消');
+                this.$Message.info('点击了取消')
             },
-            _cleanData() {
-                this.$refs.groupVal._data.currentValue = ""
+            _cleanData () {
+                this.$refs.groupVal._data.currentValue = ''
             },
-            cleanData(dataName) {
+            cleanData (dataName) {
                 for (let key in this[dataName]) {
                     if (typeof this[dataName][key] === 'object') {
-                        this.$set(this[dataName], key, []);
+                        this.$set(this[dataName], key, [])
                     } else {
-                        this.$set(this[dataName], key, '');
+                        this.$set(this[dataName], key, '')
                     }
                 }
                 // 清除验证状态
-                this.$refs[dataName].resetFields();
+                this.$refs[dataName].resetFields()
             },
-            send() {
+            send () {
                 console.log(this.$refs.myQuillEditor)
                 let data = {}
                 if (this.activeTab === 1) {
                     data = this.normalModal
-                    name="normalModal"
+                    name = 'normalModal'
                 }
                 if (this.activeTab === 2) {
                     for (var i = 0; i < this.groupMail.length; i++) {
@@ -210,8 +210,8 @@
                     }
                     console.log(this.manyModal)
                     data = this.manyModal
-                    name="manyModal"
-                    //第二版，页面取不到数据
+                    name = 'manyModal'
+                    // 第二版，页面取不到数据
                     // let list = this.manyModal.toList.mailAdd
                     // let arr = []
                     // for (var i = 0; i < list.length; i++) {
@@ -225,18 +225,18 @@
                     if (valid) {
                         this.sendMsg(data)
                     } else {
-                        this.$Message.error('表单验证失败!');
+                        this.$Message.error('表单验证失败!')
                         this.cleanData(name)
                     }
                 })
             },
-            sendMsg(data) {
-                data.from="fpmonitor@163.com"
-                Vue.http.post("/api/mail/sendMail", data)
+            sendMsg (data) {
+                data.from = 'fpmonitor@163.com'
+                Vue.http.post('/api/mail/sendMail', data)
                     .then(res => {
                         console.log(res)
                         if (res.status === 200) {
-                            this.$Message.info("操作成功");
+                            this.$Message.info('操作成功')
                             if (this.activeTab === 1) {
                                 this.cleanData('normalModal')
                             }
@@ -244,37 +244,37 @@
                                 this.cleanData('manyModal')
                             }
                         } else {
-                            this.$Message.error("操作失败");
+                            this.$Message.error('操作失败')
                         }
                     }, data => {
-                        console.error('error');
-                    });
+                        console.error('error')
+                    })
             },
-            fixSend() {
+            fixSend () {
                 this.fixSendModal = true
             },
-            okSend() {
+            okSend () {
 
             },
-            cancelSend() {
-                this.$Message.info('点击了取消');
+            cancelSend () {
+                this.$Message.info('点击了取消')
             },
-            draft() {
+            draft () {
                 this.$Message.info({
                     content: '邮件已存入草稿箱',
                     duration: 3
-                });
+                })
             },
-            close() {
+            close () {
                 this.$router.push({
                     path: '/email/home'
-                });
+                })
             },
-            selected(name) {
-                this.active = name;
-            },
+            selected (name) {
+                this.active = name
+            }
         },
-        mounted() {
+        mounted () {
             // console.log('this is current quill instance object', this.editor)
         }
 

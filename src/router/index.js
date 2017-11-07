@@ -83,7 +83,7 @@ const functionLog = resolve => require(['../components/businessModule/m-fonction
 // 功能日志
 const taskPlan = resolve => require(['../components/taskPlan/taskPlan.vue'], resolve)
 
-//邮件路由
+// 邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
 const emailHome = resolve => require(['../components/businessModule/email/emailHome.vue'], resolve)
 const writeEmail = resolve => require(['../components/businessModule/email/writeEmail.vue'], resolve)
@@ -192,14 +192,15 @@ const router = new VueRouter({
                 },
                 // 工作流程
                 {
-                    path:'/layoutContent/:id/workflow', component: workflow,
+                    path: '/layoutContent/:id/workflow',
+                    component: workflow,
                     children: [
-                        { path:'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
+                        { path: 'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
                     ]
                 },
                 // 工作流程 查看
                 {
-                    path:'/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
+                    path: '/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck
                 },
                 {
                     path: '/layoutContent/:id/projectSummary', component: projectSummary
@@ -279,18 +280,18 @@ const router = new VueRouter({
             path: '/test', component: Test
         },
         {
-            path:'/functionLog', component: functionLog
+            path: '/functionLog', component: functionLog
         },
         // 邮件路由
         {
-            path:'/email',
+            path: '/email',
             component: mEmail,
             children: [
-                {   path:'/email/home', component: emailHome   },
-                {   path:'/email/writeEmail', component: writeEmail   },
-                {   path:'/email/checkEmail', component: checkEmail   },
-                {   path:'/email/emailDetail', component: emailDetail   },
-                {   path:'/email/emailDirectory', component: emailDirectory   },
+                { path: '/email/home', component: emailHome },
+                { path: '/email/writeEmail', component: writeEmail },
+                { path: '/email/checkEmail', component: checkEmail },
+                { path: '/email/emailDetail', component: emailDetail },
+                { path: '/email/emailDirectory', component: emailDirectory }
             ]
         },
         // 报价路由
@@ -298,16 +299,16 @@ const router = new VueRouter({
             path: '/productPrice',
             component: productPrice
         }
-    
+
     ]
 })
 
 router.beforeEach((to, from, next) => {
-  iView.LoadingBar.start()
-  next()
+    iView.LoadingBar.start()
+    next()
 })
 
 router.afterEach((to, from, next) => {
-  iView.LoadingBar.finish()
+    iView.LoadingBar.finish()
 })
 export default router

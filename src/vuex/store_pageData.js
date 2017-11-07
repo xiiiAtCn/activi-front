@@ -6,23 +6,23 @@ import { default as fetch } from '../utils/DefineFetcher'
 
 // 放画面数据的
 export default {
-  state: {
-    data: {}
-  },
-  mutations: {
-    /* 更新data */
-    changeData (state, data) {
-      state.data = data
+    state: {
+        data: {}
     },
-    updateItem (state, newData) {
-      if (state.data[newData.name]) {
-        state.data[newData.name] = newData
-      } else {
-        let temp = {}
-        temp[newData.name] = newData
-        state.data = Object.assign({}, state.data, temp)
-      }
-    }
+    mutations: {
+    /* 更新data */
+        changeData (state, data) {
+            state.data = data
+        },
+        updateItem (state, newData) {
+            if (state.data[newData.name]) {
+                state.data[newData.name] = newData
+            } else {
+                let temp = {}
+                temp[newData.name] = newData
+                state.data = Object.assign({}, state.data, temp)
+            }
+        }
     // updateField(state, newData){
     //     if (state.data.fields[newData.name]) {
     //         state.data.fields[newData.name] = newData.value;
@@ -41,16 +41,16 @@ export default {
     //         state.data.tables = Object.assign({}, state.data.tables, temp);
     //     }
     // },
-  },
-  actions: {
+    },
+    actions: {
     /* 根据url请求数据 */
-    putData: function ({commit}, args) {
-      var url = args.url
-      fetch(url, function (error, body) {
-        if (error === null) {
-          commit('changeData', body)
-        }
-      })
+        putData: function ({commit}, args) {
+            var url = args.url
+            fetch(url, function (error, body) {
+                if (error === null) {
+                    commit('changeData', body)
+                }
+            })
       // debugger
       // Vue.http.get(args.url).then(function (result) {
       //     commit('changeData', result.body);
@@ -58,12 +58,12 @@ export default {
       //     alert(response.status);
       //     alert(response.statusText);
       // });
-    },
+        },
     /* 清除data数据 */
-    clearData: function ({commit}, args) {
-      commit('changeData', {})
-    }
-  },
-  getters: {}
+        clearData: function ({commit}, args) {
+            commit('changeData', {})
+        }
+    },
+    getters: {}
 }
 

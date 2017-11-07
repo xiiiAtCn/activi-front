@@ -13,22 +13,22 @@ let tableFShim = Vue.component('tableF-Shim', {
                 operation: this.operation,
                 cols: this.cols,
                 rowsContent: this.rowsContent,
-                search:this.showSearch,
-                tableWidth:this.tableWidth
+                search: this.showSearch,
+                tableWidth: this.tableWidth
             }
         })
     },
     mixins: [mixin],
-    data() {
+    data () {
         return {
             url: '',
-            showModalBtn:[],
+            showModalBtn: [],
             rowsContent: [],
             operation: [],
-            cols:[],
-            showSearch:false,
+            cols: [],
+            showSearch: false,
             tableDefine: {},
-            tableWidth:undefined
+            tableWidth: undefined
         }
     },
     props: {
@@ -41,10 +41,10 @@ let tableFShim = Vue.component('tableF-Shim', {
             default () {
                 return {}
             }
-        },
+        }
     },
     methods: {
-        initialize(def) {
+        initialize (def) {
             this.operation = _.get(def, ['ui_define', 'operation'], [])
             this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
             this.cols = _.get(def, ['ui_define', 'cols'], [])
@@ -69,7 +69,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.getTableDefine()
             this.getTableData()
         }
-    },
+    }
 })
 
 export default tableFShim

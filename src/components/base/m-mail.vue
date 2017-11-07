@@ -7,25 +7,25 @@
   import mInput from './m-input.vue'
 
   export default {
-    name: 'm-mail',
-    data () {
-      return {
-        placeholder: '电子邮件地址',
-        pattern: '^[^@]+@[^@]+\\.[^@.]+$'
-      }
-    },
-    props: {
-      'value': {
-        'default': ''
+      name: 'm-mail',
+      data () {
+          return {
+              placeholder: '电子邮件地址',
+              pattern: '^[^@]+@[^@]+\\.[^@.]+$'
+          }
       },
-      'required': {
-        type: true,
-        'default': false
+      props: {
+          'value': {
+              'default': ''
+          },
+          'required': {
+              type: true,
+              'default': false
+          }
+      },
+      components: {
+          mInput
       }
-    },
-    components: {
-      mInput
-    }
   }
 </script>
 

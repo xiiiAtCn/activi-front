@@ -16,16 +16,16 @@
   import axios from 'axios'
 
   export default {
-    name: 'm-tree',
-    props: ['define'],
-    data: function () {
-      return {
-        open: false
-      }
-    },
-    methods: {
-      clickName: function (url) {
-        this.$http.get(url).then(function (result) {
+      name: 'm-tree',
+      props: ['define'],
+      data: function () {
+          return {
+              open: false
+          }
+      },
+      methods: {
+          clickName: function (url) {
+              this.$http.get(url).then(function (result) {
 //          new Vue({
 //            el: '#aaaa',
 //            beforeCreate: function () {
@@ -41,14 +41,14 @@
 //              }
 //            }
 //          })
-        })
-      },
-      toggle: function (url, item) {
-        var _this = this
-        axios.get(url).then(function (result) {
-          _this.$set('children', result.body)
-        })
+              })
+          },
+          toggle: function (url, item) {
+              var _this = this
+              axios.get(url).then(function (result) {
+                  _this.$set('children', result.body)
+              })
+          }
       }
-    }
   }
 </script>

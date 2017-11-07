@@ -15,11 +15,11 @@
 
 <script>
     import Vue from 'vue'
-    import {dispatch} from  '../../../utils/actionUtils'
+    import {dispatch} from '../../../utils/actionUtils'
     import _ from 'lodash'
     import VueResource from 'vue-resource'
-    Vue.use(VueResource);
-    export default {
+    Vue.use(VueResource)
+export default {
         data () {
             return {
 //                获取节点详细URL
@@ -33,21 +33,21 @@
         },
         methods: {
             getQuery: function (query) {
-                console.log('路由传参： ', query);
+                console.log('路由传参： ', query)
                 this.$http.post(this.getNodeDetails, query).then((res) => {
-                    console.log('node端返回处理数据', res.body);
-                    this.columns = res.body.columns;
-                    this.data = res.body.data;
-                    this.childInfo = res.body.childInfo;
+                    console.log('node端返回处理数据', res.body)
+                    this.columns = res.body.columns
+                    this.data = res.body.data
+                    this.childInfo = res.body.childInfo
                 })
             }
         },
-        mounted(){
-            this.getQuery(this.$route.query);
-        },
+        mounted () {
+            this.getQuery(this.$route.query)
+    },
         watch: {
             '$route' () {
-                this.getQuery(this.$route.query);
+                this.getQuery(this.$route.query)
             }
         }
     }

@@ -42,69 +42,69 @@
 
     export default {
         props: {
-            showModalBtn:{
+            showModalBtn: {
                 type: null
             },
-            operation:{
+            operation: {
                 type: null
             },
-            cols:{
+            cols: {
                 type: null
             },
-            rowsContent:{
+            rowsContent: {
                 type: null
             },
-            search:{
+            search: {
                 type: Boolean,
                 default: false
             },
-            tableWidth:{
-                default:undefined
+            tableWidth: {
+                default: undefined
             }
         },
-        data() {
+        data () {
             return {
-                columnsData:[],
-                columnsDataCopy:[],
-                dataTable:[],
-                valueSearch:'',
-                //列选择控制
+                columnsData: [],
+                columnsDataCopy: [],
+                dataTable: [],
+                valueSearch: '',
+                // 列选择控制
                 indeterminate: false,
                 checkAll: true,
                 checkAllGroup: [],
                 dataList: [],
                 dataListChange: [],
-                testList:[]
+                testList: []
             }
         },
-        watch:{
-            cols(){
-                console.log("mTableF watch cols")
+        watch: {
+            cols () {
+                console.log('mTableF watch cols')
                 this.handleDefine()
             },
-            rowsContent(){
-                console.log("mTableF watch rowsContent")
+            rowsContent () {
+                console.log('mTableF watch rowsContent')
                 this.handleContent()
             }
         },
-        mounted() {
-            console.log("mTableF run")
+        mounted () {
+            console.log('mTableF run')
         },
         methods: {
-            //配置表格
-            handleDefine(){
+            // 配置表格
+            handleDefine () {
                 this.getColumnsDataWay(this.cols)
                 this.operation && this.pushTopButtonMsg(this.operation)
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
-            //columnsData存入设置
-            getColumnsDataWay(c){
-                c.forEach((val,i)=> {
-                    this.columnsData[i]={
+            // columnsData存入设置
+            getColumnsDataWay (c) {
+                c.forEach((val, i) => {
+                    this.columnsData[i] = {
                         title: val.text,
                         key: val.field,
                         render: (h, params) => {
-                            if(val.icon){
+                            if (val.icon) {
                                 return h('div', [
                                     h('Icon', {
                                         props: {
@@ -113,7 +113,7 @@
                                     }),
                                     h('strong', params.row[val.field])
                                 ])
-                            }else{
+                            } else {
                                 return h(
                                     'div', [
                                         h('span', params.row[val.field])
@@ -122,19 +122,19 @@
                             }
                         }
                     }
-                    //筛选列
-                    this.dataList[i]={
+                    // 筛选列
+                    this.dataList[i] = {
                         label: val.text,
                         value: val.field
                     }
-                    this.testList[i]=val.text
+                    this.testList[i] = val.text
                 })
-                this.columnsDataCopy=this.columnsData
+                this.columnsDataCopy = this.columnsData
                 this.checkAllGroup = this.testList
             },
-            //配置操作的按钮
-            showButton(smb){
-                if(this.columnsData[this.columnsData.length-1].key === 'action'){return}
+            // 配置操作的按钮
+            showButton (smb) {
+                if (this.columnsData[this.columnsData.length - 1].key === 'action') { return }
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -142,79 +142,76 @@
                     align: 'center',
                     render: (h, params) => {
                         let buttonList = []
-                        smb.forEach((val)=>{
+                        smb.forEach((val) => {
                             buttonList.push(h('Button', {
                                 props: {
                                     type: val.type,
-                                    size: val.size?val.size:'small'
+                                    size: val.size ? val.size : 'small'
                                 },
                                 style: {
                                     marginRight: '5px'
                                 },
                                 on: {
                                     click: () => {
-                                        this.handleButtonClick(params,val)
+                                        this.handleButtonClick(params, val)
                                     }
                                 }
                             }, val.text))
                         })
-                        if (buttonList.length > 0)
-                            return h('div', buttonList)
-                        else
-                            return h()
+                        if (buttonList.length > 0) { return h('div', buttonList) } else { return h() }
                     }
                 })
             },
-            //tableData存入行数据
-            handleContent(){
+            // tableData存入行数据
+            handleContent () {
                 this.dataTable = this.rowsContent
             },
 
-            //处理顶部按钮
-            handleTopButton(url){
-              dispatch(url)
+            // 处理顶部按钮
+            handleTopButton (url) {
+                dispatch(url)
             },
-            //发送搜索事件数据
-            handleTopSearch(){
-                bus.$emit('topSearchMsg',this.valueSearch)
+            // 发送搜索事件数据
+            handleTopSearch () {
+                bus.$emit('topSearchMsg', this.valueSearch)
                 console.log(this.valueSearch)
             },
-            //处理表内按钮点击
-            handleButtonClick(params){
+            // 处理表内按钮点击
+            handleButtonClick (params) {
                 dispatch(params.row._actions.view.url)
             },
 
-            //筛选列
+            // 筛选列
             handleCheckAll () {
                 if (this.indeterminate) {
-                    this.checkAll = false;
+                    this.checkAll = false
                 } else {
-                    this.checkAll = !this.checkAll;
+                    this.checkAll = !this.checkAll
                 }
-                this.indeterminate = false;
+                this.indeterminate = false
 
                 if (this.checkAll) {
-                    this.checkAllGroup = this.testList;
+                    this.checkAllGroup = this.testList
                 } else {
-                    this.checkAllGroup = [];
+                    this.checkAllGroup = []
                 }
-                this.handleColumnsData();
+                this.handleColumnsData()
             },
             checkAllGroupChange (data) {
                 this.dataListChange = data
                 if (data.length === this.dataList.length) {
-                    this.indeterminate = false;
-                    this.checkAll = true;
+                    this.indeterminate = false
+                    this.checkAll = true
                 } else if (data.length > 0) {
-                    this.indeterminate = true;
-                    this.checkAll = false;
+                    this.indeterminate = true
+                    this.checkAll = false
                 } else {
-                    this.indeterminate = false;
-                    this.checkAll = false;
+                    this.indeterminate = false
+                    this.checkAll = false
                 }
-                this.handleColumnsData();
+                this.handleColumnsData()
             },
-            handleColumnsData(){
+            handleColumnsData () {
 
             }
         }
