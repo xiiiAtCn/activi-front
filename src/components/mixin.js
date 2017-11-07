@@ -11,12 +11,53 @@
  */
 import _ from 'lodash'
 import Mutations from 'store/Mutation'
+import { getData } from 'utils/actionUtils'
+import { deepCopy } from 'utils/utils'
 
 const mixin = {
     props: {
         define: {
             type: Object,
             default: {}
+        }
+    },
+    methods: {
+        /**
+         * 获取数据
+         * @param {*} type dataLink类型
+         * @param {*} callback 回调
+         */
+        getData (type, callback) {
+            let dataLink = deepCopy(this.dataLink)
+            let obj = _.filter(dataLink, (item) => {
+                return item.attr === type
+            })[0]
+            // 设置组件请求参数
+            obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
+            obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
+            obj.link.body = this.getRealParamData(obj.link.body)
+            getData(obj.link, (data, err) =>{
+                callback(data, err)
+            })
+        },
+        /**
+         * 将id替换为真实数据
+         * @param {*} param 
+         * id: {
+         *      value: idObj.navSelectId,
+         *      defaultValue: ''
+         * }
+         * id: [*] || {*} || '*'
+         */
+        getRealParamData (param) {
+            let data = {}
+            if (param) {
+                let componentData = this.$store.state.componentPageData
+                for (let key of Object.keys(param)) {
+                    data[key] = componentData[param[key].value] || param[key].defaultValue
+                }
+            }
+            return data
         }
     },
     computed: {
@@ -31,20 +72,13 @@ const mixin = {
                 return ''
             }
             let arrData = []
-            for (let obj of this.define.relation) {
-                arrData.push(this.$store.state.componentPageData[obj.id] || '')
+            for (let id of this.define.relation) {
+                arrData.push(this.$store.state.componentPageData[id] || '')
             }
             return arrData
         },
         dataLink () {
             return _.get(this.define, 'dataLink', {})
-        },
-        param () {
-            let result = {}
-            for (let obj of this.define.relation) {
-                result[obj.key] = this.$store.state.componentPageData[obj.id] || obj.default
-            }
-            return result
         },
     },
     beforeDestroy () {

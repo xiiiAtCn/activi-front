@@ -450,25 +450,6 @@ export default {
             console.log('currentSelectedObj', result)
             return result
         },
-        // 当前查询条件
-        /**
-         * 
-         * 
-         * 
-         * [
-         *      {
-         *          id: '***'   
-         *          title: '',  // 分类
-         *          content: [  // 选中的值
-         *              {
-         *                  id: '',
-         *                  title: ''
-         *              }
-         *          ]
-         *      }
-         * ]
-         * 
-         */
     },
 }
 </script>

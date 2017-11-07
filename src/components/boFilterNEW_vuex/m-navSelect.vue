@@ -34,7 +34,6 @@
 <script>
 import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
-import { getData } from 'utils/actionUtils'
 import mixin from '../mixin'
 import Mutations from 'store/Mutation'
 
@@ -60,7 +59,7 @@ export default {
             // 清除选中之后的数据
             this.tempSelect.splice(i + 1, this.tempSelect.length - i)
             if (this.$store.state.componentPageData[this.id] === this.currentId) {
-                // this.getSelectData()
+                this.getSelectData()
             } else {
                 this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
             }
@@ -77,12 +76,7 @@ export default {
          * 获取数据
          */
         getSelectData () {
-            let obj = _.filter(this.dataLink, (item) => {
-                return item.attr === 'selectData'
-            })[0]
-            // 设置组件请求参数
-            obj.link.params = this.param
-            getData(obj.link, (data, err) =>{
+            this.getData('selectData', (data, err) => {
                 if (data) {
                     this.selectData.push(data)
                 }
