@@ -40,14 +40,22 @@ export default{
         return {
             navSelectDefine: {                                
                 isRelated: true,
-                relation: [{key: 'id', id: idObj.navSelectId, default: ''}],
+                relation: [idObj.navSelectId],
                 dataLink: [
                     {
                         attr: 'selectData',
                         link: {
                             method: 'GET',
                             url: urlList.navDataUrl,
-                            params: {},
+                            pathParams: {
+                                
+                            },
+                            queryParams: {
+                                id: {
+                                    value: idObj.navSelectId,
+                                    defaultValue: ''
+                                }
+                            },
                             body: {}
                         }
                     }
@@ -57,14 +65,22 @@ export default{
 
             filterDefine: {
                 isRelated: true,
-                relation: [{key: 'id', id: idObj.navSelectId, default: ''}],
+                relation: [idObj.navSelectId],
                 dataLink: [
                     {
                         attr: 'bodyData',
                         link: {
                             method: 'GET',
                             url: urlList.filterDataUrl,
-                            params: {},
+                            pathParams: {
+                                
+                            },
+                            queryParams: {
+                                id: {
+                                    value: idObj.navSelectId,
+                                    defaultValue: ''
+                                }
+                            },
                             body: {}
                         }
                     }
@@ -74,18 +90,25 @@ export default{
 
             tableDefine: {
                 isRelated: true,
-                relation: [
-                    {key: 'id', id: idObj.navSelectId, default: ''},
-                    {key: 'condition', id: idObj.filterId, default: {}}
-                ],
+                relation: [idObj.navSelectId, idObj.filterId],
                 dataLink: [
                     {
                         attr: 'tableData', 
                         link: {
                             method: 'POST',
                             url: urlList.tableDataUrl,
-                            params: {},
-                            body: {}
+                            pathParams: {},
+                            queryParams: {},
+                            body: {
+                                id: {
+                                    value: idObj.navSelectId,
+                                    defaultValue: ''
+                                },
+                                condition: {
+                                    value: idObj.filterId,
+                                    defaultValue: {}
+                                }
+                            }
                         }
                     },
                     {
@@ -93,7 +116,13 @@ export default{
                         link: {
                             method: 'GET',
                             url: urlList.tableDefineUrl,
-                            params: {},
+                            pathParams: {},
+                            queryParams: {
+                                id: {
+                                    value: idObj.navSelectId,
+                                    defaultValue: ''
+                                },
+                            },
                             body: {}
                         }
                     }

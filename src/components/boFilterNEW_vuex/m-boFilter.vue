@@ -110,7 +110,6 @@
 <script>
 import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
-import { getData } from 'utils/actionUtils'
 import mixin from '../mixin'
 import Mutation from 'store/Mutation'
 
@@ -175,7 +174,6 @@ export default{
                 return false
             }
         },
-        
         showLayer (adId) {
             this.currentAdId = adId
             this.layerStatus = true
@@ -213,11 +211,7 @@ export default{
            return result
         },
         getFilterData () {
-            let obj = _.filter(this.dataLink, (item) => {
-                return item.attr === 'bodyData'
-            })[0]
-            obj.link.params = this.param
-            getData(obj.link, (data, err) =>{
+            this.getData('bodyData', (data, err) => {
                 if (data) {
                     this.bodyData = data.rows
                 } else {
