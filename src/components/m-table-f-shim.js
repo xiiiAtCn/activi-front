@@ -64,10 +64,8 @@ let tableFShim = Vue.component('tableF-Shim', {
                     this.rowsContent = data
                 }
             })
-        }
-    },
-    watch: {
-        relationData () {
+        },
+        watchValuesChanged () {
             this.getTableDefine()
             this.getTableData()
         }

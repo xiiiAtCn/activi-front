@@ -219,10 +219,13 @@ export default{
                 }
                 this.queryData = []
             })
+        },
+        watchValuesChanged () {
+            this.getFilterData()
         }
     },
     mounted () {
-        this.getFilterData()
+        // this.getFilterData()
     },
     computed: {
         // 全局设置
@@ -267,9 +270,6 @@ export default{
             queryData = this.changeQueryDataToPostData(queryData)
             this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
         },
-        relationData () {
-            this.getFilterData()
-        } 
     }
 }
 </script>

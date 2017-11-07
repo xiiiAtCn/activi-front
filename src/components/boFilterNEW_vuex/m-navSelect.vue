@@ -82,9 +82,7 @@ export default {
                 }
             })
         },
-    },
-    watch: {
-        relationData () {
+        watchValuesChanged () {
             this.getSelectData()
         }
     },
@@ -101,6 +99,9 @@ export default {
             }
         },
     },
+    mounted () {
+        this.getSelectData()
+    }
 }
 </script>
 <style scoped>

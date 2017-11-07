@@ -33,5 +33,3 @@ export function deepCopy (source) {
 export function isEmptyObj (obj) {
     return Object.keys(obj).length === 0
 } 
-
-// export function 
