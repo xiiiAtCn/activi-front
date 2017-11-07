@@ -52,24 +52,14 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableWidth = _.get(def, ['ui_define', 'tableWidth'], undefined)
         },
         getTableDefine () {
-            let obj = _.filter(this.dataLink, (item) => {
-                return item.attr === 'tableDefine'
-            })[0]
-            // 设置组件请求参数
-            obj.link.params = this.param
-            getData(obj.link, (data, err) =>{
+            this.getData('tableDefine', (data, err) => {
                 if (data) {
                     this.initialize(data)
                 }
             })
         },
         getTableData () {
-            let obj = _.filter(this.dataLink, (item) => {
-                return item.attr === 'tableData'
-            })[0]
-            // 设置组件请求参数
-            obj.link.params = this.param
-            getData(obj.link, (data, err) =>{
+            this.getData('tableData', (data, err) => {
                 if (data) {
                     this.rowsContent = data
                 }

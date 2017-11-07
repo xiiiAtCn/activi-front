@@ -5,6 +5,23 @@
                 <div v-for="item in operation"  class="button-container" >
                      <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
                 </div>
+                <div  class='button-container' >
+                    <Poptip placement="bottom">
+                        <Button type="ghost"><Icon type="grid" style="font-size: 16px"></Icon></Button>
+                        <div class="api" slot="content">
+                            <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                                <Checkbox :indeterminate="indeterminate"
+                                          :value="checkAll"
+                                          @click.prevent.native="handleCheckAll">全选</Checkbox>
+                            </div>
+                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                                <div v-for='item in dataList'>
+                                    <Checkbox :label="item.label"></Checkbox>
+                                </div>
+                            </CheckboxGroup>
+                        </div>
+                    </Poptip>
+                </div>
             </Col>
             <Col span="8" v-show="search">
                 <div class="search">
@@ -14,7 +31,9 @@
                 </div>
             </Col>
         </Row>
-        <Table border :columns="columnsData" :data="dataTable" :width="tableWidth"></Table>
+        <div style="overflow-x:scroll;">
+            <Table border :columns="columnsData" :data="dataTable"></Table>
+        </div>
     </div>
 </template>
 <script>
@@ -46,9 +65,15 @@
         data() {
             return {
                 columnsData:[],
+                columnsDataCopy:[],
                 dataTable:[],
-                topButtonMsg:[],
-                valueSearch:''
+                valueSearch:'',
+                //列选择控制
+                indeterminate: false,
+                checkAll: true,
+                checkAllGroup: [],
+                dataList: [],
+                testList:[]
             }
         },
         watch:{
@@ -73,9 +98,8 @@
             },
             //columnsData存入设置
             getColumnsDataWay(c){
-                let columnsData = []
                 c.forEach((val,i)=> {
-                    columnsData[i]={
+                    this.columnsData[i]={
                         title: val.text,
                         key: val.field,
                         render: (h, params) => {
@@ -97,15 +121,15 @@
                             }
                         }
                     }
-
+                    //筛选列
+                    this.dataList[i]={
+                        label: val.text,
+                        value: val.field
+                    }
+                    this.testList[i]=val.text
                 })
-                this.columnsData = columnsData
-            },
-            //顶部按钮数据存入
-            pushTopButtonMsg(opt){
-                opt.forEach((val)=>{
-                    this.topButtonMsg.push(val)
-                })
+                this.columnsDataCopy=this.columnsData
+                this.checkAllGroup = this.testList
             },
             //配置操作的按钮
             showButton(smb){
@@ -154,15 +178,46 @@
                 console.log(this.valueSearch)
             },
             //发送表内按钮数据
-            handleButtonClick(params,val){
-                bus.$emit('clickRowData',params)
-                console.log(params)
-                console.log(val)
+            handleButtonClick(params){
+                dispatch(params.row._actions.view.url)
+            },
+
+            //筛选列
+            handleCheckAll () {
+                if (this.indeterminate) {
+                    this.checkAll = false;
+                } else {
+                    this.checkAll = !this.checkAll;
+                }
+                this.indeterminate = false;
+
+                if (this.checkAll) {
+                    this.checkAllGroup = this.testList;
+                } else {
+                    this.checkAllGroup = [];
+                }
+                this.handleColumnsData();
+            },
+            checkAllGroupChange (data) {
+                if (data.length === this.dataList.length) {
+                    this.indeterminate = false;
+                    this.checkAll = true;
+                } else if (data.length > 0) {
+                    this.indeterminate = true;
+                    this.checkAll = false;
+                } else {
+                    this.indeterminate = false;
+                    this.checkAll = false;
+                }
+                this.handleColumnsData();
+            },
+            handleColumnsData(){
+
             }
         }
     }
 </script>
-<style scoped >
+<style scoped>
     .button-container{
         display: inline-block;
         min-width:65px;
