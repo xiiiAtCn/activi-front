@@ -19,10 +19,10 @@ import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 
 const urlList = {
-    navDataUrl: '/api/boFilter/getNavData',
-    filterDataUrl: '/api/boFilter/getFilterData',
-    tableDataUrl: '/api/boFilter/getTableData',
-    tableDefineUrl: '/api/boFilter/getTableDefine'
+    navDataUrl: '/api/filter/getSelect',
+    filterDataUrl: '/api/filter/getFilter',
+    tableDataUrl: '/api/bo/list',
+    tableDefineUrl: '/api/bo/simpleListDefine'
 }
 
 const reqCountFlag = {

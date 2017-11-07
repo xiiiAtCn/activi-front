@@ -34,7 +34,7 @@
 <script>
 import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
-import { getData } from 'utils/skipUtils'
+import { getData } from 'utils/actionUtils'
 import mixin from '../mixin'
 
 export default {
