@@ -73,6 +73,7 @@
                 checkAll: true,
                 checkAllGroup: [],
                 dataList: [],
+                dataListChange: [],
                 testList:[]
             }
         },
@@ -133,6 +134,7 @@
             },
             //配置操作的按钮
             showButton(smb){
+                if(this.columnsData[this.columnsData.length-1].key === 'action'){return}
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -177,7 +179,7 @@
                 bus.$emit('topSearchMsg',this.valueSearch)
                 console.log(this.valueSearch)
             },
-            //发送表内按钮数据
+            //处理表内按钮点击
             handleButtonClick(params){
                 dispatch(params.row._actions.view.url)
             },
@@ -199,6 +201,7 @@
                 this.handleColumnsData();
             },
             checkAllGroupChange (data) {
+                this.dataListChange = data
                 if (data.length === this.dataList.length) {
                     this.indeterminate = false;
                     this.checkAll = true;
