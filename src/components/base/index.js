@@ -54,7 +54,9 @@ let mSteps = resolve => {
 let mSwitch = resolve => {
     require(['./m-switch.vue'], resolve)
 }
-
+let mTab = resolve => {
+    require(['./m-tab.vue'], resolve)
+}
 let mTime = resolve => {
     require(['./m-time.vue'], resolve)
 }
@@ -77,4 +79,5 @@ Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
 Vue.component('mSteps', mSteps)
 Vue.component('mSwitch', mSwitch)
+Vue.component('mTab', mTab)
 Vue.component('mTime', mTime)
