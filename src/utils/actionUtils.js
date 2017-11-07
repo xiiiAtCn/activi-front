@@ -105,7 +105,7 @@ export const  getData = (action, callback) => {
         }
     } else {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
-    }   
+    }
 
     if(stack === 0) {
         bus.$emit('show-my-full-loading')
@@ -122,13 +122,13 @@ export const  getData = (action, callback) => {
                 bus.$emit('hide-my-full-loading')
             callback(result, err)
         })
-    else 
+    else
         request.setUrl(url).forGet((result, err) => {
             stack--
             if(stack === 0)
                 bus.$emit('hide-my-full-loading')
             callback(result, err)
-        }) 
+        })
 }
 
 /**

@@ -1,51 +1,56 @@
 <template>
-    <Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>
+    <div>
+        <Tree :data="treeData" :load-data="getChildNode" @on-select-change="selectedCurrentNode"></Tree>
+    </div>
 </template>
 
 <script>
-    import _ from 'lodash'
-    //    import {dispatch} from  '../../../utils/actionUtils'
+//    import _ from 'lodash'
+//    import { deepCopy } from 'utils/utils'
+    import mixin from '../mixin'
+
     export default{
+        mixins: [mixin],
         data () {
             return {
-                urls: {
-                    // 获取跟节点
-                    getRootNode: '/api/tree/root-node'
-                },
-                // 关闭tab切换滑动效果
-                noCssTransition: false,
-                // 定义树
-                treeData: [],
+                // 树结构
+                treeData: []
             }
         },
         methods: {
-            getChildNode () {
-//                this.setUrl(item.childUrl).forGet(res => {
-//                    setTimeout(() => {
-//                        callback(res)
-//                    }, 400)
-//                })
-                setTimeout(() => {
-                    const data = [
-                        {
-                            title: '还有',
-                            loading: false,
-                            children: []
-                        },
-                        {
-                            title: '其实还有',
-                            loading: false,
-                            children: []
-                        }
-                    ];
-                    callback(data);
-                }, 400)
+            getChildNode (item, callback) {
+                this.getData(item.children, (data, err) => {
+                    if (data) {
+                    	setTimeout(() => {
+                    		callback(data)
+                        })
+                    }
+                })
             },
-            selectedCurrentNode () {
-
+            selectedCurrentNode (currentNode) {},
+            getTreeData () {
+                this.getData('treeData', (data, err) => {
+                    if (data) {
+                        this.treeData = this.treeNodeShow(data)
+                    }
+                })
+            },
+            // 判断当前节点展示方式为 有子节点 或 无子节点
+            treeNodeShow (treeData) {
+            	for (let i of treeData){
+            		if (i.leaf === false){
+            			delete i.children
+                    } else {
+                        i.loading = false
+                        i.children = []
+                    }
+                }
+                return treeData
             }
         },
         mounted () {
+            console.info("mBoTree work")
+            this.getTreeData()
         }
     }
 </script>
@@ -83,10 +88,6 @@
 </style>
 
 <style scoped>
-    /*外层*/
-    .layout {
-        padding: 20px 24px;
-    }
 
     /*左侧树菜单*/
     .leftMenu {
