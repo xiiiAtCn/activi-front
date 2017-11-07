@@ -8,18 +8,8 @@
         <Col span="20">
         <div class="rightContent">
             <Row>
-                <!--<tableF-Shim/>-->
+                <tableF-Shim/>
             </Row>
-            <!--<Row>-->
-            <!--<Table :columns="columns" :data="data"></Table>-->
-            <!--</Row>-->
-            <!--<Row class="toTop">-->
-            <!--<Tabs type="card" :animated="noCssTransition" v-if="childInfo.length > 0">-->
-            <!--<TabPane v-for="(item,index) in childInfo" :label="item.childMeta" :key="index">-->
-            <!--<Table :columns="item.childColumns" :data="item.childData"></Table>-->
-            <!--</TabPane>-->
-            <!--</Tabs>-->
-            <!--</Row>-->
         </div>
         </Col>
     </div>
@@ -27,7 +17,7 @@
 
 <script>
     import _ from 'lodash'
-    import {dispatch} from  '../../utils/actionUtils'
+    import {dispatch} from  '../../../utils/actionUtils'
     export default{
         data () {
             return {
@@ -38,18 +28,18 @@
                 // 定义树
                 treeData: [
                     {
-                        title: 'parent1',
+                        title: '有',
                         loading: false,
                         children: []
                     },
                     {
-                        title: 'parent2'
+                        title: '无'
                     },
                     {
-                        title: 'parent3'
+                        title: '无'
                     },
                     {
-                        title: 'parent4',
+                        title: '有',
                         loading: false,
                         children: []
                     }
@@ -66,12 +56,12 @@
                 setTimeout(() => {
                     const data = [
                         {
-                            title: 'children',
+                            title: '还有',
                             loading: false,
                             children: []
                         },
                         {
-                            title: 'children',
+                            title: '其实还有',
                             loading: false,
                             children: []
                         }

@@ -81,7 +81,7 @@ const boTree = resolve => require(['../components/m-boTree.vue'], resolve)
 const functionLog = resolve => require(['../components/businessModule/m-fonctionLog.vue'], resolve)
 
 // 功能日志
-const taskPlan = resolve => require(['../components/businessModule/taskPlan.vue'], resolve)
+const taskPlan = resolve => require(['../components/businessModule/taskPlan/taskPlan.vue'], resolve)
 
 //邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
