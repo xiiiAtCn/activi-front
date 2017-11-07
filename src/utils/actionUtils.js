@@ -48,9 +48,6 @@ export function dispatch () {
     console.groupEnd()
 }
 
-function deepCopy (object) {
-    return JSON.parse(JSON.stringify(object))
-}
 /***
  * 客户端事件 (遇到了再说)
  */
@@ -90,7 +87,10 @@ function asBus (action) {
  */
 let stack = 0
 export const getData = (action, callback) => {
-    let url, request = new Request(), method = 'GET', body
+    let url
+    let request = new Request()
+    let method = 'GET'
+    let body
     if (typeof action === 'string') {
         url = action
     } else if (Object.prototype.toString.apply(action) === '[object Object]') {

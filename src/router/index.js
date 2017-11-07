@@ -121,6 +121,7 @@ const router = new VueRouter({
         //     ]
         // },
         {
+            
             path: '/layoutContent/:id',
             component: mLayoutContent,
             children: [
