@@ -234,6 +234,46 @@ export default {
             showAllRow: false,
         }
     },
+    computed: {
+        // 全局设置
+        option (state) {
+            return {...this.defaultGlobalOption, ...this.globalOption}
+        },
+        // 正常数据
+        normalFilter () {
+            let data = deepCopy(this.filterData)
+            let result = _.filter(data, (o) => {
+                return !o.option.isRegion
+            })
+            return this._addDefaultOption(result)
+        },
+        // 区间选择数据
+        regionFilter () {
+            let data = deepCopy(this.filterData)
+            let result = _.filter(data, (o) => {
+                return o.option.isRegion
+            })
+            return this._addDefaultOption(result)
+        },
+        // {'123': [], '456': []}
+        currentSelectedObj () {
+            const queryData = deepCopy(this.queryData)
+            let result = {}
+            for (let query of queryData) {
+                let tempIdArr = []
+                for (let child of query.child) {
+                    tempIdArr.push(child.id)
+                }
+                if (result[query.id]) {
+                    result[query.id] = result[query.id].concat(tempIdArr)
+                } else {
+                    result[query.id] = tempIdArr
+                }
+            }
+            console.log('currentSelectedObj', result)
+            return result
+        },
+    },
     methods: {
         /**
          * 添加查询条件
@@ -410,46 +450,6 @@ export default {
         showAllOrNot () {
             this.showAllRow = !this.showAllRow
         }
-    },
-    computed: {
-        // 全局设置
-        option (state) {
-            return {...this.defaultGlobalOption, ...this.globalOption}
-        },
-        // 正常数据
-        normalFilter () {
-            let data = deepCopy(this.filterData)
-            let result = _.filter(data, (o) => {
-                return !o.option.isRegion
-            })
-            return this._addDefaultOption(result)
-        },
-        // 区间选择数据
-        regionFilter () {
-            let data = deepCopy(this.filterData)
-            let result = _.filter(data, (o) => {
-                return o.option.isRegion
-            })
-            return this._addDefaultOption(result)
-        },
-        // {'123': [], '456': []}
-        currentSelectedObj () {
-            const queryData = deepCopy(this.queryData)
-            let result = {}
-            for (let query of queryData) {
-                let tempIdArr = []
-                for (let child of query.child) {
-                    tempIdArr.push(child.id)
-                }
-                if (result[query.id]) {
-                    result[query.id] = result[query.id].concat(tempIdArr)
-                } else {
-                    result[query.id] = tempIdArr
-                }
-            }
-            console.log('currentSelectedObj', result)
-            return result
-        },
     },
 }
 </script>
