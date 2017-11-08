@@ -111,7 +111,10 @@ export const getData = (action, callback) => {
     }
     stack++
     setTimeout(() => {
-        if (stack !== 0) { bus.$emit('hide-my-full-loading') }
+        if (stack !== 0) {
+            bus.$emit('hide-my-full-loading')
+            console.warn('network seems slow. overlay is forced to close even though request is not back')
+        }
     }, 10000)
     if (method === 'POST') {
         request.setUrl(url).setBody(body).forPost((result, err) => {
