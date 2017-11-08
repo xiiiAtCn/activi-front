@@ -157,6 +157,50 @@ export default{
             defaultRowOption: defaultRowOption
         }
     },
+    computed: {
+        // 全局设置
+        option (state) {
+            return {...defaultGlobalOption, ...this.globalOption}
+        },
+        // 普通filterData
+        basicFilterData () {
+            let data = deepCopy(this.bodyData)
+            return _.filter(data, (o) => {
+                return !o.option.advancedSelect
+            })
+        },
+        // 高级选项filterData
+        advancedFilterData () {
+            let data = deepCopy(this.bodyData)
+            return _.filter(data, (o) => {
+                return o.option.advancedSelect
+            })
+        },
+        // 当前选中高级选项btn
+        currentAdBtn () {
+            if (!this.currentAdId) {
+                return null
+            }
+            let data = deepCopy(this.advancedFilterData)
+            let curAdBtn = _.filter(data, (o) => {
+                return o.id === this.currentAdId
+            })[0]
+            return {
+                id: curAdBtn.id,
+                title: curAdBtn.title
+            }
+        },
+        currentAdFilterData () {
+            return this._getFilterDataByAdId(this.currentAdId)
+        },
+    },
+    watch: {
+        queryData (val) {
+            let queryData = deepCopy(val)
+            queryData = this.changeQueryDataToPostData(queryData)
+            this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
+        },
+    },
     methods: {
         // 删除选项
         delQuery (button) {
@@ -222,53 +266,6 @@ export default{
             this.getFilterData()
         }
     },
-    mounted () {
-        // this.getFilterData()
-    },
-    computed: {
-        // 全局设置
-        option (state) {
-            return {...defaultGlobalOption, ...this.globalOption}
-        },
-        // 普通filterData
-        basicFilterData () {
-            let data = deepCopy(this.bodyData)
-            return _.filter(data, (o) => {
-                return !o.option.advancedSelect
-            })
-        },
-        // 高级选项filterData
-        advancedFilterData () {
-            let data = deepCopy(this.bodyData)
-            return _.filter(data, (o) => {
-                return o.option.advancedSelect
-            })
-        },
-        // 当前选中高级选项btn
-        currentAdBtn () {
-            if (!this.currentAdId) {
-                return null
-            }
-            let data = deepCopy(this.advancedFilterData)
-            let curAdBtn = _.filter(data, (o) => {
-                return o.id === this.currentAdId
-            })[0]
-            return {
-                id: curAdBtn.id,
-                title: curAdBtn.title
-            }
-        },
-        currentAdFilterData () {
-            return this._getFilterDataByAdId(this.currentAdId)
-        }
-    },
-    watch: {
-        queryData (val) {
-            let queryData = deepCopy(val)
-            queryData = this.changeQueryDataToPostData(queryData)
-            this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
-        }
-    }
 }
 </script>
 <style scoped>

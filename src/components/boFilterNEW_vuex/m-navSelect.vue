@@ -43,8 +43,39 @@ export default {
         return {
             // 当前选中值
             tempSelect: [],
-            selectData: []
+            // 显示用数组
+            selectData: [],
+            // 初始循环用数组
+            initTempSelect: []
         }
+    },
+    computed: {
+        titleText () {
+            return _.get(this.define, 'titleText', '筛选结果')
+        },
+         // 当前选中的最后一项的id
+        currentId () {
+            if (this.selectData && this.selectData.length > 0) {
+                return this.selectData[this.selectData.length - 1].selected || ''
+            } else {
+                return ''
+            }
+        },
+        initSelect () {
+            return this.define.initSelect || []
+        }
+    },
+    /**
+     * 初始化操作
+     * todo 如果传入初始化数组，按数组显示，否则选择第一项
+     */
+    mounted () {
+        this.getSelectData(() => {
+            let selectData = this.selectData[0]
+            let option = selectData.child[0]
+            this.$set(this.tempSelect, 0, option.value)
+            this.selectChanged (selectData, 0, option.value)
+        })
     },
     methods: {
         // 设置对应项的selected并emit事件
@@ -75,33 +106,20 @@ export default {
         /**
          * 获取数据
          */
-        getSelectData () {
+        getSelectData (callback) {
             this.getData('selectData', (data, err) => {
                 if (data) {
                     this.selectData.push(data)
+                }
+                if (callback) {
+                    callback(data, err)
                 }
             })
         },
         watchValuesChanged () {
             this.getSelectData()
-        }
-    },
-    computed: {
-        titleText () {
-            return _.get(this.define, 'titleText', '筛选结果')
         },
-         // 当前选中的最后一项的id
-        currentId () {
-            if (this.selectData && this.selectData.length > 0) {
-                return this.selectData[this.selectData.length - 1].selected || ''
-            } else {
-                return ''
-            }
-        }
     },
-    mounted () {
-        this.getSelectData()
-    }
 }
 </script>
 <style scoped>

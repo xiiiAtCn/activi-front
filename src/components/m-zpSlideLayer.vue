@@ -78,36 +78,6 @@ export default {
             }
         }
     },
-    methods: {
-        // 关闭layer
-        closeLayer () {
-            this.visible = false
-            this.$emit('input', false)
-        },
-        ok () {
-            if (this.loading) {
-                this.buttonLoading = true
-            } else {
-                if (this.autoClose) {
-                    this.closeLayer()
-                }
-            }
-            this.$emit('on-ok')
-        },
-        cancel () {
-            if (this.autoClose) {
-                this.closeLayer()
-            }
-            this.$emit('on-cancel')
-        },
-        EscClose (e) {
-            if (this.visible) {
-                if (e.keyCode === 27) {
-                    this.closeLayer()
-                }
-            }
-        }
-    },
     computed: {
         currentTop () {
             if (this.visible) {
@@ -140,7 +110,37 @@ export default {
     },
     beforeDestroy () {
         document.removeEventListener('keydown', this.EscClose)
-    }
+    },
+    methods: {
+        // 关闭layer
+        closeLayer () {
+            this.visible = false
+            this.$emit('input', false);
+        },
+        ok () {
+            if (this.loading) {
+                this.buttonLoading = true
+            } else {
+                if (this.autoClose) {
+                    this.closeLayer()
+                }
+            }
+            this.$emit('on-ok')
+        },
+        cancel () {
+            if (this.autoClose) {
+                this.closeLayer()
+            }
+            this.$emit('on-cancel')
+        },
+        EscClose (e) {
+            if (this.visible) {
+                if (e.keyCode === 27) {
+                    this.closeLayer()
+                }
+            }
+        }
+    },
 }
 </script>
 <style scoped>
