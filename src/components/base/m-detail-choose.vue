@@ -2,7 +2,8 @@
     <div v-show="visible">
         <Row >
             <Col span="22">
-                <Input readonly 
+                <Input 
+                    readonly 
                     :value="visibleName" 
                     :placeholder="placeholder">
                 </Input>
