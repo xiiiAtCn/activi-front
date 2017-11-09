@@ -94,7 +94,7 @@ const emailDirectory = resolve => require(['../components/businessModule/email/e
 // bo过滤
 const boFilter = resolve => require(['../components/boFilterNEW_vuex/m-boFilterPage.vue'], resolve)
 
-const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
+// const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
 
 Vue.use(VueRouter)
 Vue.use(iView)
@@ -103,7 +103,7 @@ const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
-        {path: '/', component: mLogin},
+        { path: '/', component: mLogin },
         // // 这些暂时不用了
         // {path: '/inventory', component: inventory},
         // {path: '/notice', component: notice},
@@ -123,7 +123,7 @@ const router = new VueRouter({
         //     ]
         // },
         {
-            
+
             path: '/layoutContent/:id',
             component: mLayoutContent,
             children: [
@@ -159,17 +159,17 @@ const router = new VueRouter({
                 },
                 // bo关系树 部门人员
                 // {
-                    // path: '/layoutContent/:id/boTree', component: boTree,
-                    // children: [
-                    //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
-                    // ]
+                // path: '/layoutContent/:id/boTree', component: boTree,
+                // children: [
+                //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
+                // ]
                 // },
                 // bo关系树 物料档案
                 // {
                 //     path: '/layoutContent/:id/fileTree', component: fileTree,
-                    // children: [
-                    //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
-                    // ]
+                // children: [
+                //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
+                // ]
                 // },
                 // bo关系 bo视图
                 // {
@@ -195,14 +195,14 @@ const router = new VueRouter({
                 },
                 // 工作流程
                 {
-                    path:'/layoutContent/:id/workflow', component: workflow,
+                    path: '/layoutContent/:id/workflow', component: workflow,
                     children: [
-                        { path:'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
+                        { path: 'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
                     ]
                 },
                 // 工作流程 查看
                 {
-                    path:'/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
+                    path: '/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
                 },
                 {
                     path: '/layoutContent/:id/projectSummary', component: projectSummary
@@ -211,9 +211,9 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/:title/projectOut',
                     component: projectOut,
                     children: [
-                        {path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails},
-                        {path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson},
-                        {path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps}
+                        { path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails },
+                        { path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson },
+                        { path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps }
                     ]
                 },
                 {
@@ -224,13 +224,13 @@ const router = new VueRouter({
                             path: '/layoutContent/:id/monitor/levelClassify',
                             component: levelClassify,
                             children: [
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap},
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid},
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap },
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid },
                                 {
                                     path: '/layoutContent/:id/monitor/levelClassify/tabFaultHistory',
                                     component: tabFaultHistory
                                 },
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow}
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow }
                             ]
                         },
                         {
@@ -282,18 +282,18 @@ const router = new VueRouter({
             path: '/test', component: Test
         },
         {
-            path:'/functionLog', component: functionLog
+            path: '/functionLog', component: functionLog
         },
         // 邮件路由
         {
-            path:'/email',
+            path: '/email',
             component: mEmail,
             children: [
-                {   path:'/email/home', component: emailHome   },
-                {   path:'/email/writeEmail', component: writeEmail   },
-                {   path:'/email/checkEmail', component: checkEmail   },
-                {   path:'/email/emailDetail', component: emailDetail   },
-                {   path:'/email/emailDirectory', component: emailDirectory   },
+                { path: '/email/home', component: emailHome },
+                { path: '/email/writeEmail', component: writeEmail },
+                { path: '/email/checkEmail', component: checkEmail },
+                { path: '/email/emailDetail', component: emailDetail },
+                { path: '/email/emailDirectory', component: emailDirectory },
             ]
         },
         // 报价路由
@@ -302,25 +302,25 @@ const router = new VueRouter({
             component: productPrice
         },
         // todo 测试用
-        {
-            path: '/zpTest',
-            component: mLayoutContent,
-            children: [
-                {
-                    path: '/zpTest/layer', component: layerTest
-                }
-            ]
-        }
-    
+        // {
+        //     path: '/zpTest',
+        //     component: mLayoutContent,
+        //     children: [
+        //         {
+        //             path: '/zpTest/layer', component: layerTest
+        //         }
+        //     ]
+        // }
+
     ]
 })
 
 router.beforeEach((to, from, next) => {
-  iView.LoadingBar.start()
-  next()
+    iView.LoadingBar.start()
+    next()
 })
 
 router.afterEach((to, from, next) => {
-  iView.LoadingBar.finish()
+    iView.LoadingBar.finish()
 })
 export default router
