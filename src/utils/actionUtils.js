@@ -48,40 +48,6 @@ export function dispatch () {
     console.groupEnd()
 }
 
-/***
- * 客户端事件 (遇到了再说)
- */
-function asBus (action) {
-  // console.log('client event', JSON.stringify(action))
-  // let url, method = 'GET', params, eventId, body, source
-  // eventId = action.eventId
-  // if (typeof action.link === 'string') {
-  //     url = action.link
-  // } else if (typeof action.link === 'object') {
-  //     source = action.source
-  //     url = action.link.url
-  //     method = action.link.method
-  //     params = action.link.params || {}
-  //     if (method === 'POST') {
-  //         source = body = params
-  //     } else {
-  //         source = deepCopy(params)
-  //         url = replace(url, params)
-  //         url = addQuery(url, params)
-  //     }
-  // }
-  // let request = new Request()
-  // if (method === 'GET') {
-  //     request.setUrl(url).forGet(data => {
-  //         bus.$emit(eventId, data, source)
-  //     })
-  // } else {
-  //     request.setUrl(url).setBody(body).forPost(data => {
-  //         bus.$emit(eventId, data, source)
-  //     })
-  // }
-}
-
 /**
  * 获取数据
  */
@@ -95,12 +61,11 @@ export const getData = (action, callback) => {
         url = action
     } else if (Object.prototype.toString.apply(action) === '[object Object]') {
         url = action.url
+        url = replace(url, action.pathParams || {})
+        url = addQuery(url, action.queryParams || {})
         if (action.method === 'POST') {
             body = action.body
             method = 'POST'
-        } else {
-            url = replace(url, action.pathParams || {})
-            url = addQuery(url, action.queryParams || {})
         }
     } else {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
