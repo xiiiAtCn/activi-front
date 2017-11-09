@@ -144,6 +144,11 @@ const mixin = {
         return {
             errorMessage: ''
         }
+    },
+    mounted () {
+        this.$nextTick(() => {
+            console.log(`${this.name}'s props are `, this.define)
+        })
     }
 }
 

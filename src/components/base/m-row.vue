@@ -29,6 +29,11 @@
           type () {
               return _.get(this.define, 'type', null)
           }
+      },
+      mounted () {
+          this.$nextTick(() => {
+              console.log('content is ', this.content)
+          })
       }
   }
 </script>

@@ -6,6 +6,8 @@ const mDetailChoose = resolve =>
     require(['./m-detail-choose.vue'], resolve)
 const mInput = resolve =>
     require(['./m-input.vue'], resolve)
+const mLabel = resolve =>
+    require(['./m-label.vue'], resolve)
 const mLoading = resolve =>
     require(['./m-loading.vue'], resolve)
 const mMultiCheck = resolve =>
@@ -26,6 +28,7 @@ const mTab = resolve =>
 Vue.component('mDate', mDate)
 Vue.component('mDetailChoose', mDetailChoose)
 Vue.component('mInput', mInput)
+Vue.component('mLabel', mLabel)
 Vue.component('mLoading', mLoading)
 Vue.component('mMultiCheck', mMultiCheck)
 Vue.component('mNumber', mNumber)
