@@ -19,152 +19,152 @@ const mBoTemplate = resolve => {
 // }
 
 const mBillMeta = resolve => {
-  require(['./m-billMeta.vue'], resolve)
+    require(['./m-billMeta.vue'], resolve)
 }
 
 const mBoMeta = resolve => {
-  require(['./m-boMeta.vue'], resolve)
+    require(['./m-boMeta.vue'], resolve)
 }
 
 const mBottomModal = resolve => {
-  require(['./m-bottomModal.vue'], resolve)
+    require(['./m-bottomModal.vue'], resolve)
 }
 
 const mCard = resolve => {
-  require(['./m-card.vue'], resolve)
+    require(['./m-card.vue'], resolve)
 }
 
 const mCoin = resolve => {
-  require(['./m-coin.vue'], resolve)
+    require(['./m-coin.vue'], resolve)
 }
 
 const mConfirm = resolve => {
-  require(['./m-confirm.vue'], resolve)
+    require(['./m-confirm.vue'], resolve)
 }
 
 const mDeliverables = resolve => {
-  require(['./m-deliverables.vue'], resolve)
+    require(['./m-deliverables.vue'], resolve)
 }
 
 const mDetailView = resolve => {
-  require(['./m-detailView.vue'], resolve)
+    require(['./m-detailView.vue'], resolve)
 }
 
 const mEntry = resolve => {
-  require(['./m-entry.vue'], resolve)
+    require(['./m-entry.vue'], resolve)
 }
 
 const mFilter = resolve => {
-  require(['./m-filter.vue'], resolve)
+    require(['./m-filter.vue'], resolve)
 }
 
 const mFilterRow = resolve => {
-  require(['./m-filterRow.vue'], resolve)
+    require(['./m-filterRow.vue'], resolve)
 }
 
 const mHead = resolve => {
-  require(['./m-head.vue'], resolve)
+    require(['./m-head.vue'], resolve)
 }
 
 const mIndex = resolve => {
-  require(['./m-index.vue'], resolve)
+    require(['./m-index.vue'], resolve)
 }
 
 const mIsBuilding = resolve => {
-  require(['./m-isBuilding.vue'], resolve)
+    require(['./m-isBuilding.vue'], resolve)
 }
 
 const mLayoutContentDefault = resolve => {
-  require(['./m-layout-content-default.vue'], resolve)
+    require(['./m-layout-content-default.vue'], resolve)
 }
 
 const mLayoutContent = resolve => {
-  require(['./m-layout-content.vue'], resolve)
+    require(['./m-layout-content.vue'], resolve)
 }
 
 const mLayout = resolve => {
-  require(['./m-layout.vue'], resolve)
+    require(['./m-layout.vue'], resolve)
 }
 
 const mListFilter = resolve => {
-  require(['./m-listFilter.vue'], resolve)
+    require(['./m-listFilter.vue'], resolve)
 }
 
 const mListResult = resolve => {
-  require(['./m-listResult.vue'], resolve)
+    require(['./m-listResult.vue'], resolve)
 }
 
 const mListTable = resolve => {
-  require(['./m-listTable.vue'], resolve)
+    require(['./m-listTable.vue'], resolve)
 }
 
 const mListTask = resolve => {
-  require(['./m-listTask.vue'], resolve)
+    require(['./m-listTask.vue'], resolve)
 }
 
 const mListView = resolve => {
-  require(['./m-detailView-shim.js'], resolve)
+    require(['./m-detailView-shim.js'], resolve)
 }
 
 const mMainContent = resolve => {
-  require(['./m-main-content.vue'], resolve)
+    require(['./m-main-content.vue'], resolve)
 }
 
 const mMain = resolve => {
-  require(['./m-main.vue'], resolve)
+    require(['./m-main.vue'], resolve)
 }
 
 const mMenu = resolve => {
-  require(['./m-menu.vue'], resolve)
+    require(['./m-menu.vue'], resolve)
 }
 
 const mModal = resolve => {
-  require(['./m-modal.vue'], resolve)
+    require(['./m-modal.vue'], resolve)
 }
 
 const mNavigation = resolve => {
-  require(['./m-navigation.vue'], resolve)
+    require(['./m-navigation.vue'], resolve)
 }
 
 const mPage = resolve => {
-  require(['./m-page.vue'], resolve)
+    require(['./m-page.vue'], resolve)
 }
 
 const mPriceTable = resolve => {
-  require(['./m-priceTable.vue'], resolve)
+    require(['./m-priceTable.vue'], resolve)
 }
 
 const mSection = resolve => {
-  require(['./m-section.vue'], resolve)
+    require(['./m-section.vue'], resolve)
 }
 
 const mTab = resolve => {
-  require(['./m-tab.vue'], resolve)
+    require(['./m-tab.vue'], resolve)
 }
 
 const mTable = resolve => {
-  require(['./m-table.vue'], resolve)
+    require(['./m-table.vue'], resolve)
 }
 
 const mTable2 = resolve => {
-  require(['./m-table2.vue'], resolve)
+    require(['./m-table2.vue'], resolve)
 }
 
 const mTableF = resolve => {
-  require(['./m-table-f.vue'], resolve)
-  require(['./m-table-f-shim.js'], resolve)
+    require(['./m-table-f.vue'], resolve)
+    require(['./m-table-f-shim.js'], resolve)
 }
 
 const mTree = resolve => {
-  require(['./m-tree.vue'], resolve)
+    require(['./m-tree.vue'], resolve)
 }
 
 const mLayer = resolve => {
-  require(['./m-zpSlideLayer'], resolve)
+    require(['./m-zpSlideLayer'], resolve)
 }
 
 const tableFShim = resolve => {
-  require(['./m-table-f-shim'], resolve)
+    require(['./m-table-f-shim'], resolve)
 }
 
 Vue.component('mBoTemplate', mBoTemplate)
