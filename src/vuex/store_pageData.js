@@ -23,24 +23,6 @@ export default {
                 state.data = Object.assign({}, state.data, temp)
             }
         }
-        // updateField(state, newData){
-        //     if (state.data.fields[newData.name]) {
-        //         state.data.fields[newData.name] = newData.value;
-        //     } else {
-        //         let temp = {};
-        //         temp[newData.name] = newData.value;
-        //         state.data.fields = Object.assign({}, state.data.fields, temp);
-        //     }
-        // },
-        // updateTable(state, newData){
-        //     if (state.data.tables[newData.name]) {
-        //         state.data.tables[newData.name] = newData.value;
-        //     } else {
-        //         let temp = {};
-        //         temp[newData.name] = newData.value;
-        //         state.data.tables = Object.assign({}, state.data.tables, temp);
-        //     }
-        // },
     },
     actions: {
         /* 根据url请求数据 */
@@ -51,13 +33,6 @@ export default {
                     commit('changeData', body)
                 }
             })
-            // debugger
-            // Vue.http.get(args.url).then(function (result) {
-            //     commit('changeData', result.body);
-            // }, function (response) {
-            //     alert(response.status);
-            //     alert(response.statusText);
-            // });
         },
         /* 清除data数据 */
         clearData: function ({ commit }, args) {
