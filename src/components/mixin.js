@@ -34,12 +34,10 @@ const mixin = {
             let obj = _.filter(dataLink, (item) => {
                 return item.attr === type
             })[0]
-            debugger
             // 设置组件请求参数
             obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
             obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
             obj.link.body = this.getRealParamData(obj.link.body)
-            debugger
             getData(obj.link, (data, err) =>{
                 callback(data, err)
             })
@@ -84,7 +82,7 @@ const mixin = {
                         if (Object.keys(param[key]).includes('defaultValue')) {
                             data[key] = defaultValue
                         } else {
-                            console.error('vuex中没有值且没有默认值 key: ' + key, 'value: ' + value)
+                            throw new Error(`获取vuex中的数据时发生错误，vuex中没有key为${value}的数据`)
                         }
                     }
                     if (data[key] === null) {

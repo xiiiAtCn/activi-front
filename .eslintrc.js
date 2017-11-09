@@ -1,27 +1,47 @@
-// http://eslint.org/docs/user-guide/configuring
-
 module.exports = {
-  root: true,
-  parser: 'babel-eslint',
-  parserOptions: {
-    sourceType: 'module'
+  "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "node": true
   },
-  env: {
-    browser: true,
+  "extends": "eslint:recommended",
+  "plugins": ["html"],
+  "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": 6,
+      "ecmaFeatures": {
+          "experimentalObjectRestSpread": true
+      }
   },
-  // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-  extends: 'standard',
-  // required to lint *.vue files
-  plugins: [
-    'html'
-  ],
-  // add your custom rules here
-  'rules': {
-    // allow paren-less arrow functions
-    'arrow-parens': 0,
-    // allow async-await
-    'generator-star-spacing': 0,
-    // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+  "rules": {
+      "indent": [
+          "error",
+          4
+      ],
+      "linebreak-style": [
+          "error",
+          "unix"
+      ],
+      "quotes": [
+          "error",
+          "single"
+      ],
+      "semi": [
+          "error",
+          "never"
+      ],
+       "no-console": 0,
+       "no-debugger": 0,
+       "prefer-spread": 0
+  },
+  "globals": {
+      "__DEV__": 2,
+      "__PROD__": 2,
+      "__DEBUG__": 0,
+      "__COVERAGE__": 2,
+      "__BASENAME__": 2,
+      "__service": 0,
+      "__dirname": 0
   }
-}
+};
