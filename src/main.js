@@ -19,9 +19,9 @@ const app = new Vue({
     router,
     store,
     data: function () {
-        return {username: 'demo用户'}
+        return { username: 'demo用户' }
     },
-    components: {mPage}
+    components: { mPage }
 }).$mount('#app')
 
 app.$Message.config({

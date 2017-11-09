@@ -8,7 +8,10 @@
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
                     <Breadcrumb v-if="define.title instanceof Array">
-                        <Breadcrumb-item v-for="item in define.title" href="">
+                        <Breadcrumb-item 
+                            v-for="(item, index) in define.title" 
+                            href=""
+                            :key="index">
                             {{item}}
 
                         </Breadcrumb-item>
@@ -59,6 +62,42 @@
                                :content="item.ui_content"></component>
                 </transition>
             </form>
+            <ButtonGroup class="form-button-group">
+                <Button
+                    v-for="(btn, index) in saveBtn"
+                    :key="index"
+                    @click="btnClick(btn.action)">
+                    {{ btn.text }}
+                </Button>
+                <Dropdown 
+                    v-if="submitBtn.length > 1"
+                    trigger="click">
+                    <Button>
+                        确认
+                        <Icon type="arrow-down-b"></Icon>
+                    </Button>
+                    <DropdownMenu slot="list" class="drop-down">
+                        <template
+                            v-for="(btn, index) in submitBtn">
+                            <Button
+                                type="text"
+                                class="submit-btn"
+                                :key="index"
+                                @click="btnClick(btn.aciton)">
+                                {{ btn.text }}
+                            </Button>
+                            <hr
+                                :key="index"
+                                class="parting-line">
+                        </template>
+                    </DropdownMenu>
+                </Dropdown>
+                <Button 
+                    v-if="submitBtn.length === 1"
+                    @click="btnClick(btn.aciton)">
+                    {{ submitBtn[0].text }}
+                </Button>
+            </ButtonGroup>
         </div>
         <Back-top></Back-top>
     </div>
@@ -70,6 +109,13 @@
 
     import {dispatch} from '../utils/actionUtils'
     import * as _ from 'lodash'
+
+    import { deepCopy } from 'utils/utils'
+
+    const BtnType = {
+        submit: 'submit',
+        save: 'save'
+    }
 
     export default {
         store,
@@ -83,6 +129,9 @@
             },
             backUrl: function (url) {
                 dispatch(url)
+            },
+            btnClick (action) {
+                dispatch(action)
             }
         },
         computed: {
@@ -91,92 +140,21 @@
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
-            }
-        },
-        components: {
-            mTable: function (resolve) {
-                require(['./m-table.vue'], resolve)
-//        require(['./m-table-shim.js'], resolve)
             },
-            mTableF: function (resolve) {
-                require(['./m-table-f.vue'], resolve)
-                require(['./m-table-f-shim.js'], resolve)
+            btnArr () {
+                return _.get(this.define, 'buttons', [])
             },
-            mTab: function (resolve) {
-                require(['./m-tab.vue'], resolve)
+            saveBtn () {
+                let btnArr = deepCopy(this.btnArr)
+                return _.filter(btnArr, (btn) => {
+                    return btn.type === BtnType.save
+                })
             },
-            mMenu: function (resolve) {
-                require(['./m-menu.vue'], resolve)
-            },
-            mSection: function (resolve) {
-                require(['./m-section.vue'], resolve)
-            },
-            mRow: function (resolve) {
-                require(['./base/m-row.vue'], resolve)
-            },
-            mCard: function (resolve) {
-                require(['./m-card.vue'], resolve)
-            },
-            mBoMeta: function (resolve) {
-                require(['./m-boMeta.vue'], resolve)
-            },
-            mBillMeta: function (resolve) {
-                require(['./m-billMeta.vue'], resolve)
-            },
-            mFilter: function (resolve) {
-                require(['./m-filter.vue'], resolve)
-            },
-            mConfirm: function (resolve) {
-                require(['./m-confirm.vue'], resolve)
-            },
-            mListView: function (resolve) {
-//                require(['./m-listView.vue'], resolve)
-                require(['./m-detailView-shim.js'], resolve)
-            },
-            mBoTree: function (resolve) {
-                require(['./taskPlan/m-boTree.vue'], resolve)
-            },
-            mSteps: function (resolve) {
-                require(['./base/m-steps.vue'], resolve)
-            },
-            mListTable: function (resolve) {
-                require(['./m-listTable.vue'], resolve)
-            },
-            mListResult: function (resolve) {
-                require(['./m-listResult.vue'], resolve)
-            },
-            mListTask: function (resolve) {
-                require(['./m-listTask.vue'], resolve)
-            },
-            mDeliverables: function (resolve) {
-                require(['./m-deliverables.vue'], resolve)
-            },
-            mTree: function (resolve) {
-                require(['./m-tree.vue'], resolve)
-            },
-            mLayout: function (resolve) {
-                require(['./m-layout.vue'], resolve)
-            },
-            mIsBuilding: function (resolve) {
-                require(['./m-isBuilding.vue'], resolve)
-            },
-            mProjectSummary: function (resolve) {
-                require(['./businessModule/project/m-projectSummary.vue'], resolve)
-            },
-            mTabMapMonitor: function (resolve) {
-                require(['./businessModule/monitor/m-tabMapMonitor.vue'], resolve)
-            },
-            mWorkCenter: function (resolve) {
-                require(['./businessModule/workCenter/m-workCenter.vue'], resolve)
-            },
-            mFilterPrice: function (resolve) {
-                require(['./m-filterPrice'], resolve)
-            },
-            mPriceTable: function (resolve) {
-                require(['./m-priceTable'], resolve)
-            },
-            mProductPrice: function (resolve) {
-                require(['./businessModule/m-productPrice'], resolve)
+            submitBtn () {
+                let btnArr = deepCopy(this.btnArr)
+                return _.filter(btnArr, (btn) => {
+                    return btn.type === BtnType.submit
+                })
             }
         },
         data () {
@@ -249,5 +227,21 @@
 
     .flip-list-move {
         transition: transform 1s;
+    }
+
+    .form-button-group {
+        float: right;
+    }
+    .form-button-group .drop-down{
+        min-width: 0;
+        text-align: center;
+    }
+    .form-button-group .parting-line{
+        border-bottom: 1px solid black;
+        margin: 0;
+    }
+    .form-button-group .parting-line:last-child{
+        border-bottom: 0;
+        height: 0;
     }
 </style>
