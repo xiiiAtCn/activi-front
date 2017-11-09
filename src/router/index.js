@@ -94,7 +94,7 @@ const emailDirectory = resolve => require(['../components/businessModule/email/e
 // bo过滤
 const boFilter = resolve => require(['../components/boFilterNEW_vuex/m-boFilterPage.vue'], resolve)
 
-const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
+// const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
 
 Vue.use(VueRouter)
 Vue.use(iView)
@@ -302,15 +302,15 @@ const router = new VueRouter({
             component: productPrice
         },
         // todo 测试用
-        {
-            path: '/zpTest',
-            component: mLayoutContent,
-            children: [
-                {
-                    path: '/zpTest/layer', component: layerTest
-                }
-            ]
-        }
+        // {
+        //     path: '/zpTest',
+        //     component: mLayoutContent,
+        //     children: [
+        //         {
+        //             path: '/zpTest/layer', component: layerTest
+        //         }
+        //     ]
+        // }
     
     ]
 })
