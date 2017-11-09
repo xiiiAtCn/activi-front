@@ -1,32 +1,23 @@
 <template>
-    <div>
+    <div v-show="visible">
         <Row>
-            <Col :span="labelLength" :offset="labelOffset">
-                <span>
-                    {{title}}
-                </span>
-            </Col>
-            <Col :span="contentLength" :offset="contentOffset">
-                <CheckboxGroup
-                    v-model="objectModel" 
-                    :size="size" 
-                    :vertical="vertical" 
-                    @on-change="selectChange">
-                        <Checkbox 
-                            v-for="(item, index) in items" 
-                            :label="item.id"
-                            :disabled="item.diabled || readonly" 
-                            :key="index">
-                                {{item.name}}
-                        </Checkbox>
-                </CheckboxGroup>
-            </Col>
+            <CheckboxGroup
+                v-model="objectModel" 
+                :size="size" 
+                :vertical="vertical" 
+                @on-change="selectChange">
+                    <Checkbox 
+                        v-for="(item, index) in items" 
+                        :label="item.id"
+                        :disabled="item.diabled || readonly" 
+                        :key="index">
+                            {{item.name}}
+                    </Checkbox>
+            </CheckboxGroup>
         </Row>
         <Row >
-            <Col :offset="errorOffset" :span="contentLength">
-                <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
-                <div v-else class="occupation gateway-item-error">隐藏</div>
-            </Col>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
 </template>

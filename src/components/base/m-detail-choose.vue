@@ -1,35 +1,24 @@
 <template>
-    <div>
-        <Row type="flex" justify="center" align="middle">
-            <Col :span="labelLength" :offset="labelOffset">
-                <span>
-                    {{title}}
-                </span>
+    <div v-show="visible">
+        <Row >
+            <Col span="22">
+                <Input readonly 
+                    :value="visibleName" 
+                    :placeholder="placeholder">
+                </Input>
             </Col>
-            <Col :span="contentLength" :offset="contentOffset">
-                <Row>
-                    <Col span="22">
-                        <Input readonly 
-                            :value="visibleName" 
-                            :placeholder="placeholder">
-                        </Input>
-                    </Col>
-                    <Col span="2" >
-                        <Button 
-                            :disabled="readonly"
-                            style="float: right;" 
-                            @click="openLayer" >
-                            选择
-                        </Button>
-                    </Col>
-                </Row>
+            <Col span="2" >
+                <Button 
+                    :disabled="readonly"
+                    style="float: right;" 
+                    @click="openLayer" >
+                    选择
+                </Button>
             </Col>
         </Row>
         <Row>
-            <Col :offset="errorOffset" :span="contentLength">
-                <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
-                <div v-else class="occupation gateway-item-error">隐藏</div>
-            </Col>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
         <mLayer v-model="visible" :autoClose="true">
             <Table 

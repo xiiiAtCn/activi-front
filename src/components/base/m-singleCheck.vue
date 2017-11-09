@@ -1,37 +1,28 @@
 <template>
-    <div>
-        <Row type="flex" justify="center" align="middle">
-            <Col :span="labelLength" :offset="labelOffset">
-                <span>
-                    {{title}}
-                </span>
-            </Col>
-            <Col :span="contentLength" :offset="contentOffset">
-                <RadioGroup 
-                    v-model="objectModel" 
-                    :size="size" 
-                    :vertical="vertical" 
-                    @on-change="selectChange">
-                    <Radio 
-                        v-for="(item, index) in items" 
-                        :key="index" 
-                        :label="item.id" 
-                        :disabled="item.disabled || readonly">
-                        <template v-if="item.icon">
-                            <Icon :type="item.icon"></Icon>
-                        </template>
-                        <span>
-                            {{item.name}}
-                        </span>
-                    </Radio>
-                </RadioGroup>
-            </Col>
+    <div v-show="visible">
+        <Row >
+            <RadioGroup 
+                v-model="objectModel" 
+                :size="size" 
+                :vertical="vertical" 
+                @on-change="selectChange">
+                <Radio 
+                    v-for="(item, index) in items" 
+                    :key="index" 
+                    :label="item.id" 
+                    :disabled="item.disabled || readonly">
+                    <template v-if="item.icon">
+                        <Icon :type="item.icon"></Icon>
+                    </template>
+                    <span>
+                        {{item.name}}
+                    </span>
+                </Radio>
+            </RadioGroup>
         </Row>
         <Row>
-            <Col :offset="errorOffset" :span="contentLength">
-                <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
-                <div v-else class="occupation gateway-item-error">隐藏</div>
-            </Col>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
 </template>

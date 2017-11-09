@@ -8,53 +8,44 @@ const mixin = {
         }
     },
     computed: {
-        readonly() {
+        readonly () {
             return _.get(this.define, 'readonly', false)
         },
-        required() {
+        required () {
             return _.get(this.define, 'required', true)
         },
-        name() {
+        visible () {
+            return _.get(this.define, 'visible', true)
+        },
+        name () {
             return _.get(this.define, 'name', Math.random())
         },
-        title() {
+        title () {
             return _.get(this.define, 'title', '')
         },
-        labelLength() {
-            return _.get(this.define, 'labelLength', 2)
-        },
-        labelOffset() {
-            return _.get(this.define, 'labelOffset', 0)
-        },
-        contentLength() {
-            return _.get(this.define, 'contentLength', 22)
-        },
-        contentOffset() {
-            return _.get(this.define, 'contentOffset', 0)
-        },
-        errorOffset() {
+        errorOffset () {
             let offset = parseInt(this.labelLength) + parseInt(this.labelOffset) + parseInt(this.contentOffset)
-            if(isNaN(offset)) {
+            if (isNaN(offset)) {
                 offset = this.labelLength
             }
             return offset
         },
-        dataType() {
+        dataType () {
             return _.get(this.define, 'dataType', 'String')
         },
-        form() {
+        form () {
             return _.get(this.define, 'form', 'form')
         },
-        reset() {
+        reset () {
             return _.get(this.$store.state.formData[this.form], 'reset', false)
         },
         hasError: {
-            get() {
+            get () {
                 let key = this.form + 'checkResult'
-                if(this.$store.state.formData[key] === undefined) {
+                if (this.$store.state.formData[key] === undefined) {
                     this.$store.commit(ADD_NEW_OBJECT,
                         {
-                            attribute: key, 
+                            attribute: key,
                             value: {}
                         }
                     )
@@ -62,33 +53,33 @@ const mixin = {
                 return _.get(this.$store.state.formData[key], this.name, false)
             }
         },
-        validate() {
+        validate () {
             return _.get(this.$store.state.formData[this.form], 'validate', false)
         },
-        uid() {
+        uid () {
             return _.get(this.define, 'ui_id', Math.random())
         },
         objectModel: {
-            get() {
+            get () {
                 console.log(`get objectModel from vuex ${this.name}`)
                 debugger
                 let form = _.get(this.$store.state.formData, this.form)
-                if(form === undefined ) {
-                    this.$store.commit(ADD_NEW_OBJECT, 
+                if (form === undefined) {
+                    this.$store.commit(ADD_NEW_OBJECT,
                         {
-                            attribute: this.form, 
+                            attribute: this.form,
                             value: {
-                                loading:true,
-                                reset:false,
-                                validate:false,
-                                visible:false
+                                loading: true,
+                                reset: false,
+                                validate: false,
+                                visible: false
                             }
                         }
                     )
                 }
                 let value = _.get(this.$store.state.formData[this.form], this.name)
-                if(value === undefined) {
-                    switch(this.dataType) {
+                if (value === undefined) {
+                    switch (this.dataType) {
                     case 'String':
                         this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
                         break
@@ -103,31 +94,33 @@ const mixin = {
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[this.form], [this.name, 'value'], '')
-                if(tmp !== '') {
-                    if(this.dataType === 'Date') {
+                if (tmp !== '') {
+                    if (this.dataType === 'Date') {
                         console.log(`tmp is ${tmp}`)
-                        if(!Object.prototype.toString.apply(tmp) === '[object Date]')
+                        if (!Object.prototype.toString.apply(tmp) === '[object Date]') {
                             tmp = new Date(tmp.replace(/-/g, '/'))
+                        }
                     }
                 }
                 return tmp
             },
-            set(value) {
-                //数组暂不支持，需要特殊处理
+            set (value) {
+                // 数组暂不支持，需要特殊处理
                 console.log(`typeof value is ${typeof value}`)
                 debugger
-                if(typeof value === 'string' || value instanceof Date)
+                if (typeof value === 'string' || value instanceof Date) {
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value}, form: this.form})
-                else
+                } else {
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value, form: this.form})
+                }
             }
         },
-        isRelated() {
+        isRelated () {
             return _.get(this.define, 'isRelated', false)
         },
-        //关联对象
-        boundTarget() {
-            if(this.isRelated) {
+        // 关联对象
+        boundTarget () {
+            if (this.isRelated) {
                 let targetId = _.get(this.define, ['relation', 'target'], '')
                 return _.get(this.$store.state.formData[this.form], targetId, '')
             } else {
@@ -136,22 +129,22 @@ const mixin = {
         }
     },
     watch: {
-        validate(newVal) {
-            if(newVal) {
+        validate (newVal) {
+            if (newVal) {
                 this.valid()
             }
         },
-        boundTarget(newVal, oldVal) {
-            if(!_.isEqual(newVal, oldVal)) {
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value:''}, form: this.form})
+        boundTarget (newVal, oldVal) {
+            if (!_.isEqual(newVal, oldVal)) {
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
             }
         }
     },
-    data(){
+    data () {
         return {
             errorMessage: ''
         }
-    },
+    }
 }
 
 export default mixin

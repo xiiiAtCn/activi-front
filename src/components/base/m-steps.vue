@@ -1,25 +1,24 @@
 <template>
   <!--2.0.0-rc.15-->
-  <div class="space">
-    <Row>
-      {{define.operation}}
-      <div v-for="item in define.operation" class="config">
-        <div class="operation">
-          <Button type="primary" v-if="item.url" shape="circle" @click="getMeta(item.url)">{{item.name}}</Button>
-          <Button type="primary" v-else shape="circle" @click="showModal(item.name)">{{item.name}}</Button>
+    <div class="space">
+        <Row>
+        {{define.operation}}
+        <div v-for="(item, index) in define.operation" :key="index" class="config">
+            <div class="operation">
+            <Button type="primary" v-if="item.url" shape="circle" @click="getMeta(item.url)">{{item.name}}</Button>
+            <Button type="primary" v-else shape="circle" @click="showModal(item.name)">{{item.name}}</Button>
+            </div>
         </div>
-      </div>
-    </Row>
-    <br>
-    <Steps :current="number" ref="curr">
-      <Step :title="item.name" :content="item.content" v-for="item in jobList"></Step>
-    </Steps>
-  </div>
+        </Row>
+        <br>
+        <Steps :current="number" ref="curr">
+            <Step :title="item.name" :content="item.content" :key="index" v-for="(item, index) in jobList"></Step>
+        </Steps>
+    </div>
 </template>
 <script>
   import _ from 'lodash'
-  import { default as fetch } from '../../utils/DefineFetcher'
-  //  import Step from 'iview'
+  import fetch from '../../utils/DefineFetcher'
 
   export default {
       props: ['define', 'content'],

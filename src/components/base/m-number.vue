@@ -1,27 +1,18 @@
 <template>
-    <div>
-        <Row type="flex" justify="center" align="middle">
-            <Col :span="labelLength" :offset="labelOffset">
-                <span>
-                    {{title}}
-                </span>
-            </Col>
-            <Col :span="contentLength" :offset="contentOffset">
-                <Input 
-                    v-model="objectModel"
-                    :placeholder="placeholder" 
-                    :readonly="readonly" 
-                    :icon="icon" 
-                    @on-change="inputNumber($event)"  
-                    @on-blur="inputNumber($event, true)" >
-                </Input>
-            </Col>
+    <div v-show="visible">
+        <Row >
+            <Input 
+                v-model="objectModel"
+                :placeholder="placeholder" 
+                :readonly="readonly" 
+                :icon="icon" 
+                @on-change="inputNumber($event)"  
+                @on-blur="inputNumber($event, true)" >
+            </Input>
         </Row>
         <Row>
-            <Col :offset="errorOffset" :span="contentLength">
                 <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
                 <div v-else class="occupation gateway-item-error">隐藏</div>
-            </Col>
         </Row>
     </div>
 </template>
