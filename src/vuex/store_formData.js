@@ -2,6 +2,7 @@ import Mutations from './Mutation'
 import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT, COUNT_CHECK_RESULT, SUBMIT_FORM_DATA } from './Action'
 import Request from 'utils/request-addon'
 import Vue from 'vue'
+
 let request = new Request()
 
 export default {
@@ -22,10 +23,9 @@ export default {
                 ...state[form],
                 ...rest
             }
-            console.log(state)
         },
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
-            let { form} = payload
+            let { form } = payload
             state[form + 'checkResult'] = {}
             form = state[form]
             for (let i in form) {
@@ -93,6 +93,11 @@ export default {
                 ...state[form + 'checkResult'],
                 ...rest
             }
+        },
+        [Mutations.DESTROY_FORM_DATA] (state, payload) {
+            let { form } = payload
+            delete state[form]
+            delete state[form + 'checkResult']
         }
     },
     actions: {
