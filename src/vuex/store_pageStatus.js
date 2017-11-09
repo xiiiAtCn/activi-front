@@ -9,14 +9,14 @@ export default {
         status: {}
     },
     mutations: {
-    /* 更新状态 */
-        changeStauts (state, data) {
+        /* 更新状态 */
+        changeStauts(state, data) {
             state.status = data
         }
     },
     actions: {
-    /* 获取页面组件状态 */
-        putStatus: function ({commit}, args) {
+        /* 获取页面组件状态 */
+        putStatus: function ({ commit }, args) {
             const url = args.url
             fetch(url, function (error, body) {
                 if (error === null) {

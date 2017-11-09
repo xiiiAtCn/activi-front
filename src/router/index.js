@@ -69,8 +69,8 @@ const checkEmail = resolve => require(['../components/businessModule/email/check
 const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 
-// bo过滤
-const boFilter = resolve => require(['../components/boFilterNEW_vuex/m-boFilterPage.vue'], resolve)
+
+// const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -131,15 +131,14 @@ const router = new VueRouter({
                 },
                 // 工作流程
                 {
-                    path: '/layoutContent/:id/workflow',
-                    component: workflow,
+                    path: '/layoutContent/:id/workflow', component: workflow,
                     children: [
                         { path: 'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
                     ]
                 },
                 // 工作流程 查看
                 {
-                    path: '/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck
+                    path: '/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
                 },
                 {
                     path: '/layoutContent/:id/projectSummary', component: projectSummary
@@ -148,9 +147,9 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/:title/projectOut',
                     component: projectOut,
                     children: [
-                        {path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails},
-                        {path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson},
-                        {path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps}
+                        { path: '/layoutContent/:id/:title/projectOut/projectDetails', component: projectDetails },
+                        { path: '/layoutContent/:id/:title/projectOut/projectPerson', component: projectPerson },
+                        { path: '/layoutContent/:id/:title/projectOut/taskSteps', component: taskSteps }
                     ]
                 },
                 {
@@ -161,13 +160,13 @@ const router = new VueRouter({
                             path: '/layoutContent/:id/monitor/levelClassify',
                             component: levelClassify,
                             children: [
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap},
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid},
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabMapMonitor', component: tabMap },
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabGridMonitor', component: tabGrid },
                                 {
                                     path: '/layoutContent/:id/monitor/levelClassify/tabFaultHistory',
                                     component: tabFaultHistory
                                 },
-                                {path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow}
+                                { path: '/layoutContent/:id/monitor/levelClassify/tabFaultNow', component: tabFaultNow }
                             ]
                         },
                         {
@@ -210,9 +209,6 @@ const router = new VueRouter({
                         }
                     ]
                 },
-                {
-                    path: '/layoutContent/:id/boFilter', component: boFilter
-                }
             ]
         },
         {
@@ -227,7 +223,7 @@ const router = new VueRouter({
                 { path: '/email/writeEmail', component: writeEmail },
                 { path: '/email/checkEmail', component: checkEmail },
                 { path: '/email/emailDetail', component: emailDetail },
-                { path: '/email/emailDirectory', component: emailDirectory }
+                { path: '/email/emailDirectory', component: emailDirectory },
             ]
         },
         // 报价路由
@@ -235,11 +231,17 @@ const router = new VueRouter({
             path: '/productPrice',
             component: productPrice
         },
-        {
-            path: '/formSubmit',
-            component: resolve =>
-                require(['../test/m-formContainer.vue'], resolve)
-        }
+        // todo 测试用
+        // {
+        //     path: '/zpTest',
+        //     component: mLayoutContent,
+        //     children: [
+        //         {
+        //             path: '/zpTest/layer', component: layerTest
+        //         }
+        //     ]
+        // }
+
     ]
 })
 

@@ -15,7 +15,7 @@ import extend from 'node.extend'
 import { default as fetch, post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
-import Request, {replace, addQuery} from './request-addon'
+import Request, { replace, addQuery } from './request-addon'
 
 // import _ from 'lodash'
 
@@ -37,10 +37,10 @@ export function dispatch () {
         })
     } else if (util.isObject(arg0)) {
         (arg0.type === 'link' ? asLink
-      : arg0.type === 'submit' ? asSubmit
-        : arg0.type === 'serverAction' ? asServerAction
-          : arg0.type === 'deliver' ? asBus
-          : asMessage)(arg0)
+            : arg0.type === 'submit' ? asSubmit
+                : arg0.type === 'serverAction' ? asServerAction
+                    : arg0.type === 'deliver' ? asBus
+                        : asMessage)(arg0)
     } else {
         console.log('路由分发参数错误 1 ', arguments)
     }
@@ -94,7 +94,8 @@ export const getData = (action, callback) => {
         request.setUrl(url).forGet((result, err) => {
             stack--
             setTimeout(() => {
-                if (stack === 0) { bus.$emit('hide-my-full-loading') }
+                if (stack === 0)
+                    bus.$emit('hide-my-full-loading')
             }, 1000)
             callback(result, err)
         })
@@ -115,7 +116,7 @@ export const getData = (action, callback) => {
  *      mode:                       //  mode: push/replace/reload
  *  }
  */
-function asLink (action) {
+function asLink(action) {
     if (action.alert) {
         iView.Message.success(action.alert)
     }
@@ -124,8 +125,8 @@ function asLink (action) {
         if (action.mode === 'reload') {
             let c = router.currentRoute
 
-      // router.go(0)
-            router.replace({path: c.path, query: c.query, hash: String(Date.now())})
+            // router.go(0)
+            router.replace({ path: c.path, query: c.query, hash: String(Date.now()) })
         } else {
             let routLinkParam = {}
             let current = router.currentRoute
@@ -137,19 +138,19 @@ function asLink (action) {
                 routLinkParam.path = action.at
             }
 
-      // if (routLinkParam.path && !_.startsWith(routLinkParam.path, '/')) {
+            // if (routLinkParam.path && !_.startsWith(routLinkParam.path, '/')) {
 
-      //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
-      // }
+            //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
+            // }
 
             if (action.url) {
-                routLinkParam.query = extend({url: action.url}, action.query)
+                routLinkParam.query = extend({ url: action.url }, action.query)
             } else {
-        // /layoutContent/:id/isBuilding
+                // /layoutContent/:id/isBuilding
                 action.url = '/api/program/isBuilding/template?at=' + action.at
-                routLinkParam.query = extend({url: action.url}, action.query)
+                routLinkParam.query = extend({ url: action.url }, action.query)
             }
-      // console.log('action', action);
+            // console.log('action', action);
             if (action.mode === 'replace') {
                 router.replace(routLinkParam)
             } else {
@@ -185,7 +186,7 @@ function asLink (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asSubmit (action) {
+function asSubmit(action) {
     console.log('dispatch submit', action)
 
     bus.$emit('forceValid')
@@ -224,7 +225,7 @@ function asSubmit (action) {
         console.log('store.state.validStatus.valid', store.state.validStatus.valid)
         console.log('校验没有通过~')
     }
-  // console.log("post data : ", store.state.pageData.data);
+    // console.log("post data : ", store.state.pageData.data);
 }
 
 /**
@@ -238,7 +239,7 @@ function asSubmit (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asServerAction (action) {
+function asServerAction(action) {
     console.log('dispatch serverAction', action)
 
     let targetAction = function () {
@@ -278,7 +279,7 @@ function asServerAction (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asMessage (action) {
+function asMessage(action) {
     console.log('dispatch message', action)
     if (action.confirm) {
         if (!window.confirm(action.confirm)) {
