@@ -4,6 +4,7 @@ import mTableF from './m-table-f.vue'
 import { getData } from 'utils/actionUtils'
 import { deepCopy } from 'utils/utils'
 import mixin from './mixin'
+import Mutations from 'store/Mutation'
 
 let tableFShim = Vue.component('tableF-Shim', {
     render: function (h) {
@@ -13,7 +14,13 @@ let tableFShim = Vue.component('tableF-Shim', {
                 operation: this.operation,
                 cols: this.cols,
                 rowsContent: this.rowsContent,
-                search:this.showSearch
+                search:this.showSearch,//是否显示搜索框
+                url:this.url,
+                tableName:this.tableName,//为本地存贮提供名字
+                serverPage:true
+            },
+            on:{
+                rowsContentChange : this.handleRowsContentChange
             }
         })
     },
@@ -26,7 +33,8 @@ let tableFShim = Vue.component('tableF-Shim', {
             operation: [],
             cols:[],
             showSearch:false,
-            tableDefine: {}
+            tableDefine: {},
+            tableName:'abcdasd'
         }
     },
     props: {
@@ -65,8 +73,12 @@ let tableFShim = Vue.component('tableF-Shim', {
         watchValuesChanged () {
             this.getTableDefine()
             this.getTableData()
+        },
+        handleRowsContentChange(arg){
+            console.log(arg)
+            this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: arg})
         }
-    },
+    }
 })
 
 export default tableFShim

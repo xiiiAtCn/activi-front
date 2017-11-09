@@ -1,44 +1,56 @@
 <template>
     <div>
         <Row class="top-content">
-            <Col span="2" offset="22">
-            <Poptip placement="bottom">
-                <Button type="primary" icon="grid"></Button>
-                <div class="api" slot="content">
-                    <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                        <Checkbox :indeterminate="indeterminate"
-                                  :value="checkAll"
-                                  @click.prevent.native="handleCheckAll">全选</Checkbox>
-                    </div>
-                    <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-                        <div v-for='item in dataList'>
-                            <Checkbox :label="item.label"></Checkbox>
-                        </div>
-                    </CheckboxGroup>
-                </div>
-            </Poptip>
-            </Col>
-            <Col span="14">
+            <Col span="16">
                 <div v-for="item in operation"  class="button-container" >
                     <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
                 </div>
             </Col>
-            <Col span="8" v-show="search">
-                <div class="search">
+            <Col span="5">
+                <div class="search" v-show="search">
                     <Input v-model="valueSearch" placeholder="筛选">
                     <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
                     </Input>
                 </div>
             </Col>
+            <Col span="1" class="columns-select">
+                <Poptip placement="bottom">
+                    <Button type="ghost" icon="grid"></Button>
+                    <div class="api" slot="content">
+                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                            <Checkbox :indeterminate="indeterminate"
+                                      :value="checkAll"
+                                      @click.prevent.native="handleCheckAll">全选</Checkbox>
+                        </div>
+                        <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                            <div v-for='item in dataList'>
+                                <Checkbox :label="item.label"></Checkbox>
+                            </div>
+                        </CheckboxGroup>
+                    </div>
+                </Poptip>
+            </Col>
+            <Col span="2">
+                <div>
+                    <Select style="width:90px" placeholder="显示行数" @on-change="changeSelect">
+                        <Option v-for="item in rowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </div>
+            </Col>
         </Row>
-        <div>
-            <Table border :columns="columnsData" :data="dataTable"></Table>
+        <div style="overflow-x: auto">
+            <Table border :columns="columnsData" :data="dataTable" height="570"></Table>
+        </div>
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="rowsContent.length" :page-size="parseInt(rowCount)" :current="currentPage" @on-change="changePage"></Page>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import bus from '../router/bus'
-    import { dispatch } from 'utils/actionUtils'
+    import { dispatch,forGet } from 'utils/actionUtils'
     import _ from 'lodash'
 
     export default {
@@ -57,7 +69,18 @@
             },
             search:{
                 type: Boolean,
+                default: true
+            },
+            url:{
+                type: null
+            },
+            serverPage:{
+                type: Boolean,
                 default: false
+            },
+            tableName:{
+                type: null,
+                default: undefined
             }
         },
         data() {
@@ -73,7 +96,36 @@
                 checkAllGroup: [],
                 dataList: [],
                 dataListChange: [],
-                testList:[]
+                testList:[],
+                //行数
+                rowList: [
+                    {
+                        value: '5',
+                        label: '5'
+                    },
+                    {
+                        value: '10',
+                        label: '10'
+                    },
+                    {
+                        value: '15',
+                        label: '15'
+                    },
+                    {
+                        value: '20',
+                        label: '20'
+                    },
+                    {
+                        value: '25',
+                        label: '25'
+                    },
+                    {
+                        value: '30',
+                        label: '30'
+                    }
+                ],
+                rowCount:10,
+                currentPage:1
             }
         },
         watch:{
@@ -130,12 +182,44 @@
                     this.testList[i]=val.text
                 })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
-                this.checkAllGroup = this.testList
-                this.dataListChange = this.testList
+                //读取localStorage数据 确认展示列
+                if(this.tableName && window.localStorage.getItem(this.tableName)){
+                    this.checkAllGroup = JSON.parse(window.localStorage.getItem(this.tableName))
+                    for(let i=this.checkAllGroup.length-1;i>=0;i--){
+                        let removeColumns=true
+                        for(let j=0;j<this.checkAllGroup.length;j++){
+                            if(this.columnsData[i].title === this.checkAllGroup[j]){
+                                removeColumns=false
+                                break
+                            }
+                        }
+                        if(removeColumns){
+                            this.columnsData.splice(i,1)
+                        }
+                    }
+                    this.dataListChange =  this.checkAllGroup
+                }else{
+                    this.checkAllGroup = this.testList
+                    this.dataListChange = this.testList
+                }
             },
             //配置操作的按钮
             showButton(smb){
-                if(this.columnsData[this.columnsData.length-1].key === 'action'){
+                let existence = false
+                if(this.columnsData.length === 0){
+                    return
+                }else{
+                    let i = 0
+                    while (true){
+                        if(this.columnsData[i].key === 'action'){
+                            existence =true
+                            break
+                        }
+                        i++
+                        if(this.columnsData.length === i){break}
+                    }
+                }
+                if(existence){
                     return
                 }
                 this.columnsData.push({
@@ -143,6 +227,7 @@
                     key: 'action',
                     width: 120,
                     align: 'center',
+                    fixed: 'right',
                     render: (h, params) => {
                         let buttonList = []
                         smb.forEach((val)=>{
@@ -170,7 +255,7 @@
             },
             //tableData存入行数据
             handleContent(){
-                this.dataTable = this.rowsContent
+                this.dataTable = this.rowsContent.slice(0,this.rowCount)
             },
 
             //处理顶部按钮
@@ -180,7 +265,6 @@
             //发送搜索事件数据
             handleTopSearch(){
                 bus.$emit('topSearchMsg',this.valueSearch)
-                console.log(this.valueSearch)
             },
             //处理表内按钮点击
             handleButtonClick(params,row){
@@ -203,9 +287,9 @@
                     this.checkAllGroup = [];
                     this.columnsData =[]
                 }
+                this.dataListChange = this.checkAllGroup
             },
             checkAllGroupChange (data) {
-
                 if (data.length === this.dataList.length) {
                     this.indeterminate = false;
                     this.checkAll = true;
@@ -217,9 +301,17 @@
                     this.checkAll = false;
                 }
 
+                if(data.length === 0){
+                    this.columnsData = []
+                    this.dataListChange = []
+                    return
+                }
                 let obj=this.judgeArr(this.dataListChange,data)
                 this.handleColumnsData(obj);
                 this.dataListChange = data
+                if(this.tableName){
+                    window.localStorage.setItem(this.tableName,JSON.stringify(data))
+                }
             },
             handleColumnsData(obj){
                 if(!obj){
@@ -237,9 +329,9 @@
                         }
                     })
                 }
-
+                this.showModalBtn && this.showButton(this.showModalBtn)
             },
-            //判断数组不同值
+            //提取数组不同值
             judgeArr(arr1,arr2){
                 let str = '',obj={method:'remove'}
                 if(arr1.length < arr2.length){
@@ -265,17 +357,44 @@
                 }
                 obj.str= str
                 return obj
+            },
+
+
+            //改变 显示行数
+            changePage(arg){
+                if(!this.serverPage){
+                    this.dataTable = this.rowsContent.slice((arg-1)*this.rowCount,arg*this.rowCount)
+                }else{
+                    this.$emit('rowsContentChange', {from:arg, size:this.rowCount})
+                }
+            },
+            //用户选择一页显示行数时
+            changeSelect(arg){
+                this.rowCount = arg
+                this.dataTable = this.rowsContent.slice(0,arg)
+                this.currentPage = 1
             }
         }
     }
 </script>
 <style scoped>
+    .top-content > div{
+        padding: 5px;
+    }
     .button-container{
         display: inline-block;
         min-width:65px;
         margin-right: 8px;
     }
-    .top-content{
-        margin-bottom: 10px;
+
+    .columns-select{
+        text-align: center;
+    }
+    .columns-select button{
+        padding: 0 11px;
+        font-size: 20px;
+    }
+    .columns-select .api{
+        text-align: initial;
     }
 </style>
