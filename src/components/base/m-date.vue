@@ -1,28 +1,19 @@
 <template>
-    <div>
-        <Row type="flex" justify="center" align="middle">
-            <Col :span="labelLength" :offset="labelOffset">
-                <span>
-                    {{title}}
-                </span>
-            </Col>
-            <Col :span="contentLength" :offset="contentOffset">
-                <Date-picker 
-                    v-model="objectModel" 
-                    :format="format" 
-                    :type="type" 
-                    :placeholder="placeholder" 
-                    :readonly="readonly" 
-                    @on-change="handleChange"
-                    class="full-opacity">
-                </Date-picker>
-            </Col>
+    <div v-show="visible">
+        <Row>
+            <Date-picker 
+                v-model="objectModel" 
+                :format="format" 
+                :type="type" 
+                :placeholder="placeholder" 
+                :readonly="readonly" 
+                @on-change="handleChange"
+                class="full-opacity">
+            </Date-picker>
         </Row>
         <Row>
-            <Col :offset="errorOffset" :span="contentLength">
-                <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
-                <div v-else class="occupation gateway-item-error">隐藏</div>
-            </Col>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
 </template>
