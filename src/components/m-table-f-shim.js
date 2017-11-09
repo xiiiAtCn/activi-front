@@ -14,10 +14,10 @@ let tableFShim = Vue.component('tableF-Shim', {
                 operation: this.operation,
                 cols: this.cols,
                 rowsContent: this.rowsContent,
+                tableHeight: this.tableHeight,
                 search:this.showSearch,//是否显示搜索框
-                url:this.url,
-                tableName:this.tableName,//为本地存贮提供名字
-                serverPage:true
+                tableName:this.tableName,//为本地存贮提供表格名字
+                serverPage:false//是否服务器分页
             },
             on:{
                 rowsContentChange : this.handleRowsContentChange
@@ -34,7 +34,9 @@ let tableFShim = Vue.component('tableF-Shim', {
             cols:[],
             showSearch:false,
             tableDefine: {},
-            tableName:'abcdasd'
+            tableName:'',
+            tableHeight:null,
+            serverPage:false
         }
     },
     props: {
@@ -55,6 +57,10 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
             this.cols = _.get(def, ['ui_define', 'cols'], [])
             this.url = _.get(def, ['ui_define', 'data_url'], null)
+            this.showSearch = _.get(def, ['ui_define', 'showSearch'], false)
+            this.tableName = _.get(def, ['ui_define', 'tableName'], '')
+            this.tableHeight = _.get(def, ['ui_define', 'tableHeight'], null)
+            this.serverPage = _.get(def, ['ui_define', 'serverPage'], false)
         },
         getTableDefine () {
             this.getData('tableDefine', (data, err) => {
@@ -75,7 +81,6 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.getTableData()
         },
         handleRowsContentChange(arg){
-            console.log(arg)
             this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: arg})
         }
     }

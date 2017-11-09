@@ -39,7 +39,7 @@
             </Col>
         </Row>
         <div style="overflow-x: auto">
-            <Table border :columns="columnsData" :data="dataTable" height="570"></Table>
+            <Table border :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
@@ -71,9 +71,6 @@
                 type: Boolean,
                 default: true
             },
-            url:{
-                type: null
-            },
             serverPage:{
                 type: Boolean,
                 default: false
@@ -81,6 +78,9 @@
             tableName:{
                 type: null,
                 default: undefined
+            },
+            tableHeight:{
+                type: null
             }
         },
         data() {
@@ -255,7 +255,11 @@
             },
             //tableData存入行数据
             handleContent(){
-                this.dataTable = this.rowsContent.slice(0,this.rowCount)
+                if(this.serverPage){
+                    this.dataTable = this.rowsContent
+                }else{
+                    this.dataTable = this.rowsContent.slice(0,this.rowCount)
+                }
             },
 
             //处理顶部按钮
