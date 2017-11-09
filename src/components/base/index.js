@@ -12,6 +12,8 @@ const mMultiCheck = resolve =>
     require(['./m-multiCheck.vue'], resolve)
 const mNumber = resolve =>
     require(['./m-number.vue'], resolve)
+const mRow = resolve =>
+    require(['./m-row.vue'], resolve)
 const mSelect = resolve =>
     require(['./m-select.vue'], resolve)
 const mSingleCheck = resolve =>
@@ -27,6 +29,7 @@ Vue.component('mInput', mInput)
 Vue.component('mLoading', mLoading)
 Vue.component('mMultiCheck', mMultiCheck)
 Vue.component('mNumber', mNumber)
+Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
 Vue.component('mSingleCheck', mSingleCheck)
 Vue.component('mSteps', mSteps)
