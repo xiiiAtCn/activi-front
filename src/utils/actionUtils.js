@@ -96,12 +96,11 @@ export const getData = (action, callback) => {
         url = action
     } else if (Object.prototype.toString.apply(action) === '[object Object]') {
         url = action.url
+        url = replace(url, action.pathParams || {})
+        url = addQuery(url, action.queryParams || {})
         if (action.method === 'POST') {
             body = action.body
             method = 'POST'
-        } else {
-            url = replace(url, action.pathParams || {})
-            url = addQuery(url, action.queryParams || {})
         }
     } else {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
