@@ -15,88 +15,88 @@ import extend from 'node.extend'
 import { default as fetch, post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
-import Request, {replace, addQuery} from './request-addon'
+import Request, { replace, addQuery } from './request-addon'
 
 // import _ from 'lodash'
 
-export function dispatch () {
-  if (arguments.length === 0) {
-    console.log('路由分发参数错误 0 ')
-    return
-  }
+export function dispatch() {
+    if (arguments.length === 0) {
+        console.log('路由分发参数错误 0 ')
+        return
+    }
 
-  let arg0 = arguments[0]
-  console.group('dispatch start', arguments[0])
-  if (util.isString(arg0)) {
-    let urlObject = url.parse(arg0, true)
-    asLink({
-      type: 'link',
-      url: arg0,
-      at: urlObject.query.at,
-      mode: arguments.length > 1 ? arguments[1] : 'push'
-    })
-  } else if (util.isObject(arg0)) {
-    (arg0.type === 'link' ? asLink
-      : arg0.type === 'submit' ? asSubmit
-        : arg0.type === 'serverAction' ? asServerAction
-          : arg0.type === 'deliver' ? asBus
-          : asMessage)(arg0)
-  } else {
-    console.log('路由分发参数错误 1 ', arguments)
-  }
+    let arg0 = arguments[0]
+    console.group('dispatch start', arguments[0])
+    if (util.isString(arg0)) {
+        let urlObject = url.parse(arg0, true)
+        asLink({
+            type: 'link',
+            url: arg0,
+            at: urlObject.query.at,
+            mode: arguments.length > 1 ? arguments[1] : 'push'
+        })
+    } else if (util.isObject(arg0)) {
+        (arg0.type === 'link' ? asLink
+            : arg0.type === 'submit' ? asSubmit
+                : arg0.type === 'serverAction' ? asServerAction
+                    : arg0.type === 'deliver' ? asBus
+                        : asMessage)(arg0)
+    } else {
+        console.log('路由分发参数错误 1 ', arguments)
+    }
 
-  console.groupEnd()
+    console.groupEnd()
 }
 
 
 function deepCopy(object) {
-  return JSON.parse(JSON.stringify(object))
+    return JSON.parse(JSON.stringify(object))
 }
 /***
  * 客户端事件 (遇到了再说)
  */
-function asBus (action) {
-  // console.log('client event', JSON.stringify(action))
-  // let url, method = 'GET', params, eventId, body, source
-  // eventId = action.eventId
-  // if (typeof action.link === 'string') {
-  //     url = action.link
-  // } else if (typeof action.link === 'object') {
-  //     source = action.source
-  //     url = action.link.url
-  //     method = action.link.method
-  //     params = action.link.params || {}
-  //     if (method === 'POST') {
-  //         source = body = params
-  //     } else {
-  //         source = deepCopy(params)
-  //         url = replace(url, params)
-  //         url = addQuery(url, params)
-  //     }
-  // }
-  // let request = new Request()
-  // if (method === 'GET') {
-  //     request.setUrl(url).forGet(data => {
-  //         bus.$emit(eventId, data, source)
-  //     })
-  // } else {
-  //     request.setUrl(url).setBody(body).forPost(data => {
-  //         bus.$emit(eventId, data, source)
-  //     })
-  // }
+function asBus(action) {
+    // console.log('client event', JSON.stringify(action))
+    // let url, method = 'GET', params, eventId, body, source
+    // eventId = action.eventId
+    // if (typeof action.link === 'string') {
+    //     url = action.link
+    // } else if (typeof action.link === 'object') {
+    //     source = action.source
+    //     url = action.link.url
+    //     method = action.link.method
+    //     params = action.link.params || {}
+    //     if (method === 'POST') {
+    //         source = body = params
+    //     } else {
+    //         source = deepCopy(params)
+    //         url = replace(url, params)
+    //         url = addQuery(url, params)
+    //     }
+    // }
+    // let request = new Request()
+    // if (method === 'GET') {
+    //     request.setUrl(url).forGet(data => {
+    //         bus.$emit(eventId, data, source)
+    //     })
+    // } else {
+    //     request.setUrl(url).setBody(body).forPost(data => {
+    //         bus.$emit(eventId, data, source)
+    //     })
+    // }
 }
 
 /**
  * 获取数据
  */
 let stack = 0
-export const  getData = (action, callback) => {
+export const getData = (action, callback) => {
     let url, request = new Request(), method = 'GET', body
-    if(typeof action === 'string') {
+    if (typeof action === 'string') {
         url = action
-    } else if(Object.prototype.toString.apply(action) === '[object Object]'){
+    } else if (Object.prototype.toString.apply(action) === '[object Object]') {
         url = action.url
-        if(action.method === 'POST') {
+        if (action.method === 'POST') {
             body = action.body
             method = 'POST'
         } else {
@@ -107,29 +107,29 @@ export const  getData = (action, callback) => {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
     }
 
-    if(stack === 0) {
+    if (stack === 0) {
         bus.$emit('show-my-full-loading')
     }
     stack++
     setTimeout(() => {
-        if(stack !== 0)
+        if (stack !== 0)
             bus.$emit('hide-my-full-loading')
     }, 10000)
-    if(method === 'POST')
+    if (method === 'POST')
         request.setUrl(url).setBody(body).forPost((result, err) => {
             stack--
             setTimeout(() => {
-                if(stack === 0)
+                if (stack === 0)
                     bus.$emit('hide-my-full-loading')
             }, 1000)
-            
+
             callback(result, err)
         })
     else
         request.setUrl(url).forGet((result, err) => {
             stack--
             setTimeout(() => {
-                if(stack === 0)
+                if (stack === 0)
                     bus.$emit('hide-my-full-loading')
             }, 1000)
             callback(result, err)
@@ -150,63 +150,63 @@ export const  getData = (action, callback) => {
  *      mode:                       //  mode: push/replace/reload
  *  }
  */
-function asLink (action) {
-  if (action.alert) {
-    iView.Message.success(action.alert)
-  }
-
-  let targetAction = function () {
-    if (action.mode === 'reload') {
-      let c = router.currentRoute
-
-      // router.go(0)
-      router.replace({path: c.path, query: c.query, hash: String(Date.now())})
-    } else {
-      let routLinkParam = {}
-      let current = router.currentRoute
-
-      if (action.at) {
-        routLinkParam.path = action.at
-      } else {
-        action.at = current.path
-        routLinkParam.path = action.at
-      }
-
-      // if (routLinkParam.path && !_.startsWith(routLinkParam.path, '/')) {
-
-      //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
-      // }
-
-      if (action.url) {
-        routLinkParam.query = extend({url: action.url}, action.query)
-      } else {
-        // /layoutContent/:id/isBuilding
-        action.url = '/api/program/isBuilding/template?at=' + action.at
-        routLinkParam.query = extend({url: action.url}, action.query)
-      }
-      // console.log('action', action);
-      if (action.mode === 'replace') {
-        router.replace(routLinkParam)
-      } else {
-        router.push(routLinkParam)
-      }
+function asLink(action) {
+    if (action.alert) {
+        iView.Message.success(action.alert)
     }
-  }
 
-  if (action.confirm) {
-    iView.Modal.confirm({
-      title: '确认',
-      content: '<p>' + action.confirm + '</p>',
-      onOk: () => {
+    let targetAction = function () {
+        if (action.mode === 'reload') {
+            let c = router.currentRoute
+
+            // router.go(0)
+            router.replace({ path: c.path, query: c.query, hash: String(Date.now()) })
+        } else {
+            let routLinkParam = {}
+            let current = router.currentRoute
+
+            if (action.at) {
+                routLinkParam.path = action.at
+            } else {
+                action.at = current.path
+                routLinkParam.path = action.at
+            }
+
+            // if (routLinkParam.path && !_.startsWith(routLinkParam.path, '/')) {
+
+            //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
+            // }
+
+            if (action.url) {
+                routLinkParam.query = extend({ url: action.url }, action.query)
+            } else {
+                // /layoutContent/:id/isBuilding
+                action.url = '/api/program/isBuilding/template?at=' + action.at
+                routLinkParam.query = extend({ url: action.url }, action.query)
+            }
+            // console.log('action', action);
+            if (action.mode === 'replace') {
+                router.replace(routLinkParam)
+            } else {
+                router.push(routLinkParam)
+            }
+        }
+    }
+
+    if (action.confirm) {
+        iView.Modal.confirm({
+            title: '确认',
+            content: '<p>' + action.confirm + '</p>',
+            onOk: () => {
+                targetAction()
+            },
+            onCancel: () => {
+                iView.Message.info('点击了取消')
+            }
+        })
+    } else {
         targetAction()
-      },
-      onCancel: () => {
-        iView.Message.info('点击了取消')
-      }
-    })
-  } else {
-    targetAction()
-  }
+    }
 }
 
 /**
@@ -220,46 +220,46 @@ function asLink (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asSubmit (action) {
-  console.log('dispatch submit', action)
+function asSubmit(action) {
+    console.log('dispatch submit', action)
 
-  bus.$emit('forceValid')
+    bus.$emit('forceValid')
 
-  let targetAction = function () {
-    post(action.url, store.state.pageData.data, function (error, body) {
-      if (error === null) {
-        store.dispatch('clearData', {})
-        dispatch(body)
-      }
-    })
-  }
-
-  bus.$emit('forceValid')
-
-  if (store.state.validStatus.valid === 'VALID') {
-    if (action.alert) {
-      iView.Message.success(action.alert)
+    let targetAction = function () {
+        post(action.url, store.state.pageData.data, function (error, body) {
+            if (error === null) {
+                store.dispatch('clearData', {})
+                dispatch(body)
+            }
+        })
     }
 
-    if (action.confirm) {
-      iView.Modal.confirm({
-        title: '确认',
-        content: '<p>' + action.confirm + '</p>',
-        onOk: () => {
-          targetAction()
-        },
-        onCancel: () => {
-          iView.Message.info('点击了取消')
+    bus.$emit('forceValid')
+
+    if (store.state.validStatus.valid === 'VALID') {
+        if (action.alert) {
+            iView.Message.success(action.alert)
         }
-      })
+
+        if (action.confirm) {
+            iView.Modal.confirm({
+                title: '确认',
+                content: '<p>' + action.confirm + '</p>',
+                onOk: () => {
+                    targetAction()
+                },
+                onCancel: () => {
+                    iView.Message.info('点击了取消')
+                }
+            })
+        } else {
+            targetAction()
+        }
     } else {
-      targetAction()
+        console.log('store.state.validStatus.valid', store.state.validStatus.valid)
+        console.log('校验没有通过~')
     }
-  } else {
-    console.log('store.state.validStatus.valid', store.state.validStatus.valid)
-    console.log('校验没有通过~')
-  }
-  // console.log("post data : ", store.state.pageData.data);
+    // console.log("post data : ", store.state.pageData.data);
 }
 
 /**
@@ -273,34 +273,34 @@ function asSubmit (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asServerAction (action) {
-  console.log('dispatch serverAction', action)
+function asServerAction(action) {
+    console.log('dispatch serverAction', action)
 
-  let targetAction = function () {
-    fetch(action.url, function (error, body) {
-      if (error === null) {
-        dispatch(body)
-      }
-    })
-  }
+    let targetAction = function () {
+        fetch(action.url, function (error, body) {
+            if (error === null) {
+                dispatch(body)
+            }
+        })
+    }
 
-  if (action.alert) {
-    iView.Message.success(action.alert)
-  }
-  if (action.confirm) {
-    iView.Modal.confirm({
-      title: '确认',
-      content: '<p>' + action.confirm + '</p>',
-      onOk: () => {
+    if (action.alert) {
+        iView.Message.success(action.alert)
+    }
+    if (action.confirm) {
+        iView.Modal.confirm({
+            title: '确认',
+            content: '<p>' + action.confirm + '</p>',
+            onOk: () => {
+                targetAction()
+            },
+            onCancel: () => {
+                iView.Message.info('点击了取消')
+            }
+        })
+    } else {
         targetAction()
-      },
-      onCancel: () => {
-        iView.Message.info('点击了取消')
-      }
-    })
-  } else {
-    targetAction()
-  }
+    }
 }
 
 /**
@@ -313,15 +313,15 @@ function asServerAction (action) {
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }
  */
-function asMessage (action) {
-  console.log('dispatch message', action)
-  if (action.confirm) {
-    if (!window.confirm(action.confirm)) {
-      return
+function asMessage(action) {
+    console.log('dispatch message', action)
+    if (action.confirm) {
+        if (!window.confirm(action.confirm)) {
+            return
+        }
     }
-  }
 
-  if (action.alert) {
-    window.alert(action.alert)
-  }
+    if (action.alert) {
+        window.alert(action.alert)
+    }
 }

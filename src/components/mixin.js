@@ -14,6 +14,8 @@ import Mutations from 'store/Mutation'
 import { getData } from 'utils/actionUtils'
 import { deepCopy } from 'utils/utils'
 
+let NoData = Symbol('NoData')
+
 const mixin = {
     props: {
         define: {
@@ -32,10 +34,12 @@ const mixin = {
             let obj = _.filter(dataLink, (item) => {
                 return item.attr === type
             })[0]
+            debugger
             // 设置组件请求参数
             obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
             obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
             obj.link.body = this.getRealParamData(obj.link.body)
+            debugger
             getData(obj.link, (data, err) =>{
                 callback(data, err)
             })
@@ -49,16 +53,44 @@ const mixin = {
          * }
          * id: [*] || {*} || '*'
          */
+        // getRealParamData (param) {
+        //     let data = {}
+        //     if (param) {
+        //         let componentData = this.$store.state.componentPageData
+        //         for (let key of Object.keys(param)) {
+        //             data[key] = componentData[param[key].value] || param[key].defaultValue
+        //             if (data[key] === null) {
+        //                 delete data[key]         
+        //             }
+        //         }
+        //     }
+        //     return data
+        // },
         getRealParamData (param) {
             let data = {}
             if (param) {
                 let componentData = this.$store.state.componentPageData
                 for (let key of Object.keys(param)) {
-                    data[key] = componentData[param[key].value] || param[key].defaultValue
+                    let value = param[key].value
+                    let defaultValue = param[key].defaultValue
+                    // 如果为数组逐层取值 
+                    if (Array.isArray(value)) {
+                        data[key] = _.get(componentData, [...value], NoData)
+                    } else {
+                        data[key] = componentData[value] || NoData
+                    }
+                    // vuex中没有数据，有默认值赋值，没有报错
+                    if (NoData === data[key]) {
+                        if (Object.keys(param[key]).includes('defaultValue')) {
+                            data[key] = defaultValue
+                        } else {
+                            console.error('vuex中没有值且没有默认值 key: ' + key, 'value: ' + value)
+                        }
+                    }
                     if (data[key] === null) {
                         delete data[key]         
                     }
-                }
+                }                    
             }
             return data
         },
