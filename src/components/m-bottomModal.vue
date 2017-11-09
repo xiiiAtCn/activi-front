@@ -1,22 +1,16 @@
 <template>
-  <!-- The Modal -->
-  <div id="myModal" class="m-modal" v-bind:style="styleObject">
-
-    <!-- Modal content -->
-    <div class="m-modal-content">
-      <div class="m-modal-header">
-        <span class="m-close" @click="close()">&times;</span>
-        <h2 v-text="headerText"></h2>
+    <div id="myModal" class="m-modal" v-bind:style="styleObject">
+      <div class="m-modal-content">
+        <div class="m-modal-header">
+          <span class="m-close" @click="close()">&times;</span>
+          <h2 v-text="headerText"></h2>
+        </div>
+        <div class="m-modal-body">
+          <p>Some text in the Modal Body</p>
+          <p>Some other text...</p>
+        </div>
       </div>
-      <div class="m-modal-body">
-        <p>Some text in the Modal Body</p>
-        <p>Some other text...</p>
-      </div>
-      <!--<div class="m-modal-footer">-->
-      <!--<h3 v-text="footerText"></h3>-->
-      <!--</div>-->
     </div>
-  </div>
 </template>
 
 <script>

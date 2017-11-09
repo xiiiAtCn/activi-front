@@ -42,10 +42,6 @@ const mConfirm = resolve => {
     require(['./m-confirm.vue'], resolve)
 }
 
-const mDeliverables = resolve => {
-    require(['./m-deliverables.vue'], resolve)
-}
-
 const mDetailView = resolve => {
     require(['./m-detailView.vue'], resolve)
 }
@@ -175,7 +171,6 @@ Vue.component('mBottomModal', mBottomModal)
 Vue.component('mCard', mCard)
 Vue.component('mCoin', mCoin)
 Vue.component('mConfirm', mConfirm)
-Vue.component('mDeliverables', mDeliverables)
 Vue.component('mDetailView', mDetailView)
 Vue.component('mEntry', mEntry)
 Vue.component('mFilter', mFilter)
