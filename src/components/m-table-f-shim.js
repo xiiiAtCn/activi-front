@@ -20,7 +20,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                 serverPage:false//是否服务器分页
             },
             on:{
-                rowsContentChange : this.handleRowsContentChange
+                rowsPageChange : this.handleRowsPageChange
             }
         })
     },
@@ -80,7 +80,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.getTableDefine()
             this.getTableData()
         },
-        handleRowsContentChange(arg){
+        handleRowsPageChange(arg){
             this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: arg})
         }
     }

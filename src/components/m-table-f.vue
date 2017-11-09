@@ -136,6 +136,11 @@
             rowsContent(){
                 console.log("mTableF watch rowsContent")
                 this.handleContent()
+            },
+            tableName(){
+                if(window.localStorage.getItem(this.tableName+'.rowCount')){
+                    this.rowCount = window.localStorage.getItem(this.tableName+'.rowCount')
+                }
             }
         },
         mounted() {
@@ -183,8 +188,8 @@
                 })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
                 //读取localStorage数据 确认展示列
-                if(this.tableName && window.localStorage.getItem(this.tableName)){
-                    this.checkAllGroup = JSON.parse(window.localStorage.getItem(this.tableName))
+                if(this.tableName && window.localStorage.getItem(this.tableName+'.checkAllGroup')){
+                    this.checkAllGroup = JSON.parse(window.localStorage.getItem(this.tableName+'.checkAllGroup'))
                     for(let i=this.checkAllGroup.length-1;i>=0;i--){
                         let removeColumns=true
                         for(let j=0;j<this.checkAllGroup.length;j++){
@@ -314,7 +319,7 @@
                 this.handleColumnsData(obj);
                 this.dataListChange = data
                 if(this.tableName){
-                    window.localStorage.setItem(this.tableName,JSON.stringify(data))
+                    window.localStorage.setItem(this.tableName+'.checkAllGroup',JSON.stringify(data))
                 }
             },
             handleColumnsData(obj){
@@ -369,7 +374,7 @@
                 if(!this.serverPage){
                     this.dataTable = this.rowsContent.slice((arg-1)*this.rowCount,arg*this.rowCount)
                 }else{
-                    this.$emit('rowsContentChange', {from:arg, size:this.rowCount})
+                    this.$emit('rowsPageChange', {from:arg, size:this.rowCount})
                 }
             },
             //用户选择一页显示行数时
@@ -377,6 +382,7 @@
                 this.rowCount = arg
                 this.dataTable = this.rowsContent.slice(0,arg)
                 this.currentPage = 1
+                window.localStorage.setItem(this.tableName+'.rowCount',arg)
             }
         }
     }
