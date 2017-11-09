@@ -8,17 +8,10 @@
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
                     <Breadcrumb v-if="define.title instanceof Array">
-                        <Breadcrumb-item v-for="item in define.title" href="">
+                        <Breadcrumb-item v-for="(item, index) in define.title" :key="index">
                             {{item}}
-
                         </Breadcrumb-item>
                     </Breadcrumb>
-                    <!--<template v-if="typeof define.subtitle === 'string'">-->
-                    <!--<span v-text="define.subtitle"></span>-->
-                    <!--</template>-->
-                    <!--<template v-else>-->
-                    <!--<Breadcrumb-item v-for="item in define.subtitle" href="">{{item}}</Breadcrumb-item>-->
-                    <!--</template>-->
                 </Breadcrumb>
                 </Col>
                 <Col span="12" class="pull-right">
@@ -26,19 +19,16 @@
                     <Button type="primary" v-if="define.editUrl" shape="circle" @click="edit(define.editUrl)">
                         <Icon type="document-text"></Icon>
                         编辑
-
                     </Button>
                 </transition>
                 <transition name="fade" mode="out-in">
                     <Button type="ghost" v-if="define.backUrl" shape="circle" @click="backUrl(define.backUrl)">
                         <Icon type="reply"></Icon>
                         返回
-
                     </Button>
                     <Button type="ghost" shape="circle" @click="back" v-else>
                         <Icon type="reply"></Icon>
                         返回
-
                     </Button>
                 </transition>
                 </Col>
@@ -67,9 +57,8 @@
     import store from '../vuex/store'
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
-
     import {dispatch} from '../utils/actionUtils'
-    import * as _ from 'lodash'
+    import _ from 'lodash'
 
     export default {
         store,
@@ -91,92 +80,6 @@
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
-            }
-        },
-        components: {
-            mTable: function (resolve) {
-                require(['./m-table.vue'], resolve)
-//        require(['./m-table-shim.js'], resolve)
-            },
-            mTableF: function (resolve) {
-                require(['./m-table-f.vue'], resolve)
-                require(['./m-table-f-shim.js'], resolve)
-            },
-            mTab: function (resolve) {
-                require(['./m-tab.vue'], resolve)
-            },
-            mMenu: function (resolve) {
-                require(['./m-menu.vue'], resolve)
-            },
-            mSection: function (resolve) {
-                require(['./m-section.vue'], resolve)
-            },
-            mRow: function (resolve) {
-                require(['./base/m-row.vue'], resolve)
-            },
-            mCard: function (resolve) {
-                require(['./m-card.vue'], resolve)
-            },
-            mBoMeta: function (resolve) {
-                require(['./m-boMeta.vue'], resolve)
-            },
-            mBillMeta: function (resolve) {
-                require(['./m-billMeta.vue'], resolve)
-            },
-            mFilter: function (resolve) {
-                require(['./m-filter.vue'], resolve)
-            },
-            mConfirm: function (resolve) {
-                require(['./m-confirm.vue'], resolve)
-            },
-            mListView: function (resolve) {
-//                require(['./m-listView.vue'], resolve)
-                require(['./m-detailView-shim.js'], resolve)
-            },
-            mBoTree: function (resolve) {
-                require(['./taskPlan/m-boTree.vue'], resolve)
-            },
-            mSteps: function (resolve) {
-                require(['./base/m-steps.vue'], resolve)
-            },
-            mListTable: function (resolve) {
-                require(['./m-listTable.vue'], resolve)
-            },
-            mListResult: function (resolve) {
-                require(['./m-listResult.vue'], resolve)
-            },
-            mListTask: function (resolve) {
-                require(['./m-listTask.vue'], resolve)
-            },
-            mDeliverables: function (resolve) {
-                require(['./m-deliverables.vue'], resolve)
-            },
-            mTree: function (resolve) {
-                require(['./m-tree.vue'], resolve)
-            },
-            mLayout: function (resolve) {
-                require(['./m-layout.vue'], resolve)
-            },
-            mIsBuilding: function (resolve) {
-                require(['./m-isBuilding.vue'], resolve)
-            },
-            mProjectSummary: function (resolve) {
-                require(['./businessModule/project/m-projectSummary.vue'], resolve)
-            },
-            mTabMapMonitor: function (resolve) {
-                require(['./businessModule/monitor/m-tabMapMonitor.vue'], resolve)
-            },
-            mWorkCenter: function (resolve) {
-                require(['./businessModule/workCenter/m-workCenter.vue'], resolve)
-            },
-            mFilterPrice: function (resolve) {
-                require(['./m-filterPrice'], resolve)
-            },
-            mPriceTable: function (resolve) {
-                require(['./m-priceTable'], resolve)
-            },
-            mProductPrice: function (resolve) {
-                require(['./businessModule/m-productPrice'], resolve)
             }
         },
         data () {

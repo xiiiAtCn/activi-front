@@ -8,21 +8,6 @@
 </template>
 <script>
     export default {
-//        beforeCreate: function () {
-//            this.$options.components.mRow = require('./base/m-row.vue');
-//            this.$options.components.mTable = require('./m-table.vue')
-//        },
-        components: {
-            mRow: function (resolve) {
-                require(['./base/m-row.vue'], resolve)
-            },
-            mTable: function (resolve) {
-                require(['./m-table.vue'], resolve)
-            },
-            mSteps: function (resolve) {
-                require(['./base/m-steps.vue'], resolve)
-            }
-        },
         props: ['content', 'define'],
         data: function () {
             return {}

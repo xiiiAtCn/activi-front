@@ -1,52 +1,49 @@
 <template>
-  <div>
-    <!--{{dataSource}}-->
-    <h3 class="title">{{define.alias}}</h3>
-    <Row>
-      <div v-for="item in define.operation" class="config">
-        <div class="operation">
-          <Button type="primary" v-if="item.url" shape="circle" @click="getMeta(item.url)">{{item.name}}</Button>
-          <Button type="primary" v-else shape="circle" @click="showModal(item.name)">{{item.name}}</Button>
-        </div>
-        <div class="search">
-          <Input v-model="valueSearch" placeholder="筛选">
-          <Button slot="append" icon="ios-search"></Button>
-          </Input>
-        </div>
-      </div>
-    </Row>
-    <br>
-    <div v-if="storeStatus=='editable'" class="operation">
-      <Button type="primary" shape="circle" @click="openModal">添加明细</Button>
-    </div>
-    <div style="padding: 0 20px;">
-      <!--{{dataSource}}-->
-      <Table :columns="columns" highlight-row :data="dataSource" border></Table>
-    </div>
     <div>
-      <Modal :loading="loading" v-model="modalState" @on-cancel="abort2Table" @on-ok="submit2Table">
-        <mForm :confirm="confirm"
-               :define="formDefine"
-               :isNew="modalData.id === dataSource.length"
-               :content="modalData"
-               :openState="modalState"
-               @updateData="updateData">
-        </mForm>
-      </Modal>
+        <!--{{dataSource}}-->
+        <h3 class="title">{{define.alias}}</h3>
+        <Row>
+            <div v-for="item in define.operation" class="config">
+                <div class="operation">
+                    <Button type="primary" v-if="item.url" shape="circle" @click="getMeta(item.url)">{{item.name}}</Button>
+                    <Button type="primary" v-else shape="circle" @click="showModal(item.name)">{{item.name}}</Button>
+                </div>
+                <div class="search">
+                    <Input v-model="valueSearch" placeholder="筛选">
+                        <Button slot="append" icon="ios-search"></Button>
+                    </Input>
+                </div>
+            </div>
+        </Row>
+        <br>
+            <div v-if="storeStatus=='editable'" class="operation">
+            <Button type="primary" shape="circle" @click="openModal">添加明细</Button>
+        </div>
+        <div style="padding: 0 20px;">
+        <!--{{dataSource}}-->
+            <Table :columns="columns" highlight-row :data="dataSource" border></Table>
+        </div>
+        <div>
+            <Modal :loading="loading" v-model="modalState" @on-cancel="abort2Table" @on-ok="submit2Table">
+                <mForm :confirm="confirm"
+                    :define="formDefine"
+                    :isNew="modalData.id === dataSource.length"
+                    :content="modalData"
+                    :openState="modalState"
+                    @updateData="updateData">
+                </mForm>
+            </Modal>
+        </div>
     </div>
-  </div>
 </template>
-<script>
+    <script>
   //  import Vue from 'vue'
   import _ from 'lodash'
   import bus from '../router/bus'
   import { dispatch } from '../utils/actionUtils'
   import { default as fetch } from '../utils/DefineFetcher'
-  import mForm from './base/m-form.vue'
-  // Vue.component('mForm', mForm)
   export default {
       props: ['define', 'content'],
-      components: {mForm},
       data () {
           return {
               confirm: false,
@@ -111,20 +108,6 @@
           storeStatus () {
               this.columns = this.getColumns()
           },
-      /* 当路由发生变化时 data_url不为空的时候重新请求数据 */
-//        $route() {
-//            var _this = this;
-//            var url = _this.define.data_url;
-//            if (url) {
-//                fetch(url, function (error, body) {
-//                    if (error === null) {
-//                        Vue.set(_this.define, "rows", body);
-//                    }
-//                })
-//            } else {
-//                Vue.set(_this.define, "rows", []);
-//            }
-//        },
       /* 当data_url发生变化时更新table数据 */
           'define.data_url' (to, from) {
               fetch(this.define.data_url, (error, body) => {
