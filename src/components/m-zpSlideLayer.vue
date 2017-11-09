@@ -115,7 +115,7 @@ export default {
         // 关闭layer
         closeLayer () {
             this.visible = false
-            this.$emit('input', false);
+            this.$emit('input', false)
         },
         ok () {
             if (this.loading) {
@@ -140,7 +140,7 @@ export default {
                 }
             }
         }
-    },
+    }
 }
 </script>
 <style scoped>

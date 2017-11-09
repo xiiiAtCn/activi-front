@@ -23,7 +23,7 @@
                     if (data) {
                     	setTimeout(() => {
                     		callback(data)
-                        })
+                    })
                     }
                 })
             },
@@ -37,19 +37,19 @@
             },
             // 判断当前节点展示方式为 有子节点 或 无子节点
             treeNodeShow (treeData) {
-            	for (let i of treeData){
-            		if (i.leaf === false){
+            	for (let i of treeData) {
+            		if (i.leaf === false) {
             			delete i.children
-                    } else {
-                        i.loading = false
-                        i.children = []
-                    }
-                }
+            } else {
+                i.loading = false
+                i.children = []
+            }
+            }
                 return treeData
             }
         },
         mounted () {
-            console.info("mBoTree work")
+            console.info('mBoTree work')
             this.getTreeData()
         }
     }

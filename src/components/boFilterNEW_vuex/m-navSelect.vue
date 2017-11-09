@@ -74,7 +74,7 @@ export default {
             let selectData = this.selectData[0]
             let option = selectData.child[0]
             this.$set(this.tempSelect, 0, option.value)
-            this.selectChanged (selectData, 0, option.value)
+            this.selectChanged(selectData, 0, option.value)
         })
     },
     methods: {
@@ -118,8 +118,8 @@ export default {
         },
         watchValuesChanged () {
             this.getSelectData()
-        },
-    },
+        }
+    }
 }
 </script>
 <style scoped>

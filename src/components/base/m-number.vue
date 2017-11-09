@@ -34,10 +34,10 @@
         name: 'm-number',
         mixins: [mixin],
         computed: {
-            placeholder() {
+            placeholder () {
                 return _.get(this.define, 'placeholder', '请输入一个数字')
             },
-            icon() {
+            icon () {
                 if (this.hasError) {
                     return 'alert'
                 }
@@ -46,18 +46,18 @@
                 }
                 return ''
             },
-            minValue() {
+            minValue () {
                 return _.get(this.define, 'minValue', Number.MIN_VALUE)
             },
-            maxValue() {
+            maxValue () {
                 return _.get(this.define, 'maxValue', Number.MAX_VALUE)
             },
-            numberType() {
+            numberType () {
                 return _.get(this.define, 'numberType', 'integer')
             }
         },
         methods: {
-            valid() {
+            valid () {
                 debugger
                 if (!this.readonly) {
                     let hasError = false
@@ -66,14 +66,14 @@
                         hasError = true
                         this.errorMessage = '请输入必填项'
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]:hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             },
-            inputNumber(e, flag) {
+            inputNumber (e, flag) {
                 debugger
                 let value = e.target.value
                 if (value.startsWith('-') && value.length === 1) {
-                    if(flag) {
+                    if (flag) {
                         value = ''
                     }
                 } else {

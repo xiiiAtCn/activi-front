@@ -32,19 +32,19 @@
         name: 'm-input',
         mixins: [mixin],
         computed: {
-            maxLength() {
+            maxLength () {
                 return _.get(this.define, 'maxLength', Number.MAX_SAFE_INTEGER)
             },
-            minLength() {
+            minLength () {
                 return _.get(this.define, 'minLength', 0)
             },
-            pattern() {
+            pattern () {
                 return _.get(this.define, 'pattern', '.*')
             },
-            placeholder() {
+            placeholder () {
                 return _.get(this.define, 'placeholder', '请输入部门名称')
             },
-            icon() {
+            icon () {
                 if (this.hasError) {
                     return 'alert'
                 }
@@ -55,32 +55,32 @@
             }
         },
         methods: {
-            valid() {
-                if(!this.readonly) {
+            valid () {
+                if (!this.readonly) {
                     let hasError = false
-                    let value = String(this.objectModel == undefined? '': this.objectModel)
-                    if(this.required) {
-                        if(value === '') {
+                    let value = String(this.objectModel == undefined ? '' : this.objectModel)
+                    if (this.required) {
+                        if (value === '') {
                             hasError = true
                             this.errorMessage = '请输入必填项'
-                        } else if(value.length < this.minLength) {
+                        } else if (value.length < this.minLength) {
                             hasError = true
                             this.errorMessage = `输入最小长度应不小于${this.minLength}`
-                        } else if(value.length > this.maxLength) {
+                        } else if (value.length > this.maxLength) {
                             hasError = true
                             this.errorMessage = `输入最大长度应不大于${this.maxLength}`
                         } else {
                             let regex = new RegExp(this.pattern)
-                            if(!regex.test(this.objectModel)) {
+                            if (!regex.test(this.objectModel)) {
                                 hasError = true
                                 this.errorMessage = '输入不符合要求, 请重新输入'
                             }
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]:hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             },
-            inputCheck() {
+            inputCheck () {
                 debugger
                 this.valid()
             }

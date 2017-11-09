@@ -43,26 +43,26 @@
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
 
     export default {
-        name:'m-radio',
+        name: 'm-radio',
         mixins: [mixin],
         computed: {
-            items() {
+            items () {
                 return _.get(this.define, 'items', [])
             },
-            size() {
+            size () {
                 return _.get(this.define, 'size', 'large')
             },
-            vertical() {
+            vertical () {
                 return _.get(this.define, 'vertical', false)
             }
         },
         methods: {
-            selectChange(value) {
+            selectChange (value) {
                 let list = this.items
                 let model = {}
-                for(let i = 0; i < list.length; i++) {
+                for (let i = 0; i < list.length; i++) {
                     let tmp = list[i]
-                    if(tmp['id'] === value) {
+                    if (tmp['id'] === value) {
                         model['name'] = tmp['name']
                         model['value'] = tmp['id']
                         break
@@ -71,17 +71,17 @@
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: model, form: this.form})
                 this.valid()
             },
-            valid() {
-                if(!this.readonly) {
+            valid () {
+                if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel
-                    if(value === '') {
+                    if (value === '') {
                         hasError = true
                         this.errorMessage = '请输入必填项'
                     }
                     setTimeout(() => {
-                        this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]:hasError, form: this.form})
-                    },1000)
+                        this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                    }, 1000)
                 }
             }
         }

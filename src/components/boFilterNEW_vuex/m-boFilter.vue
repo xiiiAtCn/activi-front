@@ -192,14 +192,14 @@ export default{
         },
         currentAdFilterData () {
             return this._getFilterDataByAdId(this.currentAdId)
-        },
+        }
     },
     watch: {
         queryData (val) {
             let queryData = deepCopy(val)
             queryData = this.changeQueryDataToPostData(queryData)
             this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
-        },
+        }
     },
     methods: {
         // 删除选项
@@ -265,7 +265,7 @@ export default{
         watchValuesChanged () {
             this.getFilterData()
         }
-    },
+    }
 }
 </script>
 <style scoped>

@@ -57,61 +57,60 @@
         name: 'm-select',
         mixins: [mixin],
         computed: {
-            items() {
+            items () {
                 return _.get(this.define, 'items', [])
             },
-            clearable() {
+            clearable () {
                 return _.get(this.define, 'clearable', true)
-            },  
-            multiple() {
+            },
+            multiple () {
                 return _.get(this.define, 'multiple', false)
             },
-            size() {
+            size () {
                 return _.get(this.define, 'szie', 'default')
             },
-            placeholder() {
+            placeholder () {
                 return _.get(this.define, 'placeholder', '请选择')
             },
-            notFound() {
+            notFound () {
                 return _.get(this.define, 'notFound', '无匹配数据')
             },
-            placement() {
+            placement () {
                 return _.get(this.define, 'placement', 'bottom')
             },
-            transfer() {
+            transfer () {
                 return _.get(this.define, 'transfer', false)
             }
         },
-        data() {
+        data () {
             return {
-                loading: false,
+                loading: false
             }
         },
-        methods:{
-            valueChange(value) {
+        methods: {
+            valueChange (value) {
                 let list = this.items
                 let model = {}
-                for(let i = 0; i < list.length; i++) {
+                for (let i = 0; i < list.length; i++) {
                     let tmp = list[i]
-                    if(tmp['id'] === value) {
+                    if (tmp['id'] === value) {
                         model['name'] = tmp['name']
                         model['value'] = tmp['id']
                         break
                     }
                 }
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: model, form: this.form})
-                if(!this.reset)
-                    this.valid()
+                if (!this.reset) { this.valid() }
             },
-            valid() {
-                if(!this.readonly) {
+            valid () {
+                if (!this.readonly) {
                     let value = this.objectModel
                     let hasError = false
-                    if (this.required && (value === '' || value.length === 0) ) {
+                    if (this.required && (value === '' || value.length === 0)) {
                         hasError = true
                         this.errorMessage = '请输入必填项'
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]:hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             }
         }

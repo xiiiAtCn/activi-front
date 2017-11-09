@@ -272,7 +272,7 @@ export default {
             }
             console.log('currentSelectedObj', result)
             return result
-        },
+        }
     },
     methods: {
         /**
@@ -450,7 +450,7 @@ export default {
         showAllOrNot () {
             this.showAllRow = !this.showAllRow
         }
-    },
+    }
 }
 </script>
 <style scoped>

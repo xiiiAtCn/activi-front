@@ -47,7 +47,7 @@
     export default {
         name: 'm-detail-choose',
         mixins: [mixin],
-        data() {
+        data () {
             return {
                 visible: false,
                 columns: [{}],
@@ -55,28 +55,28 @@
             }
         },
         computed: {
-            placeholder() {
+            placeholder () {
                 return _.get(this.define, 'placeholder', '请选择')
             },
-            showAttribute() {
+            showAttribute () {
                 return _.get(this.define, 'showAttribute', 'name')
             },
-            visibleName() {
+            visibleName () {
                 return this.objectModel[this.showAttribute] || ''
             }
         },
         methods: {
-            openLayer() {
+            openLayer () {
                 this.visible = true
             },
-            valid() {
-                if(!this.readonly) {
+            valid () {
+                if (!this.readonly) {
                     let hasError = false
-                    if(this.visibleName === '') {
+                    if (this.visibleName === '') {
                         hasError = true
                         this.errorMessage = '请输入必填项'
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]:hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             }
         }

@@ -62,12 +62,12 @@
         },
         data () {
             return {
-                columnsData:[],
-                columnsDataCopy:[],
-                dataTable:[],
-                valueSearch:'',
+                columnsData: [],
+                columnsDataCopy: [],
+                dataTable: [],
+                valueSearch: '',
 
-                //列选择控制
+                // 列选择控制
                 indeterminate: false,
                 checkAll: true,
                 checkAllGroup: [],
@@ -102,7 +102,7 @@
                     this.columnsData[i] = {
                         title: val.text,
                         key: val.field,
-                        width: val.text.length*14+40,
+                        width: val.text.length * 14 + 40,
                         render: (h, params) => {
                             if (val.icon) {
                                 return h('div', [
@@ -133,9 +133,9 @@
                 this.checkAllGroup = this.testList
                 this.dataListChange = this.testList
             },
-            //配置操作的按钮
-            showButton(smb){
-                if(this.columnsData[this.columnsData.length-1].key === 'action'){
+            // 配置操作的按钮
+            showButton (smb) {
+                if (this.columnsData[this.columnsData.length - 1].key === 'action') {
                     return
                 }
                 this.columnsData.push({
@@ -170,8 +170,8 @@
                 this.dataTable = this.rowsContent
             },
 
-            //处理顶部按钮
-            handleTopButton(url){
+            // 处理顶部按钮
+            handleTopButton (url) {
                 dispatch(url)
             },
             // 发送搜索事件数据
@@ -179,8 +179,8 @@
                 bus.$emit('topSearchMsg', this.valueSearch)
                 console.log(this.valueSearch)
             },
-            //处理表内按钮点击
-            handleButtonClick(params,row){
+            // 处理表内按钮点击
+            handleButtonClick (params, row) {
                 dispatch(params.row._actions[row.field])
             },
 
@@ -194,15 +194,14 @@
                 this.indeterminate = false
 
                 if (this.checkAll) {
-                    this.checkAllGroup = this.testList;
+                    this.checkAllGroup = this.testList
                     this.columnsData = this.columnsDataCopy
                 } else {
-                    this.checkAllGroup = [];
-                    this.columnsData =[]
+                    this.checkAllGroup = []
+                    this.columnsData = []
                 }
             },
             checkAllGroupChange (data) {
-
                 if (data.length === this.dataList.length) {
                     this.indeterminate = false
                     this.checkAll = true
@@ -214,53 +213,52 @@
                     this.checkAll = false
                 }
 
-                let obj=this.judgeArr(this.dataListChange,data)
-                this.handleColumnsData(obj);
+                let obj = this.judgeArr(this.dataListChange, data)
+                this.handleColumnsData(obj)
                 this.dataListChange = data
             },
-            handleColumnsData(obj){
-                if(!obj){
+            handleColumnsData (obj) {
+                if (!obj) {
                     return
-                } else if(obj.method === 'remove'){
-                    this.columnsData.forEach((val,i)=>{
-                        if(val.title === obj.str){
+                } else if (obj.method === 'remove') {
+                    this.columnsData.forEach((val, i) => {
+                        if (val.title === obj.str) {
                             this.columnsData.splice(i, 1)
                         }
                     })
-                }else if(obj.method === 'add'){
-                    this.columnsDataCopy.forEach((val)=>{
-                        if(val.title === obj.str){
+                } else if (obj.method === 'add') {
+                    this.columnsDataCopy.forEach((val) => {
+                        if (val.title === obj.str) {
                             this.columnsData.push(val)
                         }
                     })
                 }
-
             },
-            //判断数组不同值
-            judgeArr(arr1,arr2){
-                let str = '',obj={method:'remove'}
-                if(arr1.length < arr2.length){
-                    let Arr=arr1
-                    arr1=arr2
-                    arr2=Arr
-                    obj.method='add'
-                }else if(arr1.length === arr2.length){
+            // 判断数组不同值
+            judgeArr (arr1, arr2) {
+                let str = '', obj = {method: 'remove'}
+                if (arr1.length < arr2.length) {
+                    let Arr = arr1
+                    arr1 = arr2
+                    arr2 = Arr
+                    obj.method = 'add'
+                } else if (arr1.length === arr2.length) {
                     return
                 }
-                for(let i=0;i<arr1.length;i++){
+                for (let i = 0; i < arr1.length; i++) {
                     let val = arr1[i]
                     str = val
-                    for(let j=0;j<arr2.length;j++){
-                        if(val === arr2[j]){
-                            str =''
+                    for (let j = 0; j < arr2.length; j++) {
+                        if (val === arr2[j]) {
+                            str = ''
                             break
                         }
                     }
-                    if(str !== ''){
+                    if (str !== '') {
                         break
                     }
                 }
-                obj.str= str
+                obj.str = str
                 return obj
             }
         }
