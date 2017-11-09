@@ -8,7 +8,10 @@
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
                     <Breadcrumb v-if="define.title instanceof Array">
-                        <Breadcrumb-item v-for="item in define.title" href="">
+                        <Breadcrumb-item 
+                            v-for="(item, index) in define.title" 
+                            href=""
+                            :key="index">
                             {{item}}
 
                         </Breadcrumb-item>
@@ -59,6 +62,42 @@
                                :content="item.ui_content"></component>
                 </transition>
             </form>
+            <ButtonGroup class="form-button-group">
+                <Button
+                    v-for="(btn, index) in saveBtn"
+                    :key="index"
+                    @click="btnClick(btn.action)">
+                    {{ btn.text }}
+                </Button>
+                <Dropdown 
+                    v-if="submitBtn.length > 1"
+                    trigger="click">
+                    <Button>
+                        确认
+                        <Icon type="arrow-down-b"></Icon>
+                    </Button>
+                    <DropdownMenu slot="list" class="drop-down">
+                        <template
+                            v-for="(btn, index) in submitBtn">
+                            <Button
+                                type="text"
+                                class="submit-btn"
+                                :key="index"
+                                @click="btnClick(btn.aciton)">
+                                {{ btn.text }}
+                            </Button>
+                            <hr
+                                :key="index"
+                                class="parting-line">
+                        </template>
+                    </DropdownMenu>
+                </Dropdown>
+                <Button 
+                    v-if="submitBtn.length === 1"
+                    @click="btnClick(btn.aciton)">
+                    {{ submitBtn[0].text }}
+                </Button>
+            </ButtonGroup>
         </div>
         <Back-top></Back-top>
     </div>
@@ -70,6 +109,13 @@
 
     import {dispatch} from '../utils/actionUtils'
     import * as _ from 'lodash'
+
+    import { deepCopy } from 'utils/utils'
+
+    const BtnType = {
+        submit: 'submit',
+        save: 'save'
+    }
 
     export default {
         store,
@@ -83,6 +129,9 @@
             },
             backUrl: function (url) {
                 dispatch(url)
+            },
+            btnClick (action) {
+                dispatch(action)
             }
         },
         computed: {
@@ -91,12 +140,26 @@
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
+            },
+            btnArr () {
+                return _.get(this.define, 'buttons', [])
+            },
+            saveBtn () {
+                let btnArr = deepCopy(this.btnArr)
+                return _.filter(btnArr, (btn) => {
+                    return btn.type === BtnType.save
+                })
+            },
+            submitBtn () {
+                let btnArr = deepCopy(this.btnArr)
+                return _.filter(btnArr, (btn) => {
+                    return btn.type === BtnType.submit
+                })
             }
         },
         components: {
             mTable: function (resolve) {
                 require(['./m-table.vue'], resolve)
-//        require(['./m-table-shim.js'], resolve)
             },
             mTableF: function (resolve) {
                 require(['./m-table-f.vue'], resolve)
@@ -130,7 +193,6 @@
                 require(['./m-confirm.vue'], resolve)
             },
             mListView: function (resolve) {
-//                require(['./m-listView.vue'], resolve)
                 require(['./m-detailView-shim.js'], resolve)
             },
             mBoTree: function (resolve) {
@@ -249,5 +311,21 @@
 
     .flip-list-move {
         transition: transform 1s;
+    }
+
+    .form-button-group {
+        float: right;
+    }
+    .form-button-group .drop-down{
+        min-width: 0;
+        text-align: center;
+    }
+    .form-button-group .parting-line{
+        border-bottom: 1px solid black;
+        margin: 0;
+    }
+    .form-button-group .parting-line:last-child{
+        border-bottom: 0;
+        height: 0;
     }
 </style>
