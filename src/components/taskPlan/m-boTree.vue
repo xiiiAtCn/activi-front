@@ -5,10 +5,7 @@
 </template>
 
 <script>
-    import _ from 'lodash'
-//    import { deepCopy } from 'utils/utils'
     import mixin from '../mixin'
-
     export default{
         mixins: [mixin],
         data () {
@@ -21,9 +18,9 @@
             getChildNode (item, callback) {
                 this.getData(item.children, (data, err) => {
                     if (data) {
-                    	setTimeout(() => {
-                    		callback(data)
-                    })
+                        setTimeout(() => {
+                            callback(data)
+                        })
                     }
                 })
             },
@@ -37,14 +34,14 @@
             },
             // 判断当前节点展示方式为 有子节点 或 无子节点
             treeNodeShow (treeData) {
-            	for (let i of treeData) {
-            		if (i.leaf === false) {
-            			delete i.children
-            } else {
-                i.loading = false
-                i.children = []
-            }
-            }
+                for (let i of treeData) {
+                    if (i.leaf === false) {
+                        delete i.children
+                    } else {
+                        i.loading = false
+                        i.children = []
+                    }
+                }
                 return treeData
             }
         },
