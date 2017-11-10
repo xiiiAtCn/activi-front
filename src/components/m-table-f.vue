@@ -150,7 +150,6 @@
             //配置表格
             handleDefine(){
                 this.getColumnsDataWay(this.cols)
-                this.operation && this.pushTopButtonMsg(this.operation)
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
             //columnsData存入设置
