@@ -9,9 +9,7 @@ let request = new Request()
 let checkCount = 0
 export default {
     state: {
-        table: [],
         checkCount: 19,
-        url: '/'
     },
     mutations: {
 
@@ -98,9 +96,14 @@ export default {
             }
         },
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
+            let keys = Object.keys(state)
             let { form } = payload
-            delete state[form]
-            delete state[form + 'checkResult']
+            debugger
+            keys.forEach(element => {
+                if(element.startsWith(form)) {
+                    delete state[element]
+                }
+            })
         }
     },
     actions: {
@@ -123,8 +126,14 @@ export default {
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
                 if (flag) {
                     // 数据提交逻辑
-                    commit(Mutations.CLEAR_FORM_DATA, {form: form})
-                    commit(Mutations.BUTTON_START_LOADING, {form: form})
+                    request.setUrl(state[form + 'submit']).setBody(state[form]).forPost((data, err) => {
+                        if(err) {
+                            console.log(err)
+                        }
+                        console.log('update success ', data)
+                        commit(Mutations.CLEAR_FORM_DATA, {form: form})
+                        commit(Mutations.BUTTON_START_LOADING, {form: form})
+                    })
                 } else {
                     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
                     setTimeout(() => {

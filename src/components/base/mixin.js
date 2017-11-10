@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT } from 'store/Mutation'
+import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT, DESTROY_FORM_DATA } from 'store/Mutation'
 const mixin = {
     props: {
         define: {
@@ -140,6 +140,9 @@ const mixin = {
         return {
             errorMessage: ''
         }
+    },
+    beforeDestroy() {
+        this.$store.commit(DESTROY_FORM_DATA, {form: this.form})
     }
 }
 

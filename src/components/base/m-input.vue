@@ -34,7 +34,7 @@
                 return _.get(this.define, 'pattern', '.*')
             },
             placeholder () {
-                return _.get(this.define, 'placeholder', '请输入部门名称')
+                return _.get(this.define, 'placeholder', '请输入相关信息')
             },
             icon () {
                 if (this.hasError) {

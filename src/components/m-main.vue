@@ -97,6 +97,7 @@
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
+    import { ADD_NEW_OBJECT } from 'store/Mutation'
     import _ from 'lodash'
 
     import { deepCopy } from 'utils/utils'
@@ -105,21 +106,15 @@
         submit: 'submit',
         save: 'save'
     }
-
     export default {
         router,
-        methods: {
-            edit: function (url) {
-                dispatch(url)
-            },
-            back: function () {
-                this.$router.go(-1)
-            },
-            backUrl: function (url) {
-                dispatch(url)
-            },
-            btnClick () {
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form'})
+        data () {
+            return {
+                meta: null,
+                errorMessage: null,
+                define: {},
+                content: [],
+                dataUrl: null
             }
         },
         computed: {
@@ -134,8 +129,13 @@
             },
             saveBtn () {
                 let btnArr = deepCopy(this.btnArr)
+
                 return _.filter(btnArr, (btn) => {
-                    return btn.type === BtnType.save
+                    if(btn.type === BtnType.save) {
+                        this.$store.commit(ADD_NEW_OBJECT, {attribute:'form' + 'submit', value: btn.action.url})
+                        return true
+                    }
+                    return false
                 })
             },
             submitBtn () {
@@ -143,15 +143,6 @@
                 return _.filter(btnArr, (btn) => {
                     return btn.type === BtnType.submit
                 })
-            }
-        },
-        data () {
-            return {
-                meta: null,
-                errorMessage: null,
-                define: {},
-                content: [],
-                dataUrl: null
             }
         },
         watch: {
@@ -180,6 +171,20 @@
                 if (this.define.status_url) {
                     this.$store.dispatch('putStatus', {'url': this.define.status_url})
                 }
+            }
+        },
+        methods: {
+            edit: function (url) {
+                dispatch(url)
+            },
+            back: function () {
+                this.$router.go(-1)
+            },
+            backUrl: function (url) {
+                dispatch(url)
+            },
+            btnClick () {
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form'})
             }
         },
         beforeRouteEnter (to, from, next) {
