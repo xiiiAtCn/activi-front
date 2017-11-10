@@ -229,7 +229,7 @@
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: 120,
+                    width: smb.length * 55,
                     align: 'center',
                     fixed: 'right',
                     render: (h, params) => {
