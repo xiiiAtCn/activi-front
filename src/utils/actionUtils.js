@@ -39,7 +39,6 @@ export function dispatch () {
         (arg0.type === 'link' ? asLink
             : arg0.type === 'submit' ? asSubmit
                 : arg0.type === 'serverAction' ? asServerAction
-                    : arg0.type === 'deliver' ? asBus
                         : asMessage)(arg0)
     } else {
         console.log('路由分发参数错误 1 ', arguments)

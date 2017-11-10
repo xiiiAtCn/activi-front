@@ -1,9 +1,8 @@
 /**
  * Created by sunb on 17-7-5.
  */
-import { default as fetch } from '../utils/DefineFetcher'
-// import _ from 'lodash'
 
+import { getData } from 'utils/actionUtils'
 // 放画面数据的
 export default {
     state: {
@@ -28,10 +27,8 @@ export default {
         /* 根据url请求数据 */
         putData: function ({ commit }, args) {
             var url = args.url
-            fetch(url, function (error, body) {
-                if (error === null) {
-                    commit('changeData', body)
-                }
+            getData(url,  body => {
+                
             })
         },
         /* 清除data数据 */

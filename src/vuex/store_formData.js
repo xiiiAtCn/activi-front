@@ -1,14 +1,17 @@
 import Mutations from './Mutation'
-import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT, COUNT_CHECK_RESULT, SUBMIT_FORM_DATA } from './Action'
+import Actions from './Action'
 import Request from 'utils/request-addon'
 import Vue from 'vue'
+import { getData } from 'utils/actionUtils'
 
 let request = new Request()
 
+let checkCount = 0
 export default {
     state: {
         table: [],
-        checkCount: 8
+        checkCount: 19,
+        url: '/'
     },
     mutations: {
 
@@ -18,12 +21,12 @@ export default {
 
         [Mutations.FORM_ELEMENT_VALUE] (state, payload) {
             let {form, ...rest} = payload
-            debugger
             state[form] = {
                 ...state[form],
                 ...rest
             }
         },
+
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
             state[form + 'checkResult'] = {}
@@ -101,7 +104,7 @@ export default {
         }
     },
     actions: {
-        [FETCH_TABLE_DATA] ({commit}, data) {
+        [Actions.FETCH_TABLE_DATA] ({commit}, data) {
             request.setUrl(data.url).forPost((result, err) => {
                 if (err) {
                     commit(Mutations.SET_TABLE_DATA, [])
@@ -110,9 +113,11 @@ export default {
                 commit(Mutations.SET_TABLE_DATA, result)
             })
         },
-        [COUNT_CHECK_RESULT] ({commit, state}, payload) {
+        [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
             let {form, count} = payload
             if (state.checkCount === count) {
+                //外部计数器
+                checkCount = 0
                 let checkResult = state[form + 'checkResult']
                 let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
@@ -129,18 +134,45 @@ export default {
             }
         },
 
-        [SUBMIT_FORM_DATA] ({commit}, payload) {
+        [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },
-        [ELEMENT_VALIDATE_RESULT] ({state, dispatch}, payload) {
+        [Actions.ELEMENT_VALIDATE_RESULT] ({state, dispatch}, payload) {
             let {form, ...rest} = payload
             state[form + 'checkResult'] = {
                 ...state[form + 'checkResult'],
                 ...rest
             }
             if (state[form]['validate'] === true) {
-                dispatch(COUNT_CHECK_RESULT, {form, count: Object.keys(state[form + 'checkResult']).length})
+                checkCount++
+                dispatch(Actions.COUNT_CHECK_RESULT, {form, count: checkCount})
             }
+        },
+        [Actions.FETCH_FORM_DATA]({commit, state}, payload) {
+            let { url } = payload
+            getData(url, data => {
+                let keyList = Object.keys(data)
+                //此处的form为后台返回的值
+                if(state.form === undefined) 
+                    commit(Mutations.ADD_NEW_OBJECT, {
+                        attribute: 'form',
+                        value: {
+                            loading: true,
+                            reset: false,
+                            validate: false,
+                            visible: false
+                        }
+                    })
+                let value = {
+                    form: 'form'
+                }
+                keyList.forEach(element => {
+                    value[element] = {
+                        value: data[element]['value']
+                    }
+                })
+                commit(Mutations.FORM_ELEMENT_VALUE, value)
+            })
         }
     }
 }

@@ -61,8 +61,6 @@ const mixin = {
         },
         objectModel: {
             get () {
-                console.log(`get objectModel from vuex ${this.name}`)
-                debugger
                 let form = _.get(this.$store.state.formData, this.form)
                 if (form === undefined) {
                     this.$store.commit(ADD_NEW_OBJECT,
@@ -106,8 +104,6 @@ const mixin = {
             },
             set (value) {
                 // 数组暂不支持，需要特殊处理
-                console.log(`typeof value is ${typeof value}`)
-                debugger
                 if (typeof value === 'string' || value instanceof Date) {
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value}, form: this.form})
                 } else {
@@ -144,11 +140,6 @@ const mixin = {
         return {
             errorMessage: ''
         }
-    },
-    mounted () {
-        this.$nextTick(() => {
-            console.log(`${this.name}'s props are `, this.define)
-        })
     }
 }
 

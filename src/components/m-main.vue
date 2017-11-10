@@ -93,10 +93,10 @@
     </div>
 </template>
 <script>
-    import store from '../vuex/store'
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
+    import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
 
     import { deepCopy } from 'utils/utils'
@@ -107,7 +107,6 @@
     }
 
     export default {
-        store,
         router,
         methods: {
             edit: function (url) {
@@ -119,13 +118,13 @@
             backUrl: function (url) {
                 dispatch(url)
             },
-            btnClick (action) {
-                dispatch(action)
+            btnClick () {
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form'})
             }
         },
         computed: {
             res: function () {
-                return store.state.pageData.data.hidden
+                return this.$store.state.pageData.data.hidden
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
@@ -169,19 +168,17 @@
                         this.define = _.get(post, 'ui_define', {})
                         this.content = _.get(post, 'ui_content', [])
                         document.title = _.get(this.define, 'title', '')
-                        store.dispatch('initValidStatus')
-                        store.dispatch('clearData', {})
                         let url = this.define.data_url ? this.define.data_url : query
-                        store.dispatch('putData', {'url': url})
+                        this.$store.dispatch(FETCH_FORM_DATA, {url: url})
                     }
                 })
             },
-            dataUrl: function (newUrl, oldUrl) {
-                store.dispatch('putData', {'url': newUrl})
+            dataUrl(newUrl) {
+                this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
             },
-            'define.status_url': function (to, from) {
+            'define.status_url'() {
                 if (this.define.status_url) {
-                    store.dispatch('putStatus', {'url': this.define.status_url})
+                    this.$store.dispatch('putStatus', {'url': this.define.status_url})
                 }
             }
         },
