@@ -2,7 +2,7 @@ import Mutations from './Mutation'
 import Actions from './Action'
 import Request from 'utils/request-addon'
 import Vue from 'vue'
-import { getData } from 'utils/actionUtils'
+import { getData, dispatch } from 'utils/actionUtils'
 import iView from 'iview'
 
 let request = new Request()
@@ -76,10 +76,11 @@ export default {
             }
         },
         [Mutations.FORM_DATA_VALIDATE] (state, payload) {
-            let { form } = payload
+            let { form, requestUrl } = payload
             state[form] = {
                 ...state[form],
-                validate: true
+                validate: true,
+                [form + 'requestUrl']:requestUrl
             }
         },
         [Mutations.CLOSE_DATA_VALIDATE] (state, payload) {
@@ -127,17 +128,19 @@ export default {
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
                 if (flag) {
                     // 数据提交逻辑
-                    request.setUrl(state[form + 'submit']).setBody(state[form]).forPost((data, err) => {
-                        if(err) {
-                            console.log(err)
+                    iView.Modal.confirm({
+                        title: '确认',
+                        content: '确定提交',
+                        onOk:() => {
+                            request.setUrl(state[form][form+ 'requestUrl']).setBody(state[form]).forPost((data, err) => {
+                                if(err) {
+                                    console.log(err)
+                                    iView.Message.error('服务器出错了!')
+                                    return
+                                }
+                                dispatch(data)
+                            })
                         }
-                        iView.Message.success('操作成功, 将在1秒后返回上一页')
-                        console.log('update success ', data)
-                        commit(Mutations.CLEAR_FORM_DATA, {form: form})
-                        commit(Mutations.BUTTON_START_LOADING, {form: form})
-                        setTimeout(() => {
-                            window.history.back(-1)
-                        }, 1000)
                     })
                 } else {
                     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})

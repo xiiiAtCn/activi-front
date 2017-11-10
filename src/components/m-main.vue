@@ -131,11 +131,7 @@
                 let btnArr = deepCopy(this.btnArr)
 
                 return _.filter(btnArr, (btn) => {
-                    if(btn.type === BtnType.save) {
-                        this.$store.commit(ADD_NEW_OBJECT, {attribute:'form' + 'submit', value: btn.action.url})
-                        return true
-                    }
-                    return false
+                    return btn.type === BtnType.save
                 })
             },
             submitBtn () {
@@ -183,8 +179,8 @@
             backUrl: function (url) {
                 dispatch(url)
             },
-            btnClick () {
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form'})
+            btnClick (action) {
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', requestUrl: action.url})
             }
         },
         beforeRouteEnter (to, from, next) {
