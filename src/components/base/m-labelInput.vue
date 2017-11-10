@@ -1,18 +1,16 @@
 <template>
     <input type="hidden" v-if="hidden" :id="name" :name="name" v-model="value"/>
     <div v-else class="ivu-form-item m-flex">
-        <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}">{{label}}</label>
+        <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
         <div class="ivu-form-item-content m-input">
-            <component :is="itemType" :define="inputDefine" :uid="uid"></component>
+            <component :is="itemType" :define="inputDefine" :uid="uid" :focusId="uid"></component>
         </div>
     </div>
 </template>
 <script>
-import store from '../../vuex/store'
 import _ from 'lodash'
 
 export default {
-    store,
     props: ['define', 'content', 'uid'],
 
     data: function () {
@@ -28,9 +26,9 @@ export default {
         inputDefine: function () {
             let filtedDefine = {}
             _.forIn(this.define, function (value, key) {
-            if (key !== 'label') {
-                filtedDefine[key] = value
-            }
+                if (key !== 'label') {
+                    filtedDefine[key] = value
+                }
             })
             return filtedDefine
         },
@@ -45,12 +43,12 @@ export default {
             if (this.typeString === 'bo') return 'mBo'
             return 'mInput'
         },
-        value: {  // 专门为hidden类型的input用。
+        value: {
             get () {
-            return _.get(this.$store.state.pageData.data, this.name, '')
+                return _.get(this.$store.state.pageData.data, this.name, '')
             },
             set (value) {
-            this.$store.commit('updateItem', {name: this.name, value: value})
+                this.$store.commit('updateItem', {name: this.name, value: value})
             }
         }
     }

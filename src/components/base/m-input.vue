@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row>
-            <Input 
+            <Input :element-id="focusId"
                 v-model="objectModel"
                 :placeholder="placeholder"
                 :readonly="readonly" 

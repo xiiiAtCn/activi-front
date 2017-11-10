@@ -5,6 +5,10 @@ const mixin = {
         define: {
             type: Object,
             default: {}
+        },
+        focusId: {
+            type: [String, Number],
+            default: ''
         }
     },
     computed: {

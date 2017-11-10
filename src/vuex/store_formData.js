@@ -3,6 +3,7 @@ import Actions from './Action'
 import Request from 'utils/request-addon'
 import Vue from 'vue'
 import { getData } from 'utils/actionUtils'
+import iView from 'iview'
 
 let request = new Request()
 
@@ -130,9 +131,13 @@ export default {
                         if(err) {
                             console.log(err)
                         }
+                        iView.Message.success('操作成功, 将在1秒后返回上一页')
                         console.log('update success ', data)
                         commit(Mutations.CLEAR_FORM_DATA, {form: form})
                         commit(Mutations.BUTTON_START_LOADING, {form: form})
+                        setTimeout(() => {
+                            window.history.back(-1)
+                        }, 1000)
                     })
                 } else {
                     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
