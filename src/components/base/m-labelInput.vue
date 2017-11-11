@@ -1,6 +1,6 @@
 <template>
     <input type="hidden" v-if="hidden" :id="name" :name="name" v-model="value"/>
-    <div v-else class="ivu-form-item m-flex">
+    <div v-else class="ivu-form-item m-flex" style="margin-bottom: 0px;">
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
         <div class="ivu-form-item-content m-input">
             <component :is="itemType" :define="inputDefine" :uid="uid" :focusId="uid"></component>
@@ -13,13 +13,9 @@ import _ from 'lodash'
 export default {
     props: ['define', 'content', 'uid'],
 
-    data: function () {
+    data() {
         return {
-            name: _.get(this.define, 'name', ''),
-            label: _.get(this.define, 'label', false),
-            hidden: _.get(this.define, 'hidden', false),
-            typeString: _.get(this.define, 'typeString', 'string'),
-            labelWidth: _.get(this.define, 'labelWidth', 0)
+
         }
     },
     computed: {
@@ -31,6 +27,21 @@ export default {
                 }
             })
             return filtedDefine
+        },
+        name() {
+            return _.get(this.define, 'name', '')
+        },
+        label() {
+            return _.get(this.define, 'label', false)
+        },
+        hidden() {
+            return _.get(this.define, 'hidden', false)
+        },
+        typeString() {
+            return _.get(this.define, 'typeString', 'string')
+        },
+        labelWidth() {
+            return _.get(this.define, 'labelWidth', 0)
         },
         itemType: function () {
             if (this.typeString === 'string') return 'mInput'
