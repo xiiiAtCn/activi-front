@@ -182,7 +182,8 @@
                         document.title = _.get(this.define, 'title', '')
                         store.dispatch('initValidStatus')
                         store.dispatch('clearData', {})
-                        let url = this.define.data_url ? this.define.data_url : query
+                        store.commit('clearStatus')
+                        let url = this.define.data_url
                         store.dispatch('putData', {'url': url})
                     }
                 })
@@ -211,7 +212,7 @@
                     })
                 }
             })
-        }
+        },
     }
 </script>
 
