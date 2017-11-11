@@ -4,13 +4,13 @@ import Request from 'utils/request-addon'
 import Vue from 'vue'
 import { getData, dispatch } from 'utils/actionUtils'
 import iView from 'iview'
-
+import _ from 'lodash'
 let request = new Request()
 
 let checkCount = 0
 export default {
     state: {
-        checkCount: 19,
+        checkCount: 12,
     },
     mutations: {
 
@@ -132,7 +132,14 @@ export default {
                         title: '确认',
                         content: '确定提交',
                         onOk:() => {
-                            request.setUrl(state[form][form+ 'requestUrl']).setBody(state[form]).forPost((data, err) => {
+                            let copies = _.cloneDeep(state[form])
+                            let keyList = Object.keys(copies)
+                            keyList.forEach(element => {
+                                if(typeof copies[element] !== 'object') {
+                                    delete copies[element]
+                                }
+                            })
+                            request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
                                 if(err) {
                                     console.log(err)
                                     iView.Message.error('服务器出错了!')
