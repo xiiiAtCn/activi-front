@@ -40,7 +40,7 @@
             },
             chooseId () {
                 document.getElementById(this.$router.currentRoute.params.id).click()
-            },
+            }
         },
         watch: {
             '$route': function () {

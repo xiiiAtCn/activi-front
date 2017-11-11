@@ -1,83 +1,57 @@
 import Vue from 'vue'
 
-let mAttribute = resolve => {
-    require(['./m-attribute.vue'], resolve)
-}
-let mBo = resolve => {
-    require(['./m-bo.vue'], resolve)
-}
-let mBoolean = resolve => {
-    require(['./m-boolean.vue'], resolve)
-}
-let mDate = resolve => {
-    require(['./m-date.vue'], resolve)
-}
-let mFileUpload = resolve => {
-    require(['./m-fileUpload.vue'], resolve)
-}
-let mForm = resolve => {
-    require(['./m-form.vue'], resolve)
-}
-let mInput = resolve => {
-    require(['./m-input.vue'], resolve)
-}
-let mLabel = resolve => {
-    require(['./m-label.vue'], resolve)
-}
-let mLabelInput = resolve => {
-    require(['./m-labelInput.vue'], resolve)
-}
-let mLoading = resolve => {
-    require(['./m-loading.vue'], resolve)
-}
-let mMail = resolve => {
-    require(['./m-mail.vue'], resolve)
-}
-let mNumber = resolve => {
-    require(['./m-number.vue'], resolve)
-}
-let mPicUpload = resolve => {
-    require(['./m-picUpload.vue'], resolve)
-}
-let mRadio = resolve => {
-    require(['./m-radio.vue'], resolve)
-}
-let mRow = resolve => {
-    require(['./m-row.vue'], resolve)
-}
-let mSelect = resolve => {
-    require(['./m-select.vue'], resolve)
-}
-let mSteps = resolve => {
-    require(['./m-steps.vue'], resolve)
-}
-let mSwitch = resolve => {
-    require(['./m-switch.vue'], resolve)
-}
-let mTab = resolve => {
-    require(['./m-tab.vue'], resolve)
-}
-let mTime = resolve => {
-    require(['./m-time.vue'], resolve)
-}
+const mDate = resolve =>
+    require(['./m-date'], resolve)
 
-Vue.component('mAttribute', mAttribute)
-Vue.component('mBo', mBo)
-Vue.component('mBoolean', mBoolean)
+const mDetailChoose = resolve =>
+    require(['./m-detail-choose.vue'], resolve)
+
+const mDetailTable = resolve =>
+    require(['./m-detailTable.vue'], resolve)
+const mInput = resolve =>
+    require(['./m-input.vue'], resolve)
+
+const mLabel = resolve =>
+    require(['./m-label.vue'], resolve)
+
+const mLabelInput = resolve =>
+    require(['./m-labelInput.vue'], resolve)
+
+const mLoading = resolve =>
+    require(['./m-loading.vue'], resolve)
+
+const mMultiCheck = resolve =>
+    require(['./m-multiCheck.vue'], resolve)
+
+const mNumber = resolve =>
+    require(['./m-number.vue'], resolve)
+
+const mRow = resolve =>
+    require(['./m-row.vue'], resolve)
+
+const mSelect = resolve =>
+    require(['./m-select.vue'], resolve)
+
+const mSingleCheck = resolve =>
+    require(['./m-singleCheck.vue'], resolve)
+
+const mSteps = resolve =>
+    require(['./m-steps.vue'], resolve)
+
+const mTab = resolve =>
+    require(['./m-tab.vue'], resolve)
+
 Vue.component('mDate', mDate)
-Vue.component('mFileUpload', mFileUpload)
-Vue.component('mForm', mForm)
+Vue.component('mDetailChoose', mDetailChoose)
+Vue.component('mDetailTable', mDetailTable)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)
 Vue.component('mLabelInput', mLabelInput)
 Vue.component('mLoading', mLoading)
-Vue.component('mMail', mMail)
+Vue.component('mMultiCheck', mMultiCheck)
 Vue.component('mNumber', mNumber)
-Vue.component('mPicUpload', mPicUpload)
-Vue.component('mRadio', mRadio)
 Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
+Vue.component('mSingleCheck', mSingleCheck)
 Vue.component('mSteps', mSteps)
-Vue.component('mSwitch', mSwitch)
 Vue.component('mTab', mTab)
-Vue.component('mTime', mTime)

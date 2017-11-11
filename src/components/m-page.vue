@@ -19,15 +19,15 @@
 <script>
     import bus from 'routers/bus'
     export default {
-       data () {
-           return {
-               bus: bus,
+        data () {
+            return {
+                bus: bus,
                 position: {
                     top: '30vh',
                     left: '45vw'
                 }
             }
-       }
+        }
     }
 </script>
 

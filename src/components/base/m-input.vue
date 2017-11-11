@@ -1,112 +1,81 @@
 <template>
-  <span>
-    <Input type="text" @on-blur="valid" v-model.trim="value" :placeholder="placeholder" :readonly="readonly"
-           :icon="icon"></Input>
-    <div v-if="hasError" class="item-error">{{errorMessage}}</div>
-  </span>
+    <div>
+        <Row>
+            <Input :element-id="focusId"
+                v-model="objectModel"
+                :placeholder="placeholder"
+                :readonly="readonly" 
+                :icon="icon"
+                @on-blur="inputCheck"
+            >
+            </Input>
+        </Row>
+        <Row>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
+        </Row>
+    </div>
 </template>
 <script>
-  import bus from '../../router/bus'
-  import * as _ from 'lodash'
-
-  export default {
-    name: 'm-input',
-    data () {
-      return {
-        hasError: false,
-        errorMessage: ''
-      }
-    },
-    computed: {
-      'serverName': function () {
-        return this.name
-      },
-      'maxLength': function () {
-        return _.get(this.define, 'maxLength', -1)
-      },
-      'pattern': function () {
-        return _.get(this.define, 'pattern', null)
-      },
-      'required': function () {
-        return _.get(this.define, 'required', false)
-      },
-      'errorMessagePattern': function () {
-        return _.get(this.define, 'errorMessagePattern', '输入的内容不符合要求，请更正。')
-      },
-      'name': function () {
-        return _.get(this.define, 'name', '')
-      },
-      'placeholder': function () {
-        return _.get(this.define, 'placeholder', '')
-      },
-      'exContent': function () {
-        return _.get(this.define, 'exContent', {})
-      },
-      value: {
-        get () {
-          return _.get(this.$store.state.pageData.data, [this.name, 'value'], '')
+    import mixin from './mixin'
+    import _ from 'lodash'
+    import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
+    export default {
+        name: 'm-input',
+        mixins: [mixin],
+        computed: {
+            maxLength () {
+                return _.get(this.define, 'maxLength', Number.MAX_SAFE_INTEGER)
+            },
+            minLength () {
+                return _.get(this.define, 'minLength', 0)
+            },
+            pattern () {
+                return _.get(this.define, 'pattern', '.*')
+            },
+            placeholder () {
+                return _.get(this.define, 'placeholder', '请输入相关信息')
+            },
+            icon () {
+                if (this.hasError) {
+                    return 'alert'
+                }
+                if (this.readonly) {
+                    return 'locked'
+                }
+                return ''
+            }
         },
-        set (value) {
-          this.$store.commit('updateItem', {name: this.name, exContent: this.exContent, value: value})
+        methods: {
+            valid () {
+                if (!this.readonly) {
+                    let hasError = false
+                    let value = String(this.objectModel == undefined ? '' : this.objectModel)
+                    if (this.required) {
+                        if (value === '') {
+                            hasError = true
+                            this.errorMessage = '请输入必填项'
+                        } else if (value.length < this.minLength) {
+                            hasError = true
+                            this.errorMessage = `输入最小长度应不小于${this.minLength}`
+                        } else if (value.length > this.maxLength) {
+                            hasError = true
+                            this.errorMessage = `输入最大长度应不大于${this.maxLength}`
+                        } else {
+                            let regex = new RegExp(this.pattern)
+                            if (!regex.test(this.objectModel)) {
+                                hasError = true
+                                this.errorMessage = '输入不符合要求, 请重新输入'
+                            }
+                        }
+                    }
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                }
+            },
+            inputCheck () {
+                debugger
+                this.valid()
+            }
         }
-      },
-      readonly: function () {
-        let readonly = _.get(this.$store.state.pageStatus.status, this.name, 'readonly')
-        return (readonly === true || readonly === 'readonly' || readonly === 'readOnly')
-      },
-      'icon': function () {
-        if (this.hasError) {
-          return 'alert'
-        }
-        if (this.readonly) {
-          return 'locked'
-        }
-        return ''
-      }
-    },
-    mounted: function () {
-      let self = this
-      bus.$on('forceValid', function () {
-        self.valid()
-      })
-    },
-    props: {
-      'define': {type: Object},
-      'uid': {type: String, 'default': 'sss'}
-    },
-    methods: {
-      valid: function () {
-        if (this.readonly !== true) {
-          this.hasError = false
-          if (this.required && this.value.length === 0) {
-            this.errorMessage = '请输入必填项目。'
-            this.hasError = true
-          } else if (this.maxLength > -1 && this.value.length > this.maxLength) {
-            this.errorMessage = '请输入' + this.maxLength + '位以内的字符。'
-            this.hasError = true
-          } else if (this.minLength > -1 && this.value.length < this.minLength) {
-            this.errorMessage = '请输入' + this.minLength + '位以上的字符。'
-            this.hasError = true
-          } else if (this.pattern !== null && this.value.length > 0 && !this.value.match(this.pattern)) {
-            this.errorMessage = this.errorMessagePattern
-            this.hasError = true
-          }
-          this.$store.dispatch('reportValid', {'id': this.uid, 'result': !this.hasError})
-        }
-      }
     }
-//        watch: {
-//            'value': function (v1, v2) {
-//                if (v1 !== v2) this.valid();
-//            },
-//        },
-  }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  div.item-error {
-    font-size: small;
-    color: red;
-  }
-</style>

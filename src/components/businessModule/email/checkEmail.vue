@@ -39,7 +39,7 @@
 <script>
     import { dispatch } from '../../../utils/actionUtils'
     export default {
-        data() {
+        data () {
             return {
                 deleteDataModal: false,
                 compDeleteModal: false,
@@ -48,97 +48,96 @@
                     width: 60,
                     align: 'center'
                 },
-                    {
-                        width: 80,
-                        align: 'center',
-                        title: '状态',
-                        key: 'email',
-                        render: (h, params) => {
-                            if (params.row.email === '1') {
-                                return h('div', [
-                                    h('Icon', {
-                                        props: {
-                                            type: 'email',
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                            color: '#1079d7'
-                                        },
-                                    }),
-                                    h('strong')
-                                ]);
-                            } else if (params.row.email === '2') {
-                                return h('div', [
-                                    h('Icon', {
-                                        props: {
-                                            type: 'ios-filing',
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                            color: '#adadad'
-                                        },
-                                    }),
-                                    h('strong')
-                                ]);
-                            }
-
-                        }
-                    },
-                    {
-                        title: '发件人',
-                        key: 'postPerson',
-                        align: 'center'
-                    },
-                    {
-                        title: '主题',
-                        width: 1100,
-                        align: 'left',
-                        render: (h, params) => {
-                            return h('a', {
-                                on: {
-                                    click: () => {
-                                        params.row.email = '2'
-                                        this.$router.push({
-                                            path: '/email/emailDetail'
-                                        });
-                                    }
-                                }
-                            }, params.row.theme)
-                        }
-
-                    },
-                    {
-                        title: '时间',
-                        key: 'time',
-                        align: 'center',
-                        sortable: true,
-                        width: 120
-                    },
-                    {
-                        title: '标签',
-                        key: 'label',
-                        align: 'center',
-                        render: (h, params) => {
+                {
+                    width: 80,
+                    align: 'center',
+                    title: '状态',
+                    key: 'email',
+                    render: (h, params) => {
+                        if (params.row.email === '1') {
                             return h('div', [
                                 h('Icon', {
                                     props: {
-                                        type: 'android-add-circle',
+                                        type: 'email'
                                     },
                                     style: {
                                         fontSize: '20px',
-                                        color: '#1079d7',
-                                        cursor: 'pointer'
-                                    },
-                                    on: {
-                                        click: () => {
-
-                                        }
+                                        color: '#1079d7'
                                     }
                                 }),
                                 h('strong')
-                            ]);
+                            ])
+                        } else if (params.row.email === '2') {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'ios-filing'
+                                    },
+                                    style: {
+                                        fontSize: '20px',
+                                        color: '#adadad'
+                                    }
+                                }),
+                                h('strong')
+                            ])
                         }
-                    },
+                    }
+                },
+                {
+                    title: '发件人',
+                    key: 'postPerson',
+                    align: 'center'
+                },
+                {
+                    title: '主题',
+                    width: 1100,
+                    align: 'left',
+                    render: (h, params) => {
+                        return h('a', {
+                            on: {
+                                click: () => {
+                                    params.row.email = '2'
+                                    this.$router.push({
+                                        path: '/email/emailDetail'
+                                    })
+                                }
+                            }
+                        }, params.row.theme)
+                    }
+
+                },
+                {
+                    title: '时间',
+                    key: 'time',
+                    align: 'center',
+                    sortable: true,
+                    width: 120
+                },
+                {
+                    title: '标签',
+                    key: 'label',
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Icon', {
+                                props: {
+                                    type: 'android-add-circle'
+                                },
+                                style: {
+                                    fontSize: '20px',
+                                    color: '#1079d7',
+                                    cursor: 'pointer'
+                                },
+                                on: {
+                                    click: () => {
+
+                                    }
+                                }
+                            }),
+                            h('strong')
+                        ])
+                    }
+                }
                 ],
                 data1: [{
                     'email': '1',
@@ -146,79 +145,79 @@
                     'theme': '转发：招商银行一卡通开户通知',
                     'time': '2017-09-15'
                 },
-                    {
-                        'email': '1',
-                        'postPerson': '刘能',
-                        'theme': '招商银行一卡通开户通知',
-                        'time': '2017-09-25'
-                    },
-                    {
-                        'email': '1',
-                        'postPerson': '刘能',
-                        'theme': '招商银行一卡通开户通知',
-                        'time': '2017-09-25'
-                    },
-                    {
-                        'email': '1',
-                        'postPerson': '刘能',
-                        'theme': '招商银行一卡通开户通知',
-                        'time': '2017-09-25'
-                    }
-                ],
+                {
+                    'email': '1',
+                    'postPerson': '刘能',
+                    'theme': '招商银行一卡通开户通知',
+                    'time': '2017-09-25'
+                },
+                {
+                    'email': '1',
+                    'postPerson': '刘能',
+                    'theme': '招商银行一卡通开户通知',
+                    'time': '2017-09-25'
+                },
+                {
+                    'email': '1',
+                    'postPerson': '刘能',
+                    'theme': '招商银行一卡通开户通知',
+                    'time': '2017-09-25'
+                }
+                ]
 
             }
         },
         computed: {
-            iconSize() {}
+            iconSize () {}
         },
         methods: {
-            //邮件删除
-            deleteData() {
+            // 邮件删除
+            deleteData () {
                 this.deleteDataModal = true
             },
-            deleteConfirm() {
-                this.$Message.info('点击了确定');
+            deleteConfirm () {
+                this.$Message.info('点击了确定')
             },
-            deleteCancel() {
-                this.$Message.info('点击了取消');
+            deleteCancel () {
+                this.$Message.info('点击了取消')
             },
-            //邮件彻底删除
-            compDelete() {
+            // 邮件彻底删除
+            compDelete () {
                 this.compDeleteModal = true
             },
-            compDeleteConfirm() {
-                this.$Message.info('点击了确定');
+            compDeleteConfirm () {
+                this.$Message.info('点击了确定')
             },
-            compDeleteCancel() {
-                this.$Message.info('点击了取消');
+            compDeleteCancel () {
+                this.$Message.info('点击了取消')
             },
-            //邮件转发
-            relay() {
+            // 邮件转发
+            relay () {
 
             },
-            //邮件已读
-            read() {
+            // 邮件已读
+            read () {
                 for (var i = 0; i < this.data1.length; i++) {
                     this.data1[i].email = '2'
                 }
             },
-            close() {
+            close () {
                 this.$router.push({
                     path: '/email/home'
-                });
+                })
             },
-            handleSelectAll(status) {
-                this.$refs.selection.selectAll(status);
+            handleSelectAll (status) {
+                this.$refs.selection.selectAll(status)
             },
-            readed(){
+            readed () {
 
             },
-            noread(){
+            noread () {
 
             }
 
         },
-        mounted() {
+        mounted () {
 
         }
 

@@ -20,7 +20,6 @@ const WriteEmail = resolve => {
     require(['./writeEmail.vue'], resolve)
 }
 
-
 Vue.component('mCheckEmail', CheckEmail)
 Vue.component('mEmailDetail', EmailDetail)
 Vue.component('mEmailDirectory', EmailDirectory)

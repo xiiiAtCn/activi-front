@@ -70,7 +70,7 @@
     import mHead from './m-head.vue'
     export default {
         components: {mHead},
-        data() {
+        data () {
             return {
                 leftMenu: true,
                 secondTitle: '',
@@ -88,44 +88,44 @@
                     {
                         icon: 'social-instagram',
                         text: '我的视图',
-                        url: '/layoutContent/01',
+                        url: '/layoutContent/01'
                     },
                     {
                         icon: 'email-unread',
                         text: '我的邮件',
-                        url: '/email',
+                        url: '/email'
                     },
                     {
                         icon: 'ios-clock',
                         text: '浏览记录',
-                        url: '/layoutContent/01/workBench',
+                        url: '/layoutContent/01/workBench'
                     },
                     {
                         icon: 'ios-help',
                         text: '帮助中心',
-                        url: '',
+                        url: ''
                     },
                     {
                         icon: 'ios-bell',
                         text: '最新通知',
-                        url: '',
+                        url: ''
                     },
                     {
                         icon: 'android-settings',
                         text: '我的设置',
-                        url: '',
+                        url: ''
                     },
                     {
                         icon: 'power',
                         text: '退出',
-                        url: '',
-                    },
+                        url: ''
+                    }
                 ],
                 ids: []
             }
         },
         methods: {
-            getLeftMenu() {
+            getLeftMenu () {
                 let currentId = this.$route.params.id
                 this.secondUrl = `/layoutContent/${currentId}`
                 if (currentId === '04' || currentId === '00') {
@@ -147,9 +147,9 @@
                     })
                 }
             },
-            getTopBread() {
-                let chooseUrl = this.$route.query.url;
-                let path = this.$route.path;
+            getTopBread () {
+                let chooseUrl = this.$route.query.url
+                let path = this.$route.path
                 if (chooseUrl) {
                     this.setUrl('/api/module/leftMenu?id={id}').setPathVariables({
                         id: this.$route.params.id
@@ -160,24 +160,24 @@
                                 this.thirdIcon = i.icon
                             }
                         }
-                        this.thirdShow = true;
+                        this.thirdShow = true
                     })
                 } else {
-                    for (let i of this.ids){
+                    for (let i of this.ids) {
                         let currentPath = `/layoutContent/${i}`
-                        if (currentPath === path){
+                        if (currentPath === path) {
                             this.thirdShow = false
                         }
                     }
                 }
             },
-            showDesign() {
+            showDesign () {
                 this.designFlag = !this.designFlag
             },
-            firstMenu(){
+            firstMenu () {
                 this.firstMenuFlag = !this.firstMenuFlag
             },
-            secondMenu(){
+            secondMenu () {
                 this.secondMenuFlag = !this.secondMenuFlag
             }
 

@@ -135,7 +135,7 @@ export default {
          * [
          *      {
          *          title: '',  //  每一行显示标题
-         *          id: '',     //  该行条件id  
+         *          id: '',     //  该行条件id
          *          child: [ //  该行显示的条件
          *              {
          *                  id: '',
@@ -149,7 +149,7 @@ export default {
          *          }
          *      },
          * ]
-         * 
+         *
          */
         filterData: {
             type: Array,
@@ -203,7 +203,7 @@ export default {
                             if (!Number.isInteger(value)) {
                                 callback(new Error('请输入数字'))
                             } else if (value < 0) {
-                                callback(new Error('请输入正数'));
+                                callback(new Error('请输入正数'))
                             } else if (value - self.regionForm.bigNum > 0) {
                                 callback(new Error('不能大于大值'))
                             } else {
@@ -219,7 +219,7 @@ export default {
                             if (!Number.isInteger(value)) {
                                 callback(new Error('请输入数字'))
                             } else if (value < 0) {
-                                callback(new Error('请输入正正数'));
+                                callback(new Error('请输入正正数'))
                             } else if (value - self.regionForm.smallNum < 0) {
                                 callback(new Error('不能小于小值'))
                             } else {
@@ -227,11 +227,11 @@ export default {
                             }
                         }
                     }
-                ],
+                ]
             },
             // 显示全部行id
             showAllRowIdArr: [],
-            showAllRow: false,
+            showAllRow: false
         }
     },
     computed: {
@@ -272,13 +272,13 @@ export default {
             }
             console.log('currentSelectedObj', result)
             return result
-        },
+        }
     },
     methods: {
         /**
          * 添加查询条件
          * 1. 如果已经选中则取消选中
-         * 2. 
+         * 2.
          */
         queryBtnClick (rowData, ...btnData) {
             let option = rowData.option
@@ -295,7 +295,7 @@ export default {
                     if (!outerValid) {
                         return
                     }
-                    btnData = [{...rowData.child[0], ...this.regionForm, ...{title: this.regionForm.smallNum + '-' + this.regionForm.bigNum}}] 
+                    btnData = [{...rowData.child[0], ...this.regionForm, ...{title: this.regionForm.smallNum + '-' + this.regionForm.bigNum}}]
                 }
                 let query = {
                     id: rowData.id,
@@ -309,7 +309,7 @@ export default {
                     })
                     let child = []
                     if (index !== -1) {
-                        child =  result.splice(index, 1)[0].child
+                        child = result.splice(index, 1)[0].child
                     }
                     query = {...this.currentAdBtn, child: [query].concat(child)}
                 }
@@ -352,7 +352,7 @@ export default {
          *  1.如果当前行id与currentMultiRowId
          *      相同  清空currentMultiRowId 清空multiSelectModel
          *      不同  currentMultiRowId = 当前行id multiSelectModel赋值
-         */ 
+         */
         changeMultiType (rowData) {
             if (this.currentMultiRowId === rowData.id) {
                 this.currentMultiRowId = ''
@@ -362,7 +362,7 @@ export default {
                 let rowQuery = this.getSelectedInRow(rowData.id)
                 if (rowQuery) {
                     for (let i of rowQuery.child) {
-                         this.multiSelectModel.push(i.id)
+                        this.multiSelectModel.push(i.id)
                     }
                 } else {
                     this.multiSelectModel = []
@@ -428,10 +428,10 @@ export default {
                 if (arr.includes(btnId)) {
                     return true
                 } else {
-                    return false 
+                    return false
                 }
-            } 
-            return false 
+            }
+            return false
         },
         /**
          * 显示更多
@@ -450,7 +450,7 @@ export default {
         showAllOrNot () {
             this.showAllRow = !this.showAllRow
         }
-    },
+    }
 }
 </script>
 <style scoped>

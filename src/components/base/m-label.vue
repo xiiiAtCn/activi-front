@@ -1,13 +1,32 @@
 <template>
-  <div v-bind:class="data.controlWidth">
-    <label class="control-label clear_wt">{{data.controlName}}</label>
-  </div>
+    <Row >
+        <Col class="label">
+            {{label}}
+        </Col>
+    </Row>
 </template>
 <script>
-  export default {
-    props: ['data'],
-    data: function () {
-      return {}
+    import _ from 'lodash'
+    export default {
+        name: 'm-label',
+        props: ['define'],
+        computed: {
+            label () {
+                return _.get(this.define, 'label', '标签')
+            },
+            visible () {
+                return _.get(this.define, 'visible', true)
+            },
+            bindTarget () {
+                return _.get(this.define, 'target', '')
+            }
+        }
     }
-  }
 </script>
+<style scoped>
+    .label {
+        line-height: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+</style>

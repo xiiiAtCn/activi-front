@@ -1,9 +1,8 @@
 /**
  * Created by sunb on 17-7-5.
  */
-import { default as fetch } from '../utils/DefineFetcher'
-// import _ from 'lodash'
 
+import { getData } from 'utils/actionUtils'
 // 放画面数据的
 export default {
     state: {
@@ -23,24 +22,6 @@ export default {
                 state.data = Object.assign({}, state.data, temp)
             }
         }
-        // updateField(state, newData){
-        //     if (state.data.fields[newData.name]) {
-        //         state.data.fields[newData.name] = newData.value;
-        //     } else {
-        //         let temp = {};
-        //         temp[newData.name] = newData.value;
-        //         state.data.fields = Object.assign({}, state.data.fields, temp);
-        //     }
-        // },
-        // updateTable(state, newData){
-        //     if (state.data.tables[newData.name]) {
-        //         state.data.tables[newData.name] = newData.value;
-        //     } else {
-        //         let temp = {};
-        //         temp[newData.name] = newData.value;
-        //         state.data.tables = Object.assign({}, state.data.tables, temp);
-        //     }
-        // },
     },
     actions: {
         /* 根据url请求数据 */

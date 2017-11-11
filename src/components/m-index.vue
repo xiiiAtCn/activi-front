@@ -16,14 +16,14 @@
   import mSection from './m-section.vue'
 
   export default {
-    components: {mTab, mTable, mMenu, mSection},
-    props: ['content', 'define'],
-    mounted: function () {
-      document.title = this.content.ui_alias
-    },
-    data: function () {
-      return {}
-    }
+      components: {mTab, mTable, mMenu, mSection},
+      props: ['content', 'define'],
+      mounted: function () {
+          document.title = this.content.ui_alias
+      },
+      data: function () {
+          return {}
+      }
   }
 </script>
 

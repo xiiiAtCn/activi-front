@@ -1,12 +1,6 @@
 import Vue from 'vue'
 
 import './base'
-// import './projectManage'
-// import './businessModule'
-//
-// 自定义指令
-// import './custom-directive'
-
 import './boFilterNEW_vuex'
 import './taskPlan'
 
@@ -14,9 +8,6 @@ const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
 }
 
-// const mBoTree = resolve => {
-//     require(['./businessModule/taskPlan/m-boTree.vue'], resolve)
-// }
 
 const mBillMeta = resolve => {
     require(['./m-billMeta.vue'], resolve)
@@ -40,10 +31,6 @@ const mCoin = resolve => {
 
 const mConfirm = resolve => {
     require(['./m-confirm.vue'], resolve)
-}
-
-const mDeliverables = resolve => {
-    require(['./m-deliverables.vue'], resolve)
 }
 
 const mDetailView = resolve => {
@@ -168,14 +155,12 @@ const tableFShim = resolve => {
 }
 
 Vue.component('mBoTemplate', mBoTemplate)
-// Vue.component('mBoTree', mBoTree)
 Vue.component('mBillMeta', mBillMeta)
 Vue.component('mBoMeta', mBoMeta)
 Vue.component('mBottomModal', mBottomModal)
 Vue.component('mCard', mCard)
 Vue.component('mCoin', mCoin)
 Vue.component('mConfirm', mConfirm)
-Vue.component('mDeliverables', mDeliverables)
 Vue.component('mDetailView', mDetailView)
 Vue.component('mEntry', mEntry)
 Vue.component('mFilter', mFilter)

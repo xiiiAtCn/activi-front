@@ -22,13 +22,13 @@
   //  import router from '../routers/routers'
 
   export default {
-    props: ['content', 'define'],
-    methods: {
+      props: ['content', 'define'],
+      methods: {
       /* 提交 */
-      confirm: function () {
-        dispatch(this.define)
+          confirm: function () {
+              dispatch(this.define)
+          }
       }
-    }
   }
 </script>
 

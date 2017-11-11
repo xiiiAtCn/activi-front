@@ -50,7 +50,7 @@
 
 <script>
     export default{
-        data(){
+        data () {
             return {
                 msg: 'hello vue'
             }
@@ -58,8 +58,8 @@
         methods: {
             trlToWorkbench () {
             	this.$router.push({
-                    path: '/layoutContent/04/workbench'
-                })
+                path: '/layoutContent/04/workbench'
+            })
             }
         }
     }

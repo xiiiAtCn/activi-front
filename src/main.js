@@ -10,23 +10,10 @@ import Request from 'utils/request-addon'
 import store from './vuex/store'
 
 for (let i of Reflect.ownKeys(Request.prototype)) {
-    if (i === 'constructor')
-        continue
+    if (i === 'constructor') { continue }
     Vue.prototype[i] = Request.prototype[i]
 }
 Vue.use(iView)
-// Vue.config.silent = false;
-
-// import vueResource from 'vue-resource'
-
-// Vue.use(vueResource)
-/* eslint-disable no-new */
-// new Vue({
-//  el: '#app',
-//  router,
-//  template: '<App/>',
-//  components: { App }
-// })
 const app = new Vue({
     el: '#app',
     router,

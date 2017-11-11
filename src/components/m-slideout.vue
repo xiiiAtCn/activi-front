@@ -71,26 +71,26 @@
   import { Slideout } from '../componentJS/slideout.min'
 
   export default {
-    methods: {
-      toggle: function () {
-        this.slide.toggle()
-      }
-    },
-    mounted: function () {
-      document.querySelector('.container').className += ' panel'
-      this.slide = new Slideout({
-        'panel': document.querySelector('.container'),
-        'menu': document.getElementById('menu'),
-        'padding': 256,
-        'tolerance': 70
-      })
+      methods: {
+          toggle: function () {
+              this.slide.toggle()
+          }
+      },
+      mounted: function () {
+          document.querySelector('.container').className += ' panel'
+          this.slide = new Slideout({
+              'panel': document.querySelector('.container'),
+              'menu': document.getElementById('menu'),
+              'padding': 256,
+              'tolerance': 70
+          })
 //            this.toggle();
-    },
-    data: function () {
-      return {
-        slide: {}
+      },
+      data: function () {
+          return {
+              slide: {}
+          }
       }
-    }
 
   }
 

@@ -12,33 +12,33 @@
 
 <script>
   export default {
-    props: {
-      'alias': {
-        type: String
+      props: {
+          'alias': {
+              type: String
+          },
+          'operations': {
+              'type': Array,
+              'default': function () {
+                  return []
+              }
+          },
+          'columnsDef': {
+              type: Array,
+              'default': function () {
+                  return []
+              }
+          },
+          'rowData': {
+              type: Array,
+              'default': function () {
+                  return []
+              }
+          }
       },
-      'operations': {
-        'type': Array,
-        'default': function () {
-          return []
-        }
-      },
-      'columnsDef': {
-        type: Array,
-        'default': function () {
-          return []
-        }
-      },
-      'rowData': {
-        type: Array,
-        'default': function () {
-          return []
-        }
+      methods: {
+          getMeta: function () {
+          }
       }
-    },
-    methods: {
-      getMeta: function () {
-      }
-    }
   }
 
 </script>

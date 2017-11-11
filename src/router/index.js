@@ -1,14 +1,8 @@
-/**
- * Created by 高鹏程 on 2017/5/9.
- */
-import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vue from 'vue'
+Vue.use(VueRouter)
 
-import iView from 'iview'
-
-// const mEntry = resolve => require(['../components/m-entry.vue'], resolve)
 const mMain = resolve => require(['../components/m-main.vue'], resolve)
-// const mLayout = resolve => require(['../components/m-layout.vue'], resolve)
 const mContent = resolve => require(['../components/m-main-content.vue'], resolve)
 const mLayoutContent = resolve => require(['../components/m-layout-content.vue'], resolve)
 const mLayoutContentDefault = resolve => require(['../components/m-layout-content-default.vue'], resolve)
@@ -27,9 +21,6 @@ const tabFaultHistory = resolve => require(['../components/businessModule/monito
 const tabFaultNow = resolve => require(['../components/businessModule/monitor/tabFaultNow.vue'], resolve)
 const tabStartStopAnls = resolve => require(['../components/businessModule/monitor/tabStartStopAnls.vue'], resolve)
 const tabCurveNow = resolve => require(['../components/businessModule/monitor/tabCurveNow.vue'], resolve)
-const notice = resolve => require(['../components/businessModule/notice.vue'], resolve)
-const userManage = resolve => require(['../components/businessModule/userManage.vue'], resolve)
-const job = resolve => require(['../components/businessModule/job.vue'], resolve)
 const workbench = resolve => require(['../components/businessModule/workbench.vue'], resolve)
 
 // 项目管理
@@ -38,8 +29,6 @@ const projectOut = resolve => require(['../components/businessModule/project/m-p
 const projectDetails = resolve => require(['../components/businessModule/project/m-projectDetails.vue'], resolve)
 const projectPerson = resolve => require(['../components/businessModule/project/m-projectPerson.vue'], resolve)
 const taskSteps = resolve => require(['../components/businessModule/project/m-taskSteps.vue'], resolve)
-// const isBuilding = resolve => require(['../components/m-isBuilding.vue'], resolve)
-const Test = resolve => require(['../components/base/m-number.vue'], resolve)
 
 // 登录页
 const mLogin = resolve => require(['../components/m-login.vue'], resolve)
@@ -63,17 +52,6 @@ const workflowCheck = resolve => require(['../components/businessModule/workflow
 // 报价路由
 const productPrice = resolve => require(['../components/businessModule/m-productPrice.vue'], resolve)
 
-// bo关系 部门人员
-// const boTree = resolve => require(['../components/businessModule/boTree/boTree.vue'], resolve)
-// const boTreeDetail = resolve => require(['../components/businessModule/boTree/boTreeDetail.vue'], resolve)
-
-// bo关系 物料档案
-// const fileTree = resolve => require(['../components/businessModule/boTree/fileTree.vue'], resolve)
-// const fileTreeDetail = resolve => require(['../components/businessModule/boTree/fileTreeDetail.vue'], resolve)
-
-// bo关系 bo视图
-// const boTreeView = resolve => require(['../components/businessModule/boTree/boTreeView.vue'], resolve)
-
 // bo 树
 const boTree = resolve => require(['../components/taskPlan/m-boTree.vue'], resolve)
 
@@ -83,7 +61,7 @@ const functionLog = resolve => require(['../components/businessModule/m-fonction
 // 功能日志
 const taskPlan = resolve => require(['../components/taskPlan/taskPlan.vue'], resolve)
 
-//邮件路由
+// 邮件路由
 const mEmail = resolve => require(['../components/businessModule/email/m-email.vue'], resolve)
 const emailHome = resolve => require(['../components/businessModule/email/emailHome.vue'], resolve)
 const writeEmail = resolve => require(['../components/businessModule/email/writeEmail.vue'], resolve)
@@ -94,32 +72,11 @@ const emailDirectory = resolve => require(['../components/businessModule/email/e
 
 // const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
 
-Vue.use(VueRouter)
-Vue.use(iView)
-
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
-        { path: '/', component: mLogin },
-        // // 这些暂时不用了
-        // {path: '/inventory', component: inventory},
-        // {path: '/notice', component: notice},
-        // {path: '/userManage', component: userManage},
-        // {path: '/job', component: job},
-        // {path: '/mEntry', component: mEntry},
-        // {path: '/p', component: mEntry},
-        // {path: '/page', component: mMain},
-        // {
-        //     path: '/layout',
-        //     component: mLayout,
-        //     children: [
-        //         {
-        //             path: 'page',
-        //             component: mMain
-        //         }
-        //     ]
-        // },
+        {path: '/', component: mLogin},
         {
 
             path: '/layoutContent/:id',
@@ -155,25 +112,6 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/boTree/:nodeId/:nodeMetaId',
                     component: boTree
                 },
-                // bo关系树 部门人员
-                // {
-                // path: '/layoutContent/:id/boTree', component: boTree,
-                // children: [
-                //   {   path:'/layoutContent/:id/boTree/boDetails/:metaId/:boId/:childMetaId/:childBoId', name: 'boDetails', component: boTreeDetail   },
-                // ]
-                // },
-                // bo关系树 物料档案
-                // {
-                //     path: '/layoutContent/:id/fileTree', component: fileTree,
-                // children: [
-                //   {   path:'/layoutContent/:id/fileTree/fileDetails/:metaId/:boId', name: 'fileDetails', component: fileTreeDetail   },
-                // ]
-                // },
-                // bo关系 bo视图
-                // {
-                //     path: '/layoutContent/:id/boTreeView', component: boTreeView
-                // },
-                // 工作中心
                 {
                     path: '/layoutContent/:id/mWorkCenter', component: mWorkCenter
                 },
@@ -274,9 +212,6 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/test', component: Test
-        },
-        {
             path: '/functionLog', component: functionLog
         },
         // 邮件路由
@@ -310,12 +245,4 @@ const router = new VueRouter({
     ]
 })
 
-router.beforeEach((to, from, next) => {
-    iView.LoadingBar.start()
-    next()
-})
-
-router.afterEach((to, from, next) => {
-    iView.LoadingBar.finish()
-})
 export default router

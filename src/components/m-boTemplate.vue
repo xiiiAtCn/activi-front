@@ -16,7 +16,7 @@
 
 <script>
     import _ from 'lodash'
-    import {dispatch} from  '../utils/actionUtils'
+    import {dispatch} from '../utils/actionUtils'
     export default{
         props: {
             define: {
@@ -26,7 +26,7 @@
         computed: {
             items: function () {
                 return _.get(this.define, 'links', [])
-            },
+            }
         },
         methods: {
             getMeta: function (url) {

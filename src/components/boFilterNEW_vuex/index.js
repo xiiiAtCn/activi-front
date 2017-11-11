@@ -5,7 +5,7 @@
  * Author: zhao peng
  * -----
  * 上次修改时间: 2017-10-24
- * Modified By: 
+ * Modified By:
  * -----
  */
 import Vue from 'vue'
@@ -21,7 +21,7 @@ const mNavSelect = resolve => {
 }
 const mFilterBasic = resolve => {
     require(['./m-filterBasic.vue'], resolve)
-} 
+}
 
 Vue.component('mFilterPage', mFilterPage)
 Vue.component('mBoFilter', mFilter)

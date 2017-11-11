@@ -1,6 +1,6 @@
 import axios from 'axios'
 /**
- * 
+ *
  * @author  Lungern xiii.at.cn@gmail.com
  * @since   2017-10-18 17:38:56
  * @update  2017-10-19 09:52:09
@@ -8,15 +8,15 @@ import axios from 'axios'
 
 const types = ['$requestUrl', '$path', '$query']
 
-function Request() {
+function Request () {
 
 }
 /**
  * 发起get请求
- * 
+ *
  * @param 请求返回的回调
  */
-Request.prototype.forGet = function(callback) {
+Request.prototype.forGet = function (callback) {
     let url = this._buildPath()
     console.group(`get method from ${this._checkEnvironment()} start`)
     console.info('path: ===> ' + location.origin + url)
@@ -31,8 +31,8 @@ Request.prototype.forGet = function(callback) {
         })
         .catch(err => {
             console.group(`${this._checkEnvironment()} get request fail`)
-            console.error(`err from get method %c${location.origin + url} \n`, 
-                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)',err)
+            console.error(`err from get method %c${location.origin + url} \n`,
+                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.groupEnd()
             callback(null, err)
         })
@@ -40,18 +40,18 @@ Request.prototype.forGet = function(callback) {
 
 /**
  * 发起post请求
- * 
+ *
  * @param callback  请求返回之后的回调
  */
-Request.prototype.forPost = function(callback) {
+Request.prototype.forPost = function (callback) {
     let url = this._buildPath()
     let body = {}, config = {}
-    if(this.$body !== undefined ) {
+    if (this.$body !== undefined) {
         body = { ...this.$body}
         delete this.$body
     }
-    if(this.$config !== undefined) {
-        config = { ... this.$config}
+    if (this.$config !== undefined) {
+        config = { ...this.$config}
         delete this.$config
     }
     console.group(`post method from ${this._checkEnvironment()} start`)
@@ -61,7 +61,7 @@ Request.prototype.forPost = function(callback) {
     return axios.post(url, body, config)
         .then(res => {
             console.group(`${this._checkEnvironment()} post request success`)
-            console.info(`data from %c${location.origin + url} \n`, 
+            console.info(`data from %c${location.origin + url} \n`,
                 'color: #008B00;', res.data)
             console.info('method body :', body)
             console.groupEnd()
@@ -69,8 +69,8 @@ Request.prototype.forPost = function(callback) {
         })
         .catch(err => {
             console.group(`${this._checkEnvironment()} post request fail`)
-            console.error(`err from %c${location.origin + url} \n`, 
-                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)',err)
+            console.error(`err from %c${location.origin + url} \n`,
+                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
             callback(null, err)
@@ -80,8 +80,8 @@ Request.prototype.forPost = function(callback) {
 /**
  * 设置请求地址
  */
-Request.prototype.setUrl = function(url) {
-    if(this.$requestUrl !== undefined) {
+Request.prototype.setUrl = function (url) {
+    if (this.$requestUrl !== undefined) {
         throw new Error(`requestUrl '${this.$requestUrl}' has been set but never used, 
         please check if there was a request not sending`)
     }
@@ -92,7 +92,7 @@ Request.prototype.setUrl = function(url) {
 /**
  * 添加post请求的body参数
  */
-Request.prototype.setBody = function(body) {
+Request.prototype.setBody = function (body) {
     this._checkUrl()
     this.$body = body
     return this
@@ -101,17 +101,17 @@ Request.prototype.setBody = function(body) {
 /**
  * 设置路径参数
  */
-Request.prototype.setPathVariables = function(pathVariables) {
+Request.prototype.setPathVariables = function (pathVariables) {
     this._checkUrl()
     pureObjectCheck(pathVariables)
     this.$path = pathVariables
     return this
-} 
+}
 
 /**
  * 添加查询字符串
  */
-Request.prototype.setQuery = function(query) {
+Request.prototype.setQuery = function (query) {
     this._checkUrl()
     pureObjectCheck(query)
     this.$query = query
@@ -121,10 +121,10 @@ Request.prototype.setQuery = function(query) {
 /**
  * 设置post请求的配置参数
  */
-Request.prototype.setPostConfig = function(config) {
+Request.prototype.setPostConfig = function (config) {
     this._checkUrl()
     pureObjectCheck(config)
-    this.$config = config 
+    this.$config = config
     return this
 }
 
@@ -133,7 +133,7 @@ Request.prototype.setPostConfig = function(config) {
  * @param url 需要进行路径参数替换的url
  * @param pathVariables 路径参数对象
  */
-export function replace(url, pathVariables) {
+export function replace (url, pathVariables) {
     pureObjectCheck(pathVariables)
     let regex = /\{([^{^}]*)\}/g
     return url.replace(regex, (match, $1) => {
@@ -145,10 +145,10 @@ export function replace(url, pathVariables) {
 
 /**
  * 添加查询字符串
- * @param  url 
- * @param  queryVariables 
+ * @param  url
+ * @param  queryVariables
  */
-export function addQuery(url , queryVariables) {
+export function addQuery (url, queryVariables) {
     pureObjectCheck(queryVariables)
     return url + '?' + Object.keys(queryVariables).map(element => `${element}=${queryVariables[element]}`).join('&')
 }
@@ -156,21 +156,21 @@ export function addQuery(url , queryVariables) {
 /**
  * 生成请求的完整路径
  */
-Request.prototype._buildPath = function() {
+Request.prototype._buildPath = function () {
     this._checkUrl()
     let url = this.$requestUrl
-    if(this.$path !== undefined) {
+    if (this.$path !== undefined) {
         let pathVariables = {...this.$path}
         url = replace(url, pathVariables)
     }
-    if(this.$query !== undefined) {
+    if (this.$query !== undefined) {
         let query = {...this.$query}
         url = addQuery(url, query)
     }
 
     for (let i = 0; i < types.length; i++) {
         let element = types[i]
-        if(element in this) {
+        if (element in this) {
             delete this[element]
         }
     }
@@ -181,29 +181,29 @@ Request.prototype._buildPath = function() {
  * 解决关键字冲突问题
  * TODO
  */
-Request.prototype.resolveConflict = function(key) {
+Request.prototype.resolveConflict = function (key) {
     console.log(key)
 }
 
 /**
  * 检查是否设置请求url, 需要在设置其他参数之前检查
  */
-Request.prototype._checkUrl = function() {
-    if(this.$requestUrl === undefined) {
+Request.prototype._checkUrl = function () {
+    if (this.$requestUrl === undefined) {
         throw new Error('url is not set. Please set it first')
     }
 }
 
-Request.prototype._checkEnvironment = function() {
-    return this.$vnode ? 'Vue instance': 'Request instance'
+Request.prototype._checkEnvironment = function () {
+    return this.$vnode ? 'Vue instance' : 'Request instance'
 }
 
 /**
  * 纯粹对象检查
- * @param  target 
+ * @param  target
  */
-export function pureObjectCheck(target) {
-    if(Object.prototype.toString.apply(target) !== '[object Object]') {
+export function pureObjectCheck (target) {
+    if (Object.prototype.toString.apply(target) !== '[object Object]') {
         throw new Error(`unexpected argument variables, expect pure object, but get 
         ${Object.prototype.toString.apply(target)} `)
     }

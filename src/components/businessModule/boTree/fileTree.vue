@@ -32,35 +32,35 @@
         methods: {
 //            当前选中节点
             onSelected: function (selectedAry) {
-                console.log('选中节点：', selectedAry);
-                this.requestNOdeInfo(selectedAry, 'selected');
+                console.log('选中节点：', selectedAry)
+                this.requestNOdeInfo(selectedAry, 'selected')
             },
             onExpend: function (selectedObj) {
 //                清除 addChild = true的节点
-                this.cleanAddChild(this.baseData);
-                selectedObj['addChild'] = true;
-                let ary = [];
-                ary.push(selectedObj);
-                this.requestNOdeInfo(ary, 'expend');
+                this.cleanAddChild(this.baseData)
+                selectedObj['addChild'] = true
+                let ary = []
+                ary.push(selectedObj)
+                this.requestNOdeInfo(ary, 'expend')
             },
 //            递归当前节点，选中当前有addChild的节点
-            getHaveChild: function (data,child) {
+            getHaveChild: function (data, child) {
                 for (let i in data) {
                     if (data[i].addChild === true) {
-                        data[i].children = child;
-                        break;
+                        data[i].children = child
+                        break
                     } else {
-                        this.getHaveChild(data[i].children,child);
+                        this.getHaveChild(data[i].children, child)
                     }
                 }
             },
             cleanAddChild: function (data) {
                 for (let i in data) {
                     if (data[i].addChild === true) {
-                        delete data[i].addChild;
-                        break;
+                        delete data[i].addChild
+                        break
                     } else {
-                        this.cleanAddChild(data[i].children);
+                        this.cleanAddChild(data[i].children)
                     }
                 }
             },
@@ -68,59 +68,59 @@
             getInitNode: function () {
                 fetch(this.initNOdeUrl, (error, body) => {
                     if (!error || error === null) {
-                        this.baseData = body;
-                        console.log('初始加载节点：',body);
-                        this.requestNOdeInfo(body, 'selected');
+                        this.baseData = body
+                        console.log('初始加载节点：', body)
+                        this.requestNOdeInfo(body, 'selected')
                     }
-                });
+                })
             },
 //            递归当前选中节点
-            getArray: function (data,child) {
+            getArray: function (data, child) {
                 for (let i in data) {
                     if (data[i].selected === true) {
-                        data[i].children = child;
-                        break;
+                        data[i].children = child
+                        break
                     } else {
-                        this.getArray(data[i].children,child);
+                        this.getArray(data[i].children, child)
                     }
                 }
             },
 //            返回节点信息，传参到子组件
             requestNOdeInfo: function (ary, style) {
-                let url = this.getNodeUrl + ary[0]['childId'] + '/' + ary[0]['childMetaId'];
+                let url = this.getNodeUrl + ary[0]['childId'] + '/' + ary[0]['childMetaId']
                 fetch(url, (error, body) => {
                     if (!error || error === null) {
-                        console.log('子节点查询结果：', body);
-                        if (style === 'selected'){
-                            this.getArray(this.baseData,body);
-                            let child = [];
-                            for (let i of body){
+                        console.log('子节点查询结果：', body)
+                        if (style === 'selected') {
+                            this.getArray(this.baseData, body)
+                            let child = []
+                            for (let i of body) {
                                 child.push({
                                     childMetaId: i.childMetaId,
                                     childBoId: i.childId,
                                     childTitle: i.title
-                                });
+                                })
                             }
                         //  向下传参
                             this.$router.push({
-                                name:'fileDetails',
-                                query:{
+                                name: 'fileDetails',
+                                query: {
                                     metaId: ary[0]['childMetaId'],
                                     boId: ary[0]['childId'],
                                     selectedAry: ary[0],
                                     child: child
                                 }
-                            });
-                        } else if (style === 'expend'){
-                            this.getHaveChild(this.baseData,body);
+                            })
+                        } else if (style === 'expend') {
+                            this.getHaveChild(this.baseData, body)
                         }
                     }
-                });
+                })
             }
         },
-        mounted(){
-            this.getInitNode();
-        }
+        mounted () {
+            this.getInitNode()
+    }
     }
 </script>
 

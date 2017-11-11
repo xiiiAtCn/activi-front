@@ -33,27 +33,27 @@
   import _ from 'lodash'
 
   export default {
-    data () {
-      return {}
-    },
-    props: ['define'],
-    computed: {
-      links: function () {
+      data () {
+          return {}
+      },
+      props: ['define'],
+      computed: {
+          links: function () {
 //        return utils(this.define, [], 'links')
-        return _.get(this.define, 'links', [])
+              return _.get(this.define, 'links', [])
+          },
+          metasInfo: function () {
+              return this.links.metasInfo
+          },
+          otherInfos: function () {
+              return this.links.otherInfos
+          }
       },
-      metasInfo: function () {
-        return this.links.metasInfo
-      },
-      otherInfos: function () {
-        return this.links.otherInfos
+      methods: {
+          getMeta: function (url) {
+              dispatch(url)
+          }
       }
-    },
-    methods: {
-      getMeta: function (url) {
-        dispatch(url)
-      }
-    }
   }
 
 </script>

@@ -47,65 +47,65 @@
   import _ from 'lodash'
 
   export default {
-    data () {
-      return {
-        querys: []
-      }
-    },
-    props: ['define'],
-    computed: {
-      links: function () {
-//        return utils(this.define, [], 'links')
-        return _.get(this.define, 'links', [])
+      data () {
+          return {
+              querys: []
+          }
       },
+      props: ['define'],
+      computed: {
+          links: function () {
+//        return utils(this.define, [], 'links')
+              return _.get(this.define, 'links', [])
+          },
       // querys: function () {
       //     return utils(this.define, [], 'querys')
       // },
-      metasInfo: function () {
-        return this.links.metasInfo
+          metasInfo: function () {
+              return this.links.metasInfo
+          },
+          otherInfos: function () {
+              return this.links.otherInfos
+          }
       },
-      otherInfos: function () {
-        return this.links.otherInfos
-      }
-    },
-    methods: {
+      methods: {
       // getMeta: function (url) {
       //     dispatch(url)
       // },
-      delAttr: function (button) {
-        if (button.type !== 'meta') {
-          this.querys.forEach((item, i) => {
-            if (item.title === button.title && item.text === button.text) {
-              this.querys.splice(i, 1)
-            }
-          })
-        }
-      },
-      addAttr: function (title, button) {
+          delAttr: function (button) {
+              if (button.type !== 'meta') {
+                  this.querys.forEach((item, i) => {
+                      if (item.title === button.title && item.text === button.text) {
+                          this.querys.splice(i, 1)
+                      }
+                  })
+              }
+          },
+          addAttr: function (title, button) {
         // todo 一个or多个
-        this.querys = _.filter(this.querys, function (o) {
-          return o.title !== title
-        })
-        this.querys.push({
-          text: button.text,
-          title: title,
-          type: 'attr'
-        })
+              this.querys = _.filter(this.querys, function (o) {
+                  return o.title !== title
+              })
+              this.querys.push({
+                  text: button.text,
+                  title: title,
+                  type: 'attr'
+              })
+          },
+          replaceMeta: function (title, text) {
+              this.querys = []
+              this.querys.push({
+                  text: text,
+                  title: title,
+                  type: 'meta'
+              })
+          }
       },
-      replaceMeta: function (title, text) {
-        this.querys = []
-        this.querys.push({
-          text: text,
-          title: title,
-          type: 'meta'
-        })
+      mounted () {
+          fetch('/api/productPrice?id=1&q=2&w=3&id=2', (res, status) => {
+              console.log(res)
+          })
       }
-    },
-    mounted () {
-      fetch('/api/productPrice?id=1&q=2&w=3&id=2', (res, status) => {
-        console.log(res)
-      })
-    }
   }
 
 </script>

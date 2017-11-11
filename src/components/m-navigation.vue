@@ -14,17 +14,17 @@
 </template>
 <script>
   export default {
-    mounted: function () {
-      let _this = this
-      _this.data = [
+      mounted: function () {
+          let _this = this
+          _this.data = [
         {'path': 'mEntry', 'query': '/api/bo/metasDefine', 'name': 'bomate'}
-      ]
-    },
-    data: function () {
-      return {
-        'data': []
+          ]
+      },
+      data: function () {
+          return {
+              'data': []
+          }
       }
-    }
   }
 </script>
 <style>

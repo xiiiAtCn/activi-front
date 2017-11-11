@@ -1,19 +1,19 @@
 import Vue from 'vue'
 
 const BoTree = resolve => {
-  require(['./boTree.vue'], resolve)
+    require(['./boTree.vue'], resolve)
 }
 
 const BoTreeDetail = resolve => {
-  require(['./boTreeDetail.vue'], resolve)
+    require(['./boTreeDetail.vue'], resolve)
 }
 
 const FileTree = resolve => {
-  require(['./fileTree.vue'], resolve)
+    require(['./fileTree.vue'], resolve)
 }
 
 const FileTreeDetail = resolve => {
-  require(['./fileTreeDetail.vue'], resolve)
+    require(['./fileTreeDetail.vue'], resolve)
 }
 
 const BoTreeView = resolve => {
