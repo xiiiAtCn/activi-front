@@ -150,7 +150,6 @@
             // 配置表格
             handleDefine () {
                 this.getColumnsDataWay(this.cols)
-                this.operation && this.pushTopButtonMsg(this.operation)
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
             // columnsData存入设置
@@ -230,7 +229,7 @@
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: 120,
+                    width: smb.length * 55,
                     align: 'center',
                     fixed: 'right',
                     render: (h, params) => {

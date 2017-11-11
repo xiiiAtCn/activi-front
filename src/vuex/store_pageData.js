@@ -27,9 +27,20 @@ export default {
         /* 根据url请求数据 */
         putData: function ({ commit }, args) {
             var url = args.url
-            getData(url,  body => {
-                
-            })
+            if (url) {
+                fetch(url, function (error, body) {
+                    if (error === null) {
+                        commit('changeData', body)
+                    }
+                })
+            }
+            // debugger
+            // Vue.http.get(args.url).then(function (result) {
+            //     commit('changeData', result.body);
+            // }, function (response) {
+            //     alert(response.status);
+            //     alert(response.statusText);
+            // });
         },
         /* 清除data数据 */
         clearData: function ({ commit }, args) {

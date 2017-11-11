@@ -97,7 +97,6 @@
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
-    import { ADD_NEW_OBJECT } from 'store/Mutation'
     import _ from 'lodash'
 
     import { deepCopy } from 'utils/utils'
@@ -155,7 +154,7 @@
                         this.define = _.get(post, 'ui_define', {})
                         this.content = _.get(post, 'ui_content', [])
                         document.title = _.get(this.define, 'title', '')
-                        let url = this.define.data_url ? this.define.data_url : query
+                        let url = this.define.data_url
                         this.$store.dispatch(FETCH_FORM_DATA, {url: url})
                     }
                 })
@@ -198,7 +197,7 @@
                     })
                 }
             })
-        }
+        },
     }
 </script>
 
