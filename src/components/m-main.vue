@@ -83,7 +83,7 @@
                                 type="text"
                                 class="submit-btn"
                                 :key="index"
-                                @click="btnClick(btn.aciton)">
+                                @click="btnClick(btn.action)">
                                 {{ btn.text }}
                             </Button>
                             <hr
@@ -94,7 +94,7 @@
                 </Dropdown>
                 <Button 
                     v-if="submitBtn.length === 1"
-                    @click="btnClick(btn.aciton)">
+                    @click="btnClick(submitBtn[0].action)">
                     {{ submitBtn[0].text }}
                 </Button>
             </ButtonGroup>
@@ -182,7 +182,8 @@
                         document.title = _.get(this.define, 'title', '')
                         store.dispatch('initValidStatus')
                         store.dispatch('clearData', {})
-                        let url = this.define.data_url ? this.define.data_url : query
+                        store.commit('clearStatus')
+                        let url = this.define.data_url
                         store.dispatch('putData', {'url': url})
                     }
                 })
@@ -211,7 +212,7 @@
                     })
                 }
             })
-        }
+        },
     }
 </script>
 

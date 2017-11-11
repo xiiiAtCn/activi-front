@@ -39,7 +39,7 @@
             </Col>
         </Row>
         <div style="overflow-x: auto">
-            <Table border :columns="columnsData" :data="dataTable" height="570"></Table>
+            <Table border :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
@@ -71,9 +71,6 @@
                 type: Boolean,
                 default: true
             },
-            url:{
-                type: null
-            },
             serverPage:{
                 type: Boolean,
                 default: false
@@ -81,6 +78,9 @@
             tableName:{
                 type: null,
                 default: undefined
+            },
+            tableHeight:{
+                type: null
             }
         },
         data() {
@@ -136,6 +136,11 @@
             rowsContent(){
                 console.log("mTableF watch rowsContent")
                 this.handleContent()
+            },
+            tableName(){
+                if(window.localStorage.getItem(this.tableName+'.rowCount')){
+                    this.rowCount = window.localStorage.getItem(this.tableName+'.rowCount')
+                }
             }
         },
         mounted() {
@@ -145,7 +150,6 @@
             //配置表格
             handleDefine(){
                 this.getColumnsDataWay(this.cols)
-                this.operation && this.pushTopButtonMsg(this.operation)
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
             //columnsData存入设置
@@ -183,8 +187,8 @@
                 })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
                 //读取localStorage数据 确认展示列
-                if(this.tableName && window.localStorage.getItem(this.tableName)){
-                    this.checkAllGroup = JSON.parse(window.localStorage.getItem(this.tableName))
+                if(this.tableName && window.localStorage.getItem(this.tableName+'.checkAllGroup')){
+                    this.checkAllGroup = JSON.parse(window.localStorage.getItem(this.tableName+'.checkAllGroup'))
                     for(let i=this.checkAllGroup.length-1;i>=0;i--){
                         let removeColumns=true
                         for(let j=0;j<this.checkAllGroup.length;j++){
@@ -225,7 +229,7 @@
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: 120,
+                    width: smb.length * 55,
                     align: 'center',
                     fixed: 'right',
                     render: (h, params) => {
@@ -255,7 +259,11 @@
             },
             //tableData存入行数据
             handleContent(){
-                this.dataTable = this.rowsContent.slice(0,this.rowCount)
+                if(this.serverPage){
+                    this.dataTable = this.rowsContent
+                }else{
+                    this.dataTable = this.rowsContent.slice(0,this.rowCount)
+                }
             },
 
             //处理顶部按钮
@@ -310,7 +318,7 @@
                 this.handleColumnsData(obj);
                 this.dataListChange = data
                 if(this.tableName){
-                    window.localStorage.setItem(this.tableName,JSON.stringify(data))
+                    window.localStorage.setItem(this.tableName+'.checkAllGroup',JSON.stringify(data))
                 }
             },
             handleColumnsData(obj){
@@ -365,7 +373,7 @@
                 if(!this.serverPage){
                     this.dataTable = this.rowsContent.slice((arg-1)*this.rowCount,arg*this.rowCount)
                 }else{
-                    this.$emit('rowsContentChange', {from:arg, size:this.rowCount})
+                    this.$emit('rowsPageChange', {from:arg, size:this.rowCount})
                 }
             },
             //用户选择一页显示行数时
@@ -373,6 +381,7 @@
                 this.rowCount = arg
                 this.dataTable = this.rowsContent.slice(0,arg)
                 this.currentPage = 1
+                window.localStorage.setItem(this.tableName+'.rowCount',arg)
             }
         }
     }

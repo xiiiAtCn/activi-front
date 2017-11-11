@@ -12,6 +12,9 @@ export default {
         /* 更新状态 */
         changeStauts(state, data) {
             state.status = data
+        },
+        clearStatus (state) {
+            state.status = {}
         }
     },
     actions: {
