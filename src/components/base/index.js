@@ -6,6 +6,8 @@ const mDate = resolve =>
 const mDetailChoose = resolve =>
     require(['./m-detail-choose.vue'], resolve)
 
+const mDetailTable = resolve =>
+    require(['./m-detailTable.vue'], resolve)
 const mInput = resolve =>
     require(['./m-input.vue'], resolve)
 
@@ -41,6 +43,7 @@ const mTab = resolve =>
 
 Vue.component('mDate', mDate)
 Vue.component('mDetailChoose', mDetailChoose)
+Vue.component('mDetailTable', mDetailTable)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)
 Vue.component('mLabelInput', mLabelInput)
