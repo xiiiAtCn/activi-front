@@ -2,29 +2,29 @@
     <div class="nav-select-container">
         <div class="nav-item-container">
             <span>{{ titleText }}</span>
-            <Icon 
-                type="chevron-right" 
+            <Icon
+                type="chevron-right"
                 class="nav-arrow">
             </Icon>
         </div>
         <div
-            v-for="(select, index) in selectData" 
+            v-for="(select, index) in selectData"
             :key="index"
             class="nav-item-container">
-            <Select 
+            <Select
                 v-model="tempSelect[index]"
                 size="small"
                 class="nav-item">
-                <Option 
-                    v-for="option in select.child" 
+                <Option
+                    v-for="option in select.child"
                     @click.native="selectChanged(select, index, option.value)"
                     :key="option.value"
                     :value="option.value">
                     {{ option.label }}
                 </Option>
             </Select>
-            <Icon 
-                type="chevron-right" 
+            <Icon
+                type="chevron-right"
                 v-show="index !== selectData.length - 1"
                 class="nav-arrow">
             </Icon>

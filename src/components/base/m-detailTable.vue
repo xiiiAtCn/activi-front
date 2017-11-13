@@ -51,6 +51,10 @@
             loading: {
                 type: Boolean,
                 default: true
+            },
+            form: {
+                type: String,
+                required: true
             }
         },
         data() {
@@ -61,14 +65,14 @@
         methods: {
             openLayer(action) {
                 this.action = action
-                this.$store.commit(OPEN_TABLE_LAYER, {form: '75d8706'})
+                this.$store.commit(OPEN_TABLE_LAYER, {form: this.form})
             },
             submit2Table() { 
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: '75d8706'})
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.form})
             },
             cancel() {
-                this.$store.commit(CLEAR_FORM_DATA, {form: '75d8706'})
-                this.$store.commit(CLOSE_TABLE_LAYER, {form: '75d8706'})
+                this.$store.commit(CLEAR_FORM_DATA, {form: this.form})
+                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.form})
             }
         }
     }
