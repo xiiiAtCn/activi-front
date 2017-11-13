@@ -19,7 +19,7 @@ import Request, { replace, addQuery } from './request-addon'
 
 // import _ from 'lodash'
 
-export function dispatch() {
+export function dispatch () {
     if (arguments.length === 0) {
         console.log('路由分发参数错误 0 ')
         return
@@ -39,7 +39,6 @@ export function dispatch() {
         (arg0.type === 'link' ? asLink
             : arg0.type === 'submit' ? asSubmit
                 : arg0.type === 'serverAction' ? asServerAction
-                    : arg0.type === 'deliver' ? asBus
                         : asMessage)(arg0)
     } else {
         console.log('路由分发参数错误 1 ', arguments)
@@ -48,46 +47,15 @@ export function dispatch() {
     console.groupEnd()
 }
 
-/***
- * 客户端事件 (遇到了再说)
- */
-function asBus(action) {
-    // console.log('client event', JSON.stringify(action))
-    // let url, method = 'GET', params, eventId, body, source
-    // eventId = action.eventId
-    // if (typeof action.link === 'string') {
-    //     url = action.link
-    // } else if (typeof action.link === 'object') {
-    //     source = action.source
-    //     url = action.link.url
-    //     method = action.link.method
-    //     params = action.link.params || {}
-    //     if (method === 'POST') {
-    //         source = body = params
-    //     } else {
-    //         source = deepCopy(params)
-    //         url = replace(url, params)
-    //         url = addQuery(url, params)
-    //     }
-    // }
-    // let request = new Request()
-    // if (method === 'GET') {
-    //     request.setUrl(url).forGet(data => {
-    //         bus.$emit(eventId, data, source)
-    //     })
-    // } else {
-    //     request.setUrl(url).setBody(body).forPost(data => {
-    //         bus.$emit(eventId, data, source)
-    //     })
-    // }
-}
-
 /**
  * 获取数据
  */
 let stack = 0
 export const getData = (action, callback) => {
-    let url, request = new Request(), method = 'GET', body
+    let url
+    let request = new Request()
+    let method = 'GET'
+    let body
     if (typeof action === 'string') {
         url = action
     } else if (Object.prototype.toString.apply(action) === '[object Object]') {
@@ -107,20 +75,21 @@ export const getData = (action, callback) => {
     }
     stack++
     setTimeout(() => {
-        if (stack !== 0)
+        if (stack !== 0) {
             bus.$emit('hide-my-full-loading')
+            console.warn('network seems slow. overlay is forced to close even though request is not back')
+        }
     }, 10000)
-    if (method === 'POST')
+    if (method === 'POST') {
         request.setUrl(url).setBody(body).forPost((result, err) => {
             stack--
             setTimeout(() => {
-                if (stack === 0)
-                    bus.$emit('hide-my-full-loading')
+                if (stack === 0) { bus.$emit('hide-my-full-loading') }
             }, 1000)
 
             callback(result, err)
         })
-    else
+    } else {
         request.setUrl(url).forGet((result, err) => {
             stack--
             setTimeout(() => {
@@ -129,6 +98,7 @@ export const getData = (action, callback) => {
             }, 1000)
             callback(result, err)
         })
+    }
 }
 
 /**

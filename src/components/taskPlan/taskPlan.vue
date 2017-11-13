@@ -55,7 +55,7 @@
                             }
                         }
                     ],
-                    id: ids.treeId,
+                    id: ids.treeId
                 },
 
                 tableDefine: {
@@ -97,7 +97,7 @@
                             }
                         }
                     ],
-                    id: ids.tableId,
+                    id: ids.tableId
                 }
 
             }

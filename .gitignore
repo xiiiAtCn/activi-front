@@ -15,4 +15,5 @@ src/components/zpTest
 *.ntvs*
 *.njsproj
 *.sln
+.eslintcache
 config/index.js

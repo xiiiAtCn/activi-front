@@ -54,43 +54,43 @@
     </div>
 </template>
 <script>
-    import Vue from 'vue';
-    import { dispatch } from '../utils/actionUtils'
+    import Vue from 'vue'
+import { dispatch } from '../utils/actionUtils'
     export default {
-        data() {
+        data () {
             return {
                 search: '',
-                ajaxHistoryData:[],
+                ajaxHistoryData: [],
                 // 初始化信息总条数
-                dataCount:0,
+                dataCount: 0,
                 // 每页显示多少条
-                pageSize:10,
+                pageSize: 10,
                 historyData: []
             }
         },
         props: {
             rows: {
                 type: Array,
-                "default": function () {
-                    return [];
+                'default': function () {
+                    return []
                 }
             },
             operation: {
                 type: Array,
-                "default": function () {
-                    return [];
+                'default': function () {
+                    return []
                 }
             },
             titleDefine: {
                 type: Array,
-                "default": function () {
-                    return [];
+                'default': function () {
+                    return []
                 }
             },
             bodyDefine: {
                 type: Array,
-                "default": function () {
-                    return [];
+                'default': function () {
+                    return []
                 }
             }
         },
@@ -99,47 +99,47 @@
                 dispatch(action)
             },
 //          获取历史记录信息
-            handleListApproveHistory(){
+            handleListApproveHistory () {
                 // 保存取到的所有数据
-                this.ajaxHistoryData = this.searchData;
-                this.dataCount = this.searchData.length;
-                // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-                if( this.searchData.length < this.pageSize ) {
-                    this.historyData = this.ajaxHistoryData;
+                this.ajaxHistoryData = this.searchData
+                this.dataCount = this.searchData.length
+            // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
+                if (this.searchData.length < this.pageSize) {
+                    this.historyData = this.ajaxHistoryData
                 } else {
-                    this.historyData = this.ajaxHistoryData.slice(0,this.pageSize);
+                    this.historyData = this.ajaxHistoryData.slice(0, this.pageSize)
                 }
             },
             changePage: function (index) {
-                let _start = ( index - 1 ) * this.pageSize;
-                let _end = index * this.pageSize;
-                this.historyData = this.ajaxHistoryData.slice(_start,_end);
+                let _start = (index - 1) * this.pageSize
+                let _end = index * this.pageSize
+                this.historyData = this.ajaxHistoryData.slice(_start, _end)
             }
         },
         watch: {
             searchData: function () {
-                this.handleListApproveHistory();
+                this.handleListApproveHistory()
             }
         },
         computed: {
             searchData: {
                 get: function () {
-                    let search = this.search;
+                    let search = this.search
                     if (search) {
-                        return this.rows.filter(function(product) {
-                            return Object.keys(product).some(function(key) {
+                        return this.rows.filter(function (product) {
+                            return Object.keys(product).some(function (key) {
                                 return String(product[key]).toLowerCase().indexOf(search) > -1
                             })
                         })
                     }
-                    return this.rows;
+                    return this.rows
                 },
                 set: function (newValue) {
                     return newValue
                 }
             }
         },
-        mounted(){
+        mounted () {
 //            this.$nextTick(function() {
 //                // DOM 更新了
 //                console.log(this.titleDefine)

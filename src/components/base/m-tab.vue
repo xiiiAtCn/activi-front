@@ -1,7 +1,17 @@
 <template>
     <Tabs v-model="model" type="card">
-        <TabPane v-for="(item, index) in items" :key="index" :label="item.label" :name="item.name">
-            <component :is="item.component" :define="item.define" :content="item.content"></component>
+        <TabPane 
+            v-for="(item, index) in items" 
+            :key="index" 
+            :label="item.label" 
+            :name="item.name"
+        >
+            <component 
+                :is="item.component" 
+                :define="item.define" 
+                :content="item.content"
+            >
+            </component>
         </TabPane>
     </Tabs>
 </template>
@@ -15,10 +25,10 @@
             }
         },
         computed: {
-            items() {
+            items () {
                 return _.get(this.define, 'items', [])
             },
-            model() {
+            model () {
                 return _.get(this.define, 'active', '')
             }
         }

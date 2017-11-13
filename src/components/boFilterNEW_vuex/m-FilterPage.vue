@@ -38,7 +38,7 @@ const idObj = {
 export default{
     data () {
         return {
-            navSelectDefine: {                                
+            navSelectDefine: {
                 isRelated: true,
                 relation: [idObj.navSelectId],
                 dataLink: [
@@ -48,7 +48,7 @@ export default{
                             method: 'GET',
                             url: urlList.navDataUrl,
                             pathParams: {
-                                
+
                             },
                             queryParams: {
                                 id: {
@@ -60,7 +60,7 @@ export default{
                         }
                     }
                 ],
-                id: idObj.navSelectId,
+                id: idObj.navSelectId
             },
 
             filterDefine: {
@@ -73,7 +73,7 @@ export default{
                             method: 'GET',
                             url: urlList.filterDataUrl,
                             pathParams: {
-                                
+
                             },
                             queryParams: {
                                 id: {
@@ -85,7 +85,7 @@ export default{
                         }
                     }
                 ],
-                id: idObj.filterId,
+                id: idObj.filterId
             },
 
             tableDefine: {
@@ -93,7 +93,7 @@ export default{
                 relation: [idObj.navSelectId, idObj.filterId],
                 dataLink: [
                     {
-                        attr: 'tableData', 
+                        attr: 'tableData',
                         link: {
                             method: 'POST',
                             url: urlList.tableDataUrl,
@@ -112,7 +112,7 @@ export default{
                         }
                     },
                     {
-                        attr: 'tableDefine', 
+                        attr: 'tableDefine',
                         link: {
                             method: 'GET',
                             url: urlList.tableDefineUrl,
@@ -121,13 +121,13 @@ export default{
                                 id: {
                                     value: idObj.navSelectId,
                                     defaultValue: ''
-                                },
+                                }
                             },
                             body: {}
                         }
                     }
                 ],
-                id: idObj.tableId,
+                id: idObj.tableId
             }
         }
     }

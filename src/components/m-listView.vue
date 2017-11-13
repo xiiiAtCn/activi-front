@@ -82,27 +82,27 @@
   import { default as fetch } from '../utils/DefineFetcher'
 
   export default {
-    props: ['define', 'content'],
-    mounted: function () {
-      var _this = this
-      var url = _this.define.data_url
-      fetch(url, function (error, body) {
-        if (error === null) {
-          _this.rows = body
-        }
-      })
-    },
-    methods: {
-      getMeta: function (action) {
-        dispatch(action)
+      props: ['define', 'content'],
+      mounted: function () {
+          var _this = this
+          var url = _this.define.data_url
+          fetch(url, function (error, body) {
+              if (error === null) {
+                  _this.rows = body
+              }
+          })
+      },
+      methods: {
+          getMeta: function (action) {
+              dispatch(action)
+          }
+      },
+      data: function () {
+          return {
+              rows: [],
+              valueSearch: ''
+          }
       }
-    },
-    data: function () {
-      return {
-        rows: [],
-        valueSearch: ''
-      }
-    }
   }
 </script>
 <style>

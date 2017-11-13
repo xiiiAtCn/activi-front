@@ -47,7 +47,7 @@
                         data[i].children = child
                         break
                     } else {
-                        this.getHaveChild(data[i].children,child)
+                        this.getHaveChild(data[i].children, child)
                     }
                 }
             },
@@ -64,8 +64,8 @@
 //            初始加载节点
             getInitNode: function () {
                 this.setUrl(this.initNOdeUrl).forGet(res => {
-                    this.baseData = res;
-                    this.requestNOdeInfo(res, 'selected');
+                    this.baseData = res
+                    this.requestNOdeInfo(res, 'selected')
                 })
             },
 //            递归当前选中节点
@@ -73,7 +73,7 @@
                 for (let i in data) {
                     if (data[i].selected === true) {
                         data[i].children = child
-                        break;
+                        break
                     } else {
                         this.getArray(data[i].children, child)
                     }
@@ -83,34 +83,34 @@
             requestNOdeInfo: function (ary, style) {
                 let url = `this.getNodeUrl${ary[0]['childId']}/${ary[0]['childMetaId']}`
                 this.setUrl(url).forGet(res => {
-                    if (style === 'selected'){
+                    if (style === 'selected') {
                         this.getArray(this.baseData, res)
                         //  向下传参
-                        let child = [];
-                        for (let i of res){
+                        let child = []
+                        for (let i of res) {
                             child.push({
-                              childMetaId: i.childMetaId,
-                              childBoId: i.childId,
-                              childTitle: i.title
-                            });
+                                childMetaId: i.childMetaId,
+                                childBoId: i.childId,
+                                childTitle: i.title
+                            })
                         }
                         this.$router.push({
-                            name:'boDetails',
-                            query:{
-                              metaId: ary[0]['childMetaId'],
-                              boId: ary[0]['childId'],
-                              child: child
+                            name: 'boDetails',
+                            query: {
+                                metaId: ary[0]['childMetaId'],
+                                boId: ary[0]['childId'],
+                                child: child
                             }
-                        });
-                    } else if (style === 'expend'){
+                        })
+                    } else if (style === 'expend') {
                         this.getHaveChild(this.baseData, res)
                     }
                 })
             }
         },
-        mounted(){
-            this.getInitNode();
-        }
+        mounted () {
+            this.getInitNode()
+    }
     }
 </script>
 

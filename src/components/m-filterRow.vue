@@ -31,23 +31,23 @@ import '../assets/css/font-awesome.min.css'
 import '../assets/css/m-filterRow.css'
 
 export default {
-  props: [
-    'filterRows',
-    'items'
-  ],
-  data: function () {
-    return {
-    }
-  },
-  mounted: function () {
+    props: [
+        'filterRows',
+        'items'
+    ],
+    data: function () {
+        return {
+        }
+    },
+    mounted: function () {
 
-  },
-  methods: {
-    select: function (rowId, item) {
-      this.data.selected[rowId] = [item.value]
-      console.log(this.data.selected)
+    },
+    methods: {
+        select: function (rowId, item) {
+            this.data.selected[rowId] = [item.value]
+            console.log(this.data.selected)
+        }
     }
-  }
 }
 </script>
 

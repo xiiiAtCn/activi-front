@@ -58,10 +58,10 @@
         props: {
             showChart: {
                 type: Boolean,
-                default:false
+                default: false
             }
         },
-        data(){
+        data () {
             return {
                 urls: {
                     // 获取 checkColumns
@@ -91,31 +91,31 @@
                 inputObjList: [],
                 // 输出单据
                 outputObjList: [],
-                //切换信息
-                showMsg:false
+                // 切换信息
+                showMsg: false
             }
         },
         computed: {
-            flowName() {
+            flowName () {
                 return this.$route.params.rowName
             }
         },
         methods: {
-            showDetails(row) {
+            showDetails (row) {
                 this.leaderName = row['dutyName']
                 let dataAry = ['data_1', 'inputObjList', 'outputObjList']
-                for (let i of dataAry){
+                for (let i of dataAry) {
                     row[i] ? this[i] = row[i] : this[i] = []
                 }
             },
-            getRequest(url, argument, key, returnKey) {
+            getRequest (url, argument, key, returnKey) {
                 let reqUrl = `${url}${argument}`
                 this.setUrl(reqUrl).forGet(res => {
-                    if (returnKey === ''){
+                    if (returnKey === '') {
                         this[key] = res
-                        if (key === 'checkColumns'){
-                            for (let i of this[key]){
-                                if (i['key'] === 'name'){
+                        if (key === 'checkColumns') {
+                            for (let i of this[key]) {
+                                if (i['key'] === 'name') {
                                     i['render'] = (h, params) => {
                                         return h('div', [
                                             h('a', {
@@ -125,7 +125,7 @@
                                                     }
                                                 }
                                             }, params.row.name)
-                                        ]);
+                                        ])
                                     }
                                 }
                             }
@@ -136,10 +136,10 @@
                 })
             }
         },
-        mounted(){
+        mounted () {
             this.getRequest(this.urls.getCheckColumns, '', 'checkColumns', '')
             this.getRequest(this.urls.getCheckData, this.$route.params.rowId, 'checkData', '')
-            this.showMsg=this.showChart
+            this.showMsg = this.showChart
         }
     }
 </script>

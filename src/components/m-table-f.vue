@@ -55,19 +55,19 @@
 
     export default {
         props: {
-            showModalBtn:{
+            showModalBtn: {
                 type: null
             },
-            operation:{
+            operation: {
                 type: null
             },
-            cols:{
+            cols: {
                 type: null
             },
-            rowsContent:{
+            rowsContent: {
                 type: null
             },
-            search:{
+            search: {
                 type: Boolean,
                 default: true
             },
@@ -83,14 +83,14 @@
                 type: null
             }
         },
-        data() {
+        data () {
             return {
-                columnsData:[],
-                columnsDataCopy:[],
-                dataTable:[],
-                valueSearch:'',
+                columnsData: [],
+                columnsDataCopy: [],
+                dataTable: [],
+                valueSearch: '',
 
-                //列选择控制
+                // 列选择控制
                 indeterminate: false,
                 checkAll: true,
                 checkAllGroup: [],
@@ -128,13 +128,13 @@
                 currentPage:1
             }
         },
-        watch:{
-            cols(){
-                console.log("mTableF watch cols")
+        watch: {
+            cols () {
+                console.log('mTableF watch cols')
                 this.handleDefine()
             },
-            rowsContent(){
-                console.log("mTableF watch rowsContent")
+            rowsContent () {
+                console.log('mTableF watch rowsContent')
                 this.handleContent()
             },
             tableName(){
@@ -143,24 +143,24 @@
                 }
             }
         },
-        mounted() {
-            console.log("mTableF run")
+        mounted () {
+            console.log('mTableF run')
         },
         methods: {
-            //配置表格
-            handleDefine(){
+            // 配置表格
+            handleDefine () {
                 this.getColumnsDataWay(this.cols)
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
-            //columnsData存入设置
-            getColumnsDataWay(c){
-                c.forEach((val,i)=> {
-                    this.columnsData[i]={
+            // columnsData存入设置
+            getColumnsDataWay (c) {
+                c.forEach((val, i) => {
+                    this.columnsData[i] = {
                         title: val.text,
                         key: val.field,
-                        width: val.text.length*14+40,
+                        width: val.text.length * 14 + 40,
                         render: (h, params) => {
-                            if(val.icon){
+                            if (val.icon) {
                                 return h('div', [
                                     h('Icon', {
                                         props: {
@@ -169,7 +169,7 @@
                                     }),
                                     h('strong', params.row[val.field])
                                 ])
-                            }else{
+                            } else {
                                 return h(
                                     'div', [
                                         h('span', params.row[val.field])
@@ -178,12 +178,12 @@
                             }
                         }
                     }
-                    //筛选列
-                    this.dataList[i]={
+                    // 筛选列
+                    this.dataList[i] = {
                         label: val.text,
                         value: val.field
                     }
-                    this.testList[i]=val.text
+                    this.testList[i] = val.text
                 })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
                 //读取localStorage数据 确认展示列
@@ -234,26 +234,23 @@
                     fixed: 'right',
                     render: (h, params) => {
                         let buttonList = []
-                        smb.forEach((val)=>{
+                        smb.forEach((val) => {
                             buttonList.push(h('Button', {
                                 props: {
                                     type: val.type,
-                                    size: val.size?val.size:'small'
+                                    size: val.size ? val.size : 'small'
                                 },
                                 style: {
                                     marginRight: '5px'
                                 },
                                 on: {
                                     click: () => {
-                                        this.handleButtonClick(params,val)
+                                        this.handleButtonClick(params, val)
                                     }
                                 }
                             }, val.text))
                         })
-                        if (buttonList.length > 0)
-                            return h('div', buttonList)
-                        else
-                            return h()
+                        if (buttonList.length > 0) { return h('div', buttonList) } else { return h() }
                     }
                 })
             },
@@ -266,47 +263,47 @@
                 }
             },
 
-            //处理顶部按钮
-            handleTopButton(url){
+            // 处理顶部按钮
+            handleTopButton (url) {
                 dispatch(url)
             },
             //发送搜索事件数据
             handleTopSearch(){
                 bus.$emit('topSearchMsg',this.valueSearch)
             },
-            //处理表内按钮点击
-            handleButtonClick(params,row){
+            // 处理表内按钮点击
+            handleButtonClick (params, row) {
                 dispatch(params.row._actions[row.field])
             },
 
-            //筛选列
+            // 筛选列
             handleCheckAll () {
                 if (this.indeterminate) {
-                    this.checkAll = false;
+                    this.checkAll = false
                 } else {
-                    this.checkAll = !this.checkAll;
+                    this.checkAll = !this.checkAll
                 }
-                this.indeterminate = false;
+                this.indeterminate = false
 
                 if (this.checkAll) {
-                    this.checkAllGroup = this.testList;
+                    this.checkAllGroup = this.testList
                     this.columnsData = this.columnsDataCopy
                 } else {
-                    this.checkAllGroup = [];
-                    this.columnsData =[]
+                    this.checkAllGroup = []
+                    this.columnsData = []
                 }
                 this.dataListChange = this.checkAllGroup
             },
             checkAllGroupChange (data) {
                 if (data.length === this.dataList.length) {
-                    this.indeterminate = false;
-                    this.checkAll = true;
+                    this.indeterminate = false
+                    this.checkAll = true
                 } else if (data.length > 0) {
-                    this.indeterminate = true;
-                    this.checkAll = false;
+                    this.indeterminate = true
+                    this.checkAll = false
                 } else {
-                    this.indeterminate = false;
-                    this.checkAll = false;
+                    this.indeterminate = false
+                    this.checkAll = false
                 }
 
                 if(data.length === 0){
@@ -321,18 +318,18 @@
                     window.localStorage.setItem(this.tableName+'.checkAllGroup',JSON.stringify(data))
                 }
             },
-            handleColumnsData(obj){
-                if(!obj){
+            handleColumnsData (obj) {
+                if (!obj) {
                     return
-                } else if(obj.method === 'remove'){
-                    this.columnsData.forEach((val,i)=>{
-                        if(val.title === obj.str){
+                } else if (obj.method === 'remove') {
+                    this.columnsData.forEach((val, i) => {
+                        if (val.title === obj.str) {
                             this.columnsData.splice(i, 1)
                         }
                     })
-                }else if(obj.method === 'add'){
-                    this.columnsDataCopy.forEach((val)=>{
-                        if(val.title === obj.str){
+                } else if (obj.method === 'add') {
+                    this.columnsDataCopy.forEach((val) => {
+                        if (val.title === obj.str) {
                             this.columnsData.push(val)
                         }
                     })
@@ -350,20 +347,20 @@
                 }else if(arr1.length === arr2.length){
                     return
                 }
-                for(let i=0;i<arr1.length;i++){
+                for (let i = 0; i < arr1.length; i++) {
                     let val = arr1[i]
                     str = val
-                    for(let j=0;j<arr2.length;j++){
-                        if(val === arr2[j]){
-                            str =''
+                    for (let j = 0; j < arr2.length; j++) {
+                        if (val === arr2[j]) {
+                            str = ''
                             break
                         }
                     }
-                    if(str !== ''){
+                    if (str !== '') {
                         break
                     }
                 }
-                obj.str= str
+                obj.str = str
                 return obj
             },
 

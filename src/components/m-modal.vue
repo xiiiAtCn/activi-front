@@ -29,11 +29,11 @@
 
 <script>
   export default {
-    data: function () {
-      return {
-        style: {'display': 'block'},
-        classIn: false
+      data: function () {
+          return {
+              style: {'display': 'block'},
+              classIn: false
+          }
       }
-    }
   }
 </script>

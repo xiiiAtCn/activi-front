@@ -10,7 +10,7 @@
 
 <script>
     export default{
-        data(){
+        data () {
             return {
                 documentTitle: '工作流程',
                 urls: {
@@ -30,19 +30,19 @@
             }
         },
         methods: {
-            showRouter(row, name) {
+            showRouter (row, name) {
                 this.$router.push({
                     name: name, params: { rowName: row.name, rowId: row.id }
-                });
+                })
             },
-            getRequest(url, argument, key, returnKey) {
+            getRequest (url, argument, key, returnKey) {
                 let reqUrl = `${url}${argument}`
                 this.setUrl(reqUrl).forGet(res => {
-                    if (returnKey === ''){
+                    if (returnKey === '') {
                         this[key] = res
-                        if (key === 'columns'){
-                            for (let i of this[key]){
-                                if (i['key'] === 'action'){
+                        if (key === 'columns') {
+                            for (let i of this[key]) {
+                                if (i['key'] === 'action') {
                                     i['render'] = (h, params) => {
                                         return h('div', [
                                             h('Button', {
@@ -56,9 +56,9 @@
                                                     }
                                                 }
                                             }, '查看')
-                                        ]);
+                                        ])
                                     }
-                                } else if (i['key'] === 'name'){
+                                } else if (i['key'] === 'name') {
                                     i['render'] = (h, params) => {
                                         return h('div', [
                                             h('a', {
@@ -68,7 +68,7 @@
                                                     }
                                                 }
                                             }, params.row.name)
-                                        ]);
+                                        ])
                                     }
                                 }
                             }
@@ -79,8 +79,8 @@
                 })
             }
         },
-        mounted(){
-            this.getRequest(this.urls.getColumns, '', 'columns','')
+        mounted () {
+            this.getRequest(this.urls.getColumns, '', 'columns', '')
             this.getRequest(this.urls.getData, '', 'data', '')
         }
     }

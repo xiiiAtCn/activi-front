@@ -38,7 +38,7 @@
 <script>
     import { dispatch } from '../../../utils/actionUtils'
     export default {
-        data() {
+        data () {
             return {
                 changeFlag: false,
                 returnData: {
@@ -53,38 +53,38 @@
 
         },
         methods: {
-            goback() {
-                window.history.go(-1);
+            goback () {
+                window.history.go(-1)
             },
-            replay() {
+            replay () {
 
             },
-            deleteData() {
+            deleteData () {
 
             },
-            compDelete() {
+            compDelete () {
 
             },
-            relay() {
+            relay () {
 
             },
-            report() {
+            report () {
 
             },
-            regection() {
+            regection () {
 
             },
-            toggle() {
+            toggle () {
                 this.changeFlag = true
             },
-            send() {
+            send () {
 
             },
-            close() {
-                window.history.go(-1);
+            close () {
+                window.history.go(-1)
             }
 
-        },
+        }
 
     }
 </script>

@@ -113,7 +113,6 @@ import { deepCopy } from 'utils/utils'
 import mixin from '../mixin'
 import Mutation from 'store/Mutation'
 
-
 // 默认全局设置
 const defaultGlobalOption = {
     multiSelectText: '+多选',
@@ -193,14 +192,14 @@ export default{
         },
         currentAdFilterData () {
             return this._getFilterDataByAdId(this.currentAdId)
-        },
+        }
     },
     watch: {
         queryData (val) {
             let queryData = deepCopy(val)
             queryData = this.changeQueryDataToPostData(queryData)
             this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
-        },
+        }
     },
     methods: {
         // 删除选项
@@ -250,9 +249,8 @@ export default{
                     })
                     result[query.id] = tempArr
                 })
-
             }
-           return result
+            return result
         },
         getFilterData () {
             this.getData('bodyData', (data, err) => {
@@ -267,7 +265,7 @@ export default{
         watchValuesChanged () {
             this.getFilterData()
         }
-    },
+    }
 }
 </script>
 <style scoped>

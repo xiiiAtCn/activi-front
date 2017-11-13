@@ -25,10 +25,10 @@ let tableFShim = Vue.component('tableF-Shim', {
         })
     },
     mixins: [mixin],
-    data() {
+    data () {
         return {
             url: '',
-            showModalBtn:[],
+            showModalBtn: [],
             rowsContent: [],
             operation: [],
             cols:[],
@@ -49,10 +49,10 @@ let tableFShim = Vue.component('tableF-Shim', {
             default () {
                 return {}
             }
-        },
+        }
     },
     methods: {
-        initialize(def) {
+        initialize (def) {
             this.operation = _.get(def, ['ui_define', 'operation'], [])
             this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
             this.cols = _.get(def, ['ui_define', 'cols'], [])

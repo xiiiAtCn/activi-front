@@ -54,7 +54,7 @@
 
 <script>
     export default{
-        data(){
+        data () {
             return {
                 urls: {
                     // 获取 detailsColumns
@@ -74,81 +74,81 @@
                 modules: [
                     {
                         name: '应用模块1',
-                        url: '',
+                        url: ''
                     }, {
                         name: '应用模块2',
-                        url: '',
+                        url: ''
                     }, {
                         name: '应用模块3',
-                        url: '',
+                        url: ''
                     }
                 ],
                 bo: [
                     {
                         name: 'BO-META 1',
-                        url: '',
+                        url: ''
                     }, {
                         name: 'BO-META 2',
-                        url: '',
+                        url: ''
                     }, {
                         name: 'BO-META 3',
-                        url: '',
+                        url: ''
                     }
                 ],
                 bill: [
                     {
                         name: 'BILL-META 1',
-                        url: '',
+                        url: ''
                     }, {
                         name: 'BILL-META 2',
-                        url: '',
+                        url: ''
                     }, {
                         name: 'BILL-META 3',
-                        url: '',
+                        url: ''
                     }
                 ]
             }
         },
         computed: {
-            flowName() {
+            flowName () {
                 return this.$route.params.rowName
             }
         },
         methods: {
-            format(time) {
+            format (time) {
                 let temp = new Date(time)
                 let y = temp.getFullYear()
                 let m = temp.getMonth() + 1
                 let d = temp.getDate()
                 m < 10 ? m = `0${m}` : m
                 d < 10 ? d = `0${d}` : d
-                return `${y}-${m}-${d}`;
+                return `${y}-${m}-${d}`
             },
-            close() {
-                this.$router.push({ path: '/layoutContent/01/workflow' });
+            close () {
+                this.$router.push({ path: '/layoutContent/01/workflow' })
             },
-            pageChange(currentPage) {
+            pageChange (currentPage) {
                 this.getDetailChild(this.$route.params.rowId, currentPage - 1, this.pageSize, 'detailData')
             },
-            getDetailChild(wfMetaId, pageNumber, pageSize, key) {
+            getDetailChild (wfMetaId, pageNumber, pageSize, key) {
                 let pageParams = `${wfMetaId}/${pageNumber}/${pageSize}`
                 this.getRequest(this.urls.getDetailData, pageParams, key, '')
             },
-            getRequest(url, argument, key, returnKey) {
+            getRequest (url, argument, key, returnKey) {
                 let reqUrl = `${url}${argument}`
                 this.setUrl(reqUrl).forGet(res => {
-                    if (key === 'detailData'){
-                        for (let i of res['content']){
-                            let dataAry = ['planStart','planEnd','realStart','realEnd']
-                            for (let j of dataAry){
-                                if (i[j]){
+                    if (key === 'detailData') {
+                        for (let i of res['content']) {
+                            let dataAry = ['planStart', 'planEnd', 'realStart', 'realEnd']
+                            for (let j of dataAry) {
+                                if (i[j]) {
                                     i[j] = this.format(i[j])
                                 }
                             }
                         }
                         this.detailData = res['content']
                         this.dataCount = res['totalElements']
-                    } else if (returnKey === ''){
+                    } else if (returnKey === '') {
                         this[key] = res
                     } else {
                         this[key] = res[returnKey]
@@ -156,7 +156,7 @@
                 })
             }
         },
-        mounted(){
+        mounted () {
             this.getRequest(this.urls.getDetailColumns, '', 'detailColumns', '')
             this.getDetailChild(this.$route.params.rowId, 0, this.pageSize, 'detailData')
         },

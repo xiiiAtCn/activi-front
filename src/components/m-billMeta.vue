@@ -21,18 +21,18 @@
 
   export default {
 
-    props: {'define': {type: Object}},
-    computed: {
-      items: function () {
+      props: {'define': {type: Object}},
+      computed: {
+          items: function () {
 //        return utils(this.define, [], 'links')
-        return _.get(this.define, 'links', [])
+              return _.get(this.define, 'links', [])
+          }
+      },
+      methods: {
+          getMeta: function (url) {
+              dispatch(url)
+          }
       }
-    },
-    methods: {
-      getMeta: function (url) {
-        dispatch(url)
-      }
-    }
   }
 
 </script>

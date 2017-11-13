@@ -46,77 +46,77 @@
   import router from '../router'
 
   export default {
-    router,
-    data () {
-      return {
-        menu: false,
-        leftMenu: {
-          theme: 'light',
-          items: {
-            boMaintenance: {
-              text: '设备管理',
-              icon: 'gear-b',
-              action: {
-                type: 'link',
-                url: '/api/init/boMaintenance?at=/layoutContent/05/page'
-              }
-            },
-            formMaintenance: {
-              text: '表单管理',
-              icon: 'ios-paper',
-              action: {
-                type: 'link',
-                url: '/api/init/formMaintenance?at=/layout/page'
-              }
-            },
-            formMaintenanceNew: {
-              text: '新表单管理',
-              icon: 'ios-paper',
-              action: {
-                type: 'link',
-                url: '/api/initNew/formMaintenanceNew?at=/layout/page'
-              }
-            },
-            workflowMaintenance: {
-              text: '流程管理',
-              icon: 'pull-request',
-              action: {
-                type: 'link',
-                url: '/api/init/workflowMaintenance?at=/layout/page'
-              }
-            },
-            test: {
-              text: '测试',
-              icon: 'pull-request',
-              action: {
-                type: 'link',
-                url: '/api/bo/lists/listViewDefine?at=/layout/page'
-              }
-            },
-            treeTest: {
-              text: '树',
-              icon: 'transgender',
-              action: {
-                type: 'link',
-                url: '/api/bo/tree/listBoTreeDefine?at=/layout/page'
-              }
-            }
+      router,
+      data () {
+          return {
+              menu: false,
+              leftMenu: {
+                  theme: 'light',
+                  items: {
+                      boMaintenance: {
+                          text: '设备管理',
+                          icon: 'gear-b',
+                          action: {
+                              type: 'link',
+                              url: '/api/init/boMaintenance?at=/layoutContent/05/page'
+                          }
+                      },
+                      formMaintenance: {
+                          text: '表单管理',
+                          icon: 'ios-paper',
+                          action: {
+                              type: 'link',
+                              url: '/api/init/formMaintenance?at=/layout/page'
+                          }
+                      },
+                      formMaintenanceNew: {
+                          text: '新表单管理',
+                          icon: 'ios-paper',
+                          action: {
+                              type: 'link',
+                              url: '/api/initNew/formMaintenanceNew?at=/layout/page'
+                          }
+                      },
+                      workflowMaintenance: {
+                          text: '流程管理',
+                          icon: 'pull-request',
+                          action: {
+                              type: 'link',
+                              url: '/api/init/workflowMaintenance?at=/layout/page'
+                          }
+                      },
+                      test: {
+                          text: '测试',
+                          icon: 'pull-request',
+                          action: {
+                              type: 'link',
+                              url: '/api/bo/lists/listViewDefine?at=/layout/page'
+                          }
+                      },
+                      treeTest: {
+                          text: '树',
+                          icon: 'transgender',
+                          action: {
+                              type: 'link',
+                              url: '/api/bo/tree/listBoTreeDefine?at=/layout/page'
+                          }
+                      }
 
+                  }
+
+              }
           }
-
-        }
-      }
-    },
-    methods: {
-      loadPage: function (name) {
-        let actionDefine = this.menu.items[name]
-        dispatch(actionDefine.action)
       },
-      loadPageLeft: function (name) {
-        let actionDefine = this.leftMenu.items[name]
-        dispatch(actionDefine.action)
+      methods: {
+          loadPage: function (name) {
+              let actionDefine = this.menu.items[name]
+              dispatch(actionDefine.action)
+          },
+          loadPageLeft: function (name) {
+              let actionDefine = this.leftMenu.items[name]
+              dispatch(actionDefine.action)
+          }
       }
-    }
 //        watch: {
 //            $route () {
 //                this.meta = null;

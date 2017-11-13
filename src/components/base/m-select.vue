@@ -1,120 +1,109 @@
 <template>
-  <div>
-    <Select v-model="storeValue" :multiple="multiple" :disabled="readonly" :clearable="clearable" :filterable="filterable" :remote="remote"
-            :loading="loading" :loadingText="loadingText" :label="label" :size="size" :placeholder="placeholder"
-            :notFoundText="notFoundText" :returnWithLabel="returnWithLabel" :placement="placement">
-      <Option v-for="option in optionData" :key="option" :disabled="option.disabled || false" :value="option.value?option.value:''">
-        {{option.text}}
-      </Option>
-    </Select>
-    <div v-if="hasError" class="item-error">{{errorMessage}}</div>
-  </div>
+    <div v-show="visible">
+        <Row >
+            <Select 
+                v-model="objectModel" 
+                :multiple="multiple" 
+                :disabled="readonly" 
+                :clearable="clearable" 
+                :loading="loading" 
+                :size="size" 
+                :placeholder="placeholder" 
+                :not-found-text="notFound" 
+                :placement="placement" 
+                :transfer="transfer" 
+                @on-change="valueChange">
+                <Option 
+                    v-for="(item, index) in items" 
+                    :key="index" 
+                    :value="item.id">
+                    <template v-if="item.icon">
+                        <Icon :type="item.icon"></Icon>
+                    </template> 
+                    {{item.name}}
+                </Option>
+            </Select>
+        </Row>
+        <Row>
+            <div 
+                v-if="hasError" 
+                class="gateway-item-error">
+                {{errorMessage}}
+            </div>
+            <div 
+                v-else 
+                class="occupation gateway-item-error">
+                隐藏
+            </div>
+        </Row>
+    </div>
 </template>
 <script>
-  import _ from 'lodash'
+    import _ from 'lodash'
+    import mixin from './mixin'
+    import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
+    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
 
-  export default {
-    name: 'v-select',
-    props: ['define', 'content'],
-    data () {
-      return {
-        hasError: false,
-        errorMessage: '',
-        loading: false,
-        optionData: []
-      }
-    },
-    watch: {
-      data_url (newVal) {
-        this.$http.get(newVal).then(res => JSON.parse(res.bodyText)).then(
-          obj => {
-            this.optionData = obj.optionData
-          })
-      }
-    },
-    computed: {
-      data_url () {
-        return _.get(this.define, 'data_url', '')
-      },
-      multiple () {
-        return _.get(this.define, 'multiple', false)
-      },
-      clearable () {
-        return _.get(this.define, 'clearable', false)
-      },
-      filterable () {
-        return _.get(this.define, 'filterable', false)
-      },
-      remote () {
-        return _.get(this.define, 'remote', false)
-      },
-      loadingText () {
-        return _.get(this.define, 'loadingText', '加载中')
-      },
-      label () {
-        return _.get(this.define, 'label', [])
-      },
-      size () {
-        return _.get(this.define, 'size', 'large')
-      },
-      placeholder () {
-        return _.get(this.define, 'placehoader', '请选择')
-      },
-      notFoundText () {
-        return _.get(this.define, 'notFoundText', '无匹配数据')
-      },
-      returnWithLabel () {
-        return _.get(this.define, 'returnWithLabel', false)
-      },
-      placement () {
-        return _.get(this.define, 'placement', 'bottom')
-      },
-      name () {
-        return _.get(this.define, 'name', '')
-      },
-      uid () {
-        return _.get(this.define, 'ui_id', 'm-select?' + Date.now())
-      },
-      'exContent': function () {
-        return _.get(this.define, 'exContent', {})
-      },
-      storeValue: {
-        get () {
-          return _.get(this.$store.state.pageData.data, [this.name, 'value'], '')
+    export default {
+        name: 'm-select',
+        mixins: [mixin],
+        computed: {
+            items () {
+                return _.get(this.define, 'items', [])
+            },
+            clearable () {
+                return _.get(this.define, 'clearable', true)
+            },
+            multiple () {
+                return _.get(this.define, 'multiple', false)
+            },
+            size () {
+                return _.get(this.define, 'szie', 'default')
+            },
+            placeholder () {
+                return _.get(this.define, 'placeholder', '请选择')
+            },
+            notFound () {
+                return _.get(this.define, 'notFound', '无匹配数据')
+            },
+            placement () {
+                return _.get(this.define, 'placement', 'bottom')
+            },
+            transfer () {
+                return _.get(this.define, 'transfer', false)
+            }
         },
-        set (value) {
-//                    this.$store.commit('updateItem', {name: this.name, value: value, type:'field'})
-          this.$store.commit('updateItem', {name: this.name, exContent: this.exContent, value: value})
+        data () {
+            return {
+                loading: false
+            }
+        },
+        methods: {
+            valueChange (value) {
+                let list = this.items
+                let model = {}
+                for (let i = 0; i < list.length; i++) {
+                    let tmp = list[i]
+                    if (tmp['id'] === value) {
+                        model['name'] = tmp['name']
+                        model['value'] = tmp['id']
+                        break
+                    }
+                }
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: model, form: this.form})
+                if (!this.reset) { this.valid() }
+            },
+            valid () {
+                if (!this.readonly) {
+                    let value = this.objectModel
+                    let hasError = false
+                    if (this.required && (value === '' || value.length === 0)) {
+                        hasError = true
+                        this.errorMessage = '请输入必填项'
+                    }
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                }
+            }
         }
-      },
-      readonly () {
-        let readonly = _.get(this.$store.state.pageStatus.status, this.name, 'readonly').trim()
-        let regex = /^readonly$/i
-        return regex.test(readonly) || readonly === true
-      }
-    },
-    mounted () {
-      if (this.data_url === '') {
-        this.optionData = _.get(this.define, 'rows', [])
-      } else {
-        this.$http.get(this.data_url).then(res => JSON.parse(res.bodyText)).then(obj => {
-          this.optionData = obj.optionData
-        })
-      }
-//            bus.$on('forceValid', () => {
-//                this.valid()
-//            })
-    },
-    methods: {
-      valid () {
-        if (!this.readonly) {
-          if (this.storeValue === '') {
-            this.errorMessage = '请选择一项'
-            this.hasError = true
-          }
-          this.$store.dispatch('reportValid', {'id': this.uid, 'result': !this.hasError})
-        }
-      }
     }
-  }
 </script>

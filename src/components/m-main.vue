@@ -13,15 +13,8 @@
                             href=""
                             :key="index">
                             {{item}}
-
                         </Breadcrumb-item>
                     </Breadcrumb>
-                    <!--<template v-if="typeof define.subtitle === 'string'">-->
-                    <!--<span v-text="define.subtitle"></span>-->
-                    <!--</template>-->
-                    <!--<template v-else>-->
-                    <!--<Breadcrumb-item v-for="item in define.subtitle" href="">{{item}}</Breadcrumb-item>-->
-                    <!--</template>-->
                 </Breadcrumb>
                 </Col>
                 <Col span="12" class="pull-right">
@@ -29,19 +22,16 @@
                     <Button type="primary" v-if="define.editUrl" shape="circle" @click="edit(define.editUrl)">
                         <Icon type="document-text"></Icon>
                         编辑
-
                     </Button>
                 </transition>
                 <transition name="fade" mode="out-in">
                     <Button type="ghost" v-if="define.backUrl" shape="circle" @click="backUrl(define.backUrl)">
                         <Icon type="reply"></Icon>
                         返回
-
                     </Button>
                     <Button type="ghost" shape="circle" @click="back" v-else>
                         <Icon type="reply"></Icon>
                         返回
-
                     </Button>
                 </transition>
                 </Col>
@@ -103,12 +93,11 @@
     </div>
 </template>
 <script>
-    import store from '../vuex/store'
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
-
     import {dispatch} from '../utils/actionUtils'
-    import * as _ from 'lodash'
+    import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
+    import _ from 'lodash'
 
     import { deepCopy } from 'utils/utils'
 
@@ -116,27 +105,20 @@
         submit: 'submit',
         save: 'save'
     }
-
     export default {
-        store,
         router,
-        methods: {
-            edit: function (url) {
-                dispatch(url)
-            },
-            back: function () {
-                this.$router.go(-1)
-            },
-            backUrl: function (url) {
-                dispatch(url)
-            },
-            btnClick (action) {
-                dispatch(action)
+        data () {
+            return {
+                meta: null,
+                errorMessage: null,
+                define: {},
+                content: [],
+                dataUrl: null
             }
         },
         computed: {
             res: function () {
-                return store.state.pageData.data.hidden
+                return this.$store.state.pageData.data.hidden
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
@@ -146,6 +128,7 @@
             },
             saveBtn () {
                 let btnArr = deepCopy(this.btnArr)
+
                 return _.filter(btnArr, (btn) => {
                     return btn.type === BtnType.save
                 })
@@ -155,15 +138,6 @@
                 return _.filter(btnArr, (btn) => {
                     return btn.type === BtnType.submit
                 })
-            }
-        },
-        data () {
-            return {
-                meta: null,
-                errorMessage: null,
-                define: {},
-                content: [],
-                dataUrl: null
             }
         },
         watch: {
@@ -180,21 +154,32 @@
                         this.define = _.get(post, 'ui_define', {})
                         this.content = _.get(post, 'ui_content', [])
                         document.title = _.get(this.define, 'title', '')
-                        store.dispatch('initValidStatus')
-                        store.dispatch('clearData', {})
-                        store.commit('clearStatus')
                         let url = this.define.data_url
-                        store.dispatch('putData', {'url': url})
+                        this.$store.dispatch(FETCH_FORM_DATA, {url: url})
                     }
                 })
             },
-            dataUrl: function (newUrl, oldUrl) {
-                store.dispatch('putData', {'url': newUrl})
+            dataUrl(newUrl) {
+                this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
             },
-            'define.status_url': function (to, from) {
+            'define.status_url'() {
                 if (this.define.status_url) {
-                    store.dispatch('putStatus', {'url': this.define.status_url})
+                    this.$store.dispatch('putStatus', {'url': this.define.status_url})
                 }
+            }
+        },
+        methods: {
+            edit: function (url) {
+                dispatch(url)
+            },
+            back: function () {
+                this.$router.go(-1)
+            },
+            backUrl: function (url) {
+                dispatch(url)
+            },
+            btnClick (action) {
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', requestUrl: action.url})
             }
         },
         beforeRouteEnter (to, from, next) {

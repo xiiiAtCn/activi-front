@@ -17,3 +17,16 @@ html, body {
 .container90 {
     margin: 15px 30px auto;
 }
+
+.gateway-item-error {
+    font-size: small;
+    color: red;
+}
+
+.full-opacity {
+    width: 100%;
+}
+
+.occupation {
+    visibility: hidden;
+}

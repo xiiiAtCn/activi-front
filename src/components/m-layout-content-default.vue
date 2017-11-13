@@ -32,49 +32,49 @@
   //  Vue.use(VueResource)
 
   export default {
-    data () {
-      return {
-        details: []
-      }
-    },
-    methods: {
-      getMenu: function () {
-        let params = {
-          'id': this.$route.params.id
-        }
-        axios.get('/api/module/leftMenu', {'params': params})
+      data () {
+          return {
+              details: []
+          }
+      },
+      methods: {
+          getMenu: function () {
+              let params = {
+                  'id': this.$route.params.id
+              }
+              axios.get('/api/module/leftMenu', {'params': params})
           .then(response => {
 //          let computedAry = data.body
-            let computedAry = response.data
-            if (computedAry.length % 4 !== 0) {
-              if (computedAry.length > 4) {
-                let pushTimes = 4 - computedAry.length % 4
-                for (let i = 0; i < pushTimes; i++) {
-                  computedAry.push({})
-                }
+              let computedAry = response.data
+              if (computedAry.length % 4 !== 0) {
+                  if (computedAry.length > 4) {
+                      let pushTimes = 4 - computedAry.length % 4
+                      for (let i = 0; i < pushTimes; i++) {
+                          computedAry.push({})
+                      }
+                  }
               }
-            }
-            this.details = computedAry
+              this.details = computedAry
           }).catch(error =>
           console.log(error)
         )
-      },
-      dispatchAction: function (url) {
+          },
+          dispatchAction: function (url) {
 //                if (this.$route.params.id === '00'){
 //                    this.$router.push({ path: '/layoutContent/' + url })
 //                } else {
-        dispatch(url)
+              dispatch(url)
 //                }
+          }
+      },
+      mounted: function () {
+          this.getMenu()
+      },
+      watch: {
+          '$route': function () {
+              this.getMenu()
+          }
       }
-    },
-    mounted: function () {
-      this.getMenu()
-    },
-    watch: {
-      '$route': function () {
-        this.getMenu()
-      }
-    }
   }
 </script>
 <style scoped>
