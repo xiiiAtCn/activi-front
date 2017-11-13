@@ -4,9 +4,9 @@
         <Button-group class="nav-query-container">
             <div
                 v-for="(button, index) in queryData"
-                :key="button.id" 
+                :key="button.id"
                 class="nav-btn" >
-                <Tag 
+                <Tag
                     v-if="!isAdQuery(button)"
                     type="border"
                     closable
@@ -19,8 +19,8 @@
                         <span v-if="button.child">
                             :
                         </span>
-                        <span 
-                            v-for="child in button.child" 
+                        <span
+                            v-for="child in button.child"
                             :key="child.id"
                             class="nav-btn-text">
                             {{child.title}}
@@ -28,7 +28,7 @@
                     </span>
                 </Tag>
                 <Tooltip placement="top">
-                    <Tag 
+                    <Tag
                         v-if="isAdQuery(button)"
                         type="border"
                         closable
@@ -41,14 +41,14 @@
                         </span>
                     </Tag>
                     <div slot="content">
-                        <div 
+                        <div
                             v-for="row in button.child"
                             :key="row.id">
                             {{ row.title }}
                             <span v-if="row.child">
                                 :
                             </span>
-                            <span 
+                            <span
                                 v-for="child in row.child"
                                 :key="child.id">
                                 {{ child.title }}
@@ -74,9 +74,9 @@
                 <Col span="2">
                     <h3>{{ option.advancedText }}</h3>
                 </Col>
-                <Col span="20"> 
+                <Col span="20">
                     <Button-group class="btn-container" size="small">
-                        <Button 
+                        <Button
                             v-for="rowBtn in advancedFilterData"
                             :key="rowBtn.id"
                             @click="showLayer(rowBtn.id)"
