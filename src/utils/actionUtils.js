@@ -48,10 +48,6 @@ export function dispatch() {
     console.groupEnd()
 }
 
-
-function deepCopy(object) {
-    return JSON.parse(JSON.stringify(object))
-}
 /***
  * 客户端事件 (遇到了再说)
  */
