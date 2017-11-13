@@ -34,14 +34,20 @@
                                         "ui_id": "?G3^Ik",
                                         "ui_content": [
                                             {
-                                                "ui_id": "eNU0^8",
-                                                "ui_content": null,
+                                                "ui_id": "T?Ik]F",
                                                 "ui_define": {
-                                                    "typeString": "String",
-                                                    "name": null,
                                                     "label": "名称",
                                                     "hidden": false,
-                                                    "labelWidth": 120
+                                                    "labelWidth": 120,
+                                                    "uiObject": {
+                                                        "ui_id": "col_2",
+                                                        "ui_define": {
+                                                            "name": "FName",
+                                                            "title": "名称",
+                                                            "fieldId": "vendor_header_2"
+                                                        },
+                                                        "ui_type": "mInput"
+                                                    }
                                                 },
                                                 "ui_type": "m-labelInput"
                                             }
@@ -56,14 +62,20 @@
                                         "ui_id": "[qmG^4",
                                         "ui_content": [
                                             {
-                                                "ui_id": "Hb7rp@",
-                                                "ui_content": null,
+                                                "ui_id": "T?Ik]F",
                                                 "ui_define": {
-                                                    "typeString": "String",
-                                                    "name": null,
                                                     "label": "编码",
                                                     "hidden": false,
-                                                    "labelWidth": 120
+                                                    "labelWidth": 120,
+                                                    "uiObject": {
+                                                        "ui_id": "col_2",
+                                                        "ui_define": {
+                                                            "name": "FName",
+                                                            "title": "编码",
+                                                            "fieldId": "vendor_header_2"
+                                                        },
+                                                        "ui_type": "mInput"
+                                                    }
                                                 },
                                                 "ui_type": "m-labelInput"
                                             }
