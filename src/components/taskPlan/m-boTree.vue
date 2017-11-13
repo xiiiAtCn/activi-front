@@ -24,7 +24,9 @@
                     }
                 })
             },
-            selectedCurrentNode (currentNode) {},
+            selectedCurrentNode (currentNode) {
+            	console.log('当前节点：', currentNode[0])
+            },
             getTreeData () {
                 this.getData('treeData', (data, err) => {
                     if (data) {
@@ -43,7 +45,10 @@
                     }
                 }
                 return treeData
-            }
+            },
+//            watchValuesChanged () {
+//                this.getTreeData()
+//            }
         },
         mounted () {
             console.info('mBoTree work')
