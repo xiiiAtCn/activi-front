@@ -4,7 +4,7 @@
             <Input :element-id="focusId"
                 v-model="objectModel"
                 :placeholder="placeholder"
-                :readonly="readonly" 
+                :readonly="readonly"
                 :icon="icon"
                 @on-blur="inputCheck"
             >

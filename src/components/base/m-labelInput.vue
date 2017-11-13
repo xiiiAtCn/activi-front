@@ -20,16 +20,16 @@ export default {
     },
     computed: {
         inputDefine: function () {
-            let filtedDefine = {}
-            _.forIn(this.define, function (value, key) {
-                if (key !== 'label') {
-                    filtedDefine[key] = value
-                }
-            })
+            let filtedDefine = {
+                label: this.label,
+                hidden: this.hidden,
+                labelWidth: this.labelWidth,
+                name: this.name
+            }
             return filtedDefine
         },
         name() {
-            return _.get(this.define, 'name', '')
+            return _.get(this.define.uiObject.ui_define, 'name', '')
         },
         label() {
             return _.get(this.define, 'label', false)
@@ -37,22 +37,11 @@ export default {
         hidden() {
             return _.get(this.define, 'hidden', false)
         },
-        typeString() {
-            return _.get(this.define, 'typeString', 'string')
+        itemType() {
+            return _.get(this.define.uiObject, 'ui_type', 'mInput')
         },
         labelWidth() {
             return _.get(this.define, 'labelWidth', 0)
-        },
-        itemType: function () {
-            if (this.typeString === 'string') return 'mInput'
-            if (this.typeString === 'date') return 'mDate'
-            if (this.typeString === 'time') return 'mTime'
-            if (this.typeString === 'boolean') return 'mBoolean'
-            if (this.typeString === 'number') return 'mNumber'
-            if (this.typeString === 'tracker') return 'mTracker'
-            if (this.typeString === 'attribute') return 'mAttribute'
-            if (this.typeString === 'bo') return 'mBo'
-            return 'mInput'
         },
         value: {
             get () {
