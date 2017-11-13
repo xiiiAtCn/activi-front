@@ -133,9 +133,6 @@ const mTable = resolve => {
     require(['./m-table.vue'], resolve)
 }
 
-const mTable2 = resolve => {
-    require(['./m-table2.vue'], resolve)
-}
 
 const mTableF = resolve => {
     require(['./m-table-f.vue'], resolve)
@@ -186,7 +183,6 @@ Vue.component('mPriceTable', mPriceTable)
 Vue.component('mSection', mSection)
 Vue.component('mTab', mTab)
 Vue.component('mTable', mTable)
-Vue.component('mTable2', mTable2)
 Vue.component('mTableF', mTableF)
 Vue.component('mTree', mTree)
 Vue.component('mLayer', mLayer)

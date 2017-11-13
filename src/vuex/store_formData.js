@@ -100,7 +100,6 @@ export default {
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
             let keys = Object.keys(state)
             let { form } = payload
-            debugger
             keys.forEach(element => {
                 if(element.startsWith(form)) {
                     delete state[element]
