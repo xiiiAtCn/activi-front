@@ -1,3 +1,4 @@
+
 <template>
     <div class="layout">
         <Col span="4">
@@ -10,9 +11,11 @@
             <div class="rightContent">
                 <Row>
                     <!--section部分-->
-                    <!--<mSection></mSection>-->
+                    <mSection :define="sectionDefine"></mSection>
+                </Row>
+                <Row>
                     <!--table一览部分-->
-                    <tableF-Shim></tableF-Shim>
+                    <!--<tableF-Shim></tableF-Shim>-->
                 </Row>
             </div>
         </Col>
@@ -22,12 +25,15 @@
 <script>
     const urlList = {
         treeUrl: '/api/tree/node-list',
+        sectionDefineUrl: '',
+        sectionContentUrl: '',
         tableDefineUrl: '',
         tableDataUrl: ''
     }
 
     const ids = {
         treeId: 'treeId',
+        sectionId: 'sectionId',
         tableId: 'tableId'
     }
 
@@ -58,46 +64,27 @@
                     id: ids.treeId
                 },
 
-                tableDefine: {
+                sectionDefine: {
                     isRelated: true,
                     relation: [ids.treeId],
                     dataLink: [
                         {
-                            attr: 'tableDefine',
+                            attr: 'sectionDefine',
                             link: {
                                 method: 'GET',
-                                url: urlList.tableDefineUrl,
+                                url: urlList.sectionDefineUrl,
                                 pathParams: {},
                                 queryParams: {
                                     id: {
-                                        value: ids.tableId,
+                                        value: ids.treeId,
                                         defaultValue: ''
                                     }
                                 },
                                 body: {}
                             }
-                        },
-                        {
-                            attr: 'tableData',
-                            link: {
-                                method: 'POST',
-                                url: urlList.tableDataUrl,
-                                pathParams: {},
-                                queryParams: {},
-                                body: {
-                                    id: {
-                                        value: ids.tableId,
-                                        defaultValue: ''
-                                    },
-                                    condition: {
-                                        value: ids.tableId,
-                                        defaultValue: {}
-                                    }
-                                }
-                            }
                         }
                     ],
-                    id: ids.tableId
+                    id: ids.sectionId,
                 }
 
             }
