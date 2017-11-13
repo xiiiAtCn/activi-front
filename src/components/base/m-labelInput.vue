@@ -20,13 +20,14 @@ export default {
     },
     computed: {
         inputDefine: function () {
-            let filtedDefine = {}
-            _.forIn(this.define, function (value, key) {
-                if (key !== 'label') {
-                    filtedDefine[key] = value
-                }
-            })
-            return filtedDefine
+//            let filtedDefine = {}
+//            _.forIn(this.define, function (value, key) {
+//                if (key !== 'label') {
+//                    filtedDefine[key] = value
+//                }
+//            })
+//            return filtedDefine
+            return _.get(this.define, 'ui_object', {})
         },
         name() {
             return _.get(this.define, 'name', '')
