@@ -26,6 +26,8 @@ export const BUTTON_CANCEL_LOADING = 'button_cancel_loading'
 // 启动表单全部校验
 export const FORM_DATA_VALIDATE = 'form_data_validate'
 
+// 累计校验和
+export const INCREMENT_CHECK_COUNT = 'increment_check_count'
 //关闭表单校验逻辑
 export const CLOSE_DATA_VALIDATE = 'close_data_validate'
 
@@ -55,5 +57,6 @@ export default {
     SET_COMPONENT_DATA: SET_COMPONENT_DATA,
     CLEAR_COMPONENT_DATA: CLEAR_COMPONENT_DATA,
     DESTROY_FORM_DATA: DESTROY_FORM_DATA,
-    CLOSE_DATA_VALIDATE: CLOSE_DATA_VALIDATE
+    CLOSE_DATA_VALIDATE: CLOSE_DATA_VALIDATE,
+    INCREMENT_CHECK_COUNT: INCREMENT_CHECK_COUNT
 }

@@ -4,9 +4,15 @@ const mixin = {
     props: {
         define: {
             type: Object,
-            default: {}
+            default() {
+                return {}
+            }
         },
         focusId: {
+            type: [String, Number],
+            default: ''
+        },
+        formTmp: {
             type: [String, Number],
             default: ''
         }
@@ -22,7 +28,7 @@ const mixin = {
             return _.get(this.define, 'visible', true)
         },
         name () {
-            return _.get(this.define, 'name', Math.random())
+            return _.get(this.define, 'name') || _.get(this.define, ['ui_define', 'name'])
         },
         title () {
             return _.get(this.define, 'title', '')
@@ -38,7 +44,7 @@ const mixin = {
             return _.get(this.define, 'dataType', 'String')
         },
         form () {
-            return _.get(this.define, 'form', 'form')
+            return this.formTmp || _.get(this.define, 'form', 'form')
         },
         reset () {
             return _.get(this.$store.state.formData[this.form], 'reset', false)
