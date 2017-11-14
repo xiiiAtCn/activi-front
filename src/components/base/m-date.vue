@@ -49,7 +49,6 @@
                 }
             },
             handleChange (value) {
-                debugger
                 console.log('date changed')
                 this.objectModel = {value}
                 if (!this.reset) { this.valid() }

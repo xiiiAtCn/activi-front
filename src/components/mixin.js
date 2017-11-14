@@ -30,18 +30,22 @@ const mixin = {
          * @param {*} callback 回调
          */
         getData (type, callback) {
-            let dataLink = deepCopy(this.dataLink)
-            if (Object.keys(dataLink).length > 0) {
-                let obj = _.filter(dataLink, (item) => {
-                    return item.attr === type
-                })[0]
-                // 设置组件请求参数
-                obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
-                obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
-                obj.link.body = this.getRealParamData(obj.link.body)
-                getData(obj.link, (data, err) => {
-                    callback(data, err)
-                })
+            // 此时define还未传入 
+            if (Object.keys(this.define).length > 0) {
+                let dataLink = deepCopy(this.dataLink)
+                // 没有link对象
+                if (Object.keys(dataLink).length > 0) {
+                    let obj = _.filter(dataLink, (item) => {
+                        return item.attr === type
+                    })[0]
+                    // 设置组件请求参数
+                    obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
+                    obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
+                    obj.link.body = this.getRealParamData(obj.link.body)
+                    getData(obj.link, (data, err) => {
+                        callback(data, err)
+                    })
+                }
             }
         },
         /**
@@ -53,19 +57,6 @@ const mixin = {
          * }
          * id: [*] || {*} || '*'
          */
-        // getRealParamData (param) {
-        //     let data = {}
-        //     if (param) {
-        //         let componentData = this.$store.state.componentPageData
-        //         for (let key of Object.keys(param)) {
-        //             data[key] = componentData[param[key].value] || param[key].defaultValue
-        //             if (data[key] === null) {
-        //                 delete data[key]         
-        //             }
-        //         }
-        //     }
-        //     return data
-        // },
         getRealParamData (param) {
             let data = {}
             if (param) {
