@@ -5,7 +5,7 @@
  * Author: ZhaoPeng
  * -----
  * 上次修改时间: 2017-11-06
- * Modified By: 
+ * Modified By: ZhaoPeng
  * -----
  * 哈哈哈哈隔
  */
@@ -31,16 +31,18 @@ const mixin = {
          */
         getData (type, callback) {
             let dataLink = deepCopy(this.dataLink)
-            let obj = _.filter(dataLink, (item) => {
-                return item.attr === type
-            })[0]
-            // 设置组件请求参数
-            obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
-            obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
-            obj.link.body = this.getRealParamData(obj.link.body)
-            getData(obj.link, (data, err) => {
-                callback(data, err)
-            })
+            if (Object.keys(dataLink).length > 0) {
+                let obj = _.filter(dataLink, (item) => {
+                    return item.attr === type
+                })[0]
+                // 设置组件请求参数
+                obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
+                obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
+                obj.link.body = this.getRealParamData(obj.link.body)
+                getData(obj.link, (data, err) => {
+                    callback(data, err)
+                })
+            }
         },
         /**
          * 将id替换为真实数据
@@ -125,7 +127,7 @@ const mixin = {
             }
         }
     },
-    beforeDestroy () {
+    destroyed () {
         this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {id: this.id})
     }
 }
