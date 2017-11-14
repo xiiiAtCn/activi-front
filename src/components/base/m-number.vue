@@ -11,8 +11,8 @@
             </Input>
         </Row>
         <Row>
-                <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
-                <div v-else class="occupation gateway-item-error">隐藏</div>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
 </template>
@@ -97,7 +97,7 @@
                 this.$nextTick(() => {
                     e.target.value = value
                 })
-                this.objectModel = {value}
+                this.objectModel = {value: String(value)}
                 this.valid()
             }
         }
