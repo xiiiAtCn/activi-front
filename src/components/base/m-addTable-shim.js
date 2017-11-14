@@ -17,6 +17,7 @@ Vue.component('mDetailTable', {
             }
         })
     },
+    name: 'm-detail-table',
     props: {
         define: {
             type: Object,
@@ -34,10 +35,14 @@ Vue.component('mDetailTable', {
     },
     computed: {
         dataSource() {
-            let source = _.get(this.$store.state.formData, ['form', this.name])
+            let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
+            debugger
             if(source === undefined)
-                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: []})
-            return _.get(this.$store.state.formData, ['form', this.name])
+                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
+                    value: [],
+                    type: this.$options._componentTag
+                }})
+            return _.get(this.$store.state.formData, ['form', this.name, 'value'])
         },
         visible() {
             return _.get(this.$store.state.formData, [this.uid, 'visible'], false)
