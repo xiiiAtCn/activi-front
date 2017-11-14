@@ -5,7 +5,7 @@
             <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
-        <div style="padding: 0 20px;clear: both;">
+        <div style="padding: 0 20px;clear: both; margin-bottom: 20px;">
             <Table :columns="columns" :data="dataSource" size="small">
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>

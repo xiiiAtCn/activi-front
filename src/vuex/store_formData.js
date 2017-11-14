@@ -189,7 +189,7 @@ export default {
                                 } else if(action.type === 'edit') {
                                     array.splice(action.index, 1, formCopy)
                                 }
-                                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'mDetailTable' }})
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
                                 commit(Mutations.CLOSE_TABLE_LAYER, {form})
                                 commit(Mutations.CLEAR_FORM_DATA, {form})
                             }
