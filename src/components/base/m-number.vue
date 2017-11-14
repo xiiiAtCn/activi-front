@@ -49,7 +49,6 @@
         },
         methods: {
             valid () {
-                debugger
                 if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel
@@ -61,7 +60,6 @@
                 }
             },
             inputNumber (e, flag) {
-                debugger
                 let value = e.target.value
                 if (value.startsWith('-') && value.length === 1) {
                     if (flag) {

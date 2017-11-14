@@ -83,7 +83,6 @@ Vue.component('mDetailTable', {
             return url
         },
         columns() {
-            debugger
             let cols = this.define['columns'] || []
             let columns = this.handleColumns(cols)
             return columns
