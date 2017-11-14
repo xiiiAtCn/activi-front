@@ -1,9 +1,8 @@
 <template>
-    <input type="hidden" v-if="hidden" :id="name" :name="name" v-model="value"/>
-    <div v-else class="ivu-form-item m-flex" style="margin-bottom: 0px;">
+    <div class="ivu-form-item m-flex" style="margin-bottom: 0px;">
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
         <div class="ivu-form-item-content m-input">
-            <component :is="itemType" :define="inputDefine" :uid="uid" :focusId="uid"></component>
+            <component :formTmp="formTmp" :is="itemType" :define="ui_define" :uid="uid" :focusId="uid"></component>
         </div>
     </div>
 </template>
@@ -11,46 +10,32 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'content', 'uid'],
-
-    data() {
-        return {
-
-        }
-    },
+    props: ['define', 'content', 'uid', 'formTmp'],
     computed: {
-        inputDefine: function () {
-            let filtedDefine = {
-                label: this.label,
-                hidden: this.hidden,
-                labelWidth: this.labelWidth,
-                name: this.name
-            }
-            return filtedDefine
-        },
         name() {
             return _.get(this.define.uiObject.ui_define, 'name', '')
         },
         label() {
-            return _.get(this.define, 'label', false)
+            return _.get(this.define, ['label']) || _.get(this.define, ['ui_define', 'label'], '未知')
         },
         hidden() {
             return _.get(this.define, 'hidden', false)
+        },
+        ui_define() {
+            return _.get(this.define, ['uiObject', 'ui_define'])
         },
         itemType() {
             return _.get(this.define.uiObject, 'ui_type', 'mInput')
         },
         labelWidth() {
-            return _.get(this.define, 'labelWidth', 0)
-        },
-        value: {
-            get () {
-                return _.get(this.$store.state.pageData.data, this.name, '')
-            },
-            set (value) {
-                this.$store.commit('updateItem', {name: this.name, value: value})
-            }
+            return _.get(this.define, 'labelWidth', 120)
         }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            debugger
+            console.log('this define in m-labelInput is ', this.define)
+        })
     }
 }
 </script>

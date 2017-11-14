@@ -7,10 +7,8 @@ import iView from 'iview'
 import _ from 'lodash'
 let request = new Request()
 
-let checkCount = 0
 export default {
     state: {
-        checkCount: 12,
     },
     mutations: {
 
@@ -26,6 +24,13 @@ export default {
             }
         },
 
+        [Mutations.INCREMENT_CHECK_COUNT](state, payload) {
+            let {form} = payload
+            if(state[form]['checkedCount'] === undefined) 
+                state[form]['checkedCount'] = 1
+            else 
+                state[form]['checkedCount']++ 
+        },
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
             state[form + 'checkResult'] = {}
@@ -39,6 +44,7 @@ export default {
                 }
             }
             form['reset'] = true
+            form['checkedCount'] = 0
         },
 
         [Mutations.SET_TABLE_DATA] (state, data) {
@@ -80,6 +86,7 @@ export default {
             state[form] = {
                 ...state[form],
                 validate: true,
+                checkedCount: 0,
                 [form + 'requestUrl']:requestUrl
             }
         },
@@ -118,10 +125,8 @@ export default {
             })
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
-            let {form, count} = payload
-            if (state.checkCount === count) {
-                //外部计数器
-                checkCount = 0
+            let {form} = payload
+            if (state[form]['checkCount'] === state[form]['checkedCount']) {
                 let checkResult = state[form + 'checkResult']
                 let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
@@ -160,15 +165,15 @@ export default {
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },
-        [Actions.ELEMENT_VALIDATE_RESULT] ({state, dispatch}, payload) {
+        [Actions.ELEMENT_VALIDATE_RESULT] ({state, commit, dispatch}, payload) {
             let {form, ...rest} = payload
             state[form + 'checkResult'] = {
                 ...state[form + 'checkResult'],
                 ...rest
             }
             if (state[form]['validate'] === true) {
-                checkCount++
-                dispatch(Actions.COUNT_CHECK_RESULT, {form, count: checkCount})
+                commit(Mutations.INCREMENT_CHECK_COUNT, {form})
+                dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
         },
         [Actions.FETCH_FORM_DATA]({commit, state}, payload) {
