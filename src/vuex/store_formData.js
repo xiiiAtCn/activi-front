@@ -186,8 +186,10 @@ export default {
                             }
                         })
                         if(action.type === 'add') {
+                            formCopy['flag'] = 'add'
                             array.push(formCopy)
                         } else if(action.type === 'edit') {
+                            formCopy['flag'] = 'edit'
                             array.splice(action.index, 1, formCopy)
                         }
                         commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
