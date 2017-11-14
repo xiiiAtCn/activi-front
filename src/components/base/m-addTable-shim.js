@@ -6,14 +6,14 @@ Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
             props: {
-                form: this.form,
                 alias: this.alias,
                 operations: this.operations,
                 columns: this.columns,
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                formTmp: this.uid
+                formTmp: this.uid,
+                name: this.name
             }
         })
     },
@@ -34,7 +34,10 @@ Vue.component('mDetailTable', {
     },
     computed: {
         dataSource() {
-            return _.get(this.$store.state.formData, 'table', [])
+            let source = _.get(this.$store.state.formData, ['form', this.name])
+            if(source === undefined)
+                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: []})
+            return _.get(this.$store.state.formData, ['form', this.name])
         },
         visible() {
             return _.get(this.$store.state.formData, [this.uid, 'visible'], false)
@@ -45,6 +48,9 @@ Vue.component('mDetailTable', {
         alias() {
             let alias = this.define['alias'] || ''
             return alias
+        },
+        name() {
+            return this.define['name']
         },
         operations() {
             let operations = this.define['operations'] || [{
@@ -61,7 +67,6 @@ Vue.component('mDetailTable', {
             let cols = this.define['columns'] || []
             let columns = this.handleColumns(cols)
             let tmp = _.get(this.$store.state.formData, this.uid)
-            debugger
             if(tmp === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
                     {
@@ -95,9 +100,13 @@ Vue.component('mDetailTable', {
                 cols.forEach(col => {
                     let column = {
                         title: col['uiObject']['ui_define']['label'],
-                        key: col['uiObject']['ui_id'],
+                        key: col['uiObject']['ui_define']['uiObject']['ui_id'],
                         ui_id: col['uiObject']['ui_id'],
                         ui_define: col['uiObject'],
+                        render: (h, column) => {
+                            console.log(column['row'][col['uiObject']['ui_id']])
+                            return column['row'][col['uiObject']['ui_define']['uiObject']['ui_id']]['value']
+                        }
                     }
                     columns.push(column)
                 })

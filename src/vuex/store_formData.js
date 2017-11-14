@@ -55,7 +55,7 @@ export default {
             state[form] = {
                 ...state[form],
                 visible: true,
-                reset: false
+                reset: false,
             }
         },
         [Mutations.CLOSE_TABLE_LAYER] (state, payload) {
@@ -82,12 +82,26 @@ export default {
             }
         },
         [Mutations.FORM_DATA_VALIDATE] (state, payload) {
-            let { form, requestUrl } = payload
+            let { form} = payload
             state[form] = {
                 ...state[form],
                 validate: true,
                 checkedCount: 0,
-                [form + 'requestUrl']:requestUrl
+            }
+
+            if(payload.requestUrl !== undefined) {
+                state[form] = {
+                    ...state[form],
+                    [form + 'requestUrl']: payload.requestUrl,
+                    checkCount: 3
+                }
+            }
+
+            if(payload.action !== undefined) {
+                state[form] = {
+                    ...state[form],
+                    action: payload.action
+                }
             }
         },
         [Mutations.CLOSE_DATA_VALIDATE] (state, payload) {
@@ -126,6 +140,7 @@ export default {
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
             let {form} = payload
+            debugger
             if (state[form]['checkCount'] === state[form]['checkedCount']) {
                 let checkResult = state[form + 'checkResult']
                 let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
@@ -143,14 +158,41 @@ export default {
                                     delete copies[element]
                                 }
                             })
-                            request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
-                                if(err) {
-                                    console.log(err)
-                                    iView.Message.error('服务器出错了!')
-                                    return
+                            debugger
+                            if(state[form][ form + 'requestUrl'] !== undefined) {
+                                request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
+                                    if(err) {
+                                        console.log(err)
+                                        iView.Message.error('服务器出错了!')
+                                        return
+                                    }
+                                    dispatch(data)
+                                })
+                            }
+                            if(state[form]['action'] !== undefined) {
+                                let action = state[form]['action']
+                                delete state[form]['action']
+                                let array = state['form'][action['value']]
+                                if(array === undefined) {
+                                    array = (state['form'][action['value']] = [])
                                 }
-                                dispatch(data)
-                            })
+                                array = array.slice()
+                                let formCopy = _.cloneDeep(state[form])
+                                let keyList = Object.keys(formCopy)
+                                keyList.forEach(element => {
+                                    if(typeof formCopy[element] !== 'object') {
+                                        delete formCopy[element]
+                                    }
+                                })
+                                if(action.type === 'add') {
+                                    array.push(formCopy)
+                                } else if(action.type === 'edit') {
+                                    array.splice(action.index, 1, formCopy)
+                                }
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: array})
+                                commit(Mutations.CLOSE_TABLE_LAYER, {form})
+                                commit(Mutations.CLEAR_FORM_DATA, {form})
+                            }
                         }
                     })
                 } else {
@@ -161,7 +203,7 @@ export default {
                 }
             }
         },
-
+        
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },

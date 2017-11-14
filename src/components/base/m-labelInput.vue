@@ -22,7 +22,10 @@ export default {
             return _.get(this.define, 'hidden', false)
         },
         ui_define() {
-            return _.get(this.define, ['uiObject', 'ui_define'])
+            
+            let define = _.get(this.define, ['uiObject', 'ui_define'])
+            define['ui_id'] = _.get(this.define, ['uiObject', 'ui_id'])
+            return define
         },
         itemType() {
             return _.get(this.define.uiObject, 'ui_type', 'mInput')
@@ -30,12 +33,6 @@ export default {
         labelWidth() {
             return _.get(this.define, 'labelWidth', 120)
         }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            debugger
-            console.log('this define in m-labelInput is ', this.define)
-        })
     }
 }
 </script>

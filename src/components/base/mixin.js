@@ -28,7 +28,7 @@ const mixin = {
             return _.get(this.define, 'visible', true)
         },
         name () {
-            return _.get(this.define, 'name') || _.get(this.define, ['ui_define', 'name'])
+            return _.get(this.define, 'ui_id')
         },
         title () {
             return _.get(this.define, 'title', '')

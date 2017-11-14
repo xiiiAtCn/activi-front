@@ -33,6 +33,10 @@
                     return []
                 }
             },
+            name: {
+                type: String,
+                required: true
+            },
             columns: {
                 type: Array,
                 required: true
@@ -67,17 +71,16 @@
                 this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
             },
             submit2Table() { 
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, attribute: this.attribute})
+                let action = {}
+                action.type = this.action
+                action.value = this.name
+                action.index = 0
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, action: action})
             },
             cancel() {
                 this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
                 this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
             }
-        },
-        mounted() {
-            this.$nextTick(() => {
-                console.log('column is ', this.columns)
-            })
         }
     }
 
