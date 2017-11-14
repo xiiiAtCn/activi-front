@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import './m-addTable-shim'
 
+const mBarrier = resolve => 
+    require(['./m-barrier.vue'], resolve)
 const mDate = resolve =>
     require(['./m-date'], resolve)
 
@@ -42,6 +44,7 @@ const mSteps = resolve =>
 const mTab = resolve =>
     require(['./m-tab.vue'], resolve)
 
+Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDetailChoose', mDetailChoose)
 Vue.component('mTable2', mTable2)

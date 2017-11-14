@@ -1,20 +1,19 @@
 <template>
     <div>
-        <h3 class="title">{{alias}}</h3>
+        <mBarrier :height="10"></mBarrier>
         <div  class="operation" >
             <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
         <div style="padding: 0 20px;clear: both;">
-            <Table :columns="columns" :data="dataSource" size="small"></Table>
+            <Table :columns="columns" :data="dataSource" size="small">
+                <h3 slot="header" class="title">{{alias}}</h3>
+            </Table>
         </div>
         <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
             <Form>
-                <Row v-for="column in columns" :key="column.key">
-                    <component
-                        :is="column.type"
-                        :define="column.define">
-                    </component>
+                <Row v-for="column in columns" :key="column.ui_id">
+                    <component :formTmp="formTmp" :is="column['ui_define']['ui_type']" :define="column['ui_define']['ui_define']"></component>
                 </Row>
             </Form>
         </mLayer>
@@ -52,8 +51,8 @@
                 type: Boolean,
                 default: true
             },
-            form: {
-                type: String,
+            formTmp: {
+                type: [String, Number],
                 required: true
             }
         },
@@ -65,15 +64,20 @@
         methods: {
             openLayer(action) {
                 this.action = action
-                this.$store.commit(OPEN_TABLE_LAYER, {form: this.form})
+                this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
             },
             submit2Table() { 
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.form})
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, attribute: this.attribute})
             },
             cancel() {
-                this.$store.commit(CLEAR_FORM_DATA, {form: this.form})
-                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.form})
+                this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
+                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                console.log('column is ', this.columns)
+            })
         }
     }
 

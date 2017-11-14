@@ -70,12 +70,7 @@ export default {
      * todo 如果传入初始化数组，按数组显示，否则选择第一项
      */
     mounted () {
-        this.getSelectData(() => {
-            let selectData = this.selectData[0]
-            let option = selectData.child[0]
-            this.$set(this.tempSelect, 0, option.value)
-            this.selectChanged(selectData, 0, option.value)
-        })
+        this.getSelectData(this.firstInCallback)
     },
     methods: {
         // 设置对应项的selected并emit事件
@@ -118,6 +113,18 @@ export default {
         },
         watchValuesChanged () {
             this.getSelectData()
+        },
+        firstInCallback () {
+            console.log('navSelect firstInCallback finished')
+            let selectData = this.selectData[0]
+            let option = selectData.child[0]
+            this.$set(this.tempSelect, 0, option.value)
+            this.selectChanged(selectData, 0, option.value)
+        }
+    },
+    watch: {
+        define () {
+            this.getSelectData(this.firstInCallback)
         }
     }
 }
