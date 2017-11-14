@@ -164,6 +164,7 @@ export default {
                             if(err) {
                                 console.log(err)
                                 iView.Message.error('服务器出错了!')
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
                                 return
                             }
                             dispatch(data)
