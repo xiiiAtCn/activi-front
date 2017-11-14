@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import './m-addTable-shim'
 
 const mDate = resolve =>
     require(['./m-date'], resolve)
@@ -6,7 +7,7 @@ const mDate = resolve =>
 const mDetailChoose = resolve =>
     require(['./m-detail-choose.vue'], resolve)
 
-const mDetailTable = resolve =>
+const mTable2 = resolve =>
     require(['./m-detailTable.vue'], resolve)
 const mInput = resolve =>
     require(['./m-input.vue'], resolve)
@@ -43,13 +44,13 @@ const mTab = resolve =>
 
 Vue.component('mDate', mDate)
 Vue.component('mDetailChoose', mDetailChoose)
-Vue.component('mDetailTable', mDetailTable)
+Vue.component('mTable2', mTable2)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)
 Vue.component('mLabelInput', mLabelInput)
 Vue.component('mLoading', mLoading)
 Vue.component('mMultiCheck', mMultiCheck)
-Vue.component('mNumber', mNumber)
+Vue.component('mInteger', mNumber)
 Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
 Vue.component('mSingleCheck', mSingleCheck)
