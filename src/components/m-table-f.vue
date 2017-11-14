@@ -153,13 +153,38 @@
                 this.showModalBtn && this.showButton(this.showModalBtn)
             },
             // columnsData存入设置
+            getLength(str){
+                let len = 0;
+                if(!str){
+                    return 0
+                }
+                for (let i = 0; i < str.length; i++) {
+                    let a = str.charAt(i);
+                    if (a.match(/[^\x00-\xff]/ig) != null) {
+                        len += 2;
+                    }
+                    else {
+                        len += 1;
+                    }
+                }
+                return len*7 + 40;
+            },
             getColumnsDataWay (c) {
                 c.forEach((val, i) => {
                     this.columnsData[i] = {
                         title: val.text,
                         key: val.field,
-                        width: val.text.length * 14 + 40,
+                        align: 'center',
+                        width: this.getLength(val.text),
                         render: (h, params) => {
+                            if(this.columnsData){
+                                this.columnsData.forEach((v,j)=>{
+                                    if(v.key === val.field && this.getLength(params.row[val.field]) > this.columnsData[j].width){
+                                        if(!this.columnsData[j]){return}
+                                        this.columnsData[j].width = this.getLength(params.row[val.field])
+                                    }
+                                })
+                            }
                             if (val.icon) {
                                 return h('div', [
                                     h('Icon', {
@@ -170,10 +195,7 @@
                                     h('strong', params.row[val.field])
                                 ])
                             } else {
-                                return h(
-                                    'div', [
-                                        h('span', params.row[val.field])
-                                    ]
+                                return h('div',[h('span', params.row[val.field])]
                                 )
                             }
                         }
@@ -201,27 +223,23 @@
                             this.columnsData.splice(i,1)
                         }
                     }
-                    this.dataListChange =  this.checkAllGroup
+                    this.dataListChange =  _.cloneDeep(this.checkAllGroup)
                 }else{
-                    this.checkAllGroup = this.testList
-                    this.dataListChange = this.testList
+                    this.checkAllGroup = _.cloneDeep(this.testList)
+                    this.dataListChange = _.cloneDeep(this.testList)
                 }
             },
             //配置操作的按钮
             showButton(smb){
-                let existence = false
-                if(this.columnsData.length === 0){
-                    return
-                }else{
-                    let i = 0
-                    while (true){
-                        if(this.columnsData[i].key === 'action'){
-                            existence =true
-                            break
-                        }
-                        i++
-                        if(this.columnsData.length === i){break}
+                let i = 0
+                let existence =false
+                while (this.columnsData.length !== 0){
+                    if(this.columnsData[i].key === 'action'){
+                        existence = true
+                        break
                     }
+                    i++
+                    if(this.columnsData.length === i){break}
                 }
                 if(existence){
                     return
@@ -229,7 +247,7 @@
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: smb.length * 55,
+                    width: smb.length * 60,
                     align: 'center',
                     fixed: 'right',
                     render: (h, params) => {
@@ -286,13 +304,14 @@
                 this.indeterminate = false
 
                 if (this.checkAll) {
-                    this.checkAllGroup = this.testList
-                    this.columnsData = this.columnsDataCopy
+                    this.checkAllGroup = _.cloneDeep(this.testList)
+                    this.columnsData = _.cloneDeep(this.columnsDataCopy)
                 } else {
                     this.checkAllGroup = []
                     this.columnsData = []
+                    this.showButton(this.showModalBtn)
                 }
-                this.dataListChange = this.checkAllGroup
+                this.dataListChange = _.cloneDeep(this.checkAllGroup)
             },
             checkAllGroupChange (data) {
                 if (data.length === this.dataList.length) {
@@ -306,11 +325,6 @@
                     this.checkAll = false
                 }
 
-                if(data.length === 0){
-                    this.columnsData = []
-                    this.dataListChange = []
-                    return
-                }
                 let obj=this.judgeArr(this.dataListChange,data)
                 this.handleColumnsData(obj);
                 this.dataListChange = data
@@ -402,5 +416,10 @@
     }
     .columns-select .api{
         text-align: initial;
+    }
+</style>
+<style>
+    .ivu-table td{
+        box-sizing: content-box !important;
     }
 </style>
