@@ -17,18 +17,6 @@
 import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 
-const urlList = {
-    navDataUrl: '/api/filter/getSelect/{topMap}/{trackerClsId}',
-    filterDataUrl: '/api/filter/getFilter',
-    tableDataUrl: '/api/bo/list',
-    tableDefineUrl: '/api/bo/simpleListDefine'
-}
-
-const reqCountFlag = {
-    add: 'add',
-    del: 'del'
-}
-
 const idObj = {
     navSelectId: 'select',
     filterId: 'filterId',
@@ -43,15 +31,8 @@ const navSelectDefine = {
             attr: 'selectData',
             link: {
                 method: 'GET',
-                url: urlList.navDataUrl,
-                pathParams: {
-                    topMap: {
-                        defaultValue: ''
-                    },
-                    trackerClsId: {
-                        defaultValue: ''
-                    } 
-                },
+                url: '',
+                pathParams: {},
                 queryParams: {
                     id: {
                         value: idObj.navSelectId,
@@ -64,6 +45,69 @@ const navSelectDefine = {
     ],
     id: idObj.navSelectId
 }
+const filterDefine = {
+    isRelated: true,
+    relation: [idObj.navSelectId],
+    dataLink: [
+        {
+            attr: 'bodyData',
+            link: {
+                method: 'GET',
+                url: '',
+                pathParams: {},
+                queryParams: {
+                    id: {
+                        value: idObj.navSelectId,
+                        defaultValue: ''
+                    }
+                },
+                body: {}
+            }
+        }
+    ],
+    id: idObj.filterId
+}
+const tableDefine = {
+    isRelated: true,
+    relation: [idObj.navSelectId, idObj.filterId],
+    dataLink: [
+        {
+            attr: 'tableData',
+            link: {
+                method: 'POST',
+                url: '',
+                pathParams: {},
+                queryParams: {},
+                body: {
+                    id: {
+                        value: idObj.navSelectId,
+                        defaultValue: ''
+                    },
+                    condition: {
+                        value: idObj.filterId,
+                        defaultValue: {}
+                    }
+                }
+            }
+        },
+        {
+            attr: 'tableDefine',
+            link: {
+                method: 'GET',
+                url: '',
+                pathParams: {},
+                queryParams: {
+                    id: {
+                        value: idObj.navSelectId,
+                        defaultValue: ''
+                    }
+                },
+                body: {}
+            }
+        }
+    ],
+    id: idObj.tableId
+}
 
 export default{
     props: {
@@ -74,7 +118,6 @@ export default{
     data () {
         return {
             navSelectDefine: {},
-
             filterDefine: {
                 isRelated: true,
                 relation: [idObj.navSelectId],
@@ -83,10 +126,8 @@ export default{
                         attr: 'bodyData',
                         link: {
                             method: 'GET',
-                            url: urlList.filterDataUrl,
-                            pathParams: {
-
-                            },
+                            url: '',
+                            pathParams: {},
                             queryParams: {
                                 id: {
                                     value: idObj.navSelectId,
@@ -99,7 +140,6 @@ export default{
                 ],
                 id: idObj.filterId
             },
-
             tableDefine: {
                 isRelated: true,
                 relation: [idObj.navSelectId, idObj.filterId],
@@ -108,7 +148,7 @@ export default{
                         attr: 'tableData',
                         link: {
                             method: 'POST',
-                            url: urlList.tableDataUrl,
+                            url: '',
                             pathParams: {},
                             queryParams: {},
                             body: {
@@ -127,7 +167,7 @@ export default{
                         attr: 'tableDefine',
                         link: {
                             method: 'GET',
-                            url: urlList.tableDefineUrl,
+                            url: '',
                             pathParams: {},
                             queryParams: {
                                 id: {
@@ -145,15 +185,26 @@ export default{
     },
     mounted () {
         this.navSelectDefine = navSelectDefine
-        this.$set(this.navSelectDefine.dataLink[0].link.pathParams.topMap, 'defaultValue', this.topMap)
-        this.$set(this.navSelectDefine.dataLink[0].link.pathParams.trackerClsId, 'defaultValue', this.trackerClsId)
+        this.filterDefine = filterDefine
+        this.tableDefine = tableDefine
+
+        this.$set(this.navSelectDefine.dataLink[0].link, 'url', this.navDataUrl)
+        this.$set(this.filterDefine.dataLink[0].link, 'url', this.filterDataUrl)
+        this.$set(this.tableDefine.dataLink[0].link, 'url', this.tableDataUrl)
+        this.$set(this.tableDefine.dataLink[1].link, 'url', this.tableDefineUrl)
     },
     computed: {
-        topMap () {
-            return _.get(this.define, 'topMap', '')
+        navDataUrl () {
+            return _.get(this.define, 'navDataUrl', '')
         },
-        trackerClsId () {
-            return _.get(this.define, 'trackerClsId', '')
+        filterDataUrl () {
+            return _.get(this.define, 'filterDataUrl', '')
+        },
+        tableDataUrl () {
+            return _.get(this.define, 'tableDataUrl', '')
+        },
+        tableDefineUrl () {
+            return _.get(this.define, 'tableDefineUrl', '')
         }
     }
 }
