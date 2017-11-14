@@ -89,19 +89,25 @@ const mixin = {
                 if (value === undefined) {
                     switch (this.dataType) {
                     case 'String':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
                         break
                     case 'Array':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: []}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: [], type: this.$options._componentTag }, form: this.form})
                         break
                     case 'Date':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
                         break
                     case 'Object':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
+                        break
+                    default: 
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[this.form], [this.name, 'value'], '')
+                let type =  _.get(this.$store.state.formData[this.form], [this.name, 'type'], '')
+                if (type === undefined)
+                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: tmp, type: this.$options._componentTag}, form: this.form})
                 if (tmp !== '') {
                     if (this.dataType === 'Date') {
                         console.log(`tmp is ${tmp}`)
@@ -115,7 +121,7 @@ const mixin = {
             set (value) {
                 // 数组暂不支持，需要特殊处理
                 if (typeof value === 'string' || value instanceof Date) {
-                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value}, form: this.form})
+                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value, type: this.$options._componentTag}, form: this.form})
                 } else {
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value, form: this.form})
                 }

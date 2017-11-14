@@ -172,7 +172,7 @@ export default {
                             if(state[form]['action'] !== undefined) {
                                 let action = state[form]['action']
                                 delete state[form]['action']
-                                let array = state['form'][action['value']]
+                                let array = state['form'][action['value']]['value']
                                 if(array === undefined) {
                                     array = (state['form'][action['value']] = [])
                                 }
@@ -189,7 +189,7 @@ export default {
                                 } else if(action.type === 'edit') {
                                     array.splice(action.index, 1, formCopy)
                                 }
-                                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: array})
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'mDetailTable' }})
                                 commit(Mutations.CLOSE_TABLE_LAYER, {form})
                                 commit(Mutations.CLEAR_FORM_DATA, {form})
                             }
