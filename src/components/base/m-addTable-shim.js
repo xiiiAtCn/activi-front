@@ -36,7 +36,6 @@ Vue.component('mDetailTable', {
     computed: {
         dataSource() {
             let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
-            debugger
             if(source === undefined)
                 this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
                     value: [],

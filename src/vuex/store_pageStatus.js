@@ -2,7 +2,7 @@
  * Created by sunb on 17-7-5.
  */
 import { default as fetch } from '../utils/DefineFetcher'
-
+import { CLEAR_FORM_STATUS } from './Mutation'
 // 放画面初始状态的
 export default {
     state: {
@@ -13,7 +13,7 @@ export default {
         changeStauts(state, data) {
             state.status = data
         },
-        clearStatus (state) {
+        [CLEAR_FORM_STATUS](state) {
             state.status = {}
         }
     },
