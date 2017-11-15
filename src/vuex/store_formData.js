@@ -147,56 +147,58 @@ export default {
             // commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
             // if (flag) {
             // 数据提交逻辑
-            iView.Modal.confirm({
-                title: '确认',
-                content: '确定提交',
-                onOk:() => {
-                    let copies = _.cloneDeep(state[form])
-                    let keyList = Object.keys(copies)
-                    keyList.forEach(element => {
-                        if(typeof copies[element] !== 'object') {
-                            delete copies[element]
-                        }
-                    })
-                    if(state[form][ form + 'requestUrl'] !== undefined) {
-                        request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
-                            if(err) {
-                                console.log(err)
-                                iView.Message.error('服务器出错了!')
-                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
-                                return
-                            }
-                            dispatch(data)
-                        })
-                    }
-                    if(state[form]['action'] !== undefined) {
-                        let action = state[form]['action']
-                        delete state[form]['action']
-                        let array = state['form'][action['value']]['value']
-                        if(array === undefined) {
-                            array = (state['form'][action['value']] = [])
-                        }
-                        array = array.slice()
-                        let formCopy = _.cloneDeep(state[form])
-                        let keyList = Object.keys(formCopy)
-                        keyList.forEach(element => {
-                            if(typeof formCopy[element] !== 'object') {
-                                delete formCopy[element]
-                            }
-                        })
-                        if(action.type === 'add') {
-                            formCopy['flag'] = { value: 'add' }
-                            array.push(formCopy)
-                        } else if(action.type === 'edit') {
-                            formCopy['flag'] = { value: 'edit' }
-                            array.splice(action.index, 1, formCopy)
-                        }
-                        commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
-                        commit(Mutations.CLOSE_TABLE_LAYER, {form})
-                        commit(Mutations.CLEAR_FORM_DATA, {form})
-                    }
+            if(state[form]['action'] !== undefined) {
+                let action = state[form]['action']
+                delete state[form]['action']
+                let array = state['form'][action['value']]['value']
+                if(array === undefined) {
+                    array = (state['form'][action['value']] = [])
                 }
-            })
+                array = array.slice()
+                let formCopy = _.cloneDeep(state[form])
+                let keyList = Object.keys(formCopy)
+                keyList.forEach(element => {
+                    if(typeof formCopy[element] !== 'object') {
+                        delete formCopy[element]
+                    }
+                })
+                if(action.type === 'add') {
+                    formCopy['flag'] = { value: 'add' }
+                    array.push(formCopy)
+                } else if(action.type === 'edit') {
+                    formCopy['flag'] = { value: 'edit' }
+                    array.splice(action.index, 1, formCopy)
+                }
+                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
+                commit(Mutations.CLOSE_TABLE_LAYER, {form})
+                commit(Mutations.CLEAR_FORM_DATA, {form})
+            } else {
+                iView.Modal.confirm({
+                    title: '确认',
+                    content: '确定提交',
+                    onOk:() => {
+                        let copies = _.cloneDeep(state[form])
+                        let keyList = Object.keys(copies)
+                        keyList.forEach(element => {
+                            if(typeof copies[element] !== 'object') {
+                                delete copies[element]
+                            }
+                        })
+                        if(state[form][ form + 'requestUrl'] !== undefined) {
+                            request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
+                                if(err) {
+                                    console.log(err)
+                                    iView.Message.error('服务器出错了!')
+                                    commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                    return
+                                }
+                                dispatch(data)
+                            })
+                        }
+                    }
+                })
+            }
+            
                 // } else {
                 //     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
                 //     setTimeout(() => {
