@@ -7,10 +7,8 @@ import iView from 'iview'
 import _ from 'lodash'
 let request = new Request()
 
-let checkCount = 0
 export default {
     state: {
-        checkCount: 12,
     },
     mutations: {
 
@@ -26,6 +24,13 @@ export default {
             }
         },
 
+        [Mutations.INCREMENT_CHECK_COUNT](state, payload) {
+            let {form} = payload
+            if(state[form]['checkedCount'] === undefined) 
+                state[form]['checkedCount'] = 1
+            else 
+                state[form]['checkedCount']++ 
+        },
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
             state[form + 'checkResult'] = {}
@@ -39,6 +44,7 @@ export default {
                 }
             }
             form['reset'] = true
+            form['checkedCount'] = 0
         },
 
         [Mutations.SET_TABLE_DATA] (state, data) {
@@ -49,7 +55,7 @@ export default {
             state[form] = {
                 ...state[form],
                 visible: true,
-                reset: false
+                reset: false,
             }
         },
         [Mutations.CLOSE_TABLE_LAYER] (state, payload) {
@@ -76,11 +82,26 @@ export default {
             }
         },
         [Mutations.FORM_DATA_VALIDATE] (state, payload) {
-            let { form, requestUrl } = payload
+            let { form} = payload
             state[form] = {
                 ...state[form],
                 validate: true,
-                [form + 'requestUrl']:requestUrl
+                checkedCount: 0,
+            }
+
+            if(payload.requestUrl !== undefined) {
+                state[form] = {
+                    ...state[form],
+                    [form + 'requestUrl']: payload.requestUrl,
+                    checkCount: 3
+                }
+            }
+
+            if(payload.action !== undefined) {
+                state[form] = {
+                    ...state[form],
+                    action: payload.action
+                }
             }
         },
         [Mutations.CLOSE_DATA_VALIDATE] (state, payload) {
@@ -118,57 +139,85 @@ export default {
             })
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
-            let {form, count} = payload
-            if (state.checkCount === count) {
-                //外部计数器
-                checkCount = 0
-                let checkResult = state[form + 'checkResult']
-                let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
-                commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
-                if (flag) {
-                    // 数据提交逻辑
-                    iView.Modal.confirm({
-                        title: '确认',
-                        content: '确定提交',
-                        onOk:() => {
-                            let copies = _.cloneDeep(state[form])
-                            let keyList = Object.keys(copies)
-                            keyList.forEach(element => {
-                                if(typeof copies[element] !== 'object') {
-                                    delete copies[element]
-                                }
-                            })
-                            request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
-                                if(err) {
-                                    console.log(err)
-                                    iView.Message.error('服务器出错了!')
-                                    return
-                                }
-                                dispatch(data)
-                            })
+            let {form} = payload
+            //暂时不需要校验
+            // if (state[form]['checkCount'] === state[form]['checkedCount']) {
+            // let checkResult = state[form + 'checkResult']
+            // let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
+            // commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
+            // if (flag) {
+            // 数据提交逻辑
+            iView.Modal.confirm({
+                title: '确认',
+                content: '确定提交',
+                onOk:() => {
+                    let copies = _.cloneDeep(state[form])
+                    let keyList = Object.keys(copies)
+                    keyList.forEach(element => {
+                        if(typeof copies[element] !== 'object') {
+                            delete copies[element]
                         }
                     })
-                } else {
-                    commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
-                    setTimeout(() => {
-                        commit(Mutations.BUTTON_START_LOADING, {form: form})
-                    }, 0)
+                    if(state[form][ form + 'requestUrl'] !== undefined) {
+                        request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
+                            if(err) {
+                                console.log(err)
+                                iView.Message.error('服务器出错了!')
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                return
+                            }
+                            dispatch(data)
+                        })
+                    }
+                    if(state[form]['action'] !== undefined) {
+                        let action = state[form]['action']
+                        delete state[form]['action']
+                        let array = state['form'][action['value']]['value']
+                        if(array === undefined) {
+                            array = (state['form'][action['value']] = [])
+                        }
+                        array = array.slice()
+                        let formCopy = _.cloneDeep(state[form])
+                        let keyList = Object.keys(formCopy)
+                        keyList.forEach(element => {
+                            if(typeof formCopy[element] !== 'object') {
+                                delete formCopy[element]
+                            }
+                        })
+                        if(action.type === 'add') {
+                            formCopy['flag'] = { value: 'add' }
+                            array.push(formCopy)
+                        } else if(action.type === 'edit') {
+                            formCopy['flag'] = { value: 'edit' }
+                            array.splice(action.index, 1, formCopy)
+                        }
+                        commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
+                        commit(Mutations.CLOSE_TABLE_LAYER, {form})
+                        commit(Mutations.CLEAR_FORM_DATA, {form})
+                    }
                 }
-            }
+            })
+                // } else {
+                //     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
+                //     setTimeout(() => {
+                //         commit(Mutations.BUTTON_START_LOADING, {form: form})
+                //     }, 0)
+                // }
+            // }
         },
-
+        
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },
-        [Actions.ELEMENT_VALIDATE_RESULT] ({state, dispatch}, payload) {
+        [Actions.ELEMENT_VALIDATE_RESULT] ({state, commit, dispatch}, payload) {
             let {form, ...rest} = payload
             state[form + 'checkResult'] = {
                 ...state[form + 'checkResult'],
                 ...rest
             }
             if (state[form]['validate'] === true) {
-                checkCount++
-                dispatch(Actions.COUNT_CHECK_RESULT, {form, count: checkCount})
+                commit(Mutations.INCREMENT_CHECK_COUNT, {form})
+                dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
         },
         [Actions.FETCH_FORM_DATA]({commit, state}, payload) {

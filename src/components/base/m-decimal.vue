@@ -20,13 +20,12 @@
     import mixin from './mixin'
     import _ from 'lodash'
     import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
-
     export default {
-        name: 'm-number',
+        name: 'm-decimal',
         mixins: [mixin],
         computed: {
             placeholder () {
-                return _.get(this.define, 'placeholder', '请输入一个数字')
+                return _.get(this.define, 'placeholder', '请输入一个小数')
             },
             icon () {
                 if (this.hasError) {

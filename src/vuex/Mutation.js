@@ -26,6 +26,8 @@ export const BUTTON_CANCEL_LOADING = 'button_cancel_loading'
 // 启动表单全部校验
 export const FORM_DATA_VALIDATE = 'form_data_validate'
 
+// 累计校验和
+export const INCREMENT_CHECK_COUNT = 'increment_check_count'
 //关闭表单校验逻辑
 export const CLOSE_DATA_VALIDATE = 'close_data_validate'
 
@@ -34,6 +36,9 @@ export const ADD_NEW_OBJECT = 'add_new_object'
 
 // 在form表单被从页面卸载时移除vuex中的对象
 export const DESTROY_FORM_DATA = 'destroy_form_data'
+
+//form表单卸载时移除页面状态数据
+export const CLEAR_FORM_STATUS = 'clear_form_status'
 
 // 设置组件数据payload={id: '', data: ***}
 export const SET_COMPONENT_DATA = 'SET_COMPONENT_DATA'
@@ -55,5 +60,7 @@ export default {
     SET_COMPONENT_DATA: SET_COMPONENT_DATA,
     CLEAR_COMPONENT_DATA: CLEAR_COMPONENT_DATA,
     DESTROY_FORM_DATA: DESTROY_FORM_DATA,
-    CLOSE_DATA_VALIDATE: CLOSE_DATA_VALIDATE
+    CLEAR_FORM_STATUS: CLEAR_FORM_STATUS,
+    CLOSE_DATA_VALIDATE: CLOSE_DATA_VALIDATE,
+    INCREMENT_CHECK_COUNT: INCREMENT_CHECK_COUNT
 }

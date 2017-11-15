@@ -1,19 +1,29 @@
 import _ from 'lodash'
-import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT, DESTROY_FORM_DATA } from 'store/Mutation'
+import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT, DESTROY_FORM_DATA, CLEAR_FORM_STATUS } from 'store/Mutation'
 const mixin = {
     props: {
         define: {
             type: Object,
-            default: {}
+            default() {
+                return {}
+            }
         },
         focusId: {
+            type: [String, Number],
+            default: ''
+        },
+        formTmp: {
             type: [String, Number],
             default: ''
         }
     },
     computed: {
         readonly () {
-            return _.get(this.define, 'readonly', false)
+            let editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
+            if(editable === 'editable') {
+                return false
+            }
+            return true 
         },
         required () {
             return _.get(this.define, 'required', true)
@@ -22,7 +32,7 @@ const mixin = {
             return _.get(this.define, 'visible', true)
         },
         name () {
-            return _.get(this.define, 'name', Math.random())
+            return _.get(this.define, 'ui_id')
         },
         title () {
             return _.get(this.define, 'title', '')
@@ -38,7 +48,7 @@ const mixin = {
             return _.get(this.define, 'dataType', 'String')
         },
         form () {
-            return _.get(this.define, 'form', 'form')
+            return this.formTmp || _.get(this.define, 'form', 'form')
         },
         reset () {
             return _.get(this.$store.state.formData[this.form], 'reset', false)
@@ -83,19 +93,25 @@ const mixin = {
                 if (value === undefined) {
                     switch (this.dataType) {
                     case 'String':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
                         break
                     case 'Array':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: []}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: [], type: this.$options._componentTag }, form: this.form})
                         break
                     case 'Date':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
                         break
                     case 'Object':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
+                        break
+                    default: 
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[this.form], [this.name, 'value'], '')
+                let type =  _.get(this.$store.state.formData[this.form], [this.name, 'type'])
+                if (type === undefined)
+                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: tmp, type: this.$options._componentTag}, form: this.form})
                 if (tmp !== '') {
                     if (this.dataType === 'Date') {
                         console.log(`tmp is ${tmp}`)
@@ -109,7 +125,7 @@ const mixin = {
             set (value) {
                 // 数组暂不支持，需要特殊处理
                 if (typeof value === 'string' || value instanceof Date) {
-                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value}, form: this.form})
+                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value, type: this.$options._componentTag}, form: this.form})
                 } else {
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value, form: this.form})
                 }
@@ -147,6 +163,7 @@ const mixin = {
     },
     beforeDestroy() {
         this.$store.commit(DESTROY_FORM_DATA, {form: this.form})
+        this.$store.commit(CLEAR_FORM_STATUS)
     }
 }
 

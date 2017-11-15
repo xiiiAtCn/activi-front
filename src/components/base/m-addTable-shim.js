@@ -1,75 +1,60 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import { FETCH_TABLE_DATA } from 'store/Action'
-import {ADD_NEW_OBJECT, DESTROY_FORM_DATA } from 'store/Mutation'
+import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE } from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
             props: {
-                form: this.form,
-                alias: this.alias, 
-                operations: this.operations, 
+                alias: this.alias,
+                operations: this.operations,
                 columns: this.columns,
                 dataSource: this.dataSource,
                 visible: this.visible,
-                loading: this.loading
+                loading: this.loading,
+                formTmp: this.uid,
+                name: this.name
             }
         })
     },
+    name: 'm-detail-table',
     props: {
-        uid: {
-            type: String,
-            default: 'tb'
-        },
         define: {
             type: Object,
-            default() {
-                return {
-                    ui_alias: '',
-                    data_url: '',
-                    ui_id: '',
-                    operations: [],
-                    cols: []
-                }
-            }
         },
         content: {
             type: Object,
             default() {
                 return {}
             }
+        },
+        uid: {
+            type: String,
+            required: true
         }
     },
     computed: {
-        form() {
-            return this.uid || ''
-        },
         dataSource() {
-            return _.get(this.$store.state.formData, 'table', [])
+            let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
+            if(source === undefined)
+                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
+                    value: [],
+                    type: this.$options._componentTag
+                }})
+            return _.get(this.$store.state.formData, ['form', this.name, 'value'])
         },
         visible() {
-            let tmp = _.get(this.$store.state.formData, this.form)
-            if(tmp === undefined) {
-                this.$store.commit(ADD_NEW_OBJECT,
-                    {
-                        attribute: this.form,
-                        value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false
-                        }
-                    }
-                )
-            }
-            return _.get(this.$store.state.formData, [this.form, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.uid, 'visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.form, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.uid, 'loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''
             return alias
+        },
+        name() {
+            return this.define['name']
         },
         operations() {
             let operations = this.define['operations'] || [{
@@ -83,28 +68,49 @@ Vue.component('mDetailTable', {
             return url
         },
         columns() {
-            debugger
             let cols = this.define['columns'] || []
             let columns = this.handleColumns(cols)
+            let tmp = _.get(this.$store.state.formData, this.uid)
+            if(tmp === undefined) {
+                this.$store.commit(ADD_NEW_OBJECT,
+                    {
+                        attribute: this.uid,
+                        value: {
+                            loading: true,
+                            reset: false,
+                            validate: false,
+                            visible: false
+                        }
+                    }
+                )
+                this.$store.commit(FORM_ELEMENT_VALUE, {checkCount: columns.length, form: this.uid})
+            }
             return columns
         }
     },
+    mounted() {
+        this.$nextTick(() => {
+            console.log('add table define is ', this.define)
+        })
+    },  
     methods: {
         getDataFromUrl(url) {
             this.$store.dispatch(FETCH_TABLE_DATA, {url})
         },
-        //初始化表格配置数据
         //处理表头数据
         handleColumns(cols) {
             let columns = []
             if(Array.isArray(cols)) {
                 cols.forEach(col => {
                     let column = {
-                        title: col['ui_define']['title'],
-                        key: col.ui_id,
-                        type: col.ui_type,
-                        ui_id: col.ui_id,
-                        define: col.ui_define || {}
+                        title: col['uiObject']['ui_define']['label'],
+                        key: col['uiObject']['ui_define']['uiObject']['ui_id'],
+                        ui_id: col['uiObject']['ui_id'],
+                        ui_define: col['uiObject'],
+                        render: (h, column) => {
+                            console.log(column['row'][col['uiObject']['ui_id']])
+                            return column['row'][col['uiObject']['ui_define']['uiObject']['ui_id']]['value']
+                        }
                     }
                     columns.push(column)
                 })
