@@ -1,37 +1,37 @@
 <template>
     <div v-show="visible">
-        <Row >
-            <Select 
-                v-model="objectModel" 
-                :multiple="multiple" 
-                :disabled="readonly" 
-                :clearable="clearable" 
-                :loading="loading" 
-                :size="size" 
-                :placeholder="placeholder" 
-                :not-found-text="notFound" 
-                :placement="placement" 
-                :transfer="transfer" 
+        <Row>
+            <Select
+                v-model="objectModel"
+                :multiple="multiple"
+                :disabled="readonly"
+                :clearable="clearable"
+                :loading="loading"
+                :size="size"
+                :placeholder="placeholder"
+                :not-found-text="notFound"
+                :placement="placement"
+                :transfer="transfer"
                 @on-change="valueChange">
-                <Option 
-                    v-for="(item, index) in items" 
-                    :key="index" 
+                <Option
+                    v-for="(item, index) in items"
+                    :key="index"
                     :value="item.id">
                     <template v-if="item.icon">
                         <Icon :type="item.icon"></Icon>
-                    </template> 
+                    </template>
                     {{item.name}}
                 </Option>
             </Select>
         </Row>
         <Row>
-            <div 
-                v-if="hasError" 
+            <div
+                v-if="hasError"
                 class="gateway-item-error">
                 {{errorMessage}}
             </div>
-            <div 
-                v-else 
+            <div
+                v-else
                 class="occupation gateway-item-error">
                 隐藏
             </div>

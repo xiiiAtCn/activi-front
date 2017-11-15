@@ -61,20 +61,89 @@
                                     {
                                         "ui_id": "[qmG^4",
                                         "ui_content": [
+//                                            {
+//                                                "ui_id": "T?Ik]F",
+//                                                "ui_define": {
+//                                                    "label": "编码",
+//                                                    "hidden": false,
+//                                                    "labelWidth": 120,
+//                                                    "uiObject": {
+//                                                        "ui_id": "col_2",
+//                                                        "ui_define": {
+//                                                            "name": "FName",
+//                                                            "title": "编码",
+//                                                            "fieldId": "vendor_header_2"
+//                                                        },
+//                                                        "ui_type": "mInput"
+//                                                    }
+//                                                },
+//                                                "ui_type": "m-labelInput"
+//                                            },
                                             {
                                                 "ui_id": "T?Ik]F",
                                                 "ui_define": {
-                                                    "label": "编码",
+                                                    "label": "地址",
                                                     "hidden": false,
                                                     "labelWidth": 120,
                                                     "uiObject": {
-                                                        "ui_id": "col_2",
+                                                        "ui_id": "col_6",
                                                         "ui_define": {
                                                             "name": "FName",
-                                                            "title": "编码",
-                                                            "fieldId": "vendor_header_2"
+                                                            "title": "地址",
+                                                            "fieldId": "vendor_header_2",
+//                                                            "addDetails": true,
+                                                            "items": [
+                                                                {
+                                                                    value: 'beijing',
+                                                                    label: '北京',
+                                                                    children: [
+                                                                        {
+                                                                            value: 'gugong',
+                                                                            label: '故宫'
+                                                                        },
+                                                                        {
+                                                                            value: 'tiantan',
+                                                                            label: '天坛'
+                                                                        },
+                                                                        {
+                                                                            value: 'wangfujing',
+                                                                            label: '王府井'
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    value: 'jiangsu',
+                                                                    label: '江苏',
+                                                                    children: [
+                                                                        {
+                                                                            value: 'nanjing',
+                                                                            label: '南京',
+                                                                            children: [
+                                                                                {
+                                                                                    value: 'fuzimiao',
+                                                                                    label: '夫子庙',
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        {
+                                                                            value: 'suzhou',
+                                                                            label: '苏州',
+                                                                            children: [
+                                                                                {
+                                                                                    value: 'zhuozhengyuan',
+                                                                                    label: '拙政园',
+                                                                                },
+                                                                                {
+                                                                                    value: 'shizilin',
+                                                                                    label: '狮子林',
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                }
+                                                            ]
                                                         },
-                                                        "ui_type": "mInput"
+                                                        "ui_type": "mAddress"
                                                     }
                                                 },
                                                 "ui_type": "m-labelInput"
