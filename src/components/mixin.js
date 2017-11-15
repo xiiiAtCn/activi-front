@@ -31,7 +31,7 @@ const mixin = {
          */
         getData (type, callback) {
             // 此时define还未传入 
-            if (Object.keys(this.define).length > 0) {
+            if (this.define && Object.keys(this.define).length > 0) {
                 let dataLink = deepCopy(this.dataLink)
                 // 没有link对象
                 if (Object.keys(dataLink).length > 0) {
@@ -99,7 +99,7 @@ const mixin = {
         },
         relationData () {
             if (!this.isRelated) {
-                return ''
+                return ['']
             }
             let arrData = []
             for (let id of this.define.relation) {
@@ -114,7 +114,7 @@ const mixin = {
     watch: {
         relationData (newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
-                this.watchValuesChanged()
+                this.watchValuesChanged(newVal, oldVal)
             }
         }
     },

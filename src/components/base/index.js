@@ -46,6 +46,10 @@ const mSteps = resolve =>
 
 const mTab = resolve =>
     require(['./m-tab.vue'], resolve)
+const mInputPercent = resolve =>
+    require(['./m-input-percent.vue'], resolve)
+
+
 
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
@@ -63,3 +67,4 @@ Vue.component('mSelect', mSelect)
 Vue.component('mSingleCheck', mSingleCheck)
 Vue.component('mSteps', mSteps)
 Vue.component('mTab', mTab)
+Vue.component('mInputPercent', mInputPercent)
