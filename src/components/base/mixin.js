@@ -19,7 +19,6 @@ const mixin = {
     },
     computed: {
         readonly () {
-            debugger
             let editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
             if(editable === 'editable') {
                 return false
