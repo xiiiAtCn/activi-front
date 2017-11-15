@@ -41,9 +41,6 @@
             },
             maxValue () {
                 return _.get(this.define, 'maxValue', Number.MAX_VALUE)
-            },
-            numberType () {
-                return _.get(this.define, 'numberType', 'integer')
             }
         },
         methods: {
@@ -65,30 +62,23 @@
                         value = ''
                     }
                 } else {
-                    if (this.numberType === 'integer') {
-                        value = parseInt(value)
+                    let regex = /\./g
+                    let pointCount = value.match(regex)
+                    if (!value.endsWith('.')) {
+                        value = parseFloat(value)
                         if (isNaN(value)) {
                             value = ''
                         }
                     } else {
-                        let regex = /\./g
-                        let pointCount = value.match(regex)
-                        if (!value.endsWith('.')) {
-                            value = parseFloat(value)
-                            if (isNaN(value)) {
-                                value = ''
-                            }
-                        } else {
-                            if (pointCount.length > 1) {
-                                if (value[value.length - 2] === '.') {
-                                    value = parseFloat(value)
-                                    if (isNaN(value)) {
-                                        value = ''
-                                    }
-                                    value += '.'
-                                } else {
-                                    value = parseFloat(value)
+                        if (pointCount.length > 1) {
+                            if (value[value.length - 2] === '.') {
+                                value = parseFloat(value)
+                                if (isNaN(value)) {
+                                    value = ''
                                 }
+                                value += '.'
+                            } else {
+                                value = parseFloat(value)
                             }
                         }
                     }

@@ -128,7 +128,6 @@
             },
             saveBtn () {
                 let btnArr = deepCopy(this.btnArr)
-
                 return _.filter(btnArr, (btn) => {
                     return btn.type === BtnType.save
                 })
