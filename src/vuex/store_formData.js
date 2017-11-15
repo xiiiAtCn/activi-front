@@ -158,7 +158,6 @@ export default {
                             delete copies[element]
                         }
                     })
-                    debugger
                     if(state[form][ form + 'requestUrl'] !== undefined) {
                         request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
                             if(err) {

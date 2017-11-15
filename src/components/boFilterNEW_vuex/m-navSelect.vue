@@ -75,19 +75,21 @@ export default {
     methods: {
         // 设置对应项的selected并emit事件
         selectChanged (select, index, value) {
-            select.selected = value
-            let i = this.findSelectIndex(select.id)
-            let tempData = deepCopy(this.selectData)
-            tempData[i] = select
-            // 清除选中之后的数据
-            let data = tempData.slice(0, i + 1)
-            this.selectData = data
-            // 清除选中之后的数据
-            this.tempSelect.splice(i + 1, this.tempSelect.length - i)
-            if (this.$store.state.componentPageData[this.id] === this.currentId) {
-                this.getSelectData()
-            } else {
-                this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
+            if (!select.selected) {
+                select.selected = value
+                let i = this.findSelectIndex(select.id)
+                let tempData = deepCopy(this.selectData)
+                tempData[i] = select
+                // 清除选中之后的数据
+                let data = tempData.slice(0, i + 1)
+                this.selectData = data
+                // 清除选中之后的数据
+                this.tempSelect.splice(i + 1, this.tempSelect.length - i)
+                if (this.$store.state.componentPageData[this.id] === this.currentId) {
+                    this.getSelectData()
+                } else {
+                    this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
+                }
             }
         },
         // 根据id找出对应位置

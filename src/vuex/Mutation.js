@@ -37,6 +37,9 @@ export const ADD_NEW_OBJECT = 'add_new_object'
 // 在form表单被从页面卸载时移除vuex中的对象
 export const DESTROY_FORM_DATA = 'destroy_form_data'
 
+//form表单卸载时移除页面状态数据
+export const CLEAR_FORM_STATUS = 'clear_form_status'
+
 // 设置组件数据payload={id: '', data: ***}
 export const SET_COMPONENT_DATA = 'SET_COMPONENT_DATA'
 
@@ -57,6 +60,7 @@ export default {
     SET_COMPONENT_DATA: SET_COMPONENT_DATA,
     CLEAR_COMPONENT_DATA: CLEAR_COMPONENT_DATA,
     DESTROY_FORM_DATA: DESTROY_FORM_DATA,
+    CLEAR_FORM_STATUS: CLEAR_FORM_STATUS,
     CLOSE_DATA_VALIDATE: CLOSE_DATA_VALIDATE,
     INCREMENT_CHECK_COUNT: INCREMENT_CHECK_COUNT
 }

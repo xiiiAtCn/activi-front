@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT, DESTROY_FORM_DATA } from 'store/Mutation'
+import { FORM_ELEMENT_VALUE, ADD_NEW_OBJECT, DESTROY_FORM_DATA, CLEAR_FORM_STATUS } from 'store/Mutation'
 const mixin = {
     props: {
         define: {
@@ -19,7 +19,11 @@ const mixin = {
     },
     computed: {
         readonly () {
-            return _.get(this.define, 'readonly', false)
+            let editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
+            if(editable === 'editable') {
+                return false
+            }
+            return true 
         },
         required () {
             return _.get(this.define, 'required', true)
@@ -159,6 +163,7 @@ const mixin = {
     },
     beforeDestroy() {
         this.$store.commit(DESTROY_FORM_DATA, {form: this.form})
+        this.$store.commit(CLEAR_FORM_STATUS)
     }
 }
 

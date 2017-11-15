@@ -6,6 +6,9 @@ const mBarrier = resolve =>
 const mDate = resolve =>
     require(['./m-date'], resolve)
 
+const mDecimal = resolve => 
+    require(['./m-decimal.vue'], resolve)
+
 const mDetailChoose = resolve =>
     require(['./m-detail-choose.vue'], resolve)
 
@@ -46,6 +49,7 @@ const mTab = resolve =>
 
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
+Vue.component('mDecimal', mDecimal)
 Vue.component('mDetailChoose', mDetailChoose)
 Vue.component('mTable2', mTable2)
 Vue.component('mInput', mInput)

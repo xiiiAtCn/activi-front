@@ -22,6 +22,7 @@
 <script>
     import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER } from 'store/Mutation'
     import {SUBMIT_FORM_DATA} from 'store/Action'
+    import _ from 'lodash'
     export default {
         props: {
             alias: {
@@ -67,6 +68,10 @@
         },
         methods: {
             openLayer(action) {
+                let editable = _.get(this.$store.state.pageStatus, ['status', this.formTmp])
+                if(editable !== 'editable') {
+                    return
+                }
                 this.action = action
                 this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
             },
