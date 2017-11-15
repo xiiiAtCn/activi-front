@@ -34,7 +34,6 @@ export default {
                     }
                 })
             }
-            // debugger
             // Vue.http.get(args.url).then(function (result) {
             //     commit('changeData', result.body);
             // }, function (response) {
