@@ -53,6 +53,9 @@ const mInputPercent = resolve =>
 const mAddress = resolve =>
     require(['./m-address.vue'], resolve)
 
+const mInputChoose = resolve =>
+    require(['./m-input-choose.vue'], resolve)
+
 
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
@@ -72,3 +75,4 @@ Vue.component('mSteps', mSteps)
 Vue.component('mTab', mTab)
 Vue.component('mInputPercent', mInputPercent)
 Vue.component('mAddress', mAddress)
+Vue.component('mInputChoose', mInputChoose)
