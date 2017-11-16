@@ -15,6 +15,10 @@ const mixin = {
         formTmp: {
             type: [String, Number],
             default: ''
+        },
+        statusKey: {
+            type: [String, Number],
+            default: ''
         }
     },
     computed: {
@@ -22,7 +26,12 @@ const mixin = {
             return this.formTmp || 'form'
         },
         readonly () {
-            let editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
+            let editable
+            if(this.formTmp) {
+                editable = _.get(this.$store.state.pageStatus, ['status', this.statusKey + '_detail', this.name])
+            } else {
+                editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
+            }
             if(editable === 'editable') {
                 return false
             }
