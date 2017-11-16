@@ -2,7 +2,7 @@
     <div v-show="visible">
         <Row>
             <Date-picker 
-                v-model="objectModel" 
+                :value="objectModel" 
                 :format="format" 
                 :type="type" 
                 :placeholder="placeholder" 
@@ -49,6 +49,7 @@
                 }
             },
             handleChange (value) {
+                debugger
                 console.log('date changed')
                 this.objectModel = {value}
                 if (!this.reset) { this.valid() }

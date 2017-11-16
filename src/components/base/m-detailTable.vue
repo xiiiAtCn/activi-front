@@ -68,7 +68,8 @@
         },
         methods: {
             openLayer(action) {
-                let editable = _.get(this.$store.state.pageStatus, ['status', this.formTmp])
+                debugger
+                let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
                 if(editable !== 'editable') {
                     return
                 }

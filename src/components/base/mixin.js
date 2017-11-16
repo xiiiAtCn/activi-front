@@ -18,6 +18,9 @@ const mixin = {
         }
     },
     computed: {
+        form () {
+            return this.formTmp || 'form'
+        },
         readonly () {
             let editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
             if(editable === 'editable') {
@@ -34,21 +37,8 @@ const mixin = {
         name () {
             return _.get(this.define, 'ui_id')
         },
-        title () {
-            return _.get(this.define, 'title', '')
-        },
-        errorOffset () {
-            let offset = parseInt(this.labelLength) + parseInt(this.labelOffset) + parseInt(this.contentOffset)
-            if (isNaN(offset)) {
-                offset = this.labelLength
-            }
-            return offset
-        },
         dataType () {
             return _.get(this.define, 'dataType', 'String')
-        },
-        form () {
-            return this.formTmp || _.get(this.define, 'form', 'form')
         },
         reset () {
             return _.get(this.$store.state.formData[this.form], 'reset', false)
@@ -69,9 +59,6 @@ const mixin = {
         },
         validate () {
             return _.get(this.$store.state.formData[this.form], 'validate', false)
-        },
-        uid () {
-            return _.get(this.define, 'ui_id', Math.random())
         },
         objectModel: {
             get () {
@@ -104,7 +91,7 @@ const mixin = {
                     case 'Object':
                         this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
                         break
-                    default: 
+                    default:
                         this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
                     }
                 }
@@ -112,14 +99,6 @@ const mixin = {
                 let type =  _.get(this.$store.state.formData[this.form], [this.name, 'type'])
                 if (type === undefined)
                     this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: tmp, type: this.$options._componentTag}, form: this.form})
-                if (tmp !== '') {
-                    if (this.dataType === 'Date') {
-                        console.log(`tmp is ${tmp}`)
-                        if (!Object.prototype.toString.apply(tmp) === '[object Date]') {
-                            tmp = new Date(tmp.replace(/-/g, '/'))
-                        }
-                    }
-                }
                 return tmp
             },
             set (value) {
