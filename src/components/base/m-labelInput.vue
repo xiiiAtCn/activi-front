@@ -2,7 +2,7 @@
     <div class="ivu-form-item m-flex" style="margin-bottom: 0px;">
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
         <div class="ivu-form-item-content m-input">
-            <component :formTmp="formTmp" :is="itemType" :define="ui_define" :uid="uid" :focusId="uid"></component>
+            <component :formTmp="formTmp" :is="itemType" :define="childContent" :uid="uid" :focusId="uid"></component>
         </div>
     </div>
 </template>
@@ -10,28 +10,29 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'content', 'uid', 'formTmp'],
+    props: ['define', 'uid', 'formTmp', 'content'],
     computed: {
         name() {
-            return _.get(this.define.uiObject.ui_define, 'name', '')
+            return _.get(this.define, 'name', '')
         },
         label() {
-            return _.get(this.define, ['label']) || _.get(this.define, ['ui_define', 'label'], '未知')
+            return _.get(this.define, ['label'])
         },
         hidden() {
             return _.get(this.define, 'hidden', false)
         },
-        ui_define() {
-            
-            let define = _.get(this.define, ['uiObject', 'ui_define'])
-            define['ui_id'] = _.get(this.define, ['uiObject', 'ui_id'])
-            return define
-        },
         itemType() {
-            return _.get(this.define.uiObject, 'ui_type', 'mInput')
+            return _.get(this.content, 'ui_type', 'mInput')
         },
         labelWidth() {
             return _.get(this.define, 'labelWidth', 120)
+        },
+        childContent() {
+            if(this.content instanceof Array) {
+                return this.content[0]['ui_define']
+            } else {
+                return this.content
+            }
         }
     }
 }

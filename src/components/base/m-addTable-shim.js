@@ -89,6 +89,7 @@ Vue.component('mDetailTable', {
         }
     },
     mounted() {
+        debugger
         this.$nextTick(() => {
             console.log('add table define is ', this.define)
         })
@@ -103,13 +104,10 @@ Vue.component('mDetailTable', {
             if(Array.isArray(cols)) {
                 cols.forEach(col => {
                     let column = {
-                        title: col['uiObject']['ui_define']['label'],
-                        key: col['uiObject']['ui_define']['uiObject']['ui_id'],
-                        ui_id: col['uiObject']['ui_id'],
+                        ...col,
                         ui_define: col['uiObject'],
                         render: (h, column) => {
-                            console.log(column['row'][col['uiObject']['ui_id']])
-                            return column['row'][col['uiObject']['ui_define']['uiObject']['ui_id']]['value']
+                            return column['row'][col['key']]['value']
                         }
                     }
                     columns.push(column)
