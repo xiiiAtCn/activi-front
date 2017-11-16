@@ -2,7 +2,15 @@
     <div class="ivu-form-item m-flex" style="margin-bottom: 0px;">
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
         <div class="ivu-form-item-content m-input">
-            <component :formTmp="formTmp" :is="itemType" :define="childContent" :uid="uid" :focusId="uid"></component>
+            <component 
+                :formTmp="formTmp" 
+                :statusKey="statusKey" 
+                :is="itemType" 
+                :define="childContent" 
+                :uid="uid" 
+                :focusId="uid"
+            >
+            </component>
         </div>
     </div>
 </template>
@@ -10,7 +18,7 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'uid', 'formTmp', 'content'],
+    props: ['define', 'uid', 'formTmp', 'content', 'statusKey'],
     computed: {
         name() {
             return _.get(this.define, 'name', '')

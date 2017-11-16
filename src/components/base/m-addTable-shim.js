@@ -13,7 +13,7 @@ Vue.component('mDetailTable', {
                 visible: this.visible,
                 loading: this.loading,
                 formTmp: this.uid,
-                name: this.name
+                name: this.name,
             }
         })
     },

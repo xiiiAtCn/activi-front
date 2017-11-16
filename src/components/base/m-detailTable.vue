@@ -15,6 +15,7 @@
                 <Row v-for="column in columns" :key="column.ui_id">
                     <component 
                         :formTmp="formTmp" 
+                        :statusKey="name"
                         :is="column['ui_define']['ui_type']" 
                         :define="column['ui_define']['ui_define']" 
                         :content="column['ui_define']['ui_content']"
