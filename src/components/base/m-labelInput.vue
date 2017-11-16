@@ -30,7 +30,10 @@ export default {
             return _.get(this.define, 'hidden', false)
         },
         itemType() {
-            return _.get(this.content, 'ui_type', 'mInput')
+            debugger
+            if(this.content instanceof Array) {
+                return _.get(this.content[0], 'ui_type', 'mInput')
+            }
         },
         labelWidth() {
             return _.get(this.define, 'labelWidth', 120)
