@@ -41,6 +41,9 @@
             },
             maxValue () {
                 return _.get(this.define, 'maxValue', Number.MAX_VALUE)
+            },
+            precision() {
+                return _.get(this.define, 'precision', 10)
             }
         },
         methods: {

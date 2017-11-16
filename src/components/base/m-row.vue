@@ -11,6 +11,7 @@
                     :is="item.ui_content[0].ui_type"
                     :uid="item.ui_content[0].ui_id"
                     :define="item.ui_content[0].ui_define"
+                    :content="item.ui_content[0].ui_content"
                 >
                 </component>
             </Col>
@@ -29,10 +30,8 @@
               return _.get(this.define, 'type', null)
           }
       },
-      mounted () {
-          this.$nextTick(() => {
-              console.log('content is ', this.content)
-          })
+      mounted() {
+          debugger
       }
   }
 </script>
