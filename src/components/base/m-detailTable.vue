@@ -1,7 +1,7 @@
 <template>
     <div>
         <mBarrier :height="10"></mBarrier>
-        <div  class="operation" >
+        <div  class="operation" v-if="editable">
             <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
@@ -15,6 +15,7 @@
                 <Row v-for="column in columns" :key="column.ui_id">
                     <component 
                         :formTmp="formTmp" 
+                        :statusKey="name"
                         :is="column['ui_define']['ui_type']" 
                         :define="column['ui_define']['ui_define']" 
                         :content="column['ui_define']['ui_content']"
@@ -55,6 +56,10 @@
                 }
             },
             visible: {
+                type: Boolean,
+                default: false
+            },
+            editable: {
                 type: Boolean,
                 default: false
             },

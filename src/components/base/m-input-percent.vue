@@ -22,7 +22,7 @@
     import _ from 'lodash'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     export default {
-        name: 'm-input',
+        name: 'm-input-percent',
         mixins: [mixin],
         computed: {
             maxLength () {

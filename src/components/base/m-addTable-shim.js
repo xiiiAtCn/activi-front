@@ -13,7 +13,8 @@ Vue.component('mDetailTable', {
                 visible: this.visible,
                 loading: this.loading,
                 formTmp: this.uid,
-                name: this.name
+                name: this.name,
+                editable: this.editable
             }
         })
     },
@@ -42,6 +43,13 @@ Vue.component('mDetailTable', {
                     type: this.$options._componentTag
                 }})
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
+        },
+        editable() {
+            let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
+            if(editable === 'editable') {
+                return true
+            }
+            return false
         },
         visible() {
             return _.get(this.$store.state.formData, [this.uid, 'visible'], false)
