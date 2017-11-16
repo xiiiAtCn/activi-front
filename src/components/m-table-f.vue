@@ -1,40 +1,38 @@
 <template>
     <div>
-        <Row class="top-content">
-            <Col span="16">
-                <div v-for="item in operation"  class="button-container" >
-                    <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
-                </div>
-            </Col>
-            <Col span="5">
+        <Row class="top-content" style="text-align: right">
+            <Col span="24">
                 <div class="search" v-show="search">
                     <Input v-model="valueSearch" placeholder="筛选">
                     <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
                     </Input>
                 </div>
-            </Col>
-            <Col span="1" class="columns-select">
-                <Poptip placement="bottom">
-                    <Button type="ghost" icon="grid"></Button>
-                    <div class="api" slot="content">
-                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                            <Checkbox :indeterminate="indeterminate"
-                                      :value="checkAll"
-                                      @click.prevent.native="handleCheckAll">全选</Checkbox>
-                        </div>
-                        <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-                            <div v-for='item in dataList'>
-                                <Checkbox :label="item.label"></Checkbox>
+                <div class="button-container">
+                    <Poptip placement="bottom">
+                        <Button type="ghost" icon="grid"></Button>
+                        <div class="api" slot="content">
+                            <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                                <Checkbox :indeterminate="indeterminate"
+                                          :value="checkAll"
+                                          @click.prevent.native="handleCheckAll">全选</Checkbox>
                             </div>
-                        </CheckboxGroup>
+                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                                <div v-for='item in dataList'>
+                                    <Checkbox :label="item.label"></Checkbox>
+                                </div>
+                            </CheckboxGroup>
+                        </div>
+                    </Poptip>
+                </div>
+                <div class="button-container">
+                    <div>
+                        <Select style="width:120px" placeholder="请选择显示行数" @on-change="changeSelect">
+                            <Option v-for="item in rowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        </Select>
                     </div>
-                </Poptip>
-            </Col>
-            <Col span="2">
-                <div>
-                    <Select style="width:90px" placeholder="显示行数" @on-change="changeSelect">
-                        <Option v-for="item in rowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
+                </div>
+                <div v-for="item in operation"  class="button-container" >
+                    <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
                 </div>
             </Col>
         </Row>
