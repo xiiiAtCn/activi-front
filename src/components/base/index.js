@@ -3,9 +3,8 @@ import './m-addTable-shim'
 
 const mBarrier = resolve =>
     require(['./m-barrier.vue'], resolve)
-
 const mDate = resolve =>
-    require(['./m-date.vue'], resolve)
+    require(['./m-date'], resolve)
 
 const mDecimal = resolve =>
     require(['./m-decimal.vue'], resolve)
@@ -54,6 +53,10 @@ const mInputPercent = resolve =>
 const mAddress = resolve =>
     require(['./m-address.vue'], resolve)
 
+const mInputChoose = resolve =>
+    require(['./m-input-choose.vue'], resolve)
+
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -72,3 +75,4 @@ Vue.component('mSteps', mSteps)
 Vue.component('mTab', mTab)
 Vue.component('mInputPercent', mInputPercent)
 Vue.component('mAddress', mAddress)
+Vue.component('mInputChoose', mInputChoose)
