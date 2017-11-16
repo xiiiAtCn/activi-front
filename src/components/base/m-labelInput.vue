@@ -30,7 +30,6 @@ export default {
             return _.get(this.define, 'hidden', false)
         },
         itemType() {
-            debugger
             if(this.content instanceof Array) {
                 return _.get(this.content[0], 'ui_type', 'mInput')
             }
