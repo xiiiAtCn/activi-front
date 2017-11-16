@@ -13,7 +13,13 @@
         <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
             <Form>
                 <Row v-for="column in columns" :key="column.ui_id">
-                    <component :formTmp="formTmp" :is="column['ui_define']['ui_type']" :define="column['ui_define']['ui_define']"></component>
+                    <component 
+                        :formTmp="formTmp" 
+                        :is="column['ui_define']['ui_type']" 
+                        :define="column['ui_define']['ui_define']" 
+                        :content="column['ui_define']['ui_content']"
+                    >
+                    </component>
                 </Row>
             </Form>
         </mLayer>
@@ -87,6 +93,9 @@
                 this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
                 this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
             }
+        },
+        mounted() {
+            debugger
         }
     }
 
