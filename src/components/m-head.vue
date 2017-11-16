@@ -3,9 +3,9 @@
         <Menu active-name="" theme="light" class="themeLight">
             <li class="layout-logo">
                 <div class="posRea">
-                    <img src="../assets/img/yushi-logo.png" alt="">
-                    <a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>
-                    <a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>
+                    <a href="http://www.sohu.com/" target="_blank"><img src="../assets/img/yushi-logo.png" alt=""></a>
+                    <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
+                    <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
                 </div>
                 <div style="clear: both"></div>
             </li>
