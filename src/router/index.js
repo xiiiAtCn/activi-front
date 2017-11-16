@@ -70,7 +70,7 @@ const emailDetail = resolve => require(['../components/businessModule/email/emai
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 
 
-// const layerTest = resolve => require(['../components/zpTest/layerTest.vue'], resolve)
+ const test = resolve => require(['../components/base/test.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -231,16 +231,16 @@ const router = new VueRouter({
             path: '/productPrice',
             component: productPrice
         },
-        // todo 测试用
-        // {
-        //     path: '/zpTest',
-        //     component: mLayoutContent,
-        //     children: [
-        //         {
-        //             path: '/zpTest/layer', component: layerTest
-        //         }
-        //     ]
-        // }
+        //todo 测试用
+        {
+            path: '/test',
+            component: test,
+            children: [
+                {
+                    path: '/base/test.vue', component: test
+                }
+            ]
+        }
 
     ]
 })
