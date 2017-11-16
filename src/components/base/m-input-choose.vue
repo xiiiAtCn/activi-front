@@ -17,18 +17,11 @@
     import mixin from './mixin'
     import _ from 'lodash'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
+    import {getData} from 'utils/actionUtils'
 
 export default {
-    props: {
-        url: {
-            type: null,
-            default:'/api/filter/getPage/'
-        },
-        placeholder:{
-            type:String,
-            default:'请选择'
-        }
-    },
+    name: 'm-input-percent',
+    mixins: [mixin],
     data () {
         return {
             inputValue:'',
@@ -37,12 +30,12 @@ export default {
         }
     },
     computed: {
-    },
-    watch: {
-    },
-    mounted () {
-    },
-    beforeDestroy () {
+        url () {
+            return _.get(this.define, 'url', '/api/filter/getSection/%E4%BE%9B%E5%BA%94%E5%95%86/%E5%85%83%E6%95%B0%E6%8D%AE')
+        },
+        placeholder () {
+            return _.get(this.define, 'placeholder', '请选择相关信息')
+        }
     },
     methods: {
         handleChooseClick(){
@@ -62,7 +55,7 @@ export default {
 
         },
         getChooseData(){
-            //this.inputValue = this.$store.state     _.get(this.$store.state., , '')
+            //this.inputValue = _.get(this.$store.state., , '')
         }
     }
 }
