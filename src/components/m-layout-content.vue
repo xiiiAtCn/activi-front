@@ -34,6 +34,7 @@
                                 <span class="daJieStyle5">developer</span>
                             </div>
                             <div class="daJieStyle6">
+                                <a href="/layoutContent/04/workbench" class="exit">桌面</a>
                                 <a href="javascript:;" class="exit">退出</a>
                                 <a href="javascript:;" class="designStyle daJieStyle7" @click="showDesign"
                                    v-if="designFlag">

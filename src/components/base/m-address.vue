@@ -2,10 +2,10 @@
     <div>
         <Row>
             <Cascader
-                v-model="objectModel.split(',')"
+                :value="objectModel"
                 :data="items"
                 :transfer="transfer"
-                :disabled="readonly"
+                :disabled="false"
                 :not-found-text="notFound"
                 :clearable="clearable"
                 @on-change="select">
@@ -22,8 +22,6 @@
     import mixin from './mixin'
     import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
-
-    const test = 'beijing,tiantan'
 
     export default {
         name: 'm-select',
@@ -44,7 +42,7 @@
         },
         methods: {
             select (value) {
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value.toString(), form: this.form})
+                this.objectModel = { value: value }
                 if (!this.reset) { this.valid() }
             },
             valid () {
