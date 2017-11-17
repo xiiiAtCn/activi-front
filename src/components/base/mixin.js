@@ -44,7 +44,6 @@ const mixin = {
             return _.get(this.define, 'visible', true)
         },
         name () {
-            debugger
             return _.get(this.define, 'name')
         },
         dataType () {

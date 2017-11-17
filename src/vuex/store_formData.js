@@ -57,6 +57,15 @@ export default {
                 visible: true,
                 reset: false,
             }
+            debugger
+            if(payload.dataKey !== undefined) {
+                let {dataKey, index} = payload
+                let data = state['form'][dataKey]['value'][index]
+                state[form] = {
+                    ...state[form],
+                    ...data
+                }
+            }
         },
         [Mutations.CLOSE_TABLE_LAYER] (state, payload) {
             let { form } = payload
@@ -166,7 +175,11 @@ export default {
                     formCopy['flag'] = { value: 'add' }
                     array.push(formCopy)
                 } else if(action.type === 'edit') {
-                    formCopy['flag'] = { value: 'edit' }
+                    let index = action['index']
+                    let data = array[index]
+                    if(data.flag === undefined) {
+                        formCopy['flag'] = { value: 'edit' }
+                    }
                     array.splice(action.index, 1, formCopy)
                 }
                 commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
@@ -247,6 +260,39 @@ export default {
                 })
                 commit(Mutations.FORM_ELEMENT_VALUE, value)
             })
+        },
+        [Actions.DELETE_TABLE_DATA]({state, commit}, payload) {
+            let {dataKey, index} = payload
+            let array = state['form'][dataKey]['value'].slice()
+            let deletedArray = array.filter(ele => {
+                if(ele['flag']&& ele['flag']['value'] === 'delete') {
+                    return true
+                }
+                return false
+            })
+            let primaryList = array.filter(ele => {
+                if(ele['flag']&& ele['flag']['value'] === 'delete') {
+                    return false
+                }
+                return true
+            })
+            let data = primaryList[index]
+            debugger
+            if(data.flag) {
+                if(data.flag.value === 'edit') {
+                    data.flag = {
+                        value: 'delete'
+                    }
+                } else {
+                    primaryList.splice(index, 1)
+                }
+            } else {
+                data['flag'] = {
+                    value: 'delete'
+                }
+            }
+            primaryList = primaryList.concat(deletedArray)
+            commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [dataKey]:{type: 'm-detail-table', value: primaryList}})
         }
     }
 }

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import { FETCH_TABLE_DATA } from 'store/Action'
-import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE } from 'store/Mutation'
+import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE} from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
@@ -37,9 +37,16 @@ Vue.component('mDetailTable', {
     computed: {
         dataSource() {
             let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
-            if(source === undefined)
+            if(source === undefined )
                 this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
                     value: [],
+                    type: this.$options._componentTag
+                }})
+            
+            source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
+            if(source.type === undefined) 
+                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
+                    value: source,
                     type: this.$options._componentTag
                 }})
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
@@ -97,7 +104,6 @@ Vue.component('mDetailTable', {
         }
     },
     mounted() {
-        debugger
         this.$nextTick(() => {
             console.log('add table define is ', this.define)
         })
@@ -115,7 +121,7 @@ Vue.component('mDetailTable', {
                         ...col,
                         ui_define: col['uiObject'],
                         render: (h, column) => {
-                            return column['row'][col['key']]['value']
+                            return _.get(column, ['row', col['key'], 'value'], '')
                         }
                     }
                     columns.push(column)

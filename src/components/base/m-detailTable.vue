@@ -6,14 +6,15 @@
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
         <div style="padding: 0 20px;clear: both; margin-bottom: 20px;">
-            <Table :columns="columns" :data="dataSource" size="small">
+            <Table :columns="mixColumns" :data="source" size="small">
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>
         </div>
         <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
             <Form>
-                <Row v-for="column in columns" :key="column.ui_id">
+                <Row v-for="column in mixColumns" :key="column.ui_id">
                     <component 
+                        v-if="column['ui_define']"
                         :formTmp="formTmp" 
                         :statusKey="name"
                         :is="column['ui_define']['ui_type']" 
@@ -28,7 +29,7 @@
 </template>
 <script>
     import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER } from 'store/Mutation'
-    import {SUBMIT_FORM_DATA} from 'store/Action'
+    import {SUBMIT_FORM_DATA, DELETE_TABLE_DATA} from 'store/Action'
     import _ from 'lodash'
     export default {
         props: {
@@ -72,14 +73,76 @@
                 required: true
             }
         },
+        computed: {
+            mixColumns() {
+                let columns = this.columns
+                if(this.editable) {
+                    let operation = {
+                        title: '操作',
+                        render: (h, mixture) => {
+                            return h('div', 
+                                {
+                                },
+                                [
+                                    h('Button', {
+                                        props: {
+                                            type: 'info',
+                                            size:'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.action = 'edit'
+                                                this.dataIndex = mixture.index
+                                                this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
+                                            }
+                                        }
+                                    }, '编辑'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size:'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
+                                            }
+                                        }
+                                    }, '删除')
+                                ]
+                            )
+                            
+                        }
+                    }
+                    columns.push(operation)
+                }
+                return columns
+            },
+            source() {
+                let source = this.dataSource
+                source = source.filter(element => {
+                    if(element['flag'] && element['flag']['value'] === 'delete') {
+                        return false
+                    }
+                    return true
+                })
+                return source
+            }
+        },
+        
         data() {
             return {
-                action: ''
+                action: '',
+                dataIndex: -1
             }
         },
         methods: {
             openLayer(action) {
-                debugger
                 let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
                 if(editable !== 'editable') {
                     return
@@ -91,16 +154,13 @@
                 let action = {}
                 action.type = this.action
                 action.value = this.name
-                action.index = 0
+                action.index = this.dataIndex
                 this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, action: action})
             },
             cancel() {
                 this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
                 this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
             }
-        },
-        mounted() {
-            debugger
         }
     }
 

@@ -192,7 +192,7 @@
                         vm.define = _.get(post, 'ui_define', {})
                         vm.content = _.get(post, 'ui_content', [])
                         vm.dataUrl = _.get(post, ['ui_define', 'data_url'], null)
-                        document.title = vm.define.title
+                        document.title = vm.define.title || '表单'
                     })
                 }
             })
