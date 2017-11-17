@@ -156,7 +156,7 @@ export function addQuery (url, queryVariables) {
         ...queryVariables,
         ...urlObject.query
     }
-    return url + '?' + Object.keys(queryVariables).map(element => `${element}=${queryVariables[element]}`).join('&')
+    return urlObject.pathname + '?' + Object.keys(queryVariables).map(element => `${element}=${queryVariables[element]}`).join('&')
 }
 
 /**
