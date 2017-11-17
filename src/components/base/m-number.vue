@@ -38,10 +38,10 @@
                 return ''
             },
             minValue () {
-                return _.get(this.define, 'minValue', Number.MIN_VALUE)
+                return _.get(this.define, 'minValue', Number.MIN_SAFE_INTEGER)
             },
             maxValue () {
-                return _.get(this.define, 'maxValue', Number.MAX_VALUE)
+                return _.get(this.define, 'maxValue', Number.MAX_SAFE_INTEGER)
             }
         },
         methods: {
