@@ -84,7 +84,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.getTableData()
         },
         handleRowsPageChange(arg){
-            this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: arg})
+            this.commitData(arg)
         }
     }
 })
