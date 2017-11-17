@@ -162,7 +162,7 @@ const mixin = {
         }
     },
     destroyed () {
-        // this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {...this.idObj})
+        this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {...this.idObj})
     }
 }
 

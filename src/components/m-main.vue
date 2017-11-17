@@ -44,12 +44,12 @@
                 <transition-group name="fade" mode="out-in" tag="div" v-if="content.length > 1">
                     <component :key="item.ui_id" :is="item.ui_type" :uid="item.ui_id"
                                v-for="item in content" :define="item.ui_define"
-                               :content="item.ui_content"></component>
+                               :content="item.ui_content" :form="item.ui_form"></component>
                 </transition-group>
                 <transition name="fade" mode="out-in" tag="div" v-else>
                     <component :key="item.ui_id" :is="item.ui_type" :uid="item.ui_id"
                                v-for="item in content" :define="item.ui_define"
-                               :content="item.ui_content"></component>
+                               :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
             <ButtonGroup class="form-button-group">
