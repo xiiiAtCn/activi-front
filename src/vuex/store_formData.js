@@ -57,7 +57,6 @@ export default {
                 visible: true,
                 reset: false,
             }
-            debugger
             if(payload.dataKey !== undefined) {
                 let {dataKey, index} = payload
                 let data = state['form'][dataKey]['value'][index]
@@ -277,7 +276,6 @@ export default {
                 return true
             })
             let data = primaryList[index]
-            debugger
             if(data.flag) {
                 if(data.flag.value === 'edit') {
                     data.flag = {

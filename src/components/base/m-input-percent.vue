@@ -74,7 +74,6 @@
                 }
             },
             inputCheck () {
-                debugger
                 this.valid()
             }
         }
