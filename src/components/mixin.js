@@ -7,7 +7,7 @@
  * 上次修改时间: 2017-11-06
  * Modified By: ZhaoPeng
  * -----
- * 哈哈哈哈隔
+ * 组件公用关联逻辑
  */
 import _ from 'lodash'
 import Mutations from 'store/Mutation'
@@ -21,6 +21,11 @@ const mixin = {
         define: {
             type: Object,
             default: {}
+        },
+        // 组件数据区域
+        form: {
+            type: String,
+            default: ''
         }
     },
     methods: {
@@ -60,15 +65,18 @@ const mixin = {
         getRealParamData (param) {
             let data = {}
             if (param) {
-                let componentData = this.$store.state.componentPageData
+                let componentData = this.form ? this.$store.state.componentPageData[this.form] : this.$store.state.componentPageData
                 for (let key of Object.keys(param)) {
                     let value = param[key].value
                     let defaultValue = param[key].defaultValue
-                    // 如果为数组逐层取值 
-                    if (Array.isArray(value)) {
-                        data[key] = _.get(componentData, [...value], NoData)
-                    } else {
-                        data[key] = componentData[value] || NoData
+                    data[key] = NoData
+                    if (componentData) {
+                        // 如果为数组逐层取值 
+                        if (Array.isArray(value)) {
+                            data[key] = _.get(componentData, [...value], NoData)
+                        } else {
+                            data[key] = componentData[value] || NoData
+                        }
                     }
                     // vuex中没有数据，有默认值赋值，没有报错
                     if (NoData === data[key]) {
@@ -86,27 +94,62 @@ const mixin = {
             return data
         },
         /**
+         * 向vuex提交数据
+         * @param {*} payload 
+         */
+        commitData (payload) {
+            this.$store.commit(Mutations.SET_COMPONENT_DATA, {
+                ...this.idObj,
+                data: payload
+            })
+        },
+        /**
          * 组件受影响后会调用此方法
          */
         watchValuesChanged () {}
     },
     computed: {
+        // 组件id
         id () {
             return _.get(this.define, 'id', '')
         },
+        // 组件id + 数据区域
+        idObj () {
+            let result = {id: this.id}
+            if (this.form) {
+                result.form = this.form
+                return result
+            } else {
+                return result
+            }
+        },
+        // 是否与其他组件关联
         isRelated () {
             return _.get(this.define, 'isRelated', false)
         },
+        // 与其他组件关联的数据
         relationData () {
             if (!this.isRelated) {
                 return ['']
             }
             let arrData = []
-            for (let id of this.define.relation) {
-                arrData.push(this.$store.state.componentPageData[id] || '')
+            let source = this.$store.state.componentPageData
+            if (this.form) {
+                for (let id of this.define.relation) {
+                    if (source[this.form]) {
+                        arrData.push(source[this.form][id] || '')
+                    } else {
+                        arrData.push('')
+                    }
+                }
+            } else {
+                for (let id of this.define.relation) {
+                    arrData.push(source[id] || '')
+                }
             }
             return arrData
         },
+        // 组件获取数据link对象
         dataLink () {
             return _.get(this.define, 'dataLink', {})
         }
@@ -119,7 +162,7 @@ const mixin = {
         }
     },
     destroyed () {
-        this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {id: this.id})
+        // this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {...this.idObj})
     }
 }
 

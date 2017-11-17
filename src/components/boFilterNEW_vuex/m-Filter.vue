@@ -198,7 +198,7 @@ export default{
         queryData (val) {
             let queryData = deepCopy(val)
             queryData = this.changeQueryDataToPostData(queryData)
-            this.$store.commit(Mutation.SET_COMPONENT_DATA, {id: this.id, data: queryData})
+            this.commitData(queryData)
         }
     },
     methods: {
