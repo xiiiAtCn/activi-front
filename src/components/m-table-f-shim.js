@@ -17,7 +17,8 @@ let tableFShim = Vue.component('tableF-Shim', {
                 tableHeight: this.tableHeight,
                 search:this.showSearch,//是否显示搜索框
                 tableName:this.tableName,//为本地存贮提供表格名字
-                serverPage:false//是否服务器分页
+                serverPage:false,//是否服务器分页
+                checkRow:this.checkRow//是否行单选
             },
             on:{
                 rowsPageChange : this.handleRowsPageChange
@@ -36,7 +37,8 @@ let tableFShim = Vue.component('tableF-Shim', {
             tableDefine: {},
             tableName:'',
             tableHeight:null,
-            serverPage:false
+            serverPage:false,
+            checkRow:false
         }
     },
     props: {
@@ -61,6 +63,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableName = _.get(def, ['ui_define', 'tableName'], '')
             this.tableHeight = _.get(def, ['ui_define', 'tableHeight'], null)
             this.serverPage = _.get(def, ['ui_define', 'serverPage'], false)
+            this.checkRow= _.get(def, ['ui_define', 'checkRow'], false)
         },
         getTableDefine () {
             this.getData('tableDefine', (data, err) => {

@@ -37,7 +37,7 @@
             </Col>
         </Row>
         <div style="overflow-x: auto">
-            <Table :highlight-row="checkType" border @on-current-change="hanleRowClick"
+            <Table :highlight-row="checkRow" border @on-current-change="hanleRowClick"
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
@@ -81,9 +81,9 @@
             tableHeight:{
                 type: null
             },
-            checkType:{
+            checkRow:{
                 type: null,
-                default: true
+                default: false
             }
         },
         data () {
