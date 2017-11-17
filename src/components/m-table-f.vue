@@ -37,7 +37,8 @@
             </Col>
         </Row>
         <div style="overflow-x: auto">
-            <Table border :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
+            <Table :highlight-row="checkType" border @on-current-change="hanleRowClick"
+                   :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
@@ -79,6 +80,10 @@
             },
             tableHeight:{
                 type: null
+            },
+            checkType:{
+                type: null,
+                default: true
             }
         },
         data () {
@@ -391,6 +396,11 @@
                 this.dataTable = this.rowsContent.slice(0,arg)
                 this.currentPage = 1
                 window.localStorage.setItem(this.tableName+'.rowCount',arg)
+            },
+
+            //行单选
+            hanleRowClick(a,b){
+                console.log(a,b)
             }
         }
     }
@@ -419,5 +429,11 @@
 <style>
     .ivu-table td{
         box-sizing: content-box !important;
+    }
+    .ivu-table-row-highlight td{
+        background-color: #6cbcFa;
+    }
+    .ivu-table-row-hover td{
+        background-color: #6cbcFa !important;
     }
 </style>
