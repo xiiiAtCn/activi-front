@@ -94,7 +94,7 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.action = 'edit'
+                                                this.action = 'update'
                                                 this.dataIndex = mixture.index
                                                 this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
                                             }
