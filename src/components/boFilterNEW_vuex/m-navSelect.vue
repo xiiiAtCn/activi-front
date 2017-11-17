@@ -88,7 +88,8 @@ export default {
                 if (this.$store.state.componentPageData[this.id] === this.currentId) {
                     this.getSelectData()
                 } else {
-                    this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
+                    // this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: this.id, data: this.currentId})
+                    this.commitData(this.currentId)
                 }
             }
         },

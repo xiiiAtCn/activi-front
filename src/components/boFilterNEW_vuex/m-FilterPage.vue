@@ -3,124 +3,60 @@
         <!-- select部分 -->
         <Row class="nav-select">
             <mNavSelect
-                :define="navSelectDefine"/>
+                :define="navSelectDefine"
+                :form="form"/>
         </Row>
         <!-- filter部分 -->
         <mBoFilter
-            :define="filterDefine"/>
+            :define="filterDefine"
+            :form="form"/>
         <!-- table一览部分 -->
         <tableF-Shim
-            :define="tableDefine"/>
+            :define="tableDefine"
+            :form="form"/>
     </div>
 </template>
 <script>
 import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 
-const idObj = {
-    navSelectId: 'select',
-    filterId: 'filterId',
-    tableId: 'tableId'
-}
-
-const navSelectDefine = {
-    isRelated: true,
-    relation: [idObj.navSelectId],
-    dataLink: [
-        {
-            attr: 'selectData',
-            link: {
-                method: 'GET',
-                url: '',
-                pathParams: {},
-                queryParams: {
-                    id: {
-                        value: idObj.navSelectId,
-                        defaultValue: ''
-                    }
-                },
-                body: {}
-            }
-        }
-    ],
-    id: idObj.navSelectId
-}
-const filterDefine = {
-    isRelated: true,
-    relation: [idObj.navSelectId],
-    dataLink: [
-        {
-            attr: 'bodyData',
-            link: {
-                method: 'GET',
-                url: '',
-                pathParams: {},
-                queryParams: {
-                    id: {
-                        value: idObj.navSelectId,
-                        defaultValue: ''
-                    }
-                },
-                body: {}
-            }
-        }
-    ],
-    id: idObj.filterId
-}
-const tableDefine = {
-    isRelated: true,
-    relation: [idObj.navSelectId, idObj.filterId],
-    dataLink: [
-        {
-            attr: 'tableData',
-            link: {
-                method: 'POST',
-                url: '',
-                pathParams: {},
-                queryParams: {},
-                body: {
-                    id: {
-                        value: idObj.navSelectId,
-                        defaultValue: ''
-                    },
-                    condition: {
-                        value: idObj.filterId,
-                        defaultValue: {}
-                    }
-                }
-            }
-        },
-        {
-            attr: 'tableDefine',
-            link: {
-                method: 'GET',
-                url: '',
-                pathParams: {},
-                queryParams: {
-                    id: {
-                        value: idObj.navSelectId,
-                        defaultValue: ''
-                    }
-                },
-                body: {}
-            }
-        }
-    ],
-    id: idObj.tableId
-}
-
 export default{
     props: {
         define: {
             type: Object
+        },
+        form: {
+            type: String,
+            default: ''
         }
     },
     data () {
         return {
-            navSelectDefine: {},
+            navSelectDefine: {
+                isRelated: true,
+                relation: [],
+                dataLink: [
+                    {
+                        attr: 'selectData',
+                        link: {
+                            method: 'GET',
+                            url: '',
+                            pathParams: {},
+                            queryParams: {
+                                id: {
+                                    value: '',
+                                    defaultValue: ''
+                                }
+                            },
+                            body: {}
+                        }
+                    }
+                ],
+                id: '',
+            },
             filterDefine: {
                 isRelated: true,
-                relation: [idObj.navSelectId],
+                relation: [this.navSelectId],
                 dataLink: [
                     {
                         attr: 'bodyData',
@@ -130,7 +66,7 @@ export default{
                             pathParams: {},
                             queryParams: {
                                 id: {
-                                    value: idObj.navSelectId,
+                                    value: this.navSelectId,
                                     defaultValue: ''
                                 }
                             },
@@ -138,11 +74,11 @@ export default{
                         }
                     }
                 ],
-                id: idObj.filterId
+                id: '',
             },
             tableDefine: {
                 isRelated: true,
-                relation: [idObj.navSelectId, idObj.filterId],
+                relation: [],
                 dataLink: [
                     {
                         attr: 'tableData',
@@ -153,11 +89,11 @@ export default{
                             queryParams: {},
                             body: {
                                 id: {
-                                    value: idObj.navSelectId,
+                                    value: '',
                                     defaultValue: ''
                                 },
                                 condition: {
-                                    value: idObj.filterId,
+                                    value: '',
                                     defaultValue: {}
                                 }
                             }
@@ -171,7 +107,7 @@ export default{
                             pathParams: {},
                             queryParams: {
                                 id: {
-                                    value: idObj.navSelectId,
+                                    value: '',
                                     defaultValue: ''
                                 }
                             },
@@ -179,19 +115,31 @@ export default{
                         }
                     }
                 ],
-                id: idObj.tableId
+                id: '',
             }
         }
     },
     mounted () {
-        this.navSelectDefine = navSelectDefine
-        this.filterDefine = filterDefine
-        this.tableDefine = tableDefine
+        // 设置id
+        this.$set(this.navSelectDefine, 'id', this.navSelectId)
+        this.$set(this.filterDefine, 'id', this.filterId)
+        this.$set(this.tableDefine, 'id', this.tableId)
 
+        // 设置url
         this.$set(this.navSelectDefine.dataLink[0].link, 'url', this.navDataUrl)
         this.$set(this.filterDefine.dataLink[0].link, 'url', this.filterDataUrl)
         this.$set(this.tableDefine.dataLink[0].link, 'url', this.tableDataUrl)
         this.$set(this.tableDefine.dataLink[1].link, 'url', this.tableDefineUrl)
+
+        // 设置关联关系
+        this.$set(this.navSelectDefine, 'relation', [this.navSelectId])
+        this.$set(this.navSelectDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
+        this.$set(this.filterDefine, 'relation', [this.navSelectId])
+        this.$set(this.filterDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
+        this.$set(this.tableDefine, 'relation', [this.navSelectId, this.filterId])
+        this.$set(this.tableDefine.dataLink[0].link.body.id, 'value', this.navSelectId)
+        this.$set(this.tableDefine.dataLink[0].link.body.condition, 'value', this.filterId)
+        this.$set(this.tableDefine.dataLink[1].link.queryParams.id, 'value', this.navSelectId)
     },
     computed: {
         navDataUrl () {
@@ -205,7 +153,16 @@ export default{
         },
         tableDefineUrl () {
             return _.get(this.define, 'tableDefineUrl', '')
-        }
+        },
+        navSelectId () {
+            return _.get(this.define, 'navSelectId', 'select')
+        },
+        filterId () {
+            return _.get(this.define, 'filterId', 'filter') 
+        },
+        tableId () {
+            return _.get(this.define, 'dataListName', 'table')
+        },
     }
 }
 </script>

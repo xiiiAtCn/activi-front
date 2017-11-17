@@ -1,4 +1,5 @@
 import axios from 'axios'
+import urlUtil from 'url'
 /**
  *
  * @author  Lungern xiii.at.cn@gmail.com
@@ -150,6 +151,11 @@ export function replace (url, pathVariables) {
  */
 export function addQuery (url, queryVariables) {
     pureObjectCheck(queryVariables)
+    let urlObject = urlUtil.parse(url, true)
+    queryVariables = {
+        ...queryVariables,
+        ...urlObject.query
+    }
     return url + '?' + Object.keys(queryVariables).map(element => `${element}=${queryVariables[element]}`).join('&')
 }
 

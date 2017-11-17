@@ -29,9 +29,6 @@
           type () {
               return _.get(this.define, 'type', null)
           }
-      },
-      mounted() {
-          debugger
       }
   }
 </script>

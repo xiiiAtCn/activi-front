@@ -91,7 +91,6 @@ export default {
             }
         },
         inputCheck () {
-            debugger
             this.valid()
         }
     }

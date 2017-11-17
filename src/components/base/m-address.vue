@@ -2,7 +2,7 @@
     <div>
         <Row>
             <Cascader
-                :value="objectModel"
+                :value="addressStr"
                 :data="items"
                 :transfer="transfer"
                 :disabled="false"
@@ -27,6 +27,13 @@
         name: 'm-select',
         mixins: [mixin],
         computed: {
+            addressStr () {
+                if (this.objectModel === ''){
+                    return []
+                } else {
+                    return this.objectModel.split(',')
+                }
+            },
             items () {
                 return _.get(this.define, 'items', [])
             },
@@ -42,8 +49,8 @@
         },
         methods: {
             select (value) {
-                this.objectModel = { value: value }
-                if (!this.reset) { this.valid() }
+                let addStr = value.toString()
+                this.objectModel = { value: addStr }
             },
             valid () {
                 if (!this.readonly) {
