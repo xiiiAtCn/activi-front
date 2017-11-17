@@ -2,10 +2,10 @@
     <div>
         <Row>
             <Cascader
-                v-model="objectModel.split(',')"
+                :value="addressStr"
                 :data="items"
                 :transfer="transfer"
-                :disabled="readonly"
+                :disabled="false"
                 :not-found-text="notFound"
                 :clearable="clearable"
                 @on-change="select">
@@ -23,12 +23,17 @@
     import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
 
-    const test = 'beijing,tiantan'
-
     export default {
         name: 'm-select',
         mixins: [mixin],
         computed: {
+            addressStr () {
+                if (this.objectModel === ''){
+                    return []
+                } else {
+                    return this.objectModel.split(',')
+                }
+            },
             items () {
                 return _.get(this.define, 'items', [])
             },
@@ -44,8 +49,8 @@
         },
         methods: {
             select (value) {
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value.toString(), form: this.form})
-                if (!this.reset) { this.valid() }
+                let addStr = value.toString()
+                this.objectModel = { value: addStr }
             },
             valid () {
                 if (!this.readonly) {
