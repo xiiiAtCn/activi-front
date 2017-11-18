@@ -173,11 +173,11 @@ export default {
                 if(action.type === 'add') {
                     formCopy['flag'] = { value: 'add' }
                     array.push(formCopy)
-                } else if(action.type === 'edit') {
+                } else if(action.type === 'update') {
                     let index = action['index']
                     let data = array[index]
                     if(data.flag === undefined) {
-                        formCopy['flag'] = { value: 'edit' }
+                        formCopy['flag'] = { value: 'update' }
                     }
                     array.splice(action.index, 1, formCopy)
                 }
@@ -277,7 +277,7 @@ export default {
             })
             let data = primaryList[index]
             if(data.flag) {
-                if(data.flag.value === 'edit') {
+                if(data.flag.value === 'update') {
                     data.flag = {
                         value: 'delete'
                     }
