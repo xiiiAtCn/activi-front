@@ -2,15 +2,16 @@
     <div>
         <Row>
             <div class="search">
-                <Input v-model="inputValue" :placeholder="placeholder" readonly disabled >
+                <Input v-model="objectModel" :placeholder="placeholder" readonly>
                     <Button slot="append" @click="handleChooseClick">选择</Button>
                 </Input>
             </div>
             <mLayer v-if="showLayer" :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
-                    :is="downData.ui_content[0].ui_type"
-                    :uid="downData.ui_content[0].ui_id"
-                    :define="downData.ui_content[0].ui_define"
+                    :is="downData.ui_type"
+                    :uid="downData.ui_id"
+                    :define="downData.ui_define"
+                    :form="downData.ui_form"
                 ></component>
             </mLayer>
         </Row>
@@ -31,67 +32,59 @@ export default {
     mixins: [mixin],
     data () {
         return {
-            inputValue:'',
             showLayer:false,
             downData:[]
         }
     },
     computed: {
         url () {
-            return _.get(this.define, 'url', '/api/filter/getSection/%E4%BE%9B%E5%BA%94%E5%95%86/%E5%85%83%E6%95%B0%E6%8D%AE')
+            return _.get(this.define, 'url', '')
         },
         placeholder () {
             return _.get(this.define, 'placeholder', '请选择相关信息')
+        },
+        dataDomain () {
+            return _.get(this.define, 'dataDomain', '')
+        },
+        tableName () {
+            return _.get(this.define, 'tableName', '')
+        },
+        backUrl(){
+            return _.get(this.define, 'backUrl', '')
+        },
+        name(){
+            return _.get(this.define, 'name', '')
         }
     },
     methods: {
         handleChooseClick(){
             getData(this.url,(data,err)=>{
                 if (data) {
-                    this.downData = data
+                    this.downData = data.ui_content[0]
                 }
             })
             this.showLayer = true
         },
         handleCancel(){
             this.showLayer = false
-            this.inputCheck()
         },
         handleOk(){
             this.showLayer = false
             this.getChooseData()
-            this.inputCheck()
         },
         getChooseData(){
-            //this.inputValue = _.get(this.$store.state., , '')
-        },
-        valid () {
-            if (!this.readonly) {
-                let hasError = false
-                let value = String(this.objectModel == undefined ? '' : this.objectModel)
-                if (this.required) {
-                    if (value === '') {
-                        hasError = true
-                        this.errorMessage = '请输入必填项'
-                    } else if (value.length < this.minLength) {
-                        hasError = true
-                        this.errorMessage = `输入最小长度应不小于${this.minLength}`
-                    } else if (value.length > this.maxLength) {
-                        hasError = true
-                        this.errorMessage = `输入最大长度应不大于${this.maxLength}`
-                    } else {
-                        let regex = new RegExp(this.pattern)
-                        if (!regex.test(this.objectModel)) {
-                            hasError = true
-                            this.errorMessage = '输入不符合要求, 请重新输入'
-                        }
-                    }
+            let action={
+                url:this.backUrl,
+                queryParams:{
+                    boId:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'boid'], '')
                 }
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
             }
-        },
-        inputCheck () {
-            this.valid()
+            console.log('action is',action)
+            getData(action,(data,err)=>{
+                if (data) {
+                    this.objectModel = data[this.name]
+                }
+            })
         }
     }
 }

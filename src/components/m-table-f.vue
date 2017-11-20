@@ -7,16 +7,16 @@
                     <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
                     </Input>
                 </div>
-                <div class="button-container">
+                <div class="button-container" >
                     <Poptip placement="bottom">
                         <Button type="ghost" icon="grid"></Button>
-                        <div class="api" slot="content">
+                        <div class="api" slot="content" style="text-align: left">
                             <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
                                 <Checkbox :indeterminate="indeterminate"
                                           :value="checkAll"
                                           @click.prevent.native="handleCheckAll">全选</Checkbox>
                             </div>
-                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange" style="height: 400px;overflow-y: scroll">
                                 <div v-for='item in dataList'>
                                     <Checkbox :label="item.label"></Checkbox>
                                 </div>
@@ -36,7 +36,7 @@
                 </div>
             </Col>
         </Row>
-        <div style="overflow-x: auto">
+        <div>
             <Table :highlight-row="checkRow" border @on-current-change="hanleRowClick"
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
@@ -51,6 +51,7 @@
     import bus from '../router/bus'
     import { dispatch,forGet } from 'utils/actionUtils'
     import _ from 'lodash'
+    import { FORM_ELEMENT_VALUE} from 'store/Mutation'
 
     export default {
         props: {
@@ -79,11 +80,20 @@
                 default: undefined
             },
             tableHeight:{
-                type: null
+                type: null,
+                default: 500
             },
             checkRow:{
                 type: null,
                 default: false
+            },
+            form:{
+                type: [String, Number],
+                default: ''
+            },
+            name:{
+                type: null,
+                default: ''
             }
         },
         data () {
@@ -153,7 +163,7 @@
             // 配置表格
             handleDefine () {
                 this.getColumnsDataWay(this.cols)
-                this.showModalBtn && this.showButton(this.showModalBtn)
+                this.showButton(this.showModalBtn)
             },
             // columnsData存入设置
             getLength(str){
@@ -174,17 +184,18 @@
             },
             getColumnsDataWay (c) {
                 c.forEach((val, i) => {
+                    let self =this
                     this.columnsData[i] = {
                         title: val.text,
                         key: val.field,
                         align: 'center',
                         width: this.getLength(val.text),
                         render: (h, params) => {
-                            if(this.columnsData){
-                                this.columnsData.forEach((v,j)=>{
-                                    if(v.key === val.field && this.getLength(params.row[val.field]) > this.columnsData[j].width){
-                                        if(!this.columnsData[j]){return}
-                                        this.columnsData[j].width = this.getLength(params.row[val.field])
+                            if(self.columnsData){
+                                self.columnsData.forEach((v,j)=>{
+                                    if(v.key === val.field && self.getLength(params.row[val.field]) > self.columnsData[j].width){
+                                        if(!self.columnsData[j]){return}
+                                        self.columnsData[j].width = self.getLength(params.row[val.field])
                                     }
                                 })
                             }
@@ -282,6 +293,21 @@
                 }else{
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
+                this.removeColButton()
+            },
+            //是否去除无用的操作列
+            removeColButton(){
+                if(this.showModalBtn.length === 0){
+                    let i=1
+                    while (this.columnsData.length !== 0){
+                        if(this.columnsData[i].key === 'action'){
+                            this.columnsData.splice(i,1)
+                            break
+                        }
+                        i++
+                        if(this.columnsData.length === i){break}
+                    }
+                }
             },
 
             // 处理顶部按钮
@@ -309,10 +335,11 @@
                 if (this.checkAll) {
                     this.checkAllGroup = _.cloneDeep(this.testList)
                     this.columnsData = _.cloneDeep(this.columnsDataCopy)
+                    this.removeColButton()
                 } else {
                     this.checkAllGroup = []
                     this.columnsData = []
-                    this.showButton(this.showModalBtn)
+                    if(this.showModalBtn.length !== 0) {this.showButton(this.showModalBtn)}
                 }
                 this.dataListChange = _.cloneDeep(this.checkAllGroup)
             },
@@ -345,13 +372,13 @@
                         }
                     })
                 } else if (obj.method === 'add') {
-                    this.columnsDataCopy.forEach((val) => {
+                    this.columnsDataCopy.forEach((val,i) => {
                         if (val.title === obj.str) {
-                            this.columnsData.push(val)
+                            this.columnsData.splice(i,0,val)
                         }
                     })
                 }
-                this.showModalBtn && this.showButton(this.showModalBtn)
+                if(this.showModalBtn.length !== 0) {this.showButton(this.showModalBtn)}
             },
             //提取数组不同值
             judgeArr(arr1,arr2){
@@ -398,9 +425,9 @@
                 window.localStorage.setItem(this.tableName+'.rowCount',arg)
             },
 
-            //行单选
-            hanleRowClick(a,b){
-                console.log(a,b)
+            //行单选存数据
+            hanleRowClick(data){
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form})
             }
         }
     }
@@ -431,9 +458,9 @@
         box-sizing: content-box !important;
     }
     .ivu-table-row-highlight td{
-        background-color: #6cbcFa;
+        background-color: #8ee1fa;
     }
     .ivu-table-row-hover td{
-        background-color: #6cbcFa !important;
+        background-color: #8ee1fa !important;
     }
 </style>
