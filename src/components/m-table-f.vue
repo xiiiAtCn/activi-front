@@ -163,7 +163,7 @@
             // 配置表格
             handleDefine () {
                 this.getColumnsDataWay(this.cols)
-                this.showButton(this.showModalBtn)
+                //this.showButton(this.showModalBtn)
             },
             // columnsData存入设置
             getLength(str){
@@ -293,6 +293,7 @@
                 }else{
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
+                this.showButton(this.showModalBtn)
                 this.removeColButton()
             },
             //是否去除无用的操作列
