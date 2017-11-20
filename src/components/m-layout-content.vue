@@ -34,7 +34,7 @@
                                 <span class="daJieStyle5">developer</span>
                             </div>
                             <div class="daJieStyle6">
-                                <a href="/layoutContent/04/workbench" class="exit">桌面</a>
+                                <a @click="myDesk" class="exit">桌面</a>
                                 <a href="javascript:;" class="exit">退出</a>
                                 <a href="javascript:;" class="designStyle daJieStyle7" @click="showDesign"
                                    v-if="designFlag">
@@ -126,6 +126,11 @@
             }
         },
         methods: {
+            myDesk () {
+                this.$router.push({
+                    path: '/layoutContent/04/workbench'
+                });
+            },
             getLeftMenu () {
                 let currentId = this.$route.params.id
                 this.secondUrl = `/layoutContent/${currentId}`
