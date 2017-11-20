@@ -16,9 +16,13 @@ let tableFShim = Vue.component('tableF-Shim', {
                 rowsContent: this.rowsContent,
                 tableHeight: this.tableHeight,
                 search:this.showSearch,//是否显示搜索框
-                tableName:this.tableName,//为本地存贮提供表格名字
+                tableName:'',//为本地存贮提供表格名字
                 serverPage:false,//是否服务器分页
-                checkRow:this.checkRow//是否行单选
+                checkRow:this.checkRow, //是否行单选
+
+                form:this.form, //往vuex存数据的地址
+                name:this.name //selectid
+
             },
             on:{
                 rowsPageChange : this.handleRowsPageChange
@@ -51,6 +55,15 @@ let tableFShim = Vue.component('tableF-Shim', {
             default () {
                 return {}
             }
+        },
+        form:{
+            type:String,
+            default:''
+        }
+    },
+    computed:{
+        name () {
+            return _.get(this.define, 'id', '')
         }
     },
     methods: {
