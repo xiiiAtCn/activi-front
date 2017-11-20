@@ -79,10 +79,11 @@ export default {
                     boId:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'boid'], '')
                 }
             }
-            console.log('action is',action)
             getData(action,(data,err)=>{
                 if (data) {
-                    this.objectModel = data[this.name]
+                    for(let key in data){
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key]}, form: this.formTmp})
+                    }
                 }
             })
         }
