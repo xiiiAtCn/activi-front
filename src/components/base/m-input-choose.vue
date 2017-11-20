@@ -24,7 +24,7 @@
 <script>
     import mixin from './mixin'
     import _ from 'lodash'
-    import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
+    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
     import {getData} from 'utils/actionUtils'
 
 export default {
@@ -75,14 +75,15 @@ export default {
         getChooseData(){
             let action={
                 url:this.backUrl,
+                type: 'GET',
                 queryParams:{
                     boId:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'boid'], '')
                 }
             }
             getData(action,(data,err)=>{
                 if (data) {
-                    for(let key in data){
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key]}, form: this.formTmp})
+                    for(let key of Object.keys(data)){
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: 'mInput'}, form: this.formTmp})
                     }
                 }
             })
