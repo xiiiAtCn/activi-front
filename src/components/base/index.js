@@ -32,6 +32,9 @@ const mMultiCheck = resolve =>
 const mNumber = resolve =>
     require(['./m-number.vue'], resolve)
 
+const mPictureUpload = resolve =>
+    require(['./m-picUpload.vue'], resolve)
+
 const mRow = resolve =>
     require(['./m-row.vue'], resolve)
 
@@ -70,6 +73,7 @@ Vue.component('mLabelInput', mLabelInput)
 Vue.component('mLoading', mLoading)
 Vue.component('mMultiCheck', mMultiCheck)
 Vue.component('mInteger', mNumber)
+Vue.component('mPictureUpload', mPictureUpload)
 Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
 Vue.component('mSingleCheck', mSingleCheck)

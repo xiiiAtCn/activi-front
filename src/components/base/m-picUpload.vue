@@ -5,30 +5,34 @@
                 <img :src="item.url">
                 <div class="picture-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleView(item.name, item.url)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                    <template v-if="!readonly">
+                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                    </template>
                 </div>
             </template>
             <template v-else>
                 <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
             </template>
         </div>
-        <Upload
-            ref="upload"
-            :show-upload-list="false"
-            :before-upload="handleBeforeUpload"
-            :on-success="handleSuccess"
-            :on-error="handleError"
-            :on-format-error="handleFormatError"
-            :on-exceeded-size="handleMaxSize"
-            :max-size="maxSize"
-            :format="format"
-            type="drag"
-            :action="uploadAddress"
-            class="upload-body">
-            <div class="upload-camera">
-                <Icon type="camera" size="20"></Icon>
-            </div>
-        </Upload>
+        <template v-if="!readonly">
+            <Upload
+                ref="upload"
+                :show-upload-list="false"
+                :before-upload="handleBeforeUpload"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+                :on-format-error="handleFormatError"
+                :on-exceeded-size="handleMaxSize"
+                :max-size="maxSize"
+                :format="format"
+                type="drag"
+                :action="uploadAddress"
+                class="upload-body">
+                <div class="upload-camera">
+                    <Icon type="camera" size="20"></Icon>
+                </div>
+            </Upload>
+        </template>
         <Modal title="查看图片" v-model="visible">
             <img :src="imgUrl" v-if="visible" style="width: 100%">
         </Modal>
@@ -36,14 +40,15 @@
 </template>
 <script>
     import _ from 'lodash'
+    import mixin from './mixin'
     export default {
         name:'m-picture-upload',
+        mixins: [mixin],
         props:{
             define: {
                 type: Object,
                 default() {
                     return {
-
                     }
                 }
             }
