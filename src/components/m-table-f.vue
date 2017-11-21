@@ -37,7 +37,7 @@
             </Col>
         </Row>
         <div>
-            <Table :highlight-row="checkRow" border @on-current-change="hanleRowClick"
+            <Table :highlight-row="checkRow" border @on-current-change="handleRowClick"
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
@@ -193,6 +193,7 @@
                         render: (h, params) => {
                             if(self.columnsData){
                                 self.columnsData.forEach((v,j)=>{
+                                    if(!v.key){return}
                                     if(v.key === val.field && self.getLength(params.row[val.field]) > self.columnsData[j].width){
                                         if(!self.columnsData[j]){return}
                                         self.columnsData[j].width = self.getLength(params.row[val.field])
@@ -276,7 +277,8 @@
                                     marginRight: '5px'
                                 },
                                 on: {
-                                    click: () => {
+                                    click: (e) => {
+                                        e.preventDefault()
                                         this.handleButtonClick(params, val)
                                     }
                                 }
@@ -299,7 +301,7 @@
             //是否去除无用的操作列
             removeColButton(){
                 if(this.showModalBtn.length === 0){
-                    let i=1
+                    let i=0
                     while (this.columnsData.length !== 0){
                         if(this.columnsData[i].key === 'action'){
                             this.columnsData.splice(i,1)
@@ -427,7 +429,7 @@
             },
 
             //行单选存数据
-            hanleRowClick(data){
+            handleRowClick(data){
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form})
             }
         }
