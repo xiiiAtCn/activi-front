@@ -35,7 +35,39 @@ Vue.component('mDetailTable', {
         }
     },
     computed: {
+        columns() {
+            let cols = this.define['columns'] || []
+            let columns = this.handleColumns(cols)
+            let tmp = _.get(this.$store.state.formData, this.uid)
+            if(tmp === undefined) {
+                this.$store.commit(ADD_NEW_OBJECT,
+                    {
+                        attribute: this.uid,
+                        value: {
+                            loading: true,
+                            reset: false,
+                            validate: false,
+                            visible: false
+                        }
+                    }
+                )
+                this.$store.commit(FORM_ELEMENT_VALUE, {checkCount: columns.length, form: this.uid})
+            }
+            return columns
+        },
         dataSource() {
+            let form = _.get(this.$store.state.formData, this.form || 'form')
+            if(form === undefined) {
+                this.$store.commit(ADD_NEW_OBJECT,
+                    {
+                        attribute: this.form || 'form',
+                        value: {
+                            reset: false,
+                            validate: false
+                        }
+                    }
+                )
+            }
             let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             if(source === undefined )
                 this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
@@ -82,26 +114,6 @@ Vue.component('mDetailTable', {
             let url = this.define['data_url'] || null
             return url
         },
-        columns() {
-            let cols = this.define['columns'] || []
-            let columns = this.handleColumns(cols)
-            let tmp = _.get(this.$store.state.formData, this.uid)
-            if(tmp === undefined) {
-                this.$store.commit(ADD_NEW_OBJECT,
-                    {
-                        attribute: this.uid,
-                        value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false
-                        }
-                    }
-                )
-                this.$store.commit(FORM_ELEMENT_VALUE, {checkCount: columns.length, form: this.uid})
-            }
-            return columns
-        }
     },
     mounted() {
         this.$nextTick(() => {
