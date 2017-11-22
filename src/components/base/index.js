@@ -14,6 +14,10 @@ const mDetailChoose = resolve =>
 
 const mTable2 = resolve =>
     require(['./m-detailTable.vue'], resolve)
+
+const mFileUpload = resolve =>
+    require(['./m-fileUpload.vue'], resolve)
+
 const mInput = resolve =>
     require(['./m-input.vue'], resolve)
 
@@ -66,6 +70,7 @@ Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
 Vue.component('mDetailChoose', mDetailChoose)
+Vue.component('mFileUpload', mFileUpload)
 Vue.component('mTable2', mTable2)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)

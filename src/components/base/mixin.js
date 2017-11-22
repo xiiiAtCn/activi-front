@@ -44,7 +44,7 @@ const mixin = {
             return _.get(this.define, 'visible', true)
         },
         name () {
-            return _.get(this.define, 'name')
+            return _.get(this.define, 'name', 'defaultName')
         },
         dataType () {
             return _.get(this.define, 'dataType', 'String')
@@ -111,12 +111,7 @@ const mixin = {
                 return tmp
             },
             set (value) {
-                // 数组暂不支持，需要特殊处理
-                if (typeof value === 'string' || value instanceof Date) {
-                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value, type: this.$options._componentTag}, form: this.form})
-                } else {
-                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: value, form: this.form})
-                }
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value, type: this.$options._componentTag}, form: this.form})
             }
         },
         isRelated () {

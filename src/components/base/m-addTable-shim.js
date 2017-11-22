@@ -74,7 +74,6 @@ Vue.component('mDetailTable', {
                     value: [],
                     type: this.$options._componentTag
                 }})
-            
             source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             if(source.type === undefined) 
                 this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
