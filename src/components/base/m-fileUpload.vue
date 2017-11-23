@@ -62,10 +62,10 @@
         },
         computed: {
             uploadAddress() {
-                return _.get(this.define, 'uploadAddress', '/api/file/picUpload')
+                return _.get(this.define, 'uploadAddress', '/api/file/fileUpload')
             },
             deleteAddress() {
-                return _.get(this.define, 'deleteAddress', '/api/file/picDelete')
+                return _.get(this.define, 'deleteAddress', '/api/file/fileDelete')
             },
             picMaxNumber() {
                 return _.get(this.define, 'maxNumber', 5)
@@ -111,7 +111,7 @@
             handleRemove (file) {
                 console.log(file)
                 let id = file.id
-                console.log( '请求路径为 ', this.deleteAddress + '?picId=' + id)
+                console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
                 this.setUrl(this.deleteAddress).setQuery({picId: id}).forGet((result, err) => {
                     if(err) {
                         this.$Message.error(`删除文件${file.name}失败`)

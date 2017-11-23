@@ -3,9 +3,9 @@
         <Row>
             <div class="picture-upload-list" v-for="item in objectModel" :key="item.url">
                 <template v-if="item.status === 'finished'">
-                    <img :src="item.url">
+                    <img :src="item.thumbnailUrl">
                     <div class="picture-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView(item.name, item.url)"></Icon>
+                        <Icon type="ios-eye-outline" @click.native="handleView(item.name, item.previewUrl)"></Icon>
                         <template >
                             <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                         </template>
@@ -35,7 +35,7 @@
                     </div>
                 </Upload>
             </template>
-            <Modal title="查看图片" v-model="show">
+            <Modal title="查看图片" v-model="show" :width="640">
                 <img :src="imgUrl" v-if="show" style="width: 100%">
             </Modal>
         </Row>
@@ -110,6 +110,7 @@
                 }
             },
             handleView (name, url) {
+                debugger
                 this.show = true
                 this.imgUrl = url
             },
@@ -124,11 +125,9 @@
             
             handleRemove (file) {
                 console.log(file)
-                let id = file.id
-                console.log( '请求路径为 ', this.deleteAddress + '?picId=' + id)
-                this.setUrl(this.deleteAddress).setQuery({picId: id}).forGet((result, err) => {
+                let {originalId, thumbnailId, previewId} = file
+                this.setUrl(this.deleteAddress).setQuery({originalId, thumbnailId, previewId}).forGet((result, err) => {
                     debugger
-                    
                     if(err) {
                         this.$Message.error(`删除图片${file.name}失败`)
                     } else {
@@ -141,8 +140,10 @@
             handleSuccess (res, file) {
                 //测试数据
                 debugger
-                file['url'] = file['response']['url']
-                file['id'] = file['response']['id']
+                Object.assign(file, {
+                    ...file['response']
+                })
+                this.valid()
                 this.$Message.success('上传成功')
             },
             handleError() {
@@ -160,19 +161,19 @@
 <style scoped>
     .upload-body {
         display: inline-block;
-        width:58px;
+        width:96px;
     }
     .upload-camera {
-        width: 58px;
-        height:58px;
-        line-height: 58px;
+        width: 96px;
+        height:96px;
+        line-height: 96px;
     }
     .picture-upload-list{
         display: inline-block;
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
         text-align: center;
-        line-height: 60px;
+        line-height: 100px;
         border: 1px solid transparent;
         border-radius: 4px;
         overflow: hidden;
