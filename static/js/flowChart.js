@@ -1572,7 +1572,7 @@ function drawDoingNode(gc, jobMeta){
     //绘制小框内容
     gc.fillStyle = "rgb(210, 224, 246)";
     gc.strokeStyle = "#F8F8F9";
-	gc.strokeRoundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, 4,4);
+	gc.strokeRoundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, 10,10);
 	gc.fillStyle = BLACK_COLOR;		
 	
 	drawNodeContent(gc, jobMeta);
@@ -1652,7 +1652,7 @@ function drawNodeContent(gc, jobMeta){
 
 
 		//绘制小矩形框的头部
-		gc.fillRect(sx + jobMeta.sx + 1, sy + jobMeta.sy + 1, jobMeta.ww - 2, jobMeta.hh / 3);
+		gc.roundRect(sx + jobMeta.sx + 1, sy + jobMeta.sy + 1, jobMeta.ww - 2, jobMeta.hh / 3, {ul:4,ur:4,ll:0,lr:0}, true, true);
 		//小框字体颜色
 		gc.fillStyle = WHITE_COLOR;
 
