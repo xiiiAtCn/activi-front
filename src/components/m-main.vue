@@ -8,8 +8,8 @@
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
                     <Breadcrumb v-if="define.title instanceof Array">
-                        <Breadcrumb-item 
-                            v-for="(item, index) in define.title" 
+                        <Breadcrumb-item
+                            v-for="(item, index) in define.title"
                             href=""
                             :key="index">
                             {{item}}
@@ -59,7 +59,7 @@
                     @click="btnClick(btn.action)">
                     {{ btn.text }}
                 </Button>
-                <Dropdown 
+                <Dropdown
                     v-if="submitBtn.length > 1"
                     trigger="click">
                     <Button>
@@ -82,7 +82,7 @@
                         </template>
                     </DropdownMenu>
                 </Dropdown>
-                <Button 
+                <Button
                     v-if="submitBtn.length === 1"
                     @click="btnClick(submitBtn[0].action)">
                     {{ submitBtn[0].text }}
@@ -98,6 +98,7 @@
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
+    import util from 'util'
 
     import { deepCopy } from 'utils/utils'
 
@@ -162,7 +163,22 @@
                 this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
             },
             'define.status_url'() {
-                if (this.define.status_url) {
+                //edit by f in 11.23
+                if(util.isObject(this.define.status_url)){
+                    let str = this.define.status_url.url
+                    for(let key in this.define.status_url.pathParams){
+                        str =str.replace(`{${key}}`,this.define.status_url.pathParams[key])
+                    }
+                    if(this.define.status_url.queryParams){
+                        let list = this.define.status_url.queryParams
+                        str += '?'
+                        for(let key in list){
+                            str += `${key}=${list[key]}&`
+                        }
+                        str = str.replace(/&$/,'')
+                    }
+                    this.$store.dispatch('putStatus', {'url': str})
+                }else if (this.define.status_url) {
                     this.$store.dispatch('putStatus', {'url': this.define.status_url})
                 }
             }
