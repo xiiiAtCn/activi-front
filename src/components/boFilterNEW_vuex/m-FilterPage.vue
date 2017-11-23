@@ -120,60 +120,69 @@ export default{
     },
     data () {
         return {
-            navSelectDefine: {},
-            filterDefine: {},
-            tableDefine: {}
+            // navSelectDefine: {},
+            // filterDefine: {},
+            // tableDefine: {}
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            this.navSelectDefine = navSelectDefine
-            this.filterDefine = filterDefine
-            this.tableDefine = tableDefine
-            // 设置id
-            this.$set(this.navSelectDefine, 'id', this.navSelectId)
-            this.$set(this.filterDefine, 'id', this.filterId)
-            this.$set(this.tableDefine, 'id', this.tableId)
+        // this.$nextTick(() => {
+        //     this.navSelectDefine = navSelectDefine
+        //     this.filterDefine = filterDefine
+        //     this.tableDefine = tableDefine
+        //     // 设置id
+        //     this.$set(this.navSelectDefine, 'id', this.navSelectId)
+        //     this.$set(this.filterDefine, 'id', this.filterId)
+        //     this.$set(this.tableDefine, 'id', this.tableId)
 
-            // 设置url
-            this.$set(this.navSelectDefine.dataLink[0].link, 'url', this.navDataUrl)
-            this.$set(this.filterDefine.dataLink[0].link, 'url', this.filterDataUrl)
-            this.$set(this.tableDefine.dataLink[0].link, 'url', this.tableDataUrl)
-            this.$set(this.tableDefine.dataLink[1].link, 'url', this.tableDefineUrl)
+        //     // 设置url
+        //     this.$set(this.navSelectDefine.dataLink[0].link, 'url', this.navDataUrl)
+        //     this.$set(this.filterDefine.dataLink[0].link, 'url', this.filterDataUrl)
+        //     this.$set(this.tableDefine.dataLink[0].link, 'url', this.tableDataUrl)
+        //     this.$set(this.tableDefine.dataLink[1].link, 'url', this.tableDefineUrl)
 
-            // 设置关联关系
-            this.$set(this.navSelectDefine, 'relation', [this.navSelectId])
-            this.$set(this.navSelectDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
-            this.$set(this.filterDefine, 'relation', [this.navSelectId])
-            this.$set(this.filterDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
-            this.$set(this.tableDefine, 'relation', [this.navSelectId, this.filterId])
-            this.$set(this.tableDefine.dataLink[0].link.body.id, 'value', this.navSelectId)
-            this.$set(this.tableDefine.dataLink[0].link.body.condition, 'value', this.filterId)
-            this.$set(this.tableDefine.dataLink[1].link.queryParams.id, 'value', this.navSelectId)
-        })
+        //     // 设置关联关系
+        //     this.$set(this.navSelectDefine, 'relation', [this.navSelectId])
+        //     this.$set(this.navSelectDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
+        //     this.$set(this.filterDefine, 'relation', [this.navSelectId])
+        //     this.$set(this.filterDefine.dataLink[0].link.queryParams.id, 'value', this.navSelectId)
+        //     this.$set(this.tableDefine, 'relation', [this.navSelectId, this.filterId])
+        //     this.$set(this.tableDefine.dataLink[0].link.body.id, 'value', this.navSelectId)
+        //     this.$set(this.tableDefine.dataLink[0].link.body.condition, 'value', this.filterId)
+        //     this.$set(this.tableDefine.dataLink[1].link.queryParams.id, 'value', this.navSelectId)
+        // })
     },
     computed: {
-        navDataUrl () {
-            return _.get(this.define, 'navDataUrl', '')
+        // navDataUrl () {
+        //     return _.get(this.define, 'navDataUrl', '')
+        // },
+        // filterDataUrl () {
+        //     return _.get(this.define, 'filterDataUrl', '')
+        // },
+        // tableDataUrl () {
+        //     return _.get(this.define, 'tableDataUrl', '')
+        // },
+        // tableDefineUrl () {
+        //     return _.get(this.define, 'tableDefineUrl', '')
+        // },
+        // navSelectId () {
+        //     return _.get(this.define, 'navSelectId', 'select')
+        // },
+        // filterId () {
+        //     return _.get(this.define, 'filterId', 'filter') 
+        // },
+        // tableId () {
+        //     return _.get(this.define, 'dataListName', 'table')
+        // },
+        navSelectDefine () {
+            return _.get(this.define, 'navSelectRelation', {})
         },
-        filterDataUrl () {
-            return _.get(this.define, 'filterDataUrl', '')
+        filterDefine () {
+            return _.get(this.define, 'filterRelation', {})
         },
-        tableDataUrl () {
-            return _.get(this.define, 'tableDataUrl', '')
-        },
-        tableDefineUrl () {
-            return _.get(this.define, 'tableDefineUrl', '')
-        },
-        navSelectId () {
-            return _.get(this.define, 'navSelectId', 'select')
-        },
-        filterId () {
-            return _.get(this.define, 'filterId', 'filter') 
-        },
-        tableId () {
-            return _.get(this.define, 'dataListName', 'table')
-        },
+        tableDefine () {
+            return _.get(this.define, 'tableRelation', {})
+        }
     },
 }
 </script>
