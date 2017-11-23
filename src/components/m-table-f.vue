@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div v-for="item in operation"  class="button-container" >
-                    <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
+                    <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.url)">{{item.text}}</Button>
                 </div>
             </Col>
         </Row>
@@ -163,7 +163,7 @@
             // 配置表格
             handleDefine () {
                 this.getColumnsDataWay(this.cols)
-                //this.showButton(this.showModalBtn)
+                this.showButton(this.showModalBtn)
             },
             // columnsData存入设置
             getLength(str){
