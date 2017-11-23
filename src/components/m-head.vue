@@ -1,6 +1,6 @@
 <template>
     <div class="s-nav">
-        <Menu active-name="" theme="light" class="themeLight">
+        <Menu active-name="" theme="light" class="themeLight" style="width:auto;">
             <li class="layout-logo">
                 <div class="posRea">
                     <a href="http://www.sohu.com/" target="_blank"><img src="../assets/img/yushi-logo.png" alt=""></a>

@@ -14,6 +14,10 @@ const mDetailChoose = resolve =>
 
 const mTable2 = resolve =>
     require(['./m-detailTable.vue'], resolve)
+
+const mFileUpload = resolve =>
+    require(['./m-fileUpload.vue'], resolve)
+
 const mInput = resolve =>
     require(['./m-input.vue'], resolve)
 
@@ -32,7 +36,7 @@ const mMultiCheck = resolve =>
 const mNumber = resolve =>
     require(['./m-number.vue'], resolve)
 
-const mPictureUpload = resolve =>
+const mPicUpload = resolve =>
     require(['./m-picUpload.vue'], resolve)
 
 const mRow = resolve =>
@@ -66,6 +70,7 @@ Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
 Vue.component('mDetailChoose', mDetailChoose)
+Vue.component('mFileUpload', mFileUpload)
 Vue.component('mTable2', mTable2)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)
@@ -73,7 +78,7 @@ Vue.component('mLabelInput', mLabelInput)
 Vue.component('mLoading', mLoading)
 Vue.component('mMultiCheck', mMultiCheck)
 Vue.component('mInteger', mNumber)
-Vue.component('mPictureUpload', mPictureUpload)
+Vue.component('mPicUpload', mPicUpload)
 Vue.component('mRow', mRow)
 Vue.component('mSelect', mSelect)
 Vue.component('mSingleCheck', mSingleCheck)
