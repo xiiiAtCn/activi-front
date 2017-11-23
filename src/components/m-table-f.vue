@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div v-for="item in operation"  class="button-container" >
-                    <Button  :type="item.type?item.type:'primary'"  @click="handleTopButton(item.url)">{{item.text}}</Button>
+                    <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.action)">{{item.text}}</Button>
                 </div>
             </Col>
         </Row>
@@ -163,7 +163,7 @@
             // 配置表格
             handleDefine () {
                 this.getColumnsDataWay(this.cols)
-                //this.showButton(this.showModalBtn)
+                if(this.showModalBtn) this.showButton()
             },
             // columnsData存入设置
             getLength(str){
@@ -245,7 +245,7 @@
                 }
             },
             //配置操作的按钮
-            showButton(smb){
+            showButton(){
                 let i = 0
                 let existence =false
                 while (this.columnsData.length !== 0){
@@ -258,33 +258,30 @@
                 }
                 if(existence){
                     return
+                }else if(!this.showModalBtn){
+                    return
                 }
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: smb.length * 60,
+                    width: 60,
                     align: 'center',
                     fixed: 'right',
                     render: (h, params) => {
-                        let buttonList = []
-                        smb.forEach((val) => {
-                            buttonList.push(h('Button', {
+                        let buttons=params.row.buttons[0]
+                        return h('div', [
+                            h('Button', {
                                 props: {
-                                    type: val.type,
-                                    size: val.size ? val.size : 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
+                                    type: buttons.type ? buttons.type : 'primary',
+                                    size: buttons.size ? buttons.size : 'small'
                                 },
                                 on: {
-                                    click: (e) => {
-                                        e.preventDefault()
-                                        this.handleButtonClick(params, val)
+                                    click: () => {
+                                        this.handleButtonClick(buttons)
                                     }
                                 }
-                            }, val.text))
-                        })
-                        if (buttonList.length > 0) { return h('div', buttonList) } else { return h() }
+                            }, '查看')
+                        ])
                     }
                 })
             },
@@ -295,7 +292,7 @@
                 }else{
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
-                this.showButton(this.showModalBtn)
+                this.showButton()
                 this.removeColButton()
             },
             //是否去除无用的操作列
@@ -314,16 +311,16 @@
             },
 
             // 处理顶部按钮
-            handleTopButton (url) {
-                dispatch(url)
+            handleTopButton (action) {
+                dispatch(action)
             },
             //发送搜索事件数据
             handleTopSearch(){
                 bus.$emit('topSearchMsg',this.valueSearch)
             },
             // 处理表内按钮点击
-            handleButtonClick (params, row) {
-                dispatch(params.row._actions[row.field])
+            handleButtonClick (buttons) {
+                dispatch(buttons.action)
             },
 
             // 筛选列
@@ -342,7 +339,7 @@
                 } else {
                     this.checkAllGroup = []
                     this.columnsData = []
-                    if(this.showModalBtn.length !== 0) {this.showButton(this.showModalBtn)}
+                    if(this.showModalBtn) {this.showButton()}
                 }
                 this.dataListChange = _.cloneDeep(this.checkAllGroup)
             },
@@ -381,7 +378,7 @@
                         }
                     })
                 }
-                if(this.showModalBtn.length !== 0) {this.showButton(this.showModalBtn)}
+                if(this.showModalBtn) {this.showButton()}
             },
             //提取数组不同值
             judgeArr(arr1,arr2){
