@@ -141,6 +141,15 @@ function asLink(action) {
 
             //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
             // }
+            //144-151 change by f in 11.23
+            if(util.isObject(action.url)){
+                let str = action.url.url
+                for(let key in action.url.pathParams){
+                    str =str.replace(`{${key}}`,action.url.pathParams[key])
+                }
+                action.url=str
+            }
+
 
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
