@@ -1,20 +1,6 @@
 <template>
     <div>
         <Row>
-            <div class="picture-upload-list" v-for="item in objectModel" :key="item.url">
-                <template v-if="item.status === 'finished'">
-                    <img :src="item.thumbnailUrl">
-                    <div class="picture-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView(item.name, item.previewUrl)"></Icon>
-                        <template >
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                        </template>
-                    </div>
-                </template>
-                <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-            </div>
             <template >
                 <Upload
                     ref="upload"
@@ -29,15 +15,28 @@
                     :format="format"
                     type="drag"
                     :action="uploadAddress"
-                    class="upload-body">
-                    <div class="upload-camera">
-                        <Icon type="camera" size="20"></Icon>
-                    </div>
+                    class="upload-body"
+                >
+                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 </Upload>
             </template>
-            <Modal title="查看图片" v-model="show" :width="640">
-                <img :src="imgUrl" v-if="show" style="width: 100%">
-            </Modal>
+            <div v-for="item in objectModel" :key="item.url">
+                <template v-if="item.status === 'finished'">
+                    <div class="file-item">
+                        <Icon type="document-text"></Icon>
+                        <span>{{item.name}}</span>
+                        <template >
+                            <div class="file-delete-action">
+                                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+                <template v-else>
+                    {{item.name}}
+                    <Progress :percent="parseInt(item.percentage)" :stroke-width="5" ></Progress>
+                </template>
+            </div>
         </Row>
         <Row>
             <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
@@ -63,21 +62,21 @@
         },
         computed: {
             uploadAddress() {
-                return _.get(this.define, 'uploadAddress', '/api/file/picUpload')
+                return _.get(this.define, 'uploadAddress', '/api/file/fileUpload')
             },
             deleteAddress() {
-                return _.get(this.define, 'deleteAddress', '/api/file/picDelete')
+                return _.get(this.define, 'deleteAddress', '/api/file/fileDelete')
             },
             picMaxNumber() {
                 return _.get(this.define, 'maxNumber', 5)
             },
-            //图片后缀
+            //文件后缀
             format() {
-                return _.get(this.define, 'appendix', ['jpg', 'png'])
+                return _.get(this.define, 'appendix', ['doc', 'docx', 'pdf'])
             },
             //支持上传的文件的最大尺寸(单位为kb)
             maxSize() {
-                return _.get(this.define, 'maxSize', 4096)
+                return _.get(this.define, 'maxSize', 10240)
             }
         },
         watch: {
@@ -87,16 +86,8 @@
                 }
             }
         },
-        data () {
-            return {
-                imgUrl: '',
-                show: false
-            }
-        },
-        
         methods: {
             valid() {
-                debugger
                 if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel == undefined ? [] : this.objectModel
@@ -109,71 +100,56 @@
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             },
-            handleView (name, url) {
-                debugger
-                this.show = true
-                this.imgUrl = url
-            },
             handleBeforeUpload () {
                 const check = this.objectModel.length < this.picMaxNumber
                 if (!check) {
-                    this.$Message.error(`最多只能上传${this.picMaxNumber}张图片`)
+                    this.$Message.error(`最多只能上传${this.picMaxNumber}份文件`)
                     return false
-                } 
+                }
                 this.objectModel = this.$refs.upload.fileList
             },
-            
             handleRemove (file) {
                 console.log(file)
-                let {originalId, thumbnailId, previewId} = file
-                this.setUrl(this.deleteAddress).setQuery({originalId, thumbnailId, previewId}).forGet((result, err) => {
-                    debugger
+                let id = file.id
+                console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
+                this.setUrl(this.deleteAddress).setQuery({picId: id}).forGet((result, err) => {
                     if(err) {
-                        this.$Message.error(`删除图片${file.name}失败`)
+                        this.$Message.error(`删除文件${file.name}失败`)
                     } else {
-                        this.objectModel.splice(this.objectModel.indexOf(file), 1)
-                        this.$Message.success(`图片${file.name}已删除`)
+                        const fileList = this.$refs.upload.fileList.slice()
+                        fileList.splice(fileList.indexOf(file), 1)
+                        this.$refs.upload.fileList = fileList
+                        this.objectModel = this.$refs.upload.fileList
+                        this.$Message.success(`文件${file.name}已删除`)
                         this.valid()
                     }
                 })
             },
             handleSuccess (res, file) {
-                //测试数据
                 debugger
-                Object.assign(file, {
-                    ...file['response']
-                })
-                this.valid()
+                file['url'] = file['response']['url']
+                file['id'] = file['response']['id']
                 this.$Message.success('上传成功')
             },
             handleError() {
-                this.$Message.error('图片上传失败，请稍后重试')
+                this.$Message.error('上传失败，请稍后重试')
             },
             handleFormatError () {
-                this.$Message.error(`图片格式不正确，请上传${this.format.join('、')}格式的图片`)
+                this.$Message.error(`文件格式不正确，请上传${this.format.join('、')}格式的文件`)
             },
             handleMaxSize () {
-                this.$Message.error(`上传图片过大，图片最大为${Math.floor(this.maxSize / 1024)}M`)
+                this.$Message.error(`上传文件过大，文件最大为${Math.floor(this.maxSize / 1024)}M`)
             }
         }
     }
 </script>
 <style scoped>
-    .upload-body {
+    .file-upload-list{
         display: inline-block;
-        width:96px;
-    }
-    .upload-camera {
-        width: 96px;
-        height:96px;
-        line-height: 96px;
-    }
-    .picture-upload-list{
-        display: inline-block;
-        width: 100px;
-        height: 100px;
+        width: 60px;
+        height: 80px;
+        line-height: 80px;
         text-align: center;
-        line-height: 100px;
         border: 1px solid transparent;
         border-radius: 4px;
         overflow: hidden;
@@ -182,11 +158,8 @@
         box-shadow: 0 1px 1px rgba(0,0,0,.2);
         margin-right: 4px;
     }
-    .picture-upload-list img{
-        width: 100%;
-        height: 100%;
-    }
-    .picture-upload-list-cover{
+
+    .file-upload-list-cover{
         display: none;
         position: absolute;
         top: 0;
@@ -195,17 +168,39 @@
         right: 0;
         background: rgba(0,0,0,.6);
     }
-    .picture-upload-list:hover .picture-upload-list-cover{
+    .file-upload-list:hover .file-upload-list-cover{
         display: block;
     }
-    .picture-upload-list-cover i{
+
+    .file-item {
+        font-size:16px;
+        border-radius: 5px;
+        padding: 0 5px;
+    }
+
+    .file-item:hover {
+        background: rgba(0,0,0,.1);
+    }
+
+    .file-upload-list-cover i{
         color: #fff;
         font-size: 20px;
         cursor: pointer;
         margin: 0 2px;
     }
+
+    .file-delete-action {
+        float: right;
+        cursor: pointer;
+    }
+    .upload-body {
+        display: inline-block;
+        width:200px;
+    }
+
     div.item-error {
         font-size: small;
         color: red;
     }
+
 </style>

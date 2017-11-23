@@ -57,12 +57,44 @@
         data () {
             return {
                 urls: {
-                    // 获取 detailsColumns
-                    getDetailColumns: '/api/workflow/view/getDetailColumns',
                     // 获取 detailsData
-                    getDetailData: '/api/workflow/view/getDetailData/'
+                    getDetailData: '/prowf/prowf/query/findWfInsByWfMetaId/'
                 },
-                detailColumns: [],
+                // 列定义
+                detailColumns:  [
+                    {
+                        title: '实例名称',
+                        key: 'name'
+                    },
+                    {
+                        title: '负责人',
+                        key: 'no_1'
+                    },
+                    {
+                        title: '工期',
+                        key: 'no_2'
+                    },
+                    {
+                        title: '工时',
+                        key: 'no_3'
+                    },
+                    {
+                        title: '计划开始',
+                        key: 'planStart'
+                    },
+                    {
+                        title: '计划结束',
+                        key: 'planEnd'
+                    },
+                    {
+                        title: '实际开始',
+                        key: 'realStart'
+                    },
+                    {
+                        title: '实际结束',
+                        key: 'realEnd'
+                    }
+                ],
                 detailData: [],
                 // 默认不显示纵向边框
                 tableBorder: false,
@@ -157,7 +189,6 @@
             }
         },
         mounted () {
-            this.getRequest(this.urls.getDetailColumns, '', 'detailColumns', '')
             this.getDetailChild(this.$route.params.rowId, 0, this.pageSize, 'detailData')
         },
         watch: {
