@@ -74,7 +74,7 @@ export default {
                 url:this.backUrl,
                 type: 'GET',
                 queryParams:{
-                    boId:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'boid'], '')
+                    id:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'id'], '')
                 }
             }
             getData(action,(data,err)=>{
