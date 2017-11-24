@@ -89,7 +89,7 @@
                 this.$nextTick(() => {
                     e.target.value = value
                 })
-                this.objectModel = {value: String(value)}
+                this.objectModel = String(value)
                 this.valid()
             }
         }
