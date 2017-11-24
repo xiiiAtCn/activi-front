@@ -154,7 +154,7 @@
                 dispatch(url)
             },
             btnClick (action) {
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', action: action})
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: action})
             }
         },
         beforeRouteEnter (to, from, next) {
