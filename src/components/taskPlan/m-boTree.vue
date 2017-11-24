@@ -19,7 +19,7 @@
                 this.getData(item.children, (data, err) => {
                     if (data) {
                         setTimeout(() => {
-                            callback(data)
+                            callback(this.treeNodeShow(data))
                         })
                     }
                 })
@@ -46,14 +46,19 @@
                 }
                 return treeData
             },
-//            watchValuesChanged () {
-//                this.getTreeData()
-//            }
+            watchValuesChanged () {
+                this.getTreeData()
+            }
         },
         mounted () {
             console.info('mBoTree work')
             this.getTreeData()
-        }
+        },
+//        watch: {
+//            define () {
+//                this.getTreeData()
+//            }
+//        }
     }
 </script>
 

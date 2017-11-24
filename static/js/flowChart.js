@@ -123,7 +123,8 @@ function drawFlowChart(proWfMetaId) {
 		type: "GET",
 		dataType: "json",
 		contentType: "application/json",
-	    url: "/api/webserverconf/entitygrid/FlowChartForm",
+	    // url: "/api/webserverconf/entitygrid/FlowChartForm",
+        url: '/webserverconf/entitygrid/FlowChartForm',
 	    async: false,
 	    data: {id: proWfMetaId},
 	    success: function (data) {
@@ -191,7 +192,7 @@ function drawFlowChart(proWfMetaId) {
 
 /**
  * 鼠标按键按下事件
- * 
+ *
  * @param e 事件消息
  */
 function onMouseDown(e) {
@@ -202,7 +203,7 @@ function onMouseDown(e) {
 	// 换算成事件触发区域内部坐标
 	var mex = e.clientX - rect.left;
 	var mey = e.clientY - rect.top;
-		
+	
 	px = mex;
 	py = mey;
 	px0 = mex;
@@ -241,7 +242,7 @@ function onMouseDown(e) {
 
 /**
  * 鼠标按键抬起事件
- * 
+ *
  * @param e 事件消息
  */
 function onMouseUp(e) {
@@ -293,7 +294,7 @@ function onMouseUp(e) {
 	}
 	
 	switch (drawMode) {
-		case MODE_MOVE: 
+		case MODE_MOVE:
 			// 左侧内容区显示
 			if(null != paneWorkFlowNodeList){
 				if(null != selStatusMap){
@@ -551,7 +552,7 @@ function onMouseUp(e) {
 				var swimlane;
 				for (idx--; idx >= 0; idx--) {
 					swimlane = jobMeta.swimlaneList[idx];
-					if ((x + swimlane.ww / 2) < swimlaneMoveOffsetX && 
+					if ((x + swimlane.ww / 2) < swimlaneMoveOffsetX &&
 							((x + swimlane.ww) > swimlaneMoveOffsetX || 0 == idx)) {
 						//jobMeta.swimlaneList.remove(selSwimlane);
 						//jobMeta.swimlaneList.add(idx, selSwimlane);
@@ -571,7 +572,7 @@ function onMouseUp(e) {
 				var swimlane;
 				for (idx++; idx < num1; idx++) {
 					swimlane = jobMeta.swimlaneList[idx];
-					if((x + swimlane.ww / 2) < swimlaneMoveOffsetX && 
+					if((x + swimlane.ww / 2) < swimlaneMoveOffsetX &&
 							((x + swimlane.ww) > swimlaneMoveOffsetX || ((num1 - 1) == idx))){
 						//jobMeta.swimlaneList.remove(selSwimlane);
 						//jobMeta.swimlaneList().add(idx, selSwimlane);
@@ -600,7 +601,7 @@ function onMouseUp(e) {
 
 /**
  * 鼠标拖拽事件
- * 
+ *
  * @param e 事件消息
  */
 function onMouseDrag(e) {
@@ -634,7 +635,7 @@ function onMouseDrag(e) {
 			//if (null != pagmv && getChildren().contains(pagmv)) {
 			//	pagmv.setTranslateX(pagmv.getTranslateX() + dx);
 			//}
-			isDrag = true;						
+			isDrag = true;
 		}
 		return;
 	}
@@ -695,7 +696,7 @@ function onMouseDrag(e) {
 			}
 			if (null != selPt) {
 				if (0 < selPt.joinNodeId) {
-					setNewPointInJoinPt(mex, mey);								
+					setNewPointInJoinPt(mex, mey);
 				} else {
 					
 					selPt.x = selPt.x + dx;
@@ -815,7 +816,7 @@ function onMouseDrag(e) {
 
 /**
  * 鼠标移动事件
- * 
+ *
  * @param e 事件消息
  */
 function onMouseMove(e) {
@@ -837,11 +838,11 @@ function onMouseMove(e) {
 			var x1 = mex - sx;
 			var y1 = mey - sy;
 			
-			if ((CONFIRM_STATUS == selStatusMap.statusMapType || WORK_STATUS == selStatusMap.statusMapType) && 
+			if ((CONFIRM_STATUS == selStatusMap.statusMapType || WORK_STATUS == selStatusMap.statusMapType) &&
 					selStatusMap.sy < y1 && selStatusMap.sy + selStatusMap.hh > y1 && 4 >= Math.abs(x1 - selStatusMap.sx)) {
 				setCursor("col-resize");
 				drawMode = MODE_RESIZE_X1;
-			} else if ((CONFIRM_STATUS == selStatusMap.statusMapType || WORK_STATUS == selStatusMap.statusMapType) && 
+			} else if ((CONFIRM_STATUS == selStatusMap.statusMapType || WORK_STATUS == selStatusMap.statusMapType) &&
 					selStatusMap.sy < y1 && selStatusMap.sy + selStatusMap.hh > y1 && 4 >= Math.abs(x1 - selStatusMap.sx - selStatusMap.ww)) {
 				setCursor("col-resize");
 				drawMode = MODE_RESIZE_X2;
@@ -856,7 +857,7 @@ function onMouseMove(e) {
 		drawChart();
 		//drawNewNode(mex,mey);
 	} else if(MODE_NEW_STEP_LINK == drawMode){
-			
+		
 		//findSelStep4Link(mex,mey);
 		drawChart();
 		
@@ -921,7 +922,7 @@ function resetStatusMap(jobMeta){
 	agMapListTmp.concat(jobMeta.authGroupList);
 	//jobMeta.authGroupList.clear();
 	// 数组清空
-	jobMeta.authGroupList.length = 0; 
+	jobMeta.authGroupList.length = 0;
 	
 	if (0 < proWf.swimlaneList.length) {
 		var ww1 = 0;
@@ -1034,7 +1035,7 @@ function saveAction() {
 	drawChart();
 }
 
-function adjustmentDy4Transfer(link, selPt, y) {		
+function adjustmentDy4Transfer(link, selPt, y) {
 	var ptList = link.ptList;
 	var idx = ptList.indexOf(selPt);
 	if (0 == idx) {
@@ -1360,7 +1361,7 @@ function drawChart(){
 		gc.strokeStyle = "#E9EAEC";
 		gc.lineWidth = 1;
 		
-		gc.beginPath();	
+		gc.beginPath();
 		gc.moveTo(tmpX, 0);
 		gc.lineTo(tmpX, proWf.hh + sy);
 		gc.stroke();
@@ -1368,10 +1369,10 @@ function drawChart(){
 		
 		var swimlane;
 		for (var idx = 0; idx < swimlaneList.length; idx++) {
-			swimlane = swimlaneList[idx];				
+			swimlane = swimlaneList[idx];
 			tmpX += swimlane.ww;
 			
-			gc.beginPath();	
+			gc.beginPath();
 			gc.moveTo(tmpX, 0);
 			gc.lineTo(tmpX, proWf.hh + sy);
 			gc.stroke();
@@ -1409,7 +1410,7 @@ function drawChart(){
 	
 	gc.strokeStyle = BLACK_COLOR;
 	gc.fillStyle = BLACK_COLOR;
-	gc.lineWidth = 1;		
+	gc.lineWidth = 1;
 	var linkList = proWf.linkerList;
 	var flowLink1;
 	for (var i = 0; i < linkList.length; i++) {
@@ -1442,7 +1443,7 @@ function drawChart(){
 		gc.lineWidth = 1;
 		var offsetX = 0;
 		var swimlane;
-		for (var idx = 0; idx < swimlaneList.length; idx++){				
+		for (var idx = 0; idx < swimlaneList.length; idx++){
 			swimlane = swimlaneList[idx];
 			
 			if (selSwimlane == swimlane) {
@@ -1450,7 +1451,7 @@ function drawChart(){
 					gc.strokeStyle = "rgb(200, 200, 200)";
 					gc.lineWidth = 1;
 					
-					gc.beginPath();	
+					gc.beginPath();
 					gc.moveTo(tmpX, 0);
 					gc.lineTo(tmpX, SWIMLANE_HH);
 					gc.stroke();
@@ -1474,7 +1475,7 @@ function drawChart(){
 
 			
 			if (selSwimlane == swimlane) {
-				gc.lineWidth = 2;				
+				gc.lineWidth = 2;
 				gc.strokeStyle = RED_COLOR;
 				gc.strokeRect(tmpX, 1, selSwimlane.ww - 1, SWIMLANE_HH - 1);
 			}
@@ -1502,20 +1503,20 @@ function drawChart(){
 		if (null != selSwimlane) {
 			if (2 == swimlaneDragMode) {
 				gc.fillStyle = YELLOW_COLOR;
-				gc.fillRect(offsetX, 6, selSwimlane.ww, SWIMLANE_HH);				
+				gc.fillRect(offsetX, 6, selSwimlane.ww, SWIMLANE_HH);
 				
 				gc.strokeStyle = "rgb(200, 200, 200)";
 				gc.lineWidth = 1;
 				
-				gc.beginPath();	
+				gc.beginPath();
 				gc.moveTo(offsetX, 6);
 				gc.lineTo(offsetX, SWIMLANE_HH);
 				gc.stroke();
 				gc.closePath();
 				
-				gc.lineWidth = 2;				
+				gc.lineWidth = 2;
 				gc.strokeStyle = RED_COLOR;
-				gc.strokeRect(offsetX, 7, selSwimlane.ww - 1, SWIMLANE_HH - 1);					
+				gc.strokeRect(offsetX, 7, selSwimlane.ww - 1, SWIMLANE_HH - 1);
 				
 				gc.textAlign = "center";
 				gc.textBaseline = "middle";
@@ -1573,7 +1574,7 @@ function drawDoingNode(gc, jobMeta){
     gc.fillStyle = "rgb(210, 224, 246)";
     gc.strokeStyle = "#F8F8F9";
 	gc.strokeRoundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, 10,10);
-	gc.fillStyle = BLACK_COLOR;		
+	gc.fillStyle = BLACK_COLOR;
 	
 	drawNodeContent(gc, jobMeta);
 }
@@ -1612,7 +1613,7 @@ function drawNodeContent(gc, jobMeta){
 	var image = new Image();
 	var imageIn = new Image();
 	var imageOut = new Image();
-	var imageDefault = new Image(); 
+	var imageDefault = new Image();
 	var imageUrl= "img/tool_select_node.png";
 
 	if (PRO_JB_MT_CLS_WORK_FLOW == jobMeta.jobClass) {
@@ -1728,7 +1729,7 @@ function drawNodeContent(gc, jobMeta){
 		var lineX2 = sx + jobMeta.sx + jobMeta.ww - 10;
 		gc.lineWidth = 1;
 		
-		gc.beginPath();	
+		gc.beginPath();
 		gc.moveTo(lineX, sy + jobMeta.sy + (jobMeta.hh * 2 / 3));
 		gc.lineTo(lineX2, sy + jobMeta.sy + (jobMeta.hh * 2 / 3));
 		gc.stroke();
@@ -1831,7 +1832,7 @@ function drawLink(gc, link){
 		pt1 = ptList[i];
 		pt2 = ptList[i + 1];
 		
-		gc.beginPath();	
+		gc.beginPath();
 		gc.moveTo(sx + pt1.x, sy + pt1.y);
 		gc.lineTo(sx + pt2.x, sy + pt2.y);
 		gc.stroke();
@@ -1896,7 +1897,7 @@ function drawLink(gc, link){
 			ax = px - 5;
 			
 			by = py ;
-			bx = px + 5;	
+			bx = px + 5;
 		}
 		
 		gc.beginPath();
@@ -2000,7 +2001,7 @@ function drawSelLink(gc){
 	}
 }
 
-function drawNewNode(mex, mey){		
+function drawNewNode(mex, mey){
 	var gc = canvas.getGraphicsContext2D();
 	
 	var image = new Image();
@@ -2009,7 +2010,7 @@ function drawNewNode(mex, mey){
 		gc.strokeStyle = BLUE_COLOR;
 		gc.fillStyle = BLUE_COLOR;
 
-		gc.lineWidth = 2;		
+		gc.lineWidth = 2;
 		gc.roundRect(mex, mey, DEFAULT_NODE_WW, DEFAULT_NODE_HH, {ul:4,ur:4,ll:4,lr:4}, false, true);
 
         gc.font = FORMFONT;
@@ -2028,12 +2029,12 @@ function drawNewNode(mex, mey){
 			imageUrl = "img/tool_status_stop.png"
 		} else {
 			imageUrl = "img/tool_start_node.png"
-		}		
+		}
 	}
 	
 	image.src = imageUrl;
 	image.onload = function() {
-		gc.drawImage(image, mex + 4, mey + 4, 40, 40);	
+		gc.drawImage(image, mex + 4, mey + 4, 40, 40);
 	}
 }
 
@@ -2048,9 +2049,9 @@ function findSelStep4Link(x, y){
 	var flowNode;
 	for (var i = 0; i < flowNodeList.length; i++) {
 		flowNode = flowNodeList[i];
-		if (x >= (sx + flowNode.sx - 12) 
-				&& x <= (sx + flowNode.sx + flowNode.ww + 12) 
-				&& y >= (sy + flowNode.sy - 12) 
+		if (x >= (sx + flowNode.sx - 12)
+				&& x <= (sx + flowNode.sx + flowNode.ww + 12)
+				&& y >= (sy + flowNode.sy - 12)
 				&& y <= (sy + flowNode.sy + flowNode.hh + 12)) {
 			selJobMeta = flowNode;
 			return;
@@ -2068,9 +2069,9 @@ function findSelStep(x, y){
 	var flowNode;
 	for (var i = 0; i < flowNodeList.length; i++) {
 		
-		if (x > (sx + flowNode.sx ) 
-				&& x < (sx + flowNode.sx + flowNode.ww ) 
-				&& y > (sy + flowNode.sy ) 
+		if (x > (sx + flowNode.sx )
+				&& x < (sx + flowNode.sx + flowNode.ww )
+				&& y > (sy + flowNode.sy )
 				&& y < (sy + flowNode.sy + flowNode.hh )) {
 			selJobMeta = flowNode;
 			break;
@@ -2118,7 +2119,7 @@ function findSelObj(x, y){
 	var stepLink;
 	for (var i = 0; i < flowLinkList.length; i++) {
 		stepLink = flowLinkList[i];
-		if (x >= stepLink.sx + sx 
+		if (x >= stepLink.sx + sx
 				&& x <= stepLink.sx + stepLink.ww + sx
 				&& y >= stepLink.sy + sy
 				&& y <= stepLink.sy + 24 + sy) {
@@ -2196,9 +2197,9 @@ function findSelObj(x, y){
 					var dxx = pt2.x - pt1.x;
 					var dyy = pt2.y - pt1.y;
 					
-					if ((4 > Math.abs(dxx1) && 4 > Math.abs(dyy1)) 
+					if ((4 > Math.abs(dxx1) && 4 > Math.abs(dyy1))
 							|| (4 > Math.abs(dxx2) && 4 > Math.abs(dyy2))
-							|| 4 > Math.abs(dxx) 
+							|| 4 > Math.abs(dxx)
 							|| 4 > Math.abs(dyy)) {
 						
 						selLink = stepLink;
@@ -2273,7 +2274,7 @@ function findSelStep4DrawLink(x, y){
 		lp = new StatusLinkPoint(x1,maxy);
 	}
 	lp.joinNodeId = selJobMeta.id;
-	return lp;	
+	return lp;
 }
 
 function setNewPointInJoinPt(x, y) {
@@ -2291,7 +2292,7 @@ function setNewPointInJoinPt(x, y) {
 	y1 = adjustmentDy4Transfer(selLink, selPt, y1);
 	
 	var nodeList = proWf.proJobList;
-	 
+	
 	for (var i = 0; i < nodeList.length; i++) {
 		if (selPt.joinNodeId == nodeList[i].id) {
 			step1 = nodeList.get(i);
@@ -2359,7 +2360,7 @@ function delSelObj() {
 		} else {
 			proWf.actionType = ACTIONTYPE_UPDATE;
 		}
-	}		
+	}
 	if (null != paneProWfNodeList) {
 		//paneProWfNodeList.proWfMeta = proWf;
 		//paneProWfNodeList.drawView();
@@ -2444,7 +2445,7 @@ function setSelFormStatus(obj) {
 }
 
 function addNewSwimlane(authorityGroup) {
-	swimlane = new FormHandleStatusSwimlane();		
+	swimlane = new FormHandleStatusSwimlane();
 	swimlane.authorityGroupId = authorityGroup.id;
 	swimlane.authorityGroup = authorityGroup;
 	proWf.swimlaneList.push(swimlane);
@@ -2638,7 +2639,7 @@ function resetInOutDisVal4Job(jobMeta) {
 
 /**
  * ID是否包含在List中
- * 
+ *
  * @param list 列表
  * @param id 查找的ID
  * @return true 包含、false 不包含

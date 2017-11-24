@@ -21,7 +21,7 @@
                 this.getData('sectionDefine', (data, err) => {
                     if (data) {
                         this.tempContent = data.ui_content
-                    } 
+                    }
                 })
             },
         }
