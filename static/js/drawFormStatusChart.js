@@ -95,7 +95,8 @@ function drawStatusChart(formMetaId, formInsId) {
         type: "GET",
         dataType: "json",
         contentType: "application/json",
-        url: "webserverconf/entitygrid/FlowChartForm",
+        // url: "webserverconf/entitygrid/FlowChartForm",
+        url: '/webserverconf/entitygrid/FlowChartForm',
         async: false,
         data: {id: formMetaId},
         success: function (data) {

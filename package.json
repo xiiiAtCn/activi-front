@@ -13,7 +13,8 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
     "fixLint": "eslint --cache --c .eslintrc.js --fix --ext .js --ext .vue .\\src\\components",
-    "server-push": "git pull && git push"
+    "server-push": "git pull && git push",
+    "custom-dev": "git pull && npm run dev"
   },
   "dependencies": {
     "axios": "^0.16.2",

@@ -18,6 +18,7 @@
             <template >
                 <Upload
                     ref="upload"
+                    :data="data"
                     :multiple="true"
                     :show-upload-list="false"
                     :before-upload="handleBeforeUpload"
@@ -90,7 +91,10 @@
         data () {
             return {
                 imgUrl: '',
-                show: false
+                show: false,
+                data: {
+
+                }
             }
         },
         
@@ -106,6 +110,7 @@
                             this.errorMessage = '请上传图片'
                         }
                     }
+                    
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             },
@@ -114,12 +119,13 @@
                 this.show = true
                 this.imgUrl = url
             },
-            handleBeforeUpload () {
+            handleBeforeUpload (file) {
                 const check = this.objectModel.length < this.picMaxNumber
                 if (!check) {
                     this.$Message.error(`最多只能上传${this.picMaxNumber}张图片`)
                     return false
                 } 
+                this.data['filename'] = `${encodeURI(file.name)}`
                 this.objectModel = this.$refs.upload.fileList
             },
             
