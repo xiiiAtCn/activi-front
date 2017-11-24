@@ -21,12 +21,6 @@ export default {
     actions: {
         /* 获取页面组件状态 */
         putStatus: function ({ commit }, action) {
-            // const url = args.url
-            // fetch(url, function (error, body) {
-            //     if (error === null) {
-            //         commit('changeStauts', body.status)
-            //     }
-            // })
             getData(action, (result, err) => {
                 if (err === null) {
                     commit('changeStauts', result.status)
