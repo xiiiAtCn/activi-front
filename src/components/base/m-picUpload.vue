@@ -93,7 +93,6 @@
                 imgUrl: '',
                 show: false,
                 data: {
-
                 }
             }
         },

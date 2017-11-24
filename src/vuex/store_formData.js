@@ -1,6 +1,6 @@
 import Mutations from './Mutation'
 import Actions from './Action'
-import Request from 'utils/request-addon'
+import Request, {addQuery, replace} from 'utils/request-addon'
 import Vue from 'vue'
 import { getData, dispatch } from 'utils/actionUtils'
 import iView from 'iview'
@@ -97,11 +97,10 @@ export default {
                 checkedCount: 0,
             }
 
-            if(payload.requestUrl !== undefined) {
+            if(payload.request !== undefined) {
                 state[form] = {
                     ...state[form],
-                    [form + 'requestUrl']: payload.requestUrl,
-                    checkCount: 3
+                    [form + 'request']: payload.request,
                 }
             }
 
@@ -196,16 +195,28 @@ export default {
                                 delete copies[element]
                             }
                         })
-                        if(state[form][ form + 'requestUrl'] !== undefined) {
-                            request.setUrl(state[form][form+ 'requestUrl']).setBody(copies).forPost((data, err) => {
-                                if(err) {
-                                    console.log(err)
-                                    iView.Message.error('服务器出错了!')
-                                    commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
-                                    return
+                        if(state[form][ form + 'request'] !== undefined) {
+                            let action = state[form][ form + 'request']
+                            try {
+                                let url 
+                                url = action.url
+                                url = replace(url, action.pathParams || {})
+                                url = addQuery(url, action.queryParams || {})
+                                if (action.method !== 'POST') {
+                                    throw new Error('action\'s method must be post')
                                 }
-                                dispatch(data)
-                            })
+                                request.setUrl(url).setBody(copies).forPost((data, err) => {
+                                    if(err) {
+                                        console.log(err)
+                                        iView.Message.error('服务器出错了!')
+                                        commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                        return
+                                    }
+                                    dispatch(data)
+                                })
+                            } catch (e) {
+                                console.error(e)
+                            }
                         }
                     }
                 })

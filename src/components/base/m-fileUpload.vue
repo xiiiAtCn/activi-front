@@ -4,6 +4,7 @@
             <template >
                 <Upload
                     ref="upload"
+                    :data="data"
                     :multiple="true"
                     :show-upload-list="false"
                     :before-upload="handleBeforeUpload"
@@ -86,6 +87,12 @@
                 }
             }
         },
+        data() {
+            return {
+                data: {
+                }
+            }
+        },
         methods: {
             valid() {
                 if (!this.readonly) {
@@ -100,12 +107,13 @@
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                 }
             },
-            handleBeforeUpload () {
+            handleBeforeUpload (file) {
                 const check = this.objectModel.length < this.picMaxNumber
                 if (!check) {
                     this.$Message.error(`最多只能上传${this.picMaxNumber}份文件`)
                     return false
                 }
+                this.data['filename'] = `${encodeURI(file.name)}`
                 this.objectModel = this.$refs.upload.fileList
             },
             handleRemove (file) {
