@@ -39,8 +39,12 @@ export default function fetch(urlObject, callback) {
     axios.get(_url).then(function (res) {
         callback(null, res.data)
     }).catch(function (error) {
-        let response = error.response
-        codeClassify(response.status, response.statusText)
+        if(error.response){
+            let response = error.response
+            codeClassify(response.status, response.statusText)
+        }else {
+            console.log('Error', error.message);
+        }
     })
 }
 
@@ -49,10 +53,14 @@ export function post(url, body, callback) {
         callback(null, res.data)
     }).catch(
         function (error) {
-            let response = error.response
-            codeClassify(response.status, response.statusText)
+            if(error.response){
+                let response = error.response
+                codeClassify(response.status, response.statusText)
+            }else {
+                console.log('Error', error.message);
+            }
         }
-        )
+    )
 }
 
 function codeClassify(status, text) {

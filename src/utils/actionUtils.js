@@ -141,23 +141,14 @@ function asLink(action) {
 
             //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
             // }
-            //144-159 change by f in 11.23
+            //144-151 change by f in 11.23
             if(util.isObject(action.url)){
-                let str = action.url.url
-                for(let key in action.url.pathParams){
-                    str =str.replace(`{${key}}`,action.url.pathParams[key])
-                }
-                if(action.url.queryParams){
-                    let list = action.url.queryParams
-                    str += '?'
-                    for(let key in list){
-                        str += `${key}=${list[key]}&`
-                    }
-                    str = str.replace(/&$/,'')
-                }
-                action.url=str
+                let url
+                url = action.url.url
+                url = replace(url, action.url.pathParams || {})
+                url = addQuery(url, action.url.queryParams || {})
+                action.url = url
             }
-
 
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
