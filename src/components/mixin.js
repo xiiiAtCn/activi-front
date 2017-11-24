@@ -67,27 +67,32 @@ const mixin = {
             if (param) {
                 let componentData = this.form ? this.$store.state.componentPageData[this.form] : this.$store.state.componentPageData
                 for (let key of Object.keys(param)) {
-                    let value = param[key].value
-                    let defaultValue = param[key].defaultValue
-                    data[key] = NoData
-                    if (componentData) {
-                        // 如果为数组逐层取值 
-                        if (Array.isArray(value)) {
-                            data[key] = _.get(componentData, [...value], NoData)
-                        } else {
-                            data[key] = componentData[value] || NoData
+                    // 普通数据不处理
+                    if (!param[key].getVuexValue) {
+                        data[key] = param[key]
+                    } else {
+                        let value = param[key].value
+                        let defaultValue = param[key].defaultValue
+                        data[key] = NoData
+                        if (componentData) {
+                            // 如果为数组逐层取值 
+                            if (Array.isArray(value)) {
+                                data[key] = _.get(componentData, [...value], NoData)
+                            } else {
+                                data[key] = componentData[value] || NoData
+                            }
                         }
-                    }
-                    // vuex中没有数据，有默认值赋值，没有报错
-                    if (NoData === data[key]) {
-                        if (Object.keys(param[key]).includes('defaultValue')) {
-                            data[key] = defaultValue
-                        } else {
-                            throw new Error(`获取vuex中的数据时发生错误，vuex中没有key为${value}的数据`)
+                        // vuex中没有数据，有默认值赋值，没有报错
+                        if (NoData === data[key]) {
+                            if (Object.keys(param[key]).includes('defaultValue')) {
+                                data[key] = defaultValue
+                            } else {
+                                throw new Error(`获取vuex中的数据时发生错误，vuex中没有key为${value}的数据`)
+                            }
                         }
-                    }
-                    if (data[key] === null) {
-                        delete data[key]
+                        if (data[key] === null) {
+                            delete data[key]
+                        }
                     }
                 }                    
             }
@@ -125,7 +130,7 @@ const mixin = {
         },
         // 是否与其他组件关联
         isRelated () {
-            return _.get(this.define, 'isRelated', false)
+            return _.get(this.define, 'related', false)
         },
         // 与其他组件关联的数据
         relationData () {

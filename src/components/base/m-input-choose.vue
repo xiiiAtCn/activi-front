@@ -51,9 +51,6 @@ export default {
         },
         backUrl(){
             return _.get(this.define, 'backUrl', '')
-        },
-        name(){
-            return _.get(this.define, 'name', '')
         }
     },
     methods: {

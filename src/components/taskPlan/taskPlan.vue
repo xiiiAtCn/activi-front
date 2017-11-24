@@ -1,4 +1,3 @@
-
 <template>
     <div class="layout">
         <Col span="4">
@@ -40,7 +39,7 @@
     export default{
         data () {
             return {
-
+                // boTree 定义
                 treeDefine: {
                     isRelated: true,
                     relation: [ids.treeId],
@@ -63,7 +62,7 @@
                     ],
                     id: ids.treeId
                 },
-
+                // section部分 定义
                 sectionDefine: {
                     isRelated: true,
                     relation: [ids.treeId],
@@ -86,7 +85,6 @@
                     ],
                     id: ids.sectionId,
                 }
-
             }
         },
         methods: {
