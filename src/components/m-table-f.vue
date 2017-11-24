@@ -246,21 +246,6 @@
             },
             //配置操作的按钮
             showButton(){
-                let i = 0
-                let existence =false
-                while (this.columnsData.length !== 0){
-                    if(this.columnsData[i].key === 'action'){
-                        existence = true
-                        break
-                    }
-                    i++
-                    if(this.columnsData.length === i){break}
-                }
-                if(existence){
-                    return
-                }else if(!this.showModalBtn){
-                    return
-                }
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -280,10 +265,22 @@
                                         this.handleButtonClick(buttons)
                                     }
                                 }
-                            }, '查看')
+                            }, buttons.text)
                         ])
                     }
                 })
+                let i = 0
+                let existence =false
+                while (this.columnsData.length !== 0){
+                    if(this.columnsData[i].key === 'action'){
+                        if(existence === true){
+                            this.columnsData.splice(i,1)
+                        }
+                        existence = true
+                    }
+                    i++
+                    if(this.columnsData.length === i){break}
+                }
             },
             //tableData存入行数据
             handleContent(){
@@ -297,7 +294,7 @@
             },
             //是否去除无用的操作列
             removeColButton(){
-                if(this.showModalBtn.length === 0){
+                if(!this.showModalBtn){
                     let i=0
                     while (this.columnsData.length !== 0){
                         if(this.columnsData[i].key === 'action'){
