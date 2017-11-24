@@ -52,7 +52,7 @@
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
-            <ButtonGroup 
+            <!-- <ButtonGroup 
                 v-show="btnArr.length > 0"
                 class="form-button-group">
                 <Dropdown 
@@ -74,7 +74,17 @@
                         </template>
                     </DropdownMenu>
                 </Dropdown>
-            </ButtonGroup>
+            </ButtonGroup> -->
+            <div class="btn-container">
+                <Button
+                    v-for="(btn, index) in btnArr"
+                    :type="btn.type"
+                    class="submit-btn"
+                    :key="index"
+                    @click="btnClick(btn.action)">
+                    {{ btn.text }}
+                </Button>
+            </div>
         </div>
         <Back-top></Back-top>
     </div>
@@ -203,5 +213,13 @@
     }
     .form-button-group .drop-down-container{
         text-align: center;
+    }
+
+    .btn-container {
+        padding: 0 10px;
+    }
+    .btn-container .submit-btn{
+        float: right;
+        margin-right: 10px;
     }
 </style>
