@@ -138,22 +138,7 @@
                 this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
             },
             'define.status_url'() {
-                //edit by f in 11.23
-                if(util.isObject(this.define.status_url)){
-                    let str = this.define.status_url.url
-                    for(let key in this.define.status_url.pathParams){
-                        str =str.replace(`{${key}}`,this.define.status_url.pathParams[key])
-                    }
-                    if(this.define.status_url.queryParams){
-                        let list = this.define.status_url.queryParams
-                        str += '?'
-                        for(let key in list){
-                            str += `${key}=${list[key]}&`
-                        }
-                        str = str.replace(/&$/,'')
-                    }
-                    this.$store.dispatch('putStatus', {'url': str})
-                }else if (this.define.status_url) {
+                if (this.define.status_url) {
                     this.$store.dispatch('putStatus', {'url': this.define.status_url})
                 }
             }
