@@ -184,9 +184,10 @@ export default {
                 commit(Mutations.CLOSE_TABLE_LAYER, {form})
                 commit(Mutations.CLEAR_FORM_DATA, {form})
             } else {
+                let action = state[form][ form + 'request']
                 iView.Modal.confirm({
                     title: '确认',
-                    content: '确定提交',
+                    content:action && action.confirm ||'确定提交',
                     onOk:() => {
                         let copies = _.cloneDeep(state[form])
                         let keyList = Object.keys(copies)
@@ -195,17 +196,22 @@ export default {
                                 delete copies[element]
                             }
                         })
-                        if(state[form][ form + 'request'] !== undefined) {
-                            let action = state[form][ form + 'request']
+                        if(action !== undefined) {
                             try {
                                 let url 
-                                url = action.url
-                                url = replace(url, action.pathParams || {})
-                                url = addQuery(url, action.queryParams || {})
-                                if (action.method !== 'POST') {
+                                let urlObject = action.url
+                                if (urlObject.method !== 'POST') {
                                     throw new Error('action\'s method must be post')
                                 }
-                                request.setUrl(url).setBody(copies).forPost((data, err) => {
+                                url = urlObject.url
+                                url = replace(url, urlObject.pathParams || {})
+                                url = addQuery(url, urlObject.queryParams || {})
+                                let body = urlObject.body || {}
+                                body = {
+                                    ...body,
+                                    ...copies
+                                }
+                                request.setUrl(url).setBody(body).forPost((data, err) => {
                                     if(err) {
                                         console.log(err)
                                         iView.Message.error('服务器出错了!')
