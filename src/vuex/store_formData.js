@@ -221,6 +221,7 @@ export default {
                                     dispatch(data)
                                 })
                             } catch (e) {
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
                                 console.error(e)
                             }
                         }
