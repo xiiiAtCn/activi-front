@@ -199,13 +199,19 @@ export default {
                         if(action !== undefined) {
                             try {
                                 let url 
-                                url = action.url
-                                url = replace(url, action.pathParams || {})
-                                url = addQuery(url, action.queryParams || {})
-                                if (action.method !== 'POST') {
+                                let urlObject = action.url
+                                if (urlObject.method !== 'POST') {
                                     throw new Error('action\'s method must be post')
                                 }
-                                request.setUrl(url).setBody(copies).forPost((data, err) => {
+                                url = urlObject.url
+                                url = replace(url, urlObject.pathParams || {})
+                                url = addQuery(url, urlObject.queryParams || {})
+                                let body = urlObject.body || {}
+                                body = {
+                                    ...body,
+                                    ...copies
+                                }
+                                request.setUrl(url).setBody(body).forPost((data, err) => {
                                     if(err) {
                                         console.log(err)
                                         iView.Message.error('服务器出错了!')
