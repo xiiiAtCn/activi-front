@@ -95,14 +95,7 @@
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
-    import util from 'util'
-
-    import { deepCopy } from 'utils/utils'
-
-    const BtnType = {
-        submit: 'submit',
-        save: 'save'
-    }
+    
     export default {
         router,
         data () {

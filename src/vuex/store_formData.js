@@ -211,7 +211,7 @@ export default {
                                     ...body,
                                     ...copies
                                 }
-                                delete body[form + 'request']
+                                delete
                                 request.setUrl(url).setBody(body).forPost((data, err) => {
                                     if(err) {
                                         console.log(err)
