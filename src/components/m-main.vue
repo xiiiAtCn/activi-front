@@ -52,41 +52,28 @@
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
-            <ButtonGroup class="form-button-group">
-                <Button
-                    v-for="(btn, index) in saveBtn"
-                    :key="index"
-                    @click="btnClick(btn.action)">
-                    {{ btn.text }}
-                </Button>
+            <ButtonGroup 
+                v-show="btnArr.length > 0"
+                class="form-button-group">
                 <Dropdown 
-                    v-if="submitBtn.length > 1"
                     trigger="click">
                     <Button>
                         确认
                         <Icon type="arrow-down-b"></Icon>
                     </Button>
-                    <DropdownMenu slot="list" class="drop-down">
+                    <DropdownMenu slot="list" class="drop-down-container">
                         <template
-                            v-for="(btn, index) in submitBtn">
+                            v-for="(btn, index) in btnArr">
                             <Button
-                                type="text"
+                                :type="btn.type"
                                 class="submit-btn"
                                 :key="index"
                                 @click="btnClick(btn.action)">
                                 {{ btn.text }}
                             </Button>
-                            <hr
-                                :key="index"
-                                class="parting-line">
                         </template>
                     </DropdownMenu>
                 </Dropdown>
-                <Button 
-                    v-if="submitBtn.length === 1"
-                    @click="btnClick(submitBtn[0].action)">
-                    {{ submitBtn[0].text }}
-                </Button>
             </ButtonGroup>
         </div>
         <Back-top></Back-top>
@@ -125,18 +112,6 @@
             },
             btnArr () {
                 return _.get(this.define, 'buttons', [])
-            },
-            saveBtn () {
-                let btnArr = deepCopy(this.btnArr)
-                return _.filter(btnArr, (btn) => {
-                    return btn.type === BtnType.save
-                })
-            },
-            submitBtn () {
-                let btnArr = deepCopy(this.btnArr)
-                return _.filter(btnArr, (btn) => {
-                    return btn.type === BtnType.submit
-                })
             }
         },
         watch: {
@@ -178,7 +153,8 @@
                 dispatch(url)
             },
             btnClick (action) {
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', requestUrl: action.url})
+                dispatch(action)
+                // this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', requestUrl: action.url})
             }
         },
         beforeRouteEnter (to, from, next) {
@@ -221,12 +197,11 @@
         min-width: 0;
         text-align: center;
     }
-    .form-button-group .parting-line{
-        border-bottom: 1px solid black;
-        margin: 0;
+    .form-button-group .submit-btn{
+        margin-bottom: 10px;
+        width: 80%;
     }
-    .form-button-group .parting-line:last-child{
-        border-bottom: 0;
-        height: 0;
+    .form-button-group .drop-down-container{
+        text-align: center;
     }
 </style>
