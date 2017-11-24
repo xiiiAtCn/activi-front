@@ -248,7 +248,7 @@ function asSubmit(action) {
  */
 function asServerAction(action) {
     let targetAction = function () {
-        getData(action, (result, err) => {
+        getData(action.url, (result, err) => {
             if(err) {
                 iView.Message.error('服务器出错了, 请稍后再试!')
                 return
@@ -292,6 +292,6 @@ function asMessage(action) {
     }
 
     if (action.alert) {
-        window.alert(action.alert)
+        iView.Message.success(action.alert)
     }
 }
