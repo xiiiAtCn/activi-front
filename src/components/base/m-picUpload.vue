@@ -6,7 +6,7 @@
                     <img :src="item.thumbnailUrl">
                     <div class="picture-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleView(item.name, item.previewUrl)"></Icon>
-                        <template >
+                        <template v-if="!readonly">
                             <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                         </template>
                     </div>
@@ -15,8 +15,9 @@
                     <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                 </template>
             </div>
-            <template >
+            <template v-if="!readonly" >
                 <Upload
+                    
                     ref="upload"
                     :data="data"
                     :multiple="true"
@@ -35,6 +36,13 @@
                         <Icon type="camera" size="20"></Icon>
                     </div>
                 </Upload>
+            </template>
+            <template v-else>
+                <div class="upload-body upload-body-readonly">
+                    <div class="upload-camera">
+                        <Icon type="camera" size="20"></Icon>
+                    </div>
+                </div>
             </template>
             <Modal title="查看图片" v-model="show" :width="640">
                 <img :src="imgUrl" v-if="show" style="width: 100%">
@@ -168,10 +176,17 @@
         display: inline-block;
         width:96px;
     }
+
+    .upload-body-readonly {
+        border-radius: 5px;
+        cursor: not-allowed;
+        border: 1px dashed #dddee1;
+    }
     .upload-camera {
         width: 96px;
         height:96px;
         line-height: 96px;
+        text-align: center;
     }
     .picture-upload-list{
         display: inline-block;

@@ -184,9 +184,10 @@ export default {
                 commit(Mutations.CLOSE_TABLE_LAYER, {form})
                 commit(Mutations.CLEAR_FORM_DATA, {form})
             } else {
+                let action = state[form][ form + 'request']
                 iView.Modal.confirm({
                     title: '确认',
-                    content: '确定提交',
+                    content:action && action.confirm ||'确定提交',
                     onOk:() => {
                         let copies = _.cloneDeep(state[form])
                         let keyList = Object.keys(copies)
@@ -195,8 +196,7 @@ export default {
                                 delete copies[element]
                             }
                         })
-                        if(state[form][ form + 'request'] !== undefined) {
-                            let action = state[form][ form + 'request']
+                        if(action !== undefined) {
                             try {
                                 let url 
                                 url = action.url
