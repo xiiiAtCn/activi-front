@@ -73,6 +73,8 @@
                     setTimeout(() => {
                         this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
                     }, 1000)
+                } else {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
                 }
             }
         }

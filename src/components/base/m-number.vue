@@ -54,6 +54,8 @@
                         this.errorMessage = '请输入必填项'
                     }
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                } else {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
                 }
             },
             inputNumber (e, flag) {
