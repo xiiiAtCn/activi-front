@@ -12,7 +12,7 @@ import url from 'url'
 import util from 'util'
 import store from '../vuex/store'
 import extend from 'node.extend'
-import { default as fetch, post } from './DefineFetcher'
+import {post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
 import Request, { replace, addQuery } from './request-addon'
@@ -247,13 +247,13 @@ function asSubmit(action) {
  *  }
  */
 function asServerAction(action) {
-    console.log('dispatch serverAction', action)
-
     let targetAction = function () {
-        fetch(action.url, function (error, body) {
-            if (error === null) {
-                dispatch(body)
+        getData(action, (result, err) => {
+            if(err) {
+                iView.Message.error('服务器出错了, 请稍后再试!')
+                return
             }
+            dispatch(result)
         })
     }
 
@@ -263,12 +263,9 @@ function asServerAction(action) {
     if (action.confirm) {
         iView.Modal.confirm({
             title: '确认',
-            content: '<p>' + action.confirm + '</p>',
+            content: action.confirm,
             onOk: () => {
                 targetAction()
-            },
-            onCancel: () => {
-                iView.Message.info('点击了取消')
             }
         })
     } else {
