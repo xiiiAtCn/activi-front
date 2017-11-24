@@ -139,7 +139,7 @@
             },
             'define.status_url'() {
                 if (this.define.status_url) {
-                    this.$store.dispatch('putStatus', {'url': this.define.status_url})
+                    this.$store.dispatch('putStatus',  this.define.status_url)
                 }
             }
         },
