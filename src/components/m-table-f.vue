@@ -246,6 +246,19 @@
             },
             //配置操作的按钮
             showButton(){
+                //去重
+                let i = 0
+                let existence =false
+                while (this.columnsData.length !== 0){
+                    if(this.columnsData[i].key === 'action'){
+                        existence = true
+                        break
+                    }
+                    i++
+                    if(this.columnsData.length === i){break}
+                }
+                if(existence){return}
+
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -269,18 +282,6 @@
                         ])
                     }
                 })
-                let i = 0
-                let existence =false
-                while (this.columnsData.length !== 0){
-                    if(this.columnsData[i].key === 'action'){
-                        if(existence === true){
-                            this.columnsData.splice(i,1)
-                        }
-                        existence = true
-                    }
-                    i++
-                    if(this.columnsData.length === i){break}
-                }
             },
             //tableData存入行数据
             handleContent(){
