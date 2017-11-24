@@ -42,6 +42,10 @@ module.exports = {
                 target: 'http://localhost:80',
                 // target: 'http://192.168.1.97:1080',
             },
+            '/webserverconf': {
+                target: 'http://localhost:80',
+                // target: 'http://192.168.1.97:1080'
+            }
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README
