@@ -195,12 +195,12 @@ const mixin = {
         }
     },
     watch: {
-        validate (newVal) {
+        validate(newVal) {
             if (newVal) {
                 this.valid()
             }
         },
-        boundTarget (newVal, oldVal) {
+        boundTarget(newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
             }

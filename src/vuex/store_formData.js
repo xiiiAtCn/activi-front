@@ -17,7 +17,6 @@ export default {
         },
 
         [Mutations.FORM_ELEMENT_VALUE] (state, payload) {
-            debugger
             let {form, checkKey,...rest} = payload
             state[form] = {
                 ...state[form],
@@ -31,18 +30,20 @@ export default {
 
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
+            debugger
             state[form + 'checkResult'] = {}
             form = state[form]
             for (let i in form) {
                 let item = form[i]
                 if (typeof item === 'boolean') {
                     form[i] = false
+                } else if ( item instanceof Array) {
+                    continue
                 } else if (typeof item === 'object') {
                     form[i] = {}
                 }
             }
             form['reset'] = true
-            form['checkedCount'] = 0
         },
 
         [Mutations.SET_TABLE_DATA] (state, data) {
@@ -145,9 +146,17 @@ export default {
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
             let {form} = payload
-            if (state[form]['checkCount'] === state[form]['checkedCount']) {
-                let checkResult = state[form + 'checkResult']
-                let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
+            let waitCheck = state[form][form + 'waitCheck']
+            let finish = true
+            let checkResult = Object.keys(state[form + 'checkResult'])
+            for(let i = 0; i < waitCheck.length; i++) {
+                if(checkResult.indexOf(waitCheck[i]) === -1) {
+                    finish = false
+                }
+            }
+            if (finish) {
+                debugger
+                let flag = checkResult.every(element => state[form + 'checkResult'][element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
                 if (flag) {
                 // 数据提交逻辑
