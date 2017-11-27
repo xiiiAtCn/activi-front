@@ -67,7 +67,7 @@ export default {
         },
         handleCancel(){
             this.showLayer = false
-            this.checkValue()
+            this.valid()
         },
         handleOk(){
             this.showLayer = false
@@ -81,21 +81,21 @@ export default {
                     id:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'id'], '')
                 }
             }
-            getData(action,(data,err)=>{
+            getData(action,(data)=>{
                 if (data) {
                     for(let key of Object.keys(data)){
                         this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: 'mInput'}, form: this.formTmp})
                     }
                 }
 
-                this.checkValue()
+                this.valid()
                 if (this.objectModel !== '') {
                     this.isError = false
                     this.errorMessage = ''
                 }
             })
         },
-        checkValue(){
+        valid(){
             if (!this.readonly) {
                 if (this.required) {
                     if (this.objectModel === '') {
