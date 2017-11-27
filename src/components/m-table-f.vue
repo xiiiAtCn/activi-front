@@ -300,8 +300,6 @@
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
                 this.showButton()
-                this.removeColButton()
-
                 this.checkValue()
             },
             //是否去除无用的操作列
@@ -452,10 +450,9 @@
                             this.columnsData.splice(i,1)
                         }
                     })
-                    console.log(this.columnsData)
                 }
                 this.showButton()
-                console.log(this.columnsData)
+                this.removeColButton()
             }
         }
     }
