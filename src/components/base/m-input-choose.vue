@@ -2,8 +2,8 @@
     <div>
         <Row>
             <div class="search">
-                <Input v-model="objectModel" :placeholder="placeholder" readonly>
-                    <Button slot="append" @click="handleChooseClick">选择</Button>
+                <Input v-model="objectModel" :placeholder="placeholder" readonly :disabled="readonly">
+                    <Button slot="append" @click="handleChooseClick" :cursor="readonly?'default':'pointer'">选择</Button>
                 </Input>
             </div>
             <mLayer v-if="showLayer" :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
