@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row>
-            <template >
+            <template v-if="!readonly">
                 <Upload
                     ref="upload"
                     :data="data"
@@ -20,6 +20,11 @@
                 >
                     <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 </Upload>
+            </template>
+            <template v-else>
+                <div class="upload-body upload-body-readonly">
+                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                </div>
             </template>
             <div v-for="item in objectModel" :key="item.url">
                 <template v-if="item.status === 'finished'">
@@ -201,9 +206,18 @@
         float: right;
         cursor: pointer;
     }
+
     .upload-body {
         display: inline-block;
         width:200px;
+    }
+
+    .upload-body-readonly {
+        line-height: 100%;
+        border-radius: 5px;
+        cursor: not-allowed;
+        border: 1px dashed #dddee1;
+        text-align: center;
     }
 
     div.item-error {

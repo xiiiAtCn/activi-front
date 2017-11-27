@@ -117,8 +117,9 @@
                             this.errorMessage = '请上传图片'
                         }
                     }
-                    
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                } else {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
                 }
             },
             handleView (name, url) {

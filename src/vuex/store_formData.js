@@ -211,6 +211,7 @@ export default {
                                     ...body,
                                     ...copies
                                 }
+                                delete body[ form + 'request']
                                 request.setUrl(url).setBody(body).forPost((data, err) => {
                                     if(err) {
                                         console.log(err)
@@ -221,6 +222,7 @@ export default {
                                     dispatch(data)
                                 })
                             } catch (e) {
+                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
                                 console.error(e)
                             }
                         }
