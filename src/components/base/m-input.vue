@@ -4,8 +4,7 @@
             <Input :element-id="focusId"
                 v-model="objectModel"
                 :placeholder="placeholder"
-                :readonly="readonly"
-                :icon="icon"
+                :disabled="readonly"
                 @on-blur="inputCheck"
             >
             </Input>
@@ -36,15 +35,6 @@
             placeholder () {
                 return _.get(this.define, 'placeholder', '请输入相关信息')
             },
-            icon () {
-                if (this.hasError) {
-                    return 'alert'
-                }
-                if (this.readonly) {
-                    return 'locked'
-                }
-                return ''
-            }
         },
         methods: {
             valid () {

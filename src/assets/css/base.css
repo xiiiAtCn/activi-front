@@ -30,3 +30,12 @@ html, body {
 .occupation {
     visibility: hidden;
 }
+
+/* 覆盖iview原始样式 */
+
+.ivu-input[disabled]{
+    background-color: #f3f3f3;
+    opacity: 1;
+    color: #ccc;
+    cursor: text !important;
+}

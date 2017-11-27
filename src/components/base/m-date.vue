@@ -6,7 +6,7 @@
                 :format="format" 
                 :type="type" 
                 :placeholder="placeholder" 
-                :readonly="readonly" 
+                :disabled="readonly" 
                 @on-change="handleChange"
                 class="full-opacity">
             </Date-picker>

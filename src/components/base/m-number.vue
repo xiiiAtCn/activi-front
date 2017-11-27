@@ -4,8 +4,7 @@
             <Input 
                 v-model="objectModel"
                 :placeholder="placeholder" 
-                :readonly="readonly" 
-                :icon="icon" 
+                :disabled="readonly" 
                 @on-change="inputNumber($event)"  
                 @on-blur="inputNumber($event, true)" >
             </Input>
@@ -27,15 +26,6 @@
         computed: {
             placeholder () {
                 return _.get(this.define, 'placeholder', '请输入一个数字')
-            },
-            icon () {
-                if (this.hasError) {
-                    return 'alert'
-                }
-                if (this.readonly) {
-                    return 'locked'
-                }
-                return ''
             },
             minValue () {
                 return _.get(this.define, 'minValue', Number.MIN_SAFE_INTEGER)
