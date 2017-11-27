@@ -4,6 +4,7 @@
             <Input :element-id="focusId"
                    v-model="objectModel"
                    readonly
+                   icon="locked"
             >
             </Input>
         </Row>
