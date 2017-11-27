@@ -24,7 +24,7 @@ export default {
                 ...rest
             }
             let checkList = state[form][form + 'waitCheck']
-            if(checkList.indexOf(checkKey) === -1) 
+            if(checkList && checkList.indexOf(checkKey) === -1) 
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
         },
