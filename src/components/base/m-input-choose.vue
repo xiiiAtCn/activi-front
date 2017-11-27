@@ -84,7 +84,7 @@ export default {
             getData(action,(data)=>{
                 if (data) {
                     for(let key of Object.keys(data)){
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: 'mInput'}, form: this.formTmp})
+                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: 'mInput'}, form: this.formTmp?this.formTmp:'form'})
                     }
                 }
 
