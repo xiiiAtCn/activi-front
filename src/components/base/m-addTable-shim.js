@@ -47,11 +47,11 @@ Vue.component('mDetailTable', {
                             loading: true,
                             reset: false,
                             validate: false,
-                            visible: false
+                            visible: false,
+                            [this.uid + 'waitCheck']: []
                         }
                     }
                 )
-                this.$store.commit(FORM_ELEMENT_VALUE, {checkCount: columns.length, form: this.uid})
             }
             return columns
         },
@@ -62,24 +62,38 @@ Vue.component('mDetailTable', {
                     {
                         attribute: this.form || 'form',
                         value: {
+                            loading: true,
                             reset: false,
-                            validate: false
+                            validate: false,
+                            visible: false,
+                            [this.form || 'form' + 'waitCheck']: []
                         }
                     }
                 )
             }
             let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             if(source === undefined )
-                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
-                    value: [],
-                    type: this.$options._componentTag
-                }})
+                this.$store.commit(FORM_ELEMENT_VALUE, 
+                    {   
+                        form: 'form', 
+                        [this.name]: {
+                            value: [],
+                            type: this.$options._componentTag
+                        },
+                        checkKey: this.name
+                    })
             source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             if(source.type === undefined) 
-                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
-                    value: source,
-                    type: this.$options._componentTag
-                }})
+                this.$store.commit(FORM_ELEMENT_VALUE, 
+                    {
+                        form: 'form', 
+                        [this.name]: {
+                            value: source,
+                            type: this.$options._componentTag
+                        },
+                        checkKey: this.name
+                    }
+                )
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
         },
         editable() {
@@ -126,6 +140,12 @@ Vue.component('mDetailTable', {
         //处理表头数据
         handleColumns(cols) {
             let columns = []
+            columns.push({
+                type: 'index',
+                title: '编号',
+                width: 60,
+                align: 'center'
+            })
             if(Array.isArray(cols)) {
                 cols.forEach(col => {
                     let column = {

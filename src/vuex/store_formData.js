@@ -17,20 +17,18 @@ export default {
         },
 
         [Mutations.FORM_ELEMENT_VALUE] (state, payload) {
-            let {form, ...rest} = payload
+            debugger
+            let {form, checkKey,...rest} = payload
             state[form] = {
                 ...state[form],
                 ...rest
             }
+            let checkList = state[form][form + 'waitCheck']
+            if(checkList.indexOf(checkKey) === -1) 
+                checkList = checkList.concat(checkKey)
+            state[form][form + 'waitCheck'] = checkList
         },
 
-        [Mutations.INCREMENT_CHECK_COUNT](state, payload) {
-            let {form} = payload
-            if(state[form]['checkedCount'] === undefined) 
-                state[form]['checkedCount'] = 1
-            else 
-                state[form]['checkedCount']++ 
-        },
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
             state[form + 'checkResult'] = {}
@@ -147,96 +145,94 @@ export default {
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
             let {form} = payload
-            //暂时不需要校验
-            // if (state[form]['checkCount'] === state[form]['checkedCount']) {
-            // let checkResult = state[form + 'checkResult']
-            // let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
-            // commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
-            // if (flag) {
-            // 数据提交逻辑
-            if(state[form]['action'] !== undefined) {
-                let action = state[form]['action']
-                delete state[form]['action']
-                let array = state['form'][action['value']]['value']
-                if(array === undefined) {
-                    array = (state['form'][action['value']] = [])
-                }
-                array = array.slice()
-                let formCopy = _.cloneDeep(state[form])
-                let keyList = Object.keys(formCopy)
-                keyList.forEach(element => {
-                    if(typeof formCopy[element] !== 'object') {
-                        delete formCopy[element]
-                    }
-                })
-                if(action.type === 'add') {
-                    formCopy['flag'] = { value: 'add' }
-                    array.push(formCopy)
-                } else if(action.type === 'update') {
-                    let index = action['index']
-                    let data = array[index]
-                    if(data.flag === undefined) {
-                        formCopy['flag'] = { value: 'update' }
-                    }
-                    array.splice(action.index, 1, formCopy)
-                }
-                commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
-                commit(Mutations.CLOSE_TABLE_LAYER, {form})
-                commit(Mutations.CLEAR_FORM_DATA, {form})
-            } else {
-                let action = state[form][ form + 'request']
-                iView.Modal.confirm({
-                    title: '确认',
-                    content:action && action.confirm ||'确定提交',
-                    onOk:() => {
-                        let copies = _.cloneDeep(state[form])
-                        let keyList = Object.keys(copies)
+            if (state[form]['checkCount'] === state[form]['checkedCount']) {
+                let checkResult = state[form + 'checkResult']
+                let flag = Object.keys(checkResult).every(element => checkResult[element] === false)
+                commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
+                if (flag) {
+                // 数据提交逻辑
+                    if(state[form]['action'] !== undefined) {
+                        let action = state[form]['action']
+                        delete state[form]['action']
+                        let array = state['form'][action['value']]['value']
+                        if(array === undefined) {
+                            array = (state['form'][action['value']] = [])
+                        }
+                        array = array.slice()
+                        let formCopy = _.cloneDeep(state[form])
+                        let keyList = Object.keys(formCopy)
                         keyList.forEach(element => {
-                            if(typeof copies[element] !== 'object') {
-                                delete copies[element]
+                            if(typeof formCopy[element] !== 'object') {
+                                delete formCopy[element]
                             }
                         })
-                        if(action !== undefined) {
-                            try {
-                                let url 
-                                let urlObject = action.url
-                                if (urlObject.method !== 'POST') {
-                                    throw new Error('action\'s method must be post')
-                                }
-                                url = urlObject.url
-                                url = replace(url, urlObject.pathParams || {})
-                                url = addQuery(url, urlObject.queryParams || {})
-                                let body = urlObject.body || {}
-                                body = {
-                                    ...body,
-                                    ...copies
-                                }
-                                delete body[ form + 'request']
-                                request.setUrl(url).setBody(body).forPost((data, err) => {
-                                    if(err) {
-                                        console.log(err)
-                                        iView.Message.error('服务器出错了!')
-                                        commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
-                                        return
-                                    }
-                                    dispatch(data)
-                                })
-                            } catch (e) {
-                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
-                                console.error(e)
+                        if(action.type === 'add') {
+                            formCopy['flag'] = { value: 'add' }
+                            array.push(formCopy)
+                        } else if(action.type === 'update') {
+                            let index = action['index']
+                            let data = array[index]
+                            if(data.flag === undefined) {
+                                formCopy['flag'] = { value: 'update' }
                             }
+                            array.splice(action.index, 1, formCopy)
                         }
+                        commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
+                        commit(Mutations.CLOSE_TABLE_LAYER, {form})
+                        commit(Mutations.CLEAR_FORM_DATA, {form})
+                    } else {
+                        let action = state[form][ form + 'request']
+                        iView.Modal.confirm({
+                            title: '确认',
+                            content:action && action.confirm ||'确定提交',
+                            onOk:() => {
+                                let copies = _.cloneDeep(state[form])
+                                let keyList = Object.keys(copies)
+                                keyList.forEach(element => {
+                                    if(typeof copies[element] !== 'object') {
+                                        delete copies[element]
+                                    }
+                                })
+                                if(action !== undefined) {
+                                    try {
+                                        let url 
+                                        let urlObject = action.url
+                                        if (urlObject.method !== 'POST') {
+                                            throw new Error('action\'s method must be post')
+                                        }
+                                        url = urlObject.url
+                                        url = replace(url, urlObject.pathParams || {})
+                                        url = addQuery(url, urlObject.queryParams || {})
+                                        let body = urlObject.body || {}
+                                        body = {
+                                            ...body,
+                                            ...copies
+                                        }
+                                        delete body[ form + 'request']
+                                        request.setUrl(url).setBody(body).forPost((data, err) => {
+                                            if(err) {
+                                                console.log(err)
+                                                iView.Message.error('服务器出错了!')
+                                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                                return
+                                            }
+                                            dispatch(data)
+                                        })
+                                    } catch (e) {
+                                        commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                        console.error(e)
+                                    }
+                                }
+                            }
+                        })
                     }
-                })
+                } else {
+                    commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
+                    setTimeout(() => {
+                        commit(Mutations.BUTTON_START_LOADING, {form: form})
+                    }, 0)
+                }
             }
-            
-                // } else {
-                //     commit(Mutations.BUTTON_CANCEL_LOADING, {form: form})
-                //     setTimeout(() => {
-                //         commit(Mutations.BUTTON_START_LOADING, {form: form})
-                //     }, 0)
-                // }
-            // }
         },
         
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
@@ -249,7 +245,6 @@ export default {
                 ...rest
             }
             if (state[form]['validate'] === true) {
-                commit(Mutations.INCREMENT_CHECK_COUNT, {form})
                 dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
         },
@@ -265,7 +260,8 @@ export default {
                             loading: true,
                             reset: false,
                             validate: false,
-                            visible: false
+                            visible: false,
+                            ['form' + 'waitCheck']: []
                         }
                     })
                 let value = {

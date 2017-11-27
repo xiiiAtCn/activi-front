@@ -21,7 +21,6 @@
     import _ from 'lodash'
     import mixin from './mixin'
     import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
-    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
 
     export default {
         name: 'm-select',
