@@ -3,7 +3,7 @@
         <Row >
             <Input :element-id="focusId"
                    v-model="objectModel"
-                   readonly
+                   disabled
             >
             </Input>
         </Row>

@@ -11,19 +11,21 @@
             </Table>
         </div>
         <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
-            <Form>
-                <Row v-for="column in mixColumns" :key="column.ui_id">
-                    <component 
-                        v-if="column['ui_define']"
-                        :formTmp="formTmp" 
-                        :statusKey="name"
-                        :is="column['ui_define']['ui_type']" 
-                        :define="column['ui_define']['ui_define']" 
-                        :content="column['ui_define']['ui_content']"
-                    >
-                    </component>
-                </Row>
-            </Form>
+            <Card style="width: 60%; margin: 0 auto;">
+                <Form style="width: 85%; margin: 0 auto;">
+                    <Row v-for="column in mixColumns" :key="column.ui_id">
+                        <component 
+                            v-if="column['ui_define']"
+                            :formTmp="formTmp" 
+                            :statusKey="name"
+                            :is="column['ui_define']['ui_type']" 
+                            :define="column['ui_define']['ui_define']" 
+                            :content="column['ui_define']['ui_content']"
+                        >
+                        </component>
+                    </Row>
+                </Form>
+            </Card>
         </mLayer>
     </div>
 </template>

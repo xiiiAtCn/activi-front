@@ -27,15 +27,18 @@ const mixin = {
         },
         readonly () {
             let editable
+            let flag
             if(this.formTmp) {
                 editable = _.get(this.$store.state.pageStatus, ['status', this.statusKey + '_detail', this.name])
             } else {
                 editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
             }
             if(editable === 'editable') {
-                return false
+                flag = false
+            } else {
+                flag = true
             }
-            return true 
+            return flag
         },
         required () {
             return _.get(this.define, 'required', true)
