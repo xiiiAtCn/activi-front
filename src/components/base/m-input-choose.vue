@@ -16,7 +16,7 @@
             </mLayer>
         </Row>
         <Row>
-            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-if="isError" class="gateway-item-error">{{errorMessage}}</div>
             <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
@@ -25,6 +25,7 @@
     import mixin from './mixin'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
+    import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
 
 export default {
@@ -33,7 +34,8 @@ export default {
     data () {
         return {
             showLayer:false,
-            downData:[]
+            downData:[],
+            isError:false
         }
     },
     computed: {
@@ -55,6 +57,7 @@ export default {
     },
     methods: {
         handleChooseClick(){
+            if(this.readonly){return}
             getData(this.url,(data,err)=>{
                 if (data) {
                     this.downData = data.ui_content[0]
@@ -64,6 +67,7 @@ export default {
         },
         handleCancel(){
             this.showLayer = false
+            this.checkValue()
         },
         handleOk(){
             this.showLayer = false
@@ -83,7 +87,26 @@ export default {
                         this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: 'mInput'}, form: this.formTmp})
                     }
                 }
+
+                this.checkValue()
+                if (this.objectModel !== '') {
+                    this.isError = false
+                    this.errorMessage = ''
+                }
             })
+        },
+        checkValue(){
+            if (!this.readonly) {
+                if (this.required) {
+                    if (this.objectModel === '') {
+                        this.isError = true
+                        this.errorMessage = '请选择必填项'
+                    }
+                }
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: this.form})
+            } else {
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+            }
         }
     }
 }
