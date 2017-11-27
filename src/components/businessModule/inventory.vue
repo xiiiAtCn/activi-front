@@ -14,7 +14,7 @@ import FilterRow from '../m-filterRow.vue'
 //import VueResource from 'vue-resource'
 //Vue.use(VueResource);
 import axios from 'axios'
-Vue.config.productionTip = false;
+//Vue.config.productionTip = false;
 
 export default {
 	data: function() {
