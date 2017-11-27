@@ -126,6 +126,12 @@ Vue.component('mDetailTable', {
         //处理表头数据
         handleColumns(cols) {
             let columns = []
+            columns.push({
+                type: 'index',
+                title: '编号',
+                width: 60,
+                align: 'center'
+            })
             if(Array.isArray(cols)) {
                 cols.forEach(col => {
                     let column = {
