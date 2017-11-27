@@ -222,6 +222,11 @@
                     }
                     this.testList[i] = val.text
                 })
+                this.columnsData.unshift({
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
                 //读取localStorage数据 确认展示列
                 if(this.tableName && window.localStorage.getItem(this.tableName+'.checkAllGroup')){
