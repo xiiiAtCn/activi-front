@@ -6,7 +6,7 @@
                     <Button slot="append" @click="handleChooseClick" :cursor="readonly?'default':'pointer'">选择</Button>
                 </Input>
             </div>
-            <mLayer v-if="showLayer" :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
+            <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
                     :is="downData.ui_type"
                     :uid="downData.ui_id"
