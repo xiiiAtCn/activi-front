@@ -23,7 +23,7 @@ export default {
                 ...rest
             }
             let checkList = state[form][form + 'waitCheck']
-            if(checkList && checkList.indexOf(checkKey) === -1) 
+            if(checkList && checkKey && checkList.indexOf(checkKey) === -1) 
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
         },
@@ -155,7 +155,6 @@ export default {
                 }
             }
             if (finish) {
-                debugger
                 let flag = checkResult.every(element => state[form + 'checkResult'][element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
                 if (flag) {
@@ -175,6 +174,7 @@ export default {
                                 delete formCopy[element]
                             }
                         })
+                        delete formCopy[form + 'waitCheck']
                         if(action.type === 'add') {
                             formCopy['flag'] = { value: 'add' }
                             array.push(formCopy)
@@ -202,9 +202,11 @@ export default {
                                         delete copies[element]
                                     }
                                 })
+                                delete copies[form + 'waitCheck']
                                 if(action !== undefined) {
                                     try {
                                         let url 
+                                        action = _.cloneDeep(action)
                                         let urlObject = action.url
                                         if (urlObject.method !== 'POST') {
                                             throw new Error('action\'s method must be post')
