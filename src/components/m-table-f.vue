@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="tableCt">
         <Row class="top-content" style="text-align: right">
             <Col span="24">
                 <div class="search" v-show="search">
@@ -138,7 +138,9 @@
                     }
                 ],
                 rowCount:10,
-                currentPage:1
+                currentPage:1,
+                //table宽度
+                tableWidth:''
             }
         },
         watch: {
@@ -222,11 +224,6 @@
                     }
                     this.testList[i] = val.text
                 })
-                this.columnsData.unshift({
-                    type: 'index',
-                    width: 60,
-                    align: 'center'
-                })
                 this.columnsDataCopy = _.clone(this.columnsData, true)
                 //读取localStorage数据 确认展示列
                 if(this.tableName && window.localStorage.getItem(this.tableName+'.checkAllGroup')){
@@ -248,6 +245,8 @@
                     this.checkAllGroup = _.cloneDeep(this.testList)
                     this.dataListChange = _.cloneDeep(this.testList)
                 }
+
+                this.checkValue()
             },
             //配置操作的按钮
             showButton(){
@@ -267,16 +266,21 @@
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
-                    width: 60,
+                    width: 100,
                     align: 'center',
-                    fixed: 'right',
+                    fixed: 'left',
                     render: (h, params) => {
                         let buttons=params.row.buttons[0]
                         return h('div', [
+                            h('span', {
+                                style:{
+                                    marginRight:'5px',
+                                    marginLeft:'-5px'
+                                }
+                            }, params.index + 1 ),
                             h('Button', {
-                                props: {
-                                    type: buttons.type ? buttons.type : 'primary',
-                                    size: buttons.size ? buttons.size : 'small'
+                                props:{
+                                  size:'small'
                                 },
                                 on: {
                                     click: () => {
@@ -296,7 +300,7 @@
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
                 this.showButton()
-                this.removeColButton()
+                this.checkValue()
             },
             //是否去除无用的操作列
             removeColButton(){
@@ -431,6 +435,24 @@
             //行单选存数据
             handleRowClick(data){
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form})
+            },
+
+            checkValue(){
+                //判断表格宽度更改表格渲染
+                let width=0
+                this.columnsData.forEach((val)=>{
+                    width += val.width
+                })
+                if(width < this.$refs.tableCt.clientWidth){
+                    this.columnsData.forEach((val,i)=>{
+                        delete val.width
+                        if(val.key === 'action'){
+                            this.columnsData.splice(i,1)
+                        }
+                    })
+                }
+                this.showButton()
+                this.removeColButton()
             }
         }
     }
@@ -459,6 +481,9 @@
 <style>
     .ivu-table td{
         box-sizing: content-box !important;
+    }
+    .ivu-table-cell{
+        word-break: keep-all;
     }
     .ivu-table-row-highlight td{
         background-color: #8ee1fa;

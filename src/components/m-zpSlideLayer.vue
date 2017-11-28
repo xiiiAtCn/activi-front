@@ -1,6 +1,6 @@
 <template>        
     <div class="layer-wraper" :style="{top: visible ? 0 : '100vh'}">
-        <div  class="layer-container" :style="{top: currentTop, left: left}">
+        <div class="layer-container" :style="{top: currentTop, left: layerLeft}">
             <div class="layer-header">
                 <div class="layer-header-title">
                     {{ titleText }}
@@ -24,8 +24,9 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
 import _ from 'lodash'
+import Mutations from 'store/Mutation'
+import Action from 'store/Action'
 
 export default {
     props: {
@@ -51,20 +52,18 @@ export default {
             type: String,
             default: '取消'
         },
-        // 距离默认top值
-        top: {
-            type: String,
-            default: '0'
-        },
-        // left值
-        left: {
-            type: String,
-            default: '12.5%'
-        },
         // 点击取消与确定是否自动关闭
         autoClose: {
             type: Boolean,
             default: true
+        },
+        leftInterval: {
+            type: String,
+            default: '50px'
+        },
+        topInterval: {
+            type: String,
+            default: '50px'
         }
     },
     data () {
@@ -73,21 +72,27 @@ export default {
             visible: this.value,
             // btn Loading状态
             buttonLoading: false,
-            default: {
-                top: '75'
-            }
+            id: null
         }
     },
     computed: {
+        // layer最外层top值
         currentTop () {
             if (this.visible) {
-                return parseInt(this.top) + parseInt(this.default.top) + 'px'
+                return `calc(${this.layerTop})`
             } else {
                 return '100vh'
             }
         },
+        // layer中按钮区域top值
         btnTop () {
-            return `calc(100vh - 60px - ${parseInt(this.top) + parseInt(this.default.top)}px)`
+            return `calc(100vh - 60px - (${this.layerTop}))`
+        },
+        layerTop () {
+            return this.$store.getters.layerTop(this.id)
+        },
+        layerLeft () {
+            return `calc(${this.$store.getters.layerLeft(this.id)})`
         }
     },
     watch: {
@@ -97,6 +102,15 @@ export default {
         visible (val) {
             if (val === false) {
                 this.buttonLoading = false
+                this.$store.commit(Mutations.DEL_LAYER, this.id)
+                this.id = null
+            } else {
+                this.id = this.$store.state.layerData.idNum
+                this.$store.dispatch(Action.ADD_LAYER, {
+                        id: this.id, 
+                        topInterval: this.topInterval,
+                        leftInterval: this.leftInterval
+                    })
             }
         },
         loading (val) {
@@ -153,7 +167,7 @@ export default {
     left: 0;
     z-index: 900;
     background-color: rgba(55,55,55,.6);
-    transition: top .5s;
+    transition: all .5s;
 }
 .layer-container {
     position: fixed;
@@ -163,7 +177,7 @@ export default {
     border: 1px solid #e9eaec;
     border-radius: 15px;
     background: #fff;
-    transition: top .5s;
+    transition: all .5s;
 }
 .layer-header {
     position: absolute;
@@ -199,7 +213,7 @@ export default {
     padding: 12px 50px;
     text-align: right;
     position: absolute;
-    left: 200px;
+    left: 0;
     right: 0;
     height: 60px;
 }
