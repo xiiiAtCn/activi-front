@@ -6,7 +6,7 @@
                     <Button slot="append" @click="handleChooseClick" :cursor="readonly?'default':'pointer'">选择</Button>
                 </Input>
             </div>
-            <mLayer v-if="showLayer" :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
+            <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
                     :is="downData.ui_type"
                     :uid="downData.ui_id"
@@ -55,14 +55,16 @@ export default {
             return _.get(this.define, 'backUrl', '')
         }
     },
+    mounted(){
+        getData(this.url,(data,err)=>{
+            if (data) {
+                this.downData = data.ui_content[0]
+            }
+        })
+    },
     methods: {
         handleChooseClick(){
             if(this.readonly){return}
-            getData(this.url,(data,err)=>{
-                if (data) {
-                    this.downData = data.ui_content[0]
-                }
-            })
             this.showLayer = true
         },
         handleCancel(){
