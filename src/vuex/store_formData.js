@@ -30,7 +30,6 @@ export default {
 
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
-            debugger
             state[form + 'checkResult'] = {}
             form = state[form]
             for (let i in form) {

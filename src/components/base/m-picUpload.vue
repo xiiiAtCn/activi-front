@@ -107,7 +107,6 @@
         
         methods: {
             valid() {
-                debugger
                 if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel == undefined ? [] : this.objectModel
@@ -123,7 +122,6 @@
                 }
             },
             handleView (name, url) {
-                debugger
                 this.show = true
                 this.imgUrl = url
             },
@@ -141,7 +139,6 @@
                 console.log(file)
                 let {originalId, thumbnailId, previewId} = file
                 this.setUrl(this.deleteAddress).setQuery({originalId, thumbnailId, previewId}).forGet((result, err) => {
-                    debugger
                     if(err) {
                         this.$Message.error(`删除图片${file.name}失败`)
                     } else {
@@ -153,7 +150,6 @@
             },
             handleSuccess (res, file) {
                 //测试数据
-                debugger
                 Object.assign(file, {
                     ...file['response']
                 })
