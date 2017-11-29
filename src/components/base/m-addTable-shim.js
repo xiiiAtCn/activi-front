@@ -63,6 +63,7 @@ Vue.component('mDetailTable', {
             return _.get(this.$store.state.formData[this.ui_form], 'validate', false)
         },
         dataSource() {
+            debugger
             let form = _.get(this.$store.state.formData, this.ui_form || 'form')
             if(form === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
@@ -90,7 +91,8 @@ Vue.component('mDetailTable', {
                         checkKey: this.name
                     })
             source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
-            if(source.type === undefined) 
+            let type = _.get(this.$store.state.formData, ['form', this.name, 'type'])
+            if(type === undefined) 
                 this.$store.commit(FORM_ELEMENT_VALUE, 
                     {
                         form: 'form', 
