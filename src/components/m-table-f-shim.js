@@ -76,7 +76,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableName = _.get(def, ['ui_define', 'tableName'], '')
             this.tableHeight = _.get(def, ['ui_define', 'tableHeight'], null)
             this.serverPage = _.get(def, ['ui_define', 'serverPage'], false)
-            this.checkRow= _.get(def, ['ui_define', 'checkRow'], false)
+            this.checkRow=  _.get(def, ['ui_define', 'checkRow'], '')
         },
         getTableDefine () {
             this.getData('tableDefine', (data, err) => {

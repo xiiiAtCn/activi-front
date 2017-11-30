@@ -66,6 +66,9 @@ const mInputChoose = resolve =>
 const mDisplay = resolve =>
     require(['./m-display.vue'], resolve)
 
+const mButtonLayer = resolve =>
+    require(['./m-button-layer.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -88,3 +91,4 @@ Vue.component('mInputPercent', mInputPercent)
 Vue.component('mAddress', mAddress)
 Vue.component('mInputChoose', mInputChoose)
 Vue.component('mDisplay', mDisplay)
+Vue.component('mButtonLayer', mButtonLayer)
