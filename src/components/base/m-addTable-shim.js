@@ -182,7 +182,6 @@ Vue.component('mDetailTable', {
                     `arguments ${JSON.parse(cols)} will be ignored and return an array width an empty object`)
                 columns.push({})
             }
-            console.log(columns)
             return columns
         }
     }
