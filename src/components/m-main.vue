@@ -157,7 +157,7 @@
                 dispatch(url)
             },
             btnClick (action) {
-                if(action.type === 'serverAction') {
+                if(action.type === 'serverAction' || action.type === 'link') {
                     dispatch(action)
                 } else {
                     this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: action})
