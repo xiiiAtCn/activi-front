@@ -17,3 +17,4 @@ src/components/zpTest
 *.sln
 .eslintcache
 config/index.js
+test/e2e/screenshot/

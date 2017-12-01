@@ -1,5 +1,6 @@
 require('babel-register')
 var config = require('../../config')
+const path = require('path')
 
 // http://nightwatchjs.org/gettingstarted#settings-file
 module.exports = {
@@ -23,7 +24,8 @@ module.exports = {
             selenium_host: 'localhost',
             silent: true,
             globals: {
-                devServerURL: 'http://localhost:' + (process.env.PORT || config.dev.port)
+                devServerURL: 'http://localhost:' + (process.env.PORT || config.dev.port),
+                screenshot: path.resolve(__dirname, 'screenshot')
             }
         },
 
