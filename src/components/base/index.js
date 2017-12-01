@@ -69,6 +69,12 @@ const mDisplay = resolve =>
 const mButtonLayer = resolve =>
     require(['./m-button-layer.vue'], resolve)
 
+const mSpan = resolve =>
+    require(['./m-span.vue'], resolve)
+
+const mButtonShow = resolve =>
+    require(['./m-button-show.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -92,3 +98,5 @@ Vue.component('mAddress', mAddress)
 Vue.component('mInputChoose', mInputChoose)
 Vue.component('mDisplay', mDisplay)
 Vue.component('mButtonLayer', mButtonLayer)
+Vue.component('mSpan', mSpan)
+Vue.component('mButtonShow', mButtonShow)

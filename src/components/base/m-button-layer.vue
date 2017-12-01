@@ -1,7 +1,6 @@
 <template>
     <div>
         <Button :type="define.type || 'default'" :size="define.size || 'default'" @click="handleClick">{{define.text}}</Button>
-
         <mLayer :value="showLayer" :titleText="define.text" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
                 :is="downData.ui_type"
@@ -24,7 +23,6 @@
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
-    import iView from 'iview'
 
     export default {
         props:{
@@ -33,8 +31,7 @@
         data () {
             return {
                 showLayer:false,
-                downData:{},
-                // iframeUrl:`/static/drawFormStatusChart.html?id=1872436001224704`,
+                downData:{}
             }
         },
         computed: {
@@ -42,7 +39,6 @@
         mounted(){
             getData(this.define.getDataAction.url,(data)=>{
                 if (data) {
-                    console.log('this.data' , data)
                     this.downData= data.ui_content[0]
                 }
             })
@@ -54,13 +50,9 @@
             handleOk(){
                 let action=this.define.saveDataAction.url
                 action.body=_.get(this.$store.state.formData['form'],'list', '')
-                getData(action,(data)=>{
-                    if (data) {
-                        if (data.alert) {
-                            iView.Message.success(data.alert)
-                        }
-                    }
-                })
+                if(action.type === 'serverAction'  || action.type === 'link') {
+                    dispatch(action)
+                }
             },
             handleCancel(){}
         }

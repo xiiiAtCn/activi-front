@@ -141,14 +141,8 @@ function asLink(action) {
 
             //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
             // }
-            //144-151 change by f in 11.23
-            if(util.isObject(action.url)){
-                let url
-                url = action.url.url
-                url = replace(url, action.url.pathParams || {})
-                url = addQuery(url, action.url.queryParams || {})
-                action.url = url
-            }
+            //144-145 change by f in 12.1
+            action.url = urlToString(action)
 
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
@@ -293,5 +287,21 @@ function asMessage(action) {
 
     if (action.alert) {
         iView.Message.success(action.alert)
+    }
+}
+
+/*
+* url对象转字符串
+* */
+
+function urlToString(action) {
+    if(util.isObject(action.url)){
+        let url
+        url = action.url.url
+        url = replace(url, action.url.pathParams || {})
+        url = addQuery(url, action.url.queryParams || {})
+        return url
+    }else{
+        return action.url
     }
 }
