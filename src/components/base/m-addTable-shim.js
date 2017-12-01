@@ -167,6 +167,7 @@ Vue.component('mDetailTable', {
                 cols.forEach(col => {
                     let column = {
                         ...col,
+                        align: 'center',
                         ui_define: col['uiObject'],
                         render: (h, column) => {
                             return _.get(column, ['row', col['key'], 'value'], '')
