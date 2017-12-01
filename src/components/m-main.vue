@@ -162,10 +162,10 @@
                         console.log('post', post)
                         this.meta = post
                         this.define = _.get(post, 'ui_define', {})
-                        this.handleButtonList(this.define.buttons)
                         this.content = _.get(post, 'ui_content', [])
                         document.title = _.get(this.define, 'title', '')
                         let url = this.define.data_url
+                        this.handleButtonList(this.define.buttons)
                         this.$store.dispatch(FETCH_FORM_DATA, {url: url})
                     }
                 })
@@ -194,16 +194,8 @@
                 dispatch(url)
             },
             btnClick (btn) {
-                if(btn.buttonType === 'ordinary-button' ){
-                    getData(btn.action.url,(data)=>{
-                        if (data) {
-                            if (data.alert) {
-                                iView.Message.success(data.alert)
-                            }
-                        }
-                    })
-                } else if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
-                    dispatch(action)
+                if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
+                    dispatch(btn.action)
                 } else {
                     this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: btn.action})
                 }
@@ -244,11 +236,11 @@
                     next(vm => {
                         vm.meta = post
                         vm.define = _.get(post, 'ui_define', {})
-                        vm.handleButtonList(vm.define.buttons)
                         vm.content = _.get(post, 'ui_content', [])
                         vm.dataUrl = _.get(post, ['ui_define', 'data_url'], null)
                         document.title = vm.define.title || '表单'
                         console.log('beforeRouteEnter')
+                        vm.handleButtonList(vm.define.buttons)
                     })
                 }
             })
