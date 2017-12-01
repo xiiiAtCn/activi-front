@@ -83,7 +83,8 @@ const mixin = {
                                 loading: true,
                                 reset: false,
                                 validate: false,
-                                visible: false
+                                visible: false,
+                                [this.form + 'waitCheck']: []
                             }
                         }
                     )
@@ -92,29 +93,92 @@ const mixin = {
                 if (value === undefined) {
                     switch (this.dataType) {
                     case 'String':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, 
+                            {
+                                [this.name]: {
+                                    value: '', 
+                                    type: this.$options._componentTag
+                                }, 
+                                form: this.form, 
+                                checkKey: this.name
+                            }
+                        )
                         break
                     case 'Array':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: [], type: this.$options._componentTag }, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, 
+                            {
+                                [this.name]: {
+                                    value: [], 
+                                    type: this.$options._componentTag 
+                                }, 
+                                form: this.form,
+                                checkKey: this.name
+                            }
+                        )
                         break
                     case 'Date':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: '', type: this.$options._componentTag}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, 
+                            {
+                                [this.name]: {
+                                    value: '',
+                                    type: this.$options._componentTag
+                                }, 
+                                form: this.form,
+                                checkKey: this.name
+                            }
+                        )
                         break
                     case 'Object':
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, 
+                            {
+                                [this.name]: {
+                                    value: {}, 
+                                    type: this.$options._componentTag
+                                }, 
+                                form: this.form,
+                                checkKey: this.name
+                            }
+                        )
                         break
                     default:
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: {}, type: this.$options._componentTag}, form: this.form})
+                        this.$store.commit(FORM_ELEMENT_VALUE, 
+                            {
+                                [this.name]: {
+                                    value: {}, 
+                                    type: this.$options._componentTag
+                                }, 
+                                form: this.form,
+                                checkKey: this.name
+                            }
+                        )
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[this.form], [this.name, 'value'], '')
                 let type =  _.get(this.$store.state.formData[this.form], [this.name, 'type'])
                 if (type === undefined)
-                    this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: tmp, type: this.$options._componentTag}, form: this.form})
+                    this.$store.commit(FORM_ELEMENT_VALUE, 
+                        {
+                            [this.name]: {
+                                value: tmp, 
+                                type: this.$options._componentTag
+                            }, 
+                            form: this.form,
+                            checkKey: this.name
+                        }
+                    )
                 return tmp
             },
             set (value) {
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value, type: this.$options._componentTag}, form: this.form})
+                this.$store.commit(FORM_ELEMENT_VALUE, 
+                    {
+                        [this.name]: {
+                            value, 
+                            type: this.$options._componentTag
+                        }, 
+                        form: this.form,
+                        checkKey: this.name
+                    }
+                )
             }
         },
         isRelated () {
@@ -131,12 +195,12 @@ const mixin = {
         }
     },
     watch: {
-        validate (newVal) {
+        validate(newVal) {
             if (newVal) {
                 this.valid()
             }
         },
-        boundTarget (newVal, oldVal) {
+        boundTarget(newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]: {value: ''}, form: this.form})
             }

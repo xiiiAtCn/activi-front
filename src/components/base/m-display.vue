@@ -14,11 +14,17 @@
 </template>
 <script>
     import mixin from './mixin'
-
+    import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     export default {
         name: 'm-display',
         mixins: [mixin],
         computed: {
+        },
+        methods: {
+            valid() {
+                console.log('valid will do nothing except commit no error')
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+            }
         }
     }
 </script>

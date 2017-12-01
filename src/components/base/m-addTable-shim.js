@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import _ from 'lodash'
-import { FETCH_TABLE_DATA } from 'store/Action'
+import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT } from 'store/Action'
 import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE} from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
@@ -14,7 +14,7 @@ Vue.component('mDetailTable', {
                 loading: this.loading,
                 formTmp: this.uid,
                 name: this.name,
-                editable: this.editable
+                editable: this.readonly
             }
         })
     },
@@ -28,6 +28,10 @@ Vue.component('mDetailTable', {
             default() {
                 return {}
             }
+        },
+        ui_form: {
+            type: String,
+            default: 'form'
         },
         uid: {
             type: String,
@@ -47,42 +51,60 @@ Vue.component('mDetailTable', {
                             loading: true,
                             reset: false,
                             validate: false,
-                            visible: false
+                            visible: false,
+                            [this.uid + 'waitCheck']: []
                         }
                     }
                 )
-                this.$store.commit(FORM_ELEMENT_VALUE, {checkCount: columns.length, form: this.uid})
             }
             return columns
         },
+        validate () {
+            return _.get(this.$store.state.formData[this.ui_form], 'validate', false)
+        },
         dataSource() {
-            let form = _.get(this.$store.state.formData, this.form || 'form')
+            let form = _.get(this.$store.state.formData, this.ui_form || 'form')
             if(form === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
                     {
-                        attribute: this.form || 'form',
+                        attribute: this.ui_form || 'form',
                         value: {
+                            loading: true,
                             reset: false,
-                            validate: false
+                            validate: false,
+                            visible: false,
+                            [(this.ui_form || 'form') + 'waitCheck']: []
                         }
                     }
                 )
             }
             let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             if(source === undefined )
-                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
-                    value: [],
-                    type: this.$options._componentTag
-                }})
+                this.$store.commit(FORM_ELEMENT_VALUE, 
+                    {   
+                        form: 'form', 
+                        [this.name]: {
+                            value: [],
+                            type: this.$options._componentTag
+                        },
+                        checkKey: this.name
+                    })
             source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
-            if(source.type === undefined) 
-                this.$store.commit(FORM_ELEMENT_VALUE, {form: 'form', [this.name]: {
-                    value: source,
-                    type: this.$options._componentTag
-                }})
+            let type = _.get(this.$store.state.formData, ['form', this.name, 'type'])
+            if(type === undefined) 
+                this.$store.commit(FORM_ELEMENT_VALUE, 
+                    {
+                        form: 'form', 
+                        [this.name]: {
+                            value: source,
+                            type: this.$options._componentTag
+                        },
+                        checkKey: this.name
+                    }
+                )
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
         },
-        editable() {
+        readonly() {
             let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
             if(editable === 'editable') {
                 return true
@@ -114,12 +136,21 @@ Vue.component('mDetailTable', {
             return url
         },
     },
-    mounted() {
-        this.$nextTick(() => {
-            console.log('add table define is ', this.define)
-        })
-    },  
+    watch: {
+        validate(newVal) {
+            if (newVal) {
+                this.valid()
+            }
+        }
+    },
     methods: {
+        valid() {
+            if(!this.readonly) {
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
+            } else {
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
+            }
+        },
         getDataFromUrl(url) {
             this.$store.dispatch(FETCH_TABLE_DATA, {url})
         },
@@ -151,7 +182,6 @@ Vue.component('mDetailTable', {
                     `arguments ${JSON.parse(cols)} will be ignored and return an array width an empty object`)
                 columns.push({})
             }
-            console.log(columns)
             return columns
         }
     }

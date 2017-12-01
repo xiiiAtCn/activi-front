@@ -139,7 +139,6 @@
                 })
             },
             handleSuccess (res, file) {
-                debugger
                 file['url'] = file['response']['url']
                 file['id'] = file['response']['id']
                 this.$Message.success('上传成功')
