@@ -37,7 +37,7 @@
             </Col>
         </Row>
         <div>
-            <Table :highlight-row="checkRow" border @on-current-change="handleRowClick"
+            <Table :highlight-row="checkRow === 'S' ? true : false" border @on-current-change="handleRowClick" @on-selection-change="handleRowsClick"
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
@@ -85,7 +85,7 @@
             },
             checkRow:{
                 type: null,
-                default: false
+                default: ''
             },
             form:{
                 type: [String, Number],
@@ -245,23 +245,32 @@
                     this.checkAllGroup = _.cloneDeep(this.testList)
                     this.dataListChange = _.cloneDeep(this.testList)
                 }
-
+                this.checkRowClick()
                 this.checkValue()
             },
-            //配置操作的按钮
-            showButton(){
-                //去重
+            //判断是否存在
+            judgeExistence(key,text){
                 let i = 0
                 let existence =false
                 while (this.columnsData.length !== 0){
-                    if(this.columnsData[i].key === 'action'){
+                    if(this.columnsData[i][key] === text){
                         existence = true
                         break
                     }
                     i++
                     if(this.columnsData.length === i){break}
                 }
-                if(existence){return}
+                if(existence){
+                    return true
+                }else{
+                    return false
+                }
+            },
+            //配置操作的按钮
+            showButton(){
+                if(this.judgeExistence('key','action')){
+                    return
+                }
 
                 this.columnsData.push({
                     title: '操作',
@@ -300,6 +309,7 @@
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
                 this.showButton()
+                this.checkRowClick()
                 this.checkValue()
             },
             //是否去除无用的操作列
@@ -437,14 +447,47 @@
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form})
             },
 
+            //行多选存数据
+            handleRowsClick(data){
+                let list=[]
+                data.forEach((val)=>{
+                    list.push(val.id)
+                })
+                this.$store.commit(FORM_ELEMENT_VALUE, {list, form: this.form})
+                console.log('rows check data is' , data)
+            },
+
+            checkRowClick(){
+                if(this.checkRow === 'M'){
+                    if(this.judgeExistence('type','selection')){
+                        return
+                    }
+                    this.columnsData.push({
+                        type: 'selection',
+                        width: 60,
+                        fixed: 'left',
+                        align: 'center'
+                    })
+                }
+            },
+
+
             checkValue(){
                 //判断表格宽度更改表格渲染
-                let width=0
-                this.columnsData.forEach((val)=>{
+                let width=0,arr=[]
+                this.columnsData.forEach((val,i)=>{
                     width += val.width
+                    // if(val.width >= this.getLength(val.text)){
+                    //     arr.push(i)
+                    // }
                 })
                 if(width < this.$refs.tableCt.clientWidth){
                     this.columnsData.forEach((val,i)=>{
+                        // for(let j=0;j<arr.length;j++){
+                        //     if(arr[j] === i){
+                        //         return
+                        //     }
+                        // }
                         delete val.width
                         if(val.key === 'action'){
                             this.columnsData.splice(i,1)
@@ -453,7 +496,7 @@
                 }
                 this.showButton()
                 this.removeColButton()
-            }
+            },
         }
     }
 </script>

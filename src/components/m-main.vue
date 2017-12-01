@@ -2,8 +2,8 @@
     <div class="container90">
         <div v-if="define.title">
             <Row>
-                <Col span="12" style="display: flex; justify-content: flex-start; align-items: flex-end">
-                <Breadcrumb>
+                <Col span="20" style="display: flex; justify-content: flex-start; align-items: flex-end">
+                <Breadcrumb  style="margin-right: 10px">
                     <Breadcrumb-item v-if="typeof define.title === 'string'">
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
@@ -16,8 +16,33 @@
                         </Breadcrumb-item>
                     </Breadcrumb>
                 </Breadcrumb>
+
+                <div class="btn-container-top-left" v-for="item in topLeft">
+                    <template name="fade" mode="out-in"  v-for="(btn, index) in item">
+                        <Poptip placement="bottom" v-if="btn && btn.child">
+                            <Button :type="btn.type || 'default'">
+                                {{btn.text}}
+                                <Icon type="arrow-down-b"></Icon>
+                            </Button>
+                            <div slot="content" style="padding: 0 14px;">
+                                <div  v-for="(v, index) in btn.child">
+                                    <mButtonLayer :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                </div>
+                            </div>
+                        </Poptip>
+                        <Button
+                            v-else
+                            :type="btn.type || 'default'"
+                            class="submit-btn"
+                            :key="index"
+                            :size="btn.size || 'default'"
+                            @click="btnClick(btn.action)">
+                            {{ btn.text }}
+                        </Button>
+                    </template>
+                </div>
                 </Col>
-                <Col span="12" class="pull-right">
+                <Col span="4" class="pull-right">
                 <transition name="fade" mode="out-in">
                     <Button type="primary" v-if="define.editUrl" shape="circle" @click="edit(define.editUrl)">
                         <Icon type="document-text"></Icon>
@@ -52,10 +77,10 @@
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
-            <!-- <ButtonGroup 
+            <!-- <ButtonGroup
                 v-show="btnArr.length > 0"
                 class="form-button-group">
-                <Dropdown 
+                <Dropdown
                     trigger="click">
                     <Button>
                         确认
@@ -75,15 +100,29 @@
                     </DropdownMenu>
                 </Dropdown>
             </ButtonGroup> -->
-            <div class="btn-container">
-                <Button
-                    v-for="(btn, index) in btnArr"
-                    :type="btn.type"
-                    class="submit-btn"
-                    :key="index"
-                    @click="btnClick(btn.action)">
-                    {{ btn.text }}
-                </Button>
+            <div class="btn-container-bottom-right" v-for="item in bottomRight">
+                <template name="fade" mode="out-in"  v-for="(btn, index) in item">
+                    <Poptip placement="bottom" v-if="btn && btn.child">
+                        <Button :type="btn.type || 'default'">
+                            {{btn.text}}
+                            <Icon type="arrow-down-b"></Icon>
+                        </Button>
+                        <div slot="content" style="padding: 0 14px;">
+                            <div  v-for="(v, index) in btn.child">
+                                <mButtonLayer :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                            </div>
+                        </div>
+                    </Poptip>
+                    <Button
+                        v-else
+                        :type="btn.type || 'default'"
+                        class="submit-btn"
+                        :key="index"
+                        :size="btn.size || 'default'"
+                        @click="btnClick(btn.action)">
+                        {{ btn.text }}
+                    </Button>
+                </template>
             </div>
         </div>
         <Back-top></Back-top>
@@ -95,7 +134,7 @@
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
-    
+
     export default {
         router,
         data () {
@@ -104,7 +143,9 @@
                 errorMessage: null,
                 define: {},
                 content: [],
-                dataUrl: null
+                dataUrl: null,
+                topLeft:[],
+                bottomRight:[]
             }
         },
         computed: {
@@ -113,9 +154,6 @@
             },
             leftMenu: function () {
                 return this.define.leftMenu ? this.define.leftMenu : {}
-            },
-            btnArr () {
-                return _.get(this.define, 'buttons', [])
             }
         },
         watch: {
@@ -134,6 +172,8 @@
                         document.title = _.get(this.define, 'title', '')
                         let url = this.define.data_url
                         this.$store.dispatch(FETCH_FORM_DATA, {url: url})
+                        console.log('watch s',this.define)
+                        this.handleButtonList(this.define.buttons)
                     }
                 })
             },
@@ -146,6 +186,8 @@
                 }
             }
         },
+        mounted () {
+        },
         methods: {
             edit: function (url) {
                 dispatch(url)
@@ -157,11 +199,34 @@
                 dispatch(url)
             },
             btnClick (action) {
-                if(action.type === 'serverAction' || action.type === 'link') {
+                if(action.type === 'serverAction'  || action.type === 'link') {
                     dispatch(action)
                 } else {
                     this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: action})
                 }
+            },
+            handleButtonList(list){
+                if(!list){return}
+                this.topLeft={}
+                this.bottomRight={}
+                console.log('buttons is',list)
+                list.forEach((val)=>{
+                    if(val.location === 'topLeft'){
+                        if(!this.topLeft[val.groupNo]){
+                            this.topLeft[val.groupNo]=[val]
+                        }else{
+                            this.topLeft[val.groupNo].push(val)
+                        }
+                    } else if(val.location === 'bottomRight'){
+                        if(!this.bottomRight[val.groupNo]){
+                            this.bottomRight[val.groupNo]=[val]
+                        }else{
+                            this.bottomRight[val.groupNo].push(val)
+                        }
+                    }
+                })
+                console.log('this.topLeft is ',this.topLeft)
+                console.log('this.bottomRight is ',this.bottomRight)
             }
         },
         beforeRouteEnter (to, from, next) {
@@ -176,6 +241,7 @@
                         vm.content = _.get(post, 'ui_content', [])
                         vm.dataUrl = _.get(post, ['ui_define', 'data_url'], null)
                         document.title = vm.define.title || '表单'
+                        vm.handleButtonList(vm.define.buttons)
                     })
                 }
             })
@@ -212,11 +278,16 @@
         text-align: center;
     }
 
-    .btn-container {
-        padding: 0 10px;
-    }
-    .btn-container .submit-btn{
+    .btn-container-bottom-right {
         float: right;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+    .btn-container-top-left{
+        margin-left: 10px;
         margin-right: 10px;
+    }
+    .submit-btn{
+        margin-right: 5px;
     }
 </style>
