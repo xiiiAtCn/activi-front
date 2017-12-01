@@ -36,7 +36,7 @@
                             class="submit-btn"
                             :key="index"
                             :size="btn.size || 'default'"
-                            @click="btnClick(btn)">
+                            @click="btnClick(btn.action)">
                             {{ btn.text }}
                         </Button>
                     </template>
@@ -119,7 +119,7 @@
                         class="submit-btn"
                         :key="index"
                         :size="btn.size || 'default'"
-                        @click="btnClick(btn)">
+                        @click="btnClick(btn.action)">
                         {{ btn.text }}
                     </Button>
                 </template>
@@ -198,11 +198,11 @@
             backUrl: function (url) {
                 dispatch(url)
             },
-            btnClick (btn) {
-                if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
-                    dispatch(btn.action)
+            btnClick (action) {
+                if(action.type === 'serverAction'  || action.type === 'link') {
+                    dispatch(action)
                 } else {
-                    this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: btn.action})
+                    this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: action})
                 }
             },
             handleButtonList(list){
