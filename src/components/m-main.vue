@@ -172,7 +172,6 @@
                         document.title = _.get(this.define, 'title', '')
                         let url = this.define.data_url
                         this.$store.dispatch(FETCH_FORM_DATA, {url: url})
-                        console.log('watch s',this.define)
                         this.handleButtonList(this.define.buttons)
                     }
                 })
@@ -193,9 +192,11 @@
                 dispatch(url)
             },
             back: function () {
+                this.clearButtonList()
                 this.$router.go(-1)
             },
             backUrl: function (url) {
+                this.clearButtonList()
                 dispatch(url)
             },
             btnClick (action) {
@@ -206,10 +207,13 @@
                 }
             },
             handleButtonList(list){
-                if(!list){return}
                 this.topLeft={}
                 this.bottomRight={}
-                console.log('buttons is',list)
+                if(!list){
+                    return
+                }
+                this.topLeft={}
+                this.bottomRight={}
                 list.forEach((val)=>{
                     if(val.location === 'topLeft'){
                         if(!this.topLeft[val.groupNo]){
@@ -225,8 +229,10 @@
                         }
                     }
                 })
-                console.log('this.topLeft is ',this.topLeft)
-                console.log('this.bottomRight is ',this.bottomRight)
+            },
+            clearButtonList(){
+                this.topLeft={}
+                this.bottomRight={}
             }
         },
         beforeRouteEnter (to, from, next) {
