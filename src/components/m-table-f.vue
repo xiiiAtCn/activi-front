@@ -49,9 +49,10 @@
 </template>
 <script>
     import bus from '../router/bus'
-    import { dispatch,forGet } from 'utils/actionUtils'
+    import { dispatch,forGet,getData } from 'utils/actionUtils'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE} from 'store/Mutation'
+    import iView from 'iview'
 
     export default {
         props: {
@@ -140,7 +141,9 @@
                 rowCount:10,
                 currentPage:1,
                 //table宽度
-                tableWidth:''
+                tableWidth:'',
+                //post 的 id数组
+                idList:[]
             }
         },
         watch: {
@@ -329,7 +332,20 @@
 
             // 处理顶部按钮
             handleTopButton (action) {
-                dispatch(action)
+                console.log(this.idList)
+                if(action.type !== 'link'){
+                    action.url.body = this.idList
+                    getData(action.url,(data)=>{
+                        if (data) {
+                            if (data.alert) {
+                                iView.Message.success(data.alert)
+                            }
+                        }
+                    })
+                }else {
+                    dispatch(action)
+                }
+
             },
             //发送搜索事件数据
             handleTopSearch(){
@@ -444,7 +460,9 @@
 
             //行单选存数据
             handleRowClick(data){
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form})
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form || 'form'})
+
+                this.idList.push(data.id)
             },
 
             //行多选存数据
@@ -453,8 +471,8 @@
                 data.forEach((val)=>{
                     list.push(val.id)
                 })
-                this.$store.commit(FORM_ELEMENT_VALUE, {list, form: this.form})
-                console.log('rows check data is' , data)
+                this.idList = list
+                this.$store.commit(FORM_ELEMENT_VALUE, {list, form: this.form || 'form'})
             },
 
             checkRowClick(){

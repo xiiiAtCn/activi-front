@@ -24,6 +24,7 @@
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
+    import iView from 'iview'
 
     export default {
         props:{
@@ -52,10 +53,12 @@
             },
             handleOk(){
                 let action=this.define.saveDataAction.url
-                action.body=_.get(this.$store.state.formData[this.define.getDataAction.url.queryParams.form],'list', '')
+                action.body=_.get(this.$store.state.formData['form'],'list', '')
                 getData(action,(data)=>{
                     if (data) {
-                        console.log('this.data' , data)
+                        if (data.alert) {
+                            iView.Message.success(data.alert)
+                        }
                     }
                 })
             },

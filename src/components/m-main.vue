@@ -26,7 +26,15 @@
                             </Button>
                             <div slot="content" style="padding: 0 14px;">
                                 <div  v-for="(v, index) in btn.child">
-                                    <mButtonLayer :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                    <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                    <Button
+                                        v-else
+                                        :type="v.type || 'default'"
+                                        :key="index"
+                                        :size="v.size || 'default'"
+                                        @click="btnClick(v)">
+                                        {{ v.text }}
+                                    </Button>
                                 </div>
                             </div>
                         </Poptip>
@@ -36,7 +44,7 @@
                             class="submit-btn"
                             :key="index"
                             :size="btn.size || 'default'"
-                            @click="btnClick(btn.action)">
+                            @click="btnClick(btn)">
                             {{ btn.text }}
                         </Button>
                     </template>
@@ -77,29 +85,6 @@
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
-            <!-- <ButtonGroup
-                v-show="btnArr.length > 0"
-                class="form-button-group">
-                <Dropdown
-                    trigger="click">
-                    <Button>
-                        确认
-                        <Icon type="arrow-down-b"></Icon>
-                    </Button>
-                    <DropdownMenu slot="list" class="drop-down-container">
-                        <template
-                            v-for="(btn, index) in btnArr">
-                            <Button
-                                :type="btn.type"
-                                class="submit-btn"
-                                :key="index"
-                                @click="btnClick(btn.action)">
-                                {{ btn.text }}
-                            </Button>
-                        </template>
-                    </DropdownMenu>
-                </Dropdown>
-            </ButtonGroup> -->
             <div class="btn-container-bottom-right" v-for="item in bottomRight">
                 <template name="fade" mode="out-in"  v-for="(btn, index) in item">
                     <Poptip placement="bottom" v-if="btn && btn.child">
@@ -109,7 +94,15 @@
                         </Button>
                         <div slot="content" style="padding: 0 14px;">
                             <div  v-for="(v, index) in btn.child">
-                                <mButtonLayer :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                <Button
+                                    v-else
+                                    :type="v.type || 'default'"
+                                    :key="index"
+                                    :size="v.size || 'default'"
+                                    @click="btnClick(v)">
+                                    {{ v.text }}
+                                </Button>
                             </div>
                         </div>
                     </Poptip>
@@ -119,7 +112,7 @@
                         class="submit-btn"
                         :key="index"
                         :size="btn.size || 'default'"
-                        @click="btnClick(btn.action)">
+                        @click="btnClick(btn)">
                         {{ btn.text }}
                     </Button>
                 </template>
@@ -131,9 +124,10 @@
 <script>
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
-    import {dispatch} from '../utils/actionUtils'
+    import {dispatch,getData} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
+    import iView from 'iview'
 
     export default {
         router,
@@ -168,11 +162,11 @@
                         console.log('post', post)
                         this.meta = post
                         this.define = _.get(post, 'ui_define', {})
+                        this.handleButtonList(this.define.buttons)
                         this.content = _.get(post, 'ui_content', [])
                         document.title = _.get(this.define, 'title', '')
                         let url = this.define.data_url
                         this.$store.dispatch(FETCH_FORM_DATA, {url: url})
-                        this.handleButtonList(this.define.buttons)
                     }
                 })
             },
@@ -199,11 +193,19 @@
                 this.clearButtonList()
                 dispatch(url)
             },
-            btnClick (action) {
-                if(action.type === 'serverAction'  || action.type === 'link') {
+            btnClick (btn) {
+                if(btn.buttonType === 'ordinary-button' ){
+                    getData(btn.action.url,(data)=>{
+                        if (data) {
+                            if (data.alert) {
+                                iView.Message.success(data.alert)
+                            }
+                        }
+                    })
+                } else if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
                     dispatch(action)
                 } else {
-                    this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: action})
+                    this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: btn.action})
                 }
             },
             handleButtonList(list){
@@ -212,8 +214,6 @@
                 if(!list){
                     return
                 }
-                this.topLeft={}
-                this.bottomRight={}
                 list.forEach((val)=>{
                     if(val.location === 'topLeft'){
                         if(!this.topLeft[val.groupNo]){
@@ -244,10 +244,11 @@
                     next(vm => {
                         vm.meta = post
                         vm.define = _.get(post, 'ui_define', {})
+                        vm.handleButtonList(vm.define.buttons)
                         vm.content = _.get(post, 'ui_content', [])
                         vm.dataUrl = _.get(post, ['ui_define', 'data_url'], null)
                         document.title = vm.define.title || '表单'
-                        vm.handleButtonList(vm.define.buttons)
+                        console.log('beforeRouteEnter')
                     })
                 }
             })

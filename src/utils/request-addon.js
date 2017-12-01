@@ -1,5 +1,6 @@
 import axios from 'axios'
 import urlUtil from 'url'
+import  _ from 'lodash'
 /**
  *
  * @author  Lungern xiii.at.cn@gmail.com
@@ -48,8 +49,13 @@ Request.prototype.forPost = function (callback) {
     let url = this._buildPath()
     let body = {}, config = {}
     if (this.$body !== undefined) {
-        body = { ...this.$body}
-        delete this.$body
+        if(_.isArray(this.$body)){
+            body = this.$body
+            delete this.$body
+        }else{
+            body = { ...this.$body}
+            delete this.$body
+        }
     }
     if (this.$config !== undefined) {
         config = { ...this.$config}
