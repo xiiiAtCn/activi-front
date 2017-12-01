@@ -20,7 +20,7 @@
                 <div class="btn-container-top-left" v-for="item in topLeft">
                     <template name="fade" mode="out-in"  v-for="(btn, index) in item">
                         <Poptip placement="bottom" v-if="btn && btn.child">
-                            <Button>
+                            <Button :type="btn.type || 'default'">
                                 {{btn.text}}
                                 <Icon type="arrow-down-b"></Icon>
                             </Button>
@@ -103,7 +103,7 @@
             <div class="btn-container-bottom-right" v-for="item in bottomRight">
                 <template name="fade" mode="out-in"  v-for="(btn, index) in item">
                     <Poptip placement="bottom" v-if="btn && btn.child">
-                        <Button>
+                        <Button :type="btn.type || 'default'">
                             {{btn.text}}
                             <Icon type="arrow-down-b"></Icon>
                         </Button>
@@ -199,7 +199,7 @@
                 dispatch(url)
             },
             btnClick (btn) {
-                if(btn.action.type === 'serverAction') {
+                if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
                     dispatch(btn.action)
                 } else {
                     this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: btn.action})

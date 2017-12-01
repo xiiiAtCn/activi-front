@@ -53,6 +53,11 @@
             handleOk(){
                 let action=this.define.saveDataAction.url
                 action.body=_.get(this.$store.state.formData[this.define.getDataAction.url.queryParams.form],'list', '')
+                getData(action,(data)=>{
+                    if (data) {
+                        console.log('this.data' , data)
+                    }
+                })
             },
             handleCancel(){}
         }
