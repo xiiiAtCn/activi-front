@@ -335,16 +335,8 @@
                 console.log(this.idList)
                 if(action.type !== 'link'){
                     action.url.body = this.idList
-                    getData(action.url,(data)=>{
-                        if (data) {
-                            if (data.alert) {
-                                iView.Message.success(data.alert)
-                            }
-                        }
-                    })
-                }else {
-                    dispatch(action)
                 }
+                dispatch(action)
             },
             //发送搜索事件数据
             handleTopSearch(){
@@ -509,12 +501,9 @@
                         if(val.key === 'action'){
                             this.columnsData.splice(i,1)
                         }
-                        if(val.type && val.type === 'selection'){
-                            this.columnsData.splice(i,1)
-                        }
                     })
-                    this.checkRowClick()
                 }
+                this.checkRowClick()
                 this.showButton()
                 this.removeColButton()
             },
