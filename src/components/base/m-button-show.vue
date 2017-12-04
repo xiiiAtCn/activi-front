@@ -15,17 +15,16 @@
     import {urlToString} from 'utils/actionUtils'
 
     export default {
-        props:{
-            define:{}
-        },
+        props:['define'],
         data () {
             return {
                 showLayer:false,
-                iframeUrl:`/static/drawFormStatusChart.html?id=1872436001224704`,
             }
         },
-        mounted () {
-            this.iframeUrl = urlToString(this.define.url)
+        computed: {
+            iframeUrl () {
+                return urlToString(this.define.action.url)
+            }
         },
         methods: {
             handleClick(){

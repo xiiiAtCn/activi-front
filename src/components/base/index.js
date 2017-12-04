@@ -72,7 +72,7 @@ const mButtonLayer = resolve =>
 const mSpan = resolve =>
     require(['./m-span.vue'], resolve)
 
-const mButtonShow = resolve =>
+const mButtonIframe = resolve =>
     require(['./m-button-show.vue'], resolve)
 
 const mBoolean = resolve =>
@@ -102,5 +102,5 @@ Vue.component('mInputChoose', mInputChoose)
 Vue.component('mDisplay', mDisplay)
 Vue.component('mButtonLayer', mButtonLayer)
 Vue.component('mSpan', mSpan)
-Vue.component('mButtonShow', mButtonShow)
+Vue.component('mButtonIframe', mButtonIframe)
 Vue.component('mBoolean', mBoolean)
