@@ -294,7 +294,7 @@ function asMessage(action) {
 * url对象转字符串
 * */
 
-function urlToString(action) {
+export function urlToString(action) {
     if(util.isObject(action.url)){
         let url
         url = action.url.url

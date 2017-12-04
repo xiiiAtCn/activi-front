@@ -3,7 +3,7 @@
         <Row>
             <div class="search">
                 <Input v-model="objectModel" :placeholder="placeholder" readonly :disabled="readonly">
-                    <Button slot="append" @click="handleChooseClick" :cursor="readonly?'default':'pointer'">选择</Button>
+                    <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
             <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">

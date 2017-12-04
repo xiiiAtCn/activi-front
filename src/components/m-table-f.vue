@@ -345,7 +345,6 @@
                 }else {
                     dispatch(action)
                 }
-
             },
             //发送搜索事件数据
             handleTopSearch(){
@@ -510,7 +509,11 @@
                         if(val.key === 'action'){
                             this.columnsData.splice(i,1)
                         }
+                        if(val.type && val.type === 'selection'){
+                            this.columnsData.splice(i,1)
+                        }
                     })
+                    this.checkRowClick()
                 }
                 this.showButton()
                 this.removeColButton()
