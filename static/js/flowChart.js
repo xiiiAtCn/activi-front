@@ -102,12 +102,28 @@ var outputFullValueMap;
 var jobMeta;
 
 window.onload=function () {
-    drawFlowChart(window.location.search.split("=")[1], "");
+    drawFlowChart(this.getSearchString());
 };
 
+function getSearchString() {
+    // 获取URL中?之后的字符
+    var str = location.search;
+    str = str.substring(1,str.length);
+
+    // 以&分隔字符串，获得类似name=xiaoli这样的元素数组
+    var arr = str.split("&");
+    var obj = new Object();
+
+    // 将每一个数组元素以=分隔并赋给obj对象
+    for(var i = 0; i < arr.length; i++) {
+        var tmp_arr = arr[i].split("=");
+        obj[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
+    }
+    return obj;
+}
 // 根据WFMetaId画取工作流定义数据，并画出工作流示意图
-function drawFlowChart(proWfMetaId) {
-	
+function drawFlowChart(idList) {
+
 	lastOkJobMeta = null;
 	okJobMetaList = null;
 	selStatusMap = null;
@@ -126,13 +142,13 @@ function drawFlowChart(proWfMetaId) {
 	    // url: "/api/webserverconf/entitygrid/FlowChartForm",
         url: '/webserverconf/entitygrid/FlowChartForm',
 	    async: false,
-	    data: {id: proWfMetaId},
+	    data: idList,
 	    success: function (data) {
 	    	if (data) {
-	    		
+
 	    		// 更新对应行的数据
 	    		proWf = data;
-	    		
+
 	    		inputIconMap = proWf.inputIconMap ;
 	    		inputValueMap = proWf.inputValueMap;
 	    		inputFullValueMap = proWf.inputFullValueMap;
@@ -196,14 +212,14 @@ function drawFlowChart(proWfMetaId) {
  * @param e 事件消息
  */
 function onMouseDown(e) {
-	
+
 	// 事件触发区域，外部边框
 	var rect = e.target.getBoundingClientRect();
-	
+
 	// 换算成事件触发区域内部坐标
 	var mex = e.clientX - rect.left;
 	var mey = e.clientY - rect.top;
-	
+
 	px = mex;
 	py = mey;
 	px0 = mex;
@@ -211,31 +227,31 @@ function onMouseDown(e) {
 	isDrag = false;
 	swimlaneDragMode = 0;
 	swimlaneMoveOffsetX = 0;
-	
+
 	if (isViewMode) {
 		return;
 	}
-	
+
 	if (36 > mex && 36 > mey) {
 		if (ACTIONTYPE_INSERT == jobMeta.actionType || ACTIONTYPE_UPDATE == jobMeta.actionType) {
 			return;
 		}
 	}
-	
+
 	if (MODE_NEW_CONFIRM_STATUS == drawMode || MODE_NEW_WORK_STATUS == drawMode
 			|| MODE_NEW_SELECT_NODE == drawMode || MODE_NEW_COMBINE_NODE == drawMode
 			|| MODE_NEW_STEP_LINK == drawMode || MODE_SHOW_EDIT_FIELD == drawMode || MODE_NEW_STOP_NODE == drawMode) {
 		return;
 	}
-	
+
 	if (MODE_RESIZE_X1 == drawMode || MODE_RESIZE_X2 == drawMode) {
 		return;
 	}
-	
+
 	// 查找被选中的对象
 	findSelObj(mex, mey);
 	drawChart();
-	
+
 	// 如果发生按下事件，将鼠标移动事件切换成鼠标拖拽时间
 	canvas.onmousemove = onMouseDrag;
 }
@@ -246,16 +262,16 @@ function onMouseDown(e) {
  * @param e 事件消息
  */
 function onMouseUp(e) {
-	
+
 	// 事件触发区域，外部边框
 	var rect = e.target.getBoundingClientRect();
-	
+
 	// 换算成事件触发区域内部坐标
 	var mex = e.clientX - rect.left;
 	var mey = e.clientY - rect.top;
-	
+
 	var preSx = sx;
-	
+
 	if (sx > SX) {
 		sx = SX;
 	}
@@ -265,19 +281,19 @@ function onMouseUp(e) {
 	if (null == jobMeta) {
 		return;
 	}
-	
+
 	if (sx < 200 - jobMeta.ww) {
 		sx = 200 - jobMeta.ww;
 	}
-	
+
 	if (sy < 200 - jobMeta.hh) {
 		sy = 200 - jobMeta.hh;
 	}
-	
+
 	//if (null != pagmv && getChildren().contains(pagmv)) {
 	//	pagmv.setTranslateX(pagmv.getTranslateX() + sx - preSx);
 	//}
-	
+
 	if (isViewMode) {
 		drawChart();
 		if (!isDrag) {
@@ -285,14 +301,14 @@ function onMouseUp(e) {
 		}
 		return;
 	}
-	
+
 	if (36 > mex && 36 > mey) {
 		if (ACTIONTYPE_INSERT == jobMeta.actionType || ACTIONTYPE_UPDATE == jobMeta.actionType) {
 			saveAction();
 			return;
 		}
 	}
-	
+
 	switch (drawMode) {
 		case MODE_MOVE:
 			// 左侧内容区显示
@@ -321,7 +337,7 @@ function onMouseUp(e) {
 			newNode.sx = mex - sx;
 			newNode.sy = mey - sy;
 			newNode.hh = DEFAULT_NODE_HH;
-			
+
 			if (MODE_NEW_CONFIRM_STATUS == drawMode) {
 				if (null == formStatusSel) {
 					return;
@@ -349,16 +365,16 @@ function onMouseUp(e) {
 				newNode.ww = DEFAULT_NODE_WW_SC;
 				newNode.setStatusMapType(STOP_NODE);
 			}
-			
+
 			List<FormHandleStatusMap> nodeList = jobMeta.getStatusList();
-			
+
 			nodeList.add(newNode);
 			setDrawMode(MODE_MOVE);
 			selStatusMap = newNode;
 			if (null != paneWorkFlowNodeList) {
 				paneWorkFlowNodeList.setFormHandleStatusMap(newNode,true);
 			}
-			
+
 			if (ACTIONTYPE_NONE == jobMeta.actionType) {
 				if (null == jobMeta.id || 0 == jobMeta.id.length()) {
 					jobMeta.actionType = ACTIONTYPE_INSERT;
@@ -373,15 +389,15 @@ function onMouseUp(e) {
 		case MODE_NEW_STEP_LINK:
 			/*
 			if (null == newLink) {
-				
+
 				if (null == selStatusMap) {
 					return;
 				}
-				
+
 				if (STOP_NODE == selStatusMap.getStatusMapType()) {
 					return;
 				}
-				
+
 				boolean find1 = false;
 				for (FormHandleStatusMap tmpMap : jobMeta.getStatusList()) {
 					if (tmpMap.getPrivateMapId() == selStatusMap.getPrivateMapId()){
@@ -399,16 +415,16 @@ function onMouseUp(e) {
 				if(find1){
 					return;
 				}
-				
+
 				StatusLinkPoint lp = findSelStep4DrawLink(mex,mey);
 				if (null != lp) {
 					newLink = new FormStatusTransfer();
 					newLink.setTransferId(jobMeta.calcMaxSID());
 					newLink.setStartNodeId(selStatusMap.getPrivateMapId());
 					newLink.addPoint(lp);
-					
+
 					jobMeta.getStatusTransferList().add(newLink);
-					
+
 					selStatusTransfer = newLink;
 				}
 			} else {
@@ -424,7 +440,7 @@ function onMouseUp(e) {
 							break;
 						}
 					}
-					
+
 					if (!find1) {
 						for(FormHandleStatusMap tmpMap : jobMeta.getStatusList()){
 							if(tmpMap.getPrivateMapId() == selStatusMap.getPrivateMapId()){
@@ -440,14 +456,14 @@ function onMouseUp(e) {
 							}
 						}
 					}
-					
+
 					List<StatusLinkPoint> ptList = newLink.getPtList();
 					if(!find1 && 0 < ptList.length){
-						
+
 						String newLinkName = "NEW LINK";
-						
+
 						newLink.setEndNodeId(selStatusMap.getPrivateMapId());
-						
+
 						FormHandleStatusMap startMap = null;
 						FormHandleStatusMap endMap = null;
 						for (FormHandleStatusMap statusMap1 : jobMeta.getStatusList()) {
@@ -467,29 +483,29 @@ function onMouseUp(e) {
 						} else {
 							newLink.setType(0);
 						}
-						
+
 						newLink.addPoint(lp);
-						
+
 						newLink.setTransferName(newLinkName);
-						
+
 						StatusLinkPoint lp0 = ptList[0];
 						newLink.sx = (lp0.x + lp.x) / 2;
 						newLink.sy = (lp0.y + lp.y) / 2;
 						newLink.hh = 24;
-						
+
 						recalLinkNameWidth(newLink);
-						
+
 						FormStatusTransfer newLink1 = newLink;
 						selStatusTransfer = newLink;
 						newLink = null;
 						setDrawMode(MODE_MOVE);
 						selStatusTransfer = newLink1;
-						
+
 						if (null != paneWorkFlowNodeList) {
 							paneWorkFlowNodeList.setFormStatusTransfer(selStatusTransfer,true);
 							paneWorkFlowNodeList.drawView();
 						}
-						
+
 						if (ACTIONTYPE_NONE == jobMeta.actionType) {
 							if (null == jobMeta.id || 0 == jobMeta.id.length()) {
 								jobMeta.actionType = ACTIONTYPE_INSERT;
@@ -503,7 +519,7 @@ function onMouseUp(e) {
 						setDrawMode(MODE_MOVE);
 					}
 				} else {
-					
+
 					int newx = mex - sx;
 					int newy = mey - sy;
 					int sn = newLink.getPtList().length;
@@ -511,9 +527,9 @@ function onMouseUp(e) {
 						lp = newLink.getPtList().get(sn - 1);
 						int newdy = Math.abs(newy - lp.y);
 						int newdx = Math.abs(newx - lp.x);
-						
+
 						if(16 <= newdy || 16 <= newdx){
-							
+
 							if(16 > newdy){
 								newy = lp.y;
 							}
@@ -521,7 +537,7 @@ function onMouseUp(e) {
 								newx = lp.x;
 							}
 							lp = new StatusLinkPoint(newx, newy);
-							
+
 							newLink.addPoint(lp);
 						}
 					}
@@ -533,11 +549,11 @@ function onMouseUp(e) {
 		case MODE_RESIZE_X2:
 			break;
 	}
-	
+
 	if (null != selSwimlane) {
 		if (2 == swimlaneDragMode) {
 			var num1 = jobMeta.swimlaneList.length;
-			
+
 			var idx = jobMeta.swimlaneList.indexOf(selSwimlane);;
 			//for (var i = 0; i < num1; i++) {
 			//	if (jobMeta.swimlaneList[i].authorityGroupId == selSwimlane.authorityGroupId) {
@@ -545,7 +561,7 @@ function onMouseUp(e) {
 			//		break;
 			//	}
 			//}
-			
+
 			if (0 > swimlaneMoveOffsetX && 0 < idx) {
 				swimlaneMoveOffsetX = -swimlaneMoveOffsetX;
 				var x = 0;
@@ -594,7 +610,7 @@ function onMouseUp(e) {
 		swimlaneDragMode = 0;
 	}
 	drawChart();
-	
+
 	// 重新设置鼠标移动事件
 	canvas.onmousemove = onMouseMove;
 }
@@ -605,19 +621,19 @@ function onMouseUp(e) {
  * @param e 事件消息
  */
 function onMouseDrag(e) {
-	
+
 	// 事件触发区域，外部边框
 	var rect = e.target.getBoundingClientRect();
-	
+
 	// 换算成事件触发区域内部坐标
 	var mex = e.clientX - rect.left;
 	var mey = e.clientY - rect.top;
-	
+
 	var dx = mex - px;
 	var dy = mey - py;
 	px = mex;
 	py = mey;
-	
+
 	if (null == jobMeta) {
 		return;
 	}
@@ -626,7 +642,7 @@ function onMouseDrag(e) {
 			return;
 		}
 	}
-	
+
 	if (isViewMode) {
 		if (MODE_MOVE == drawMode) {
 			sx += dx;
@@ -639,7 +655,7 @@ function onMouseDrag(e) {
 		}
 		return;
 	}
-	
+
 	if (MODE_MOVE == drawMode) {
 		if (null == selStatusMap && null == selStatusTransfer && null == selSwimlane) {
 			sx += dx;
@@ -651,9 +667,9 @@ function onMouseDrag(e) {
 			isDrag = true;
 			return;
 		}
-		
+
 		if (null != selSwimlane) {
-			
+
 			if (0 == swimlaneDragMode) {
 				if (Math.abs(dx) < Math.abs(dy)) {
 					swimlaneDragMode = 2;
@@ -661,7 +677,7 @@ function onMouseDrag(e) {
 					swimlaneDragMode = 1;
 				}
 			}
-			
+
 			if (1 == swimlaneDragMode) {
 				selSwimlane.ww = selSwimlane.ww + dx;
 				if (SWIMLINE_WW > selSwimlane.ww){
@@ -670,13 +686,13 @@ function onMouseDrag(e) {
 			} else {
 				swimlaneMoveOffsetX += dx;
 			}
-			
+
 			if (!checkNotEmpty(jobMeta.id)) {
 				jobMeta.actionType = ACTIONTYPE_INSERT;
 			} else {
 				jobMeta.actionType = ACTIONTYPE_UPDATE;
 			}
-			
+
 			drawChart();
 			isDrag = true;
 			return;
@@ -698,10 +714,10 @@ function onMouseDrag(e) {
 				if (0 < selPt.joinNodeId) {
 					setNewPointInJoinPt(mex, mey);
 				} else {
-					
+
 					selPt.x = selPt.x + dx;
 					selPt.y = selPt.y + dy;
-					
+
 					selPt.x = adjustmentDx4Transfer(selStatusTransfer, selPt, selPt.x);
 					selPt.y = adjustmentDy4Transfer(selStatusTransfer, selPt, selPt.y);
 				}
@@ -715,14 +731,14 @@ function onMouseDrag(e) {
 			}
 		}
 		if (null != selStatusMap) {
-			
+
 			dx = adjustmentDx4Node(selStatusMap, dx);
 			dy = adjustmentDy4Node(selStatusMap, dy);
-			
+
 			resetStatusLoc(dx, dy);
 		}
 	} else if(MODE_RESIZE_X1 == drawMode) {
-		
+
 		var newSx = selStatusMap.sx + dx;
 		if (0 > newSx ) {
 			return;
@@ -731,7 +747,7 @@ function onMouseDrag(e) {
 		if (96 > newWw) {
 			return;
 		}
-		
+
 		var flowLinkList = jobMeta.statusTransferList;
 		for (var i = 0; i < flowLinkList.length; i++) {
 			var link1 = flowLinkList[i];
@@ -766,11 +782,11 @@ function onMouseDrag(e) {
 			}
 		}
 	} else if (MODE_RESIZE_X2 == drawMode) {
-		
+
 		if (null != selStatusMap) {
-			
+
 			dx = adjustmentWW4Node(selStatusMap, dx);
-			
+
 			var newWw = selStatusMap.ww + dx;
 			if (96 > newWw){
 				return;
@@ -820,24 +836,24 @@ function onMouseDrag(e) {
  * @param e 事件消息
  */
 function onMouseMove(e) {
-	
+
 	if (isViewMode) {
 		return;
 	}
-	
+
 	// 事件触发区域，外部边框
 	var rect = e.target.getBoundingClientRect();
-	
+
 	// 换算成事件触发区域内部坐标
 	var mex = e.clientX - rect.left;
 	var mey = e.clientY - rect.top;
-	
+
 	if (MODE_MOVE == drawMode || MODE_RESIZE_X1 == drawMode || MODE_RESIZE_X2 == drawMode) {
-	
+
 		if (null != selStatusMap) {
 			var x1 = mex - sx;
 			var y1 = mey - sy;
-			
+
 			if ((CONFIRM_STATUS == selStatusMap.statusMapType || WORK_STATUS == selStatusMap.statusMapType) &&
 					selStatusMap.sy < y1 && selStatusMap.sy + selStatusMap.hh > y1 && 4 >= Math.abs(x1 - selStatusMap.sx)) {
 				setCursor("col-resize");
@@ -853,18 +869,18 @@ function onMouseMove(e) {
 		}
 	} else if(MODE_NEW_CONFIRM_STATUS == drawMode || MODE_NEW_WORK_STATUS == drawMode
 			|| MODE_NEW_SELECT_NODE == drawMode || MODE_NEW_COMBINE_NODE == drawMode || MODE_NEW_STOP_NODE == drawMode){
-	
+
 		drawChart();
 		//drawNewNode(mex,mey);
 	} else if(MODE_NEW_STEP_LINK == drawMode){
-		
+
 		//findSelStep4Link(mex,mey);
 		drawChart();
-		
+
 		//gc.drawImage(imgNewLink, mex - 24, mey);
-		
+
 		if (null != newLink) {
-			
+
 			var size1 = newLink.ptList.length - 1;
 			if (0 <= size1) {
 				var lp = newLink.ptList[size1];
@@ -883,17 +899,17 @@ function resetStatusLoc(dx, dy) {
 	if (null == selJobMeta) {
 		return;
 	}
-	
+
 	selJobMeta.sx = selJobMeta.sx + dx;
 	selJobMeta.sy = selJobMeta.sy + dy;
 	var flowLinkList = proWf.linkerList;
-	
+
 	var link1;
 	for (var i = 0; i < flowLinkList.length;i++) {
-		
+
 		link1 = flowLinkList[i];
 		var ptList = link1.ptList;
-		
+
 		if (link1.formJobMetaId == selJobMeta.id) {
 			var pt0 = ptList[0];
 			pt0.x += dx;
@@ -916,24 +932,24 @@ function resetStatusLoc(dx, dy) {
 
 function resetStatusMap(jobMeta){
 	var agMapListTmp = new Array();
-	
+
 	//agMapListTmp.addAll(jobMeta.authGroupList);
-	
+
 	agMapListTmp.concat(jobMeta.authGroupList);
 	//jobMeta.authGroupList.clear();
 	// 数组清空
 	jobMeta.authGroupList.length = 0;
-	
+
 	if (0 < proWf.swimlaneList.length) {
 		var ww1 = 0;
 		var swimlane;
 		for (var i = 0; i < proWf.swimlaneList.length; i++) {
 			swimlane = proWf.swimlaneList[i];
-			
+
 			if (ww1 + swimlane.ww > jobMeta.sx && ww1 < jobMeta.sx + jobMeta.ww) {
 				var agMap1 = null;
 				for (var j = 0; j < agMapListTmp.length; j++) {
-					
+
 					agMap = agMapListTmp[j]
 					if (agMap.authGroupId == swimlane.authorityGroupId) {
 						agMap1 = agMap;
@@ -943,7 +959,7 @@ function resetStatusMap(jobMeta){
 				if (null == agMap1) {
 					//agMap1 = new HandleStatusAuthGroupMap();
 					agMap1.authGroupId = swimlane.authorityGroupId;
-					
+
 				}
 				agMap1.ag = swimlane.authorityGroup;
 				agMap1.type = swimlane.authorityGroup.type;
@@ -994,7 +1010,7 @@ function saveAction() {
 			}
 		}
 	}
-	
+
 	var newWw = maxx + 16;
 	var newHh = maxy + 24;
 	if (600 > newWw) {
@@ -1003,7 +1019,7 @@ function saveAction() {
 	if (2000 > newHh) {
 		newHh = 2000;
 	}
-	
+
 	if (0 < proWf.swimlaneList.length){
 		var ww1 = 0;
 		var swimlane;
@@ -1011,20 +1027,20 @@ function saveAction() {
 			swimlane = proWf.swimlaneList[i];
 			ww1 += swimlane.ww;
 		}
-		
+
 		newWw = ww1;
 	}
-	
+
 	var jobMeta;
 	for (var i = 0; i < proWf.proJobList.length; i++) {
 		jobMeta = proWf.proJobList[i]
-		
+
 		resetStatusMap(jobMeta);
 	}
-	
+
 	proWf.ww = newWw;
 	proWf.hh = newHh;
-	
+
 	//ProWfMetaFactory fact = ProWfMetaFactory.getFactory();
 	if (ACTIONTYPE_INSERT == proWf.actionType) {
 		//fact.insert(proWf);
@@ -1042,7 +1058,7 @@ function adjustmentDy4Transfer(link, selPt, y) {
 
 		var jobMeta;
 		for (var i = 0; i < proWf.proJobList.length; i++) {
-			
+
 			jobMeta = proWf.proJobList[i];
 			if (jobMeta.id == link.formJobMetaId) {
 				var middleY = jobMeta.sy + (jobMeta.hh / 2);
@@ -1060,12 +1076,12 @@ function adjustmentDy4Transfer(link, selPt, y) {
 			}
 		}
 	} else if ((ptList.length - 1) == idx) {
-		
+
 		var jobMeta = null;
 		for (var i = 0; i < proWf.proJobList.length; i++) {
-			
+
 			var jobMeta = proWf.proJobList[i];
-			
+
 			if (jobMeta.id == link.toJobMetaId) {
 				var middleY = jobMeta.sy + (jobMeta.hh / 2);
 				if (adjustmentGap > Math.abs(middleY - y)) {
@@ -1084,12 +1100,12 @@ function adjustmentDy4Transfer(link, selPt, y) {
 	}
 	var lp;
 	for (var i = 0; i < ptList.length; i++) {
-		
+
 		lp = ptList[i];
 		if (lp == selPt) {
 			continue;
 		}
-		
+
 		if (adjustmentGap > Math.abs(lp.y - y)) {
 			return lp.y;
 		}
@@ -1099,14 +1115,14 @@ function adjustmentDy4Transfer(link, selPt, y) {
 
 function adjustmentDx4Transfer(jobLink, selPt, x) {
 	var ptList = jobLink.ptList;
-	
+
 	var idx = ptList.indexOf(selPt);
 	if (0 == idx) {
-		
+
 		var jobMeta;
 		for (var i = 0; i < proWf.proJobList.length; i++) {
 			jobMeta = proWf.proJobList[i];
-			
+
 			if (jobMeta.id == jobLink.formJobMetaId) {
 				var middleX = jobMeta.sx + (jobMeta.ww / 2);
 				if (adjustmentGap > Math.abs(middleX - x)) {
@@ -1126,7 +1142,7 @@ function adjustmentDx4Transfer(jobLink, selPt, x) {
 		var jobMeta;
 		for (var i = 0; i < proWf.proJobList.length; i++) {
 			jobMeta = proWf.proJobList[i];
-			
+
 			if (statusMap.id == jobLink.toJobMetaId) {
 				var middleX = statusMap.sx + (statusMap.ww / 2);
 				if(adjustmentGap > Math.abs(middleX - x)){
@@ -1143,19 +1159,19 @@ function adjustmentDx4Transfer(jobLink, selPt, x) {
 			}
 		}
 	}
-	
+
 	var lp;
 	for (var i = 0; i < ptList.length; i++) {
 		lp = ptList[i];
 		if (lp == selPt) {
 			continue;
 		}
-		
+
 		if (adjustmentGap > Math.abs(lp.x - x)) {
 			return lp.x;
 		}
 	}
-	
+
 	return x;
 }
 
@@ -1168,11 +1184,11 @@ function adjustmentDy4Node(statusMap1, dy) {
 	var statusMap;
 	for (var i  = 0; i < statusMapList.length; i++) {
 		statusMap = statusMapList[i];
-		
+
 		if (statusMap == statusMap1) {
 			continue;
 		}
-		
+
 		if (adjustmentGap > Math.abs(statusMap.sy - tmpY)) {
 			dy = statusMap.sy - statusMap1.sy;
 			return dy;
@@ -1185,19 +1201,19 @@ function adjustmentDy4Node(statusMap1, dy) {
 function adjustmentDx4Node(statusMap1, dx) {
 	var statusMapList = proWf.proJobList;
 	var tmpX = statusMap1.sx + dx;
-	
+
 	if (2 > tmpX) {
 		return 0;
 	}
-	
+
 	var jobMeta;
 	for (var i = 0; i < statusMapList.length; i++) {
 		jobMeta = statusMapList[i]
-		
+
 		if (jobMeta == statusMap1) {
 			continue;
 		}
-		
+
 		if (adjustmentGap > Math.abs(jobMeta1.sx - tmpX)) {
 			dx = jobMeta.sx - statusMap1.sx;
 			return dx;
@@ -1210,19 +1226,19 @@ function adjustmentDx4Node(statusMap1, dx) {
 function adjustmentWW4Node(jobMeta1, dx) {
 	var statusMapList = proWf.proJobList;
 	var tmpWW = jobMeta1.ww + dx;
-	
+
 	var statusMap;
 	for(var i = 0; i < statusMapList.length; i++){
-		
+
 		statusMap = statusMapList[i];
 		if (statusMap == jobMeta1) {
 			continue;
 		}
-		
+
 		if (statusMap.sx != jobMeta1.sx) {
 			continue;
 		}
-		
+
 		if (adjustmentGap > Math.abs(statusMap.ww - tmpWW)) {
 			dx = statusMap.ww - jobMeta1.ww;
 			return dx;
@@ -1233,25 +1249,25 @@ function adjustmentWW4Node(jobMeta1, dx) {
 }
 
 function setDrawMode(newDrawMode){
-	
+
 	selJobMeta = null;
 	selLink = null;
 	selPt   = null;
 	isSelLinkName = false;
 	joinNode = null;
-	
+
 	drawMode = newDrawMode;
-	
+
 	if (null == proWf) {
 		return;
 	}
-	
+
 	if (null != newLink) {
 		var linkList = proWf.linkerList;
 		var link1;
 		for (var i = 0; i < linkList.length; i++){
 			if (newLink == link1) {
-				
+
 				var idx = linkList.indexOf(newLink);
 				linkList.splice(idx, 1);
 				break;
@@ -1259,7 +1275,7 @@ function setDrawMode(newDrawMode){
 		}
 	}
 	newLink = null;
-	
+
 	switch (drawMode) {
 		case MODE_MOVE:
 			setCursor("pointer");
@@ -1276,12 +1292,12 @@ function setDrawMode(newDrawMode){
 			setCursor("col-resize");
 			break;
 	}
-	
+
 	drawView();
 }
 
 function setProWfMeta(proWfMeta){
-	
+
 	proWf = proWfMeta;
 	selJobMeta = null;
 	selLink = null;
@@ -1290,9 +1306,9 @@ function setProWfMeta(proWfMeta){
 	joinNode = null;
 	sx = SX;
 	sy = SY;
-	
+
 	resetInOutDisVal();
-	
+
 	if (null != proWfMeta && null != proWfMeta.swimlaneList) {
 		var swimlane;
 		for (var i = 0; i < proWfMeta.swimlaneList.length; i++) {
@@ -1302,20 +1318,20 @@ function setProWfMeta(proWfMeta){
 			}
 		}
 	}
-	
+
 	drawMode = MODE_MOVE;
 }
 
 function setMyPrefSize(newWw, newHh){
 	ww = newWw;
 	hh = newHh + 1000;
-	
+
 	canvas.width = ww;
 	canvas.height = hh;
 }
 
 function drawView() {
-	
+
 	drawChart();
 	//this.getChildren().clear();
 	if (!isViewMode){
@@ -1331,11 +1347,11 @@ function drawView() {
 
 // 绘制流程示意图
 function drawChart(){
-	
+
 	gc.clearRect(0, 0, ww, hh);
 	gc.lineWidth = 2;
 	var updFlg = 0;
-	
+
 	gc.textAlign = "left";
 	gc.textBaseline = "middle";
 
@@ -1344,7 +1360,7 @@ function drawChart(){
 		gc.roundRect(sx, sy, ww - 24, hh  - 24, {ul:8,ur:8,ll:8,lr:8}, true, false);
 		return;
 	}
-	
+
 	if (ACTIONTYPE_INSERT == proWf.actionType || ACTIONTYPE_UPDATE == proWf.actionType) {
 		updFlg = 1;
 		gc.fillStyle = "rgb(255, 255, 204)";
@@ -1353,25 +1369,25 @@ function drawChart(){
 		gc.fillStyle = "#FFFFFF";
 	}
 	gc.roundRect(sx, sy, proWf.ww, proWf.hh, {ul:8,ur:8,ll:8,lr:8}, true, false);
-	
+
 	var swimlaneList = proWf.swimlaneList;
 	var tmpX = sx;
 	//泳线
 	if (0 < swimlaneList.length) {
 		gc.strokeStyle = "#E9EAEC";
 		gc.lineWidth = 1;
-		
+
 		gc.beginPath();
 		gc.moveTo(tmpX, 0);
 		gc.lineTo(tmpX, proWf.hh + sy);
 		gc.stroke();
 		gc.closePath();
-		
+
 		var swimlane;
 		for (var idx = 0; idx < swimlaneList.length; idx++) {
 			swimlane = swimlaneList[idx];
 			tmpX += swimlane.ww;
-			
+
 			gc.beginPath();
 			gc.moveTo(tmpX, 0);
 			gc.lineTo(tmpX, proWf.hh + sy);
@@ -1379,7 +1395,7 @@ function drawChart(){
 			gc.closePath();
 		}
 	}
-	
+
 	gc.lineWidth = 2;
 	var jobList = proWf.proJobList;
 
@@ -1388,7 +1404,7 @@ function drawChart(){
 		if (selJobMeta == jobMeta) {
 			continue;
 		}
-		
+
 		if (null == selJobMeta) {
 			if (lastOkJobMeta == jobMeta) {
 				continue;
@@ -1407,7 +1423,7 @@ function drawChart(){
 	} else {
 		drawLastOkStatus(gc);
 	}
-	
+
 	gc.strokeStyle = BLACK_COLOR;
 	gc.fillStyle = BLACK_COLOR;
 	gc.lineWidth = 1;
@@ -1420,13 +1436,13 @@ function drawChart(){
 		}
 		drawLink(gc, flowLink1);
 	}
-	
+
 	gc.strokeStyle = RED_COLOR;
 	gc.fillStyle = RED_COLOR;
 	if (null != selLink) {
 		drawSelLink(gc);
 	}
-	
+
 	if (0 < swimlaneList.length) {
         gc.strokeStyle = "#E9EAEC";
         gc.lineWidth = 1;
@@ -1445,18 +1461,18 @@ function drawChart(){
 		var swimlane;
 		for (var idx = 0; idx < swimlaneList.length; idx++){
 			swimlane = swimlaneList[idx];
-			
+
 			if (selSwimlane == swimlane) {
 				if (2 == swimlaneDragMode) {
 					gc.strokeStyle = "rgb(200, 200, 200)";
 					gc.lineWidth = 1;
-					
+
 					gc.beginPath();
 					gc.moveTo(tmpX, 0);
 					gc.lineTo(tmpX, SWIMLANE_HH);
 					gc.stroke();
 					gc.closePath();
-					
+
 					offsetX = swimlaneMoveOffsetX + tmpX;
 					tmpX += swimlane.ww;
 					continue;
@@ -1465,21 +1481,21 @@ function drawChart(){
             //绘制顶部背景颜色
 			gc.fillStyle = "#B3B8C1";
 			gc.fillRect(tmpX, 0, swimlane.ww, SWIMLANE_HH);
-			
+
 			if (0 == idx) {
 				gc.strokeStyle = "rgb(200, 200, 200)";
 			}else{
 				gc.strokeStyle ="#E9EAEC";
 			}
-			
 
-			
+
+
 			if (selSwimlane == swimlane) {
 				gc.lineWidth = 2;
 				gc.strokeStyle = RED_COLOR;
 				gc.strokeRect(tmpX, 1, selSwimlane.ww - 1, SWIMLANE_HH - 1);
 			}
-			
+
 			gc.textAlign = "center";
 			gc.textBaseline = "middle";
 			gc.fillStyle = "#4B5262";
@@ -1504,32 +1520,32 @@ function drawChart(){
 			if (2 == swimlaneDragMode) {
 				gc.fillStyle = YELLOW_COLOR;
 				gc.fillRect(offsetX, 6, selSwimlane.ww, SWIMLANE_HH);
-				
+
 				gc.strokeStyle = "rgb(200, 200, 200)";
 				gc.lineWidth = 1;
-				
+
 				gc.beginPath();
 				gc.moveTo(offsetX, 6);
 				gc.lineTo(offsetX, SWIMLANE_HH);
 				gc.stroke();
 				gc.closePath();
-				
+
 				gc.lineWidth = 2;
 				gc.strokeStyle = RED_COLOR;
 				gc.strokeRect(offsetX, 7, selSwimlane.ww - 1, SWIMLANE_HH - 1);
-				
+
 				gc.textAlign = "center";
 				gc.textBaseline = "middle";
-				
+
 				gc.fillStyle = BLACK_COLOR;
                 gc.font = FORMFONT;
                 gc.fillText(selSwimlane.authorityGroup.groupName, offsetX + (selSwimlane.ww / 2), SWIMLANE_HH / 2 + 6, selSwimlane.ww - 4);
 			}
 		}
 	}
-	
+
 	if (1 == updFlg) {
-		
+
 		var imageTS = new Image();
 		imageTS.src = "img/toolbar-save.png";
 		imageTS.onload = function () {
@@ -1566,7 +1582,7 @@ function drawDoingNode(gc, jobMeta){
 	} else {
 		gc.strokeStyle = "rgb(128, 128, 128)";
 	}
-	
+
 	gc.lineWidth = 1;
 
 
@@ -1575,7 +1591,7 @@ function drawDoingNode(gc, jobMeta){
     gc.strokeStyle = "#F8F8F9";
 	gc.strokeRoundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, 10,10);
 	gc.fillStyle = BLACK_COLOR;
-	
+
 	drawNodeContent(gc, jobMeta);
 }
 
@@ -1583,9 +1599,9 @@ function drawNodeOkStatus(gc, jobMeta){
     gc.fillStyle = "#0F7CEE";
 	gc.fillStyle = "rgb(250, 250, 250)";
 	//gc.fillStyle = BLACK_COLOR;
-	
+
 	//drawNodeContent(gc, jobMeta);
-	
+
 	if (PRO_JB_MT_CLS_WORK_FLOW == jobMeta.jobClass) {
 		gc.strokeStyle = DARKORANGE_COLOR;
 	} else if(PRO_JB_MT_CLS_JOB_NODE == jobMeta.jobClass) {
@@ -1609,7 +1625,7 @@ function drawNodeOkStatus(gc, jobMeta){
 }
 
 function drawNodeContent(gc, jobMeta){
-	
+
 	var image = new Image();
 	var imageIn = new Image();
 	var imageOut = new Image();
@@ -1624,7 +1640,7 @@ function drawNodeContent(gc, jobMeta){
 		} else {
 			gc.fillText(jobMeta.name, sx + jobMeta.sx + ICON_WW_1 + 8, sy + jobMeta.sy + jobMeta.hh/2);
 		}
-		
+
 		if (checkNotEmpty(jobMeta.iconName)) {
 
             image.src = jobMeta.iconName;
@@ -1667,7 +1683,7 @@ function drawNodeContent(gc, jobMeta){
         gc.fillText(name, sx + jobMeta.sx + ICON_WW_2 + 8, sy + jobMeta.sy + (jobMeta.hh / 6) + 2);
 
 		gc.textAlign = "left";
-		
+
 		var sx1 = sx + jobMeta.sx + (jobMeta.hh/6);
 
 		var inputIcon = inputIconMap[jobMeta.id];
@@ -1691,7 +1707,7 @@ function drawNodeContent(gc, jobMeta){
 					gc.drawImage(imageIn, sx1, sy + jobMeta.sy + 4 + jobMeta.hh / 3, ICON_WW_2, ICON_WW_2);
                 }
 			} else {
-				
+
 				imageDefault.src = "img/default-form-icon.png";
 				imageDefault.onload = function () {
 					gc.drawImage(imageDefault, sx1, sy + jobMeta.sy + 4 + jobMeta.hh / 3, ICON_WW_2, ICON_WW_2);
@@ -1701,7 +1717,7 @@ function drawNodeContent(gc, jobMeta){
             gc.font = FORMFONT;
             gc.fillText(inputVal, sx1 + ICON_WW_2 + 4, sy + jobMeta.sy + jobMeta.hh/2);
 		}
-		
+
 		if (checkNotEmpty(outputVal)) {
 			if (checkNotEmpty(outputIcon)) {
                 imageOut.src = outputIcon;
@@ -1728,7 +1744,7 @@ function drawNodeContent(gc, jobMeta){
 		var lineX = sx1 ;
 		var lineX2 = sx + jobMeta.sx + jobMeta.ww - 10;
 		gc.lineWidth = 1;
-		
+
 		gc.beginPath();
 		gc.moveTo(lineX, sy + jobMeta.sy + (jobMeta.hh * 2 / 3));
 		gc.lineTo(lineX2, sy + jobMeta.sy + (jobMeta.hh * 2 / 3));
@@ -1736,15 +1752,15 @@ function drawNodeContent(gc, jobMeta){
 		gc.closePath();
 
 	} else if (PRO_JB_MT_CLS_SELECT_NODE == jobMeta.jobClass) {
-		
+
 		imageUrl= "img/tool_select_node.png";
-		
+
 		if (PRO_SELECT_NODE_TYPE_ALL_SEL == jobMeta.selectNodeType) {
 			imageUrl = "img/tool_select_node_all.png";
 		} else if (PRO_SELECT_NODE_TYPE_EXPRESS_SEL == jobMeta.selectNodeType) {
 			imageUrl = "img/tool_select_node_express.png";
 		}
-		
+
 		image.src = imageUrl;
 		image.onload = function () {
 			gc.drawImage(image, sx + jobMeta.sx + 8, sy + jobMeta.sy + 8, ICON_WW_1, ICON_WW_1);
@@ -1758,7 +1774,7 @@ function drawNodeContent(gc, jobMeta){
 		} else if (PRO_COMBINE_NODE_TYPE_EXPRESS_COMBINE == jobMeta.combineNodeType) {
 			imageUrl = "img/tool_combine_node_express.png";
 		}
-		
+
 		image.src = imageUrl;
 		image.onload = function () {
 			gc.drawImage(image, sx + jobMeta.sx + 8, sy + jobMeta.sy + 8, ICON_WW_1, ICON_WW_1);
@@ -1772,14 +1788,14 @@ function drawNodeContent(gc, jobMeta){
 		} else if (PRO_STOP_NODE_TYPE_ABNORMAL == jobMeta.stopNodeType) {
 			imageUrl = "img/tool_stop_abnormal.png";
 		}
-		
+
 		image.src = imageUrl;
 		image.onload = function () {
 			gc.drawImage(image, sx + jobMeta.sx + 8, sy + jobMeta.sy + 8, ICON_WW_1, ICON_WW_1);
 		}
 	} else if (PRO_JB_MT_CLS_START_NODE == jobMeta.jobClass) {
 		imageUrl = "img/tool_start_node.png";
-		
+
 		image.src = imageUrl;
 		image.onload = function () {
 			gc.drawImage(image, sx + jobMeta.sx + 8, sy + jobMeta.sy + 8, ICON_WW_1, ICON_WW_1);
@@ -1809,12 +1825,12 @@ function drawNode(gc, jobMeta){
 
 	gc.lineWidth = 1;
 	gc.roundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, {ul:4,ur:4,ll:4,lr:4}, true, true);
-	
+
 	drawNodeContent(gc, jobMeta);
 }
 
 function drawLink(gc, link){
-	
+
 	if (execLinkList.indexOf(link) >= 0) {
 		gc.strokeStyle = DARKORANGE_COLOR;;
 	} else if(selLink == link) {
@@ -1822,64 +1838,64 @@ function drawLink(gc, link){
 	} else{
 		gc.strokeStyle = "rgb(100, 100, 100)";
 	}
-	
+
 	var ptList = link.ptList;
 	var ptSize = ptList.length - 1;
-	
+
 	var pt1;
 	var pt2;
 	for (var i = 0; i < ptSize; i++) {
 		pt1 = ptList[i];
 		pt2 = ptList[i + 1];
-		
+
 		gc.beginPath();
 		gc.moveTo(sx + pt1.x, sy + pt1.y);
 		gc.lineTo(sx + pt2.x, sy + pt2.y);
 		gc.stroke();
 		gc.closePath();
 	}
-	
+
 	if (0 >= ptList.length) {
 		return;
 	}
-	
+
 	var lp0 = ptList[0];
 	gc.fillArc(sx + lp0.x, sy + lp0.y, 2);
-	
+
 	var sn = ptList.length;
 	if (2 <= sn) {
 		var pt1 = ptList[sn - 2];
 		var pt2 = ptList[sn - 1];
-		
+
 		var dx = pt2.x - pt1.x;
 		var dy = pt2.y - pt1.y;
-		
+
 		var ax = pt2.x;
 		var ay = pt2.y;
 		var bx = pt2.x;
 		var by = pt2.y;
-		
+
 		var px = pt2.x;
 		var py = pt2.y;
 		if (selLink != link) {
 			gc.strokeStyle = "rgb(60, 60, 60)";
 		}
-		
+
 		if(Math.abs(dx) > Math.abs(dy)){
-			
+
 			if (0 < dx) {
 				px -= 16;
 			} else {
 				px += 16;
 			}
-			
+
 			var k = dy / dx;
-			
+
 			py = k * (px - pt1.x) + pt1.y;
-			
+
 			ax = px ;
 			ay = py - 5;
-			
+
 			bx = px ;
 			by = py + 5;
 		} else {
@@ -1888,29 +1904,29 @@ function drawLink(gc, link){
 			} else {
 				py += 16;
 			}
-			
+
 			var k = dx / dy;
-			
+
 			px = k * (py - pt1.y) + pt1.x;
-			
+
 			ay = py ;
 			ax = px - 5;
-			
+
 			by = py ;
 			bx = px + 5;
 		}
-		
+
 		gc.beginPath();
 		gc.moveTo(sx + ax, sy + ay);
 		gc.lineTo(sx + pt2.x, sy + pt2.y);
-		
+
 		gc.moveTo(sx + bx, sy + by);
 		gc.lineTo(sx + pt2.x, sy + pt2.y);
-	
+
 		gc.stroke();
 		gc.closePath();
 	}
-	
+
 	var name = getTransferName(link);
 	if (null != name) {
         gc.font = FORMFONT;
@@ -1955,10 +1971,10 @@ function drawLastOkStatus(gc) {
 	gc.strokeStyle = RED_COLOR;
 
 	gc.lineWidth = 2;
-	
+
 	gc.roundRect(sx + formStatus.sx, sy + formStatus.sy, formStatus.ww, formStatus.hh, {ul:4,ur:4,ll:4,lr:4}, true, true);
 	gc.fillStyle = RED_COLOR;
-	
+
 	drawNodeContent(gc, formStatus);
 }
 
@@ -1966,15 +1982,15 @@ function drawSelNode(gc) {
 	if (null == selJobMeta) {
 		return;
 	}
-	
+
 	var formStatus = selJobMeta;
 	gc.fillStyle = WHITE_COLOR;;
 	gc.strokeStyle = RED_COLOR;
-	
+
 	gc.roundRect(sx + formStatus.sx, sy + formStatus.sy, formStatus.ww, formStatus.hh, {ul:4,ur:4,ll:4,lr:4}, true, true);
-	
+
 	gc.fillStyle = RED_COLOR;
-	
+
 	drawNodeContent(gc, formStatus);
 }
 
@@ -2003,7 +2019,7 @@ function drawSelLink(gc){
 
 function drawNewNode(mex, mey){
 	var gc = canvas.getGraphicsContext2D();
-	
+
 	var image = new Image();
 	var imageUrl;
 	if (MODE_NEW_WORK_FLOW == drawMode || MODE_NEW_JOBNODE == drawMode) {
@@ -2020,7 +2036,7 @@ function drawNewNode(mex, mey){
 		gc.lineWidth = 2;
 		gc.strokeStyle = BLUE_COLOR;
 		gc.roundRect(mex, mey, DEFAULT_NODE_WW_SC, DEFAULT_NODE_HH, {ul:4,ur:4,ll:4,lr:4}, false, true);
-		
+
 		if (MODE_NEW_SELECT_NODE == drawMode) {
 			imageUrl = "img/tool_select_node.png"
 		} else if(MODE_NEW_COMBINE_NODE == drawMode) {
@@ -2031,7 +2047,7 @@ function drawNewNode(mex, mey){
 			imageUrl = "img/tool_start_node.png"
 		}
 	}
-	
+
 	image.src = imageUrl;
 	image.onload = function() {
 		gc.drawImage(image, mex + 4, mey + 4, 40, 40);
@@ -2039,13 +2055,13 @@ function drawNewNode(mex, mey){
 }
 
 function findSelStep4Link(x, y){
-	
+
 	selJobMeta = null;
 	var flowNodeList = proWf.proJobList;
 	if (null == flowNodeList) {
 		return;
 	}
-	
+
 	var flowNode;
 	for (var i = 0; i < flowNodeList.length; i++) {
 		flowNode = flowNodeList[i];
@@ -2060,7 +2076,7 @@ function findSelStep4Link(x, y){
 }
 
 function findSelStep(x, y){
-	
+
 	selJobMeta = null;
 	var flowNodeList = proWf.proJobList;
 	if (null == flowNodeList) {
@@ -2068,7 +2084,7 @@ function findSelStep(x, y){
 	}
 	var flowNode;
 	for (var i = 0; i < flowNodeList.length; i++) {
-		
+
 		if (x > (sx + flowNode.sx )
 				&& x < (sx + flowNode.sx + flowNode.ww )
 				&& y > (sy + flowNode.sy )
@@ -2080,7 +2096,7 @@ function findSelStep(x, y){
 }
 
 function findSelObj(x, y){
-	
+
 	selJobMeta = null;
 	selLink = null;
 	selPt   = null;
@@ -2090,12 +2106,12 @@ function findSelObj(x, y){
 	if (null == proWf) {
 		return;
 	}
-	
+
 	if (0 < proWf.swimlaneList.length && SWIMLANE_HH > y) {
 		var x1 = sx;
 		var swimlane;
 		for (var i = 0; i <  proWf.swimlaneList.length; i++) {
-			
+
 			swimlane = proWf.swimlaneList[i];
 			if (x1 + swimlane.ww > x) {
 				selSwimlane = swimlane;
@@ -2105,10 +2121,10 @@ function findSelObj(x, y){
 		}
 		return;
 	}
-	
+
 	var flowLinkList = proWf.linkerList;
 	var flowNodeList = proWf.proJobList;
-	
+
 	var pt1 = null;
 	var pt2 = null;
 	var x1 = 0;
@@ -2127,9 +2143,9 @@ function findSelObj(x, y){
 			isSelLinkName = true;
 			return;
 		}
-		
+
 		var ptList = stepLink.ptList;
-		
+
 		ptMaxIdx = ptList.length - 1;
 		for (var j = 0; j <= ptMaxIdx; j++) {
 			pt1 = ptList[j];
@@ -2137,11 +2153,11 @@ function findSelObj(x, y){
 				&& 8 >= Math.abs(pt1.y - y + sy)) {
 				selPt = pt1;
 				if (0 < pt1.joinNodeId) {
-					
+
 					var stepRect;
 					for (var k = 0; k < flowNodeList.length; k++) {
 						stepRect = flowNodeList[k]
-						
+
 						if (stepRect.id == pt1.joinNodeId) {
 							joinNode = stepRect;
 							break;
@@ -2156,7 +2172,7 @@ function findSelObj(x, y){
 			for (var j = 0; j < ptMaxIdx; j++) {
 				pt1 = ptList[j];
 				pt2 = ptList[j + 1];
-				
+
 				if (pt2.x > pt1.x ) {
 					x1 = pt1.x;
 					x2 = pt2.x;
@@ -2164,7 +2180,7 @@ function findSelObj(x, y){
 					x1 = pt2.x;
 					x2 = pt1.x;
 				}
-				
+
 				if (pt2.y > pt1.y) {
 					y1 = pt1.y;
 					y2 = pt2.y;
@@ -2172,7 +2188,7 @@ function findSelObj(x, y){
 					y1 = pt2.y;
 					y2 = pt1.y;
 				}
-				
+
 				if (16 > x2 - x1) {
 					x1 -= 8;
 					x2 += 8;
@@ -2181,7 +2197,7 @@ function findSelObj(x, y){
 					y1 -= 8;
 					y2 += 8;
 				}
-				
+
 				x1 += sx;
 				x2 += sx;
 				y1 += sy;
@@ -2190,25 +2206,25 @@ function findSelObj(x, y){
 
 					var dxx1 = x - pt1.x - sx;
 					var dyy1 = y - pt1.y - sy;
-					
+
 					var dxx2 = pt2.x + sx - x;
 					var dyy2 = pt2.y + sy - y;
-					
+
 					var dxx = pt2.x - pt1.x;
 					var dyy = pt2.y - pt1.y;
-					
+
 					if ((4 > Math.abs(dxx1) && 4 > Math.abs(dyy1))
 							|| (4 > Math.abs(dxx2) && 4 > Math.abs(dyy2))
 							|| 4 > Math.abs(dxx)
 							|| 4 > Math.abs(dyy)) {
-						
+
 						selLink = stepLink;
 						return;
 					}
 					var tanyxgap = (dxx1 * dyy / dxx ) - dyy1;
-					
+
 					if (16 >= Math.abs(tanyxgap)) {
-						
+
 						selLink = stepLink;
 						return;
 					}
@@ -2216,7 +2232,7 @@ function findSelObj(x, y){
 			}
 		}
 	}
-	
+
 	if (null != selLink) {
 		return;
 	}
@@ -2232,7 +2248,7 @@ function findSelStep4DrawLink(x, y){
 	var step1 = selJobMeta;
 	var x1 = x - sx;
 	var y1 = y - sy;
-	
+
 	var maxx = step1.sx + step1.ww;
 	var maxy = step1.sy + step1.hh;
 	if (x1 < step1.sx) {
@@ -2247,7 +2263,7 @@ function findSelStep4DrawLink(x, y){
 	if (y1 > maxy ) {
 		y1 = maxy;
 	}
-	
+
 	var dx1 = Math.abs(x1 - step1.sx);
 	var dx2 = Math.abs(maxx - x1);
 	var dy1 = Math.abs(y1 - step1.sy);
@@ -2263,7 +2279,7 @@ function findSelStep4DrawLink(x, y){
 	if (dy2 < mindd) {
 		mindd = dy2;
 	}
-	
+
 	if (mindd == dx1) {
 		lp = new StatusLinkPoint(step1.sx,y1);
 	} else if (mindd == dx2) {
@@ -2284,15 +2300,15 @@ function setNewPointInJoinPt(x, y) {
 	}
 	var lp = selPt;
 	var step1 = null;
-	
+
 	var x1 = x - sx;
 	var y1 = y - sy;
-	
+
 	x1 = adjustmentDx4Transfer(selLink, selPt, x1);
 	y1 = adjustmentDy4Transfer(selLink, selPt, y1);
-	
+
 	var nodeList = proWf.proJobList;
-	
+
 	for (var i = 0; i < nodeList.length; i++) {
 		if (selPt.joinNodeId == nodeList[i].id) {
 			step1 = nodeList.get(i);
@@ -2316,7 +2332,7 @@ function setNewPointInJoinPt(x, y) {
 	if (y1 > maxy ) {
 		y1 = maxy;
 	}
-	
+
 	var dx1 = Math.abs(x1 - step1.sx);
 	var dx2 = Math.abs(maxx - x1);
 	var dy1 = Math.abs(y1 - step1.sy);
@@ -2332,7 +2348,7 @@ function setNewPointInJoinPt(x, y) {
 	if (dy2 < mindd) {
 		mindd = dy2;
 	}
-	
+
 	if (mindd == dx1) {
 		lp.x = step1.sx;
 		lp.y = y1;
@@ -2349,11 +2365,11 @@ function setNewPointInJoinPt(x, y) {
 }
 
 function delSelObj() {
-	
+
 	delSelLink();
 	delSelNode();
 	delSelSwimlane();
-	
+
 	if (ACTIONTYPE_NONE == proWf.actionType) {
 		if (!checkNotEmpty(proWf.id)) {
 			proWf.actionType = ACTIONTYPE_INSERT;
@@ -2375,7 +2391,7 @@ function delSelSwimlane() {
 	if (null == selSwimlane) {
 		return;
 	}
-	
+
 	var idx = proWf.swimlaneList.indexOf(selSwimlane);
 	proWf.swimlaneList.splice(idx, 1);
 	selSwimlane = null;
@@ -2391,7 +2407,7 @@ function delSelLink() {
 	var linkList = proWf.linkerList;
 	var link1;
 	for (var i = 0; i < linkList.length; i++) {
-		
+
 		link1 = linkList[i];
 		if (link1 == selLink) {
 			linkList.splice(i, 1);
@@ -2431,7 +2447,7 @@ function recalLinkNameWidth(link){
 	if (null == link) {
 		return;
 	}
-	
+
 	//textTmp.setText(getTransferName(link));
 	link.ww = textTmp.boundsInLocal.width + 8;
 }
@@ -2456,7 +2472,7 @@ function addNewSwimlane(authorityGroup) {
 }
 
 function showAuthorityGroupMember(me) {
-	
+
 	var y = me.getY();
 	var x = me.getX();
 
@@ -2466,9 +2482,9 @@ function showAuthorityGroupMember(me) {
 		var x1 = sx;
 		var swimlane;
 		for (var i = 0; i < proWf.swimlaneList.length; i++) {
-			
+
 			swimlane = proWf.swimlaneList[i];
-			
+
 			if (x1 + swimlane.ww > x) {
 				if (36 > (x - x1)){
 					authorityGroup = swimlane.authorityGroup;
@@ -2479,7 +2495,7 @@ function showAuthorityGroupMember(me) {
 			x1 += swimlane.ww;
 		}
 	}
-	
+
 	if (null == authorityGroup) {
 		isShowAGMember = false;
 		//if (null != pagmv) {
@@ -2496,7 +2512,7 @@ function showAuthorityGroupMember(me) {
 		//	}
 	//	}
 	//}
-	
+
 	//if (null == pagmv) {
 		/*pagmv = new PomaAuthorityGroupMemberView();
 		pagmv.init1(fPage, 200);
@@ -2507,16 +2523,16 @@ function showAuthorityGroupMember(me) {
 				getChildren().remove(pagmv);
 				return true;
 			}
-			
+
 		});*/
 	//}
 	//pagmv.setAuthorityGroup(authorityGroup);
-	
+
 	//var ww1 = pagmv.getWidth();
 	//if(ww1 + locX + 2 > ww){
 	//	locX = ww - ww1 - 2;
 	//}
-	
+
 	//pagmv.setTranslateX(locX + 2);
 	//pagmv.setTranslateY(SWIMLANE_HH + 2);
 	//if(!getChildren().contains(pagmv)){
@@ -2540,7 +2556,7 @@ function showAuthorityGroupMember(me) {
 		if(PRO_JB_MT_CLS_JOB_NODE != jobMeta.jobClass){
 			continue;
 		}
-		
+
 		resetInOutDisVal4Job(jobMeta);
 	}
 }
@@ -2549,7 +2565,7 @@ function resetInOutDisVal4Job(jobMeta) {
 	if (PRO_JB_MT_CLS_JOB_NODE != jobMeta.jobClass) {
 		return;
 	}
-	
+
 	if (checkNotEmpty(jobMeta.inputFormDataExpress)) {
 		String[] inputVals = jobMeta.getInputFormDataExpress().split(ComConf.SPLIT_CHAR_1);
 		int idx = 0;
@@ -2559,7 +2575,7 @@ function resetInOutDisVal4Job(jobMeta) {
 				if (4 != items.length) {
 					continue;
 				}
-				
+
 				FormMetaInfo formMeta = FormMetaInfoFactory.getFactory().findById(items[1]);
 				if (null != formMeta) {
 					if (0 == idx) {
@@ -2574,13 +2590,13 @@ function resetInOutDisVal4Job(jobMeta) {
 						inputFullValueMap.put(jobMeta.id, inputFullValueMap.get(jobMeta.id) + " " + jobMeta.name);
 					}
 					idx++;
-					
+
 				}else{
 					inputIconMap.put(jobMeta.id, null);
 					inputValueMap.put(jobMeta.id, null);
 					inputFullValueMap.put(jobMeta.id, null);
 				}
-				
+
 			}
 		}
 	} else {
@@ -2588,7 +2604,7 @@ function resetInOutDisVal4Job(jobMeta) {
 		inputValueMap.put(jobMeta.id, null);
 		inputFullValueMap.put(jobMeta.id, null);
 	}
-	
+
 
 	if (StringUtils.isNotBlank(jobMeta.getOutputFormDataExpress())) {
 		var outputVals = jobMeta.getOutputFormDataExpress().split(ComConf.SPLIT_CHAR_1);
@@ -2599,7 +2615,7 @@ function resetInOutDisVal4Job(jobMeta) {
 				if (3 > items.length) {
 					continue;
 				}
-				
+
 				var formMeta = FormMetaInfoFactory.getFactory().findById(items[2]);
 				if (null != formMeta) {
 					if (0 == idx) {
@@ -2619,22 +2635,22 @@ function resetInOutDisVal4Job(jobMeta) {
 						outputFullValueMap.put(jobMeta.id, val + " " + formMeta.name);
 					}
 					idx++;
-					
+
 				} else {
 					outputIconMap.put(jobMeta.id, null);
 					outputValueMap.put(jobMeta.id, null);
 					outputFullValueMap.put(jobMeta.id, null);
 				}
 			}
-			
-			
+
+
 		}
 	} else {
 		outputIconMap.put(jobMeta.id, null);
 		outputValueMap.put(jobMeta.id, null);
 		outputFullValueMap.put(jobMeta.id, null);
 	}
-	
+
 }*/
 
 /**
@@ -2648,7 +2664,7 @@ function contains(list, id) {
 	if (null == list || 0 == list.length) {
 		return false;
 	}
-	
+
 	for (var i = 0; i < list.length; i++) {
 		if (id == list[i]) {
 			return true;

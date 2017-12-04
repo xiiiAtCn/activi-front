@@ -27,6 +27,7 @@
                             <div slot="content" style="padding: 0 14px;">
                                 <div  v-for="(v, index) in btn.child">
                                     <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                                     <Button
                                         v-else
                                         :type="v.type || 'default'"
@@ -38,6 +39,7 @@
                                 </div>
                             </div>
                         </Poptip>
+                        <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                         <Button
                             v-else
                             :type="btn.type || 'default'"
@@ -95,6 +97,7 @@
                         <div slot="content" style="padding: 0 14px;">
                             <div  v-for="(v, index) in btn.child">
                                 <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
+                                <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                                 <Button
                                     v-else
                                     :type="v.type || 'default'"
@@ -106,6 +109,7 @@
                             </div>
                         </div>
                     </Poptip>
+                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                     <Button
                         v-else
                         :type="btn.type || 'default'"
@@ -241,6 +245,7 @@
                         document.title = vm.define.title || '表单'
                         console.log('beforeRouteEnter')
                         vm.handleButtonList(vm.define.buttons)
+
                     })
                 }
             })

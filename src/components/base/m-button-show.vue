@@ -23,7 +23,7 @@
         },
         computed: {
             iframeUrl () {
-                return urlToString(this.define.action.url)
+                return urlToString(this.define.action)
             }
         },
         methods: {

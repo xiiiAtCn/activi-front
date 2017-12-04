@@ -149,7 +149,7 @@
         mounted(){
             this.getRequest(this.urls.getCheckData, this.$route.params.rowId, 'checkData', '')
             //在画图需要的id
-            this.iframeUrl=`/static/drawFormStatusChart.html?id=${this.$route.params.rowId}`
+            this.iframeUrl=`/static/drawFormStatusChart.html?wfMetaId=${this.$route.params.rowId}`
         }
     }
 </script>

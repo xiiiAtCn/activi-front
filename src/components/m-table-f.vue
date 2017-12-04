@@ -49,10 +49,9 @@
 </template>
 <script>
     import bus from '../router/bus'
-    import { dispatch,forGet,getData } from 'utils/actionUtils'
+    import { dispatch} from 'utils/actionUtils'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE} from 'store/Mutation'
-    import iView from 'iview'
 
     export default {
         props: {
