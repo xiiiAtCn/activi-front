@@ -75,6 +75,9 @@ const mSpan = resolve =>
 const mButtonShow = resolve =>
     require(['./m-button-show.vue'], resolve)
 
+const mBoolean = resolve =>
+    require(['./m-boolean.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -100,3 +103,4 @@ Vue.component('mDisplay', mDisplay)
 Vue.component('mButtonLayer', mButtonLayer)
 Vue.component('mSpan', mSpan)
 Vue.component('mButtonShow', mButtonShow)
+Vue.component('mBoolean', mBoolean)

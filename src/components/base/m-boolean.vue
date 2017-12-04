@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row>
-            <Switch v-model="switchValue" @on-change="change"></Switch>
+            <Checkbox v-model="objectModel" :disabled="readonly">{{define.title}}</Checkbox>
         </Row>
         <Row>
             <div v-if="isError" class="gateway-item-error">{{errorMessage}}</div>
@@ -14,11 +14,9 @@
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
 
     export default {
-        name: 'm-boolean',
         mixins: [mixin],
         data(){
           return {
-              switchValue:false,
               isError:true
           }
         },

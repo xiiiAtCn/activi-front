@@ -1,17 +1,23 @@
 <template>
-    <span :style="{ fontSize:define.size || '14px' ,
-                    color:define.color || '#333',
-                    padding:define.padding || '0',
-                    margin:define.margin || '0'}">{{define.text}}</span>
+    <div>
+        <Row >
+            <span class="ivu-form-item-label">{{define.text}}</span>
+        </Row>
+        <Row >
+            <div class="box"></div>
+        </Row>
+    </div>
 </template>
 <script>
     export default {
-        props: ['define'],
-        computed: {
-        },
-        methods: {
-        }
+        props: ['define']
     }
 </script>
 <style scoped>
+    .box{
+        padding: 16px;
+    }
+    .ivu-form-item-label{
+        padding-left: 10px;
+    }
 </style>
