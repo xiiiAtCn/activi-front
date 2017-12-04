@@ -180,8 +180,7 @@
     }
 
     .operation {
-        margin: 0 20px 5px;
-        float: right;
+        margin: 5px 0;
     }
 </style>
 
