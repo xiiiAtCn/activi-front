@@ -496,15 +496,18 @@
                         //         return
                         //     }
                         // }
-                        delete val.width
-                        if(val.key === 'action'){
+                        if(val.key && val.key === 'action'){
                             this.columnsData.splice(i,1)
                         }
+                        if(val.type && val.type === 'selection'){
+                            this.columnsData.splice(i,1)
+                        }
+                        delete val.width
                     })
                 }
-                this.checkRowClick()
                 this.showButton()
                 this.removeColButton()
+                this.checkRowClick()
             },
         }
     }
