@@ -1,7 +1,7 @@
 <template>
     <div>
         <Button :type="define.type || 'default'" :size="define.size || 'default'" @click="handleClick">{{define.text}}</Button>
-        <mLayer :value="showLayer" :titleText="define.text">
+        <mLayer :value="showLayer" :titleText="define.text"  @on-cancel="handleCancel" @on-ok="handleOk">
             <iframe
                 :src="iframeUrl"
                 frameborder="0"
@@ -29,6 +29,12 @@
         methods: {
             handleClick(){
                 this.showLayer =true
+            },
+            handleCancel(){
+                this.showLayer = false
+            },
+            handleOk(){
+                this.showLayer = false
             }
         }
     }

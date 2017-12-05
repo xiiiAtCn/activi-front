@@ -1,4 +1,4 @@
-<template>        
+<template>
     <div class="layer-wraper" :style="{top: visible ? 0 : '100vh'}">
         <div class="layer-container" :style="{top: currentTop, left: layerLeft}">
             <div class="layer-header">
@@ -107,7 +107,7 @@ export default {
             } else {
                 this.id = this.$store.state.layerData.idNum
                 this.$store.dispatch(Action.ADD_LAYER, {
-                        id: this.id, 
+                        id: this.id,
                         topInterval: this.topInterval,
                         leftInterval: this.leftInterval
                     })
@@ -151,6 +151,7 @@ export default {
             if (this.visible) {
                 if (e.keyCode === 27) {
                     this.closeLayer()
+                    this.$emit('on-cancel')
                 }
             }
         }

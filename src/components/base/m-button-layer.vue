@@ -8,13 +8,6 @@
                 :define="downData.ui_define"
                 :form="downData.ui_form"
             ></component>
-            <!--<iframe
-                v-else
-                :src="iframeUrl"
-                frameborder="0"
-                scrolling="no"
-                style="width: 100%; min-height:600px;"
-            ></iframe>-->
         </mLayer>
     </div>
 </template>
@@ -53,8 +46,11 @@
                 if(action.type === 'serverAction'  || action.type === 'link') {
                     dispatch(action)
                 }
+                this.showLayer = false
             },
-            handleCancel(){}
+            handleCancel(){
+                this.showLayer = false
+            }
         }
     }
 </script>
