@@ -9,6 +9,7 @@ var proWf = null;
 var jobMeta;
 var lastOkJobMeta = null;
 var okJobMetaList = null;
+var doingJobMetaList = null;
 var selStatusMap = null;
 var selLink = null;
 var selSwimlane = null;
@@ -126,6 +127,7 @@ function drawFlowChart(idList) {
 
 	lastOkJobMeta = null;
 	okJobMetaList = null;
+    doingWorkStatusList = null;
 	selStatusMap = null;
 	selLink = null;
 	selSwimlane = null;
@@ -159,6 +161,7 @@ function drawFlowChart(idList) {
 	    		execLinkList = proWf.execLinkList;
 
                 okJobMetaList = proWf.okJobMetaList;
+                doingJobMetaList  = proWf.doingJobMetaList ;
 
                 // 获取画面画布
                 canvas = document.getElementById("FrmStatusCan");
@@ -1410,10 +1413,11 @@ function drawChart(){
 				continue;
 			}
 		}
-		if (okJobMetaList.indexOf(jobMeta.id) >= 0) {
+
+		if (okJobMetaList && okJobMetaList.indexOf(jobMeta.id) >= 0) {
 			drawNodeOkStatus(gc, jobMeta);
-		//} else if(doingWorkStatusList.indexOf(jobMeta) >=0) {
-		//	drawDoingNode(gc,jobMeta);
+		} else if(doingJobMetaList && doingJobMetaList.indexOf(jobMeta.id) >=0) {
+			drawDoingNode(gc,jobMeta);
 		} else {
 			drawNode(gc, jobMeta);
 		}
@@ -1589,7 +1593,7 @@ function drawDoingNode(gc, jobMeta){
     //绘制小框内容
     gc.fillStyle = "rgb(210, 224, 246)";
     gc.strokeStyle = "#F8F8F9";
-	gc.strokeRoundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, 10,10);
+    gc.roundRect(sx + jobMeta.sx, sy + jobMeta.sy, jobMeta.ww, jobMeta.hh, {ul:4,ur:4,ll:4,lr:4}, true, true);
 	gc.fillStyle = BLACK_COLOR;
 
 	drawNodeContent(gc, jobMeta);
@@ -1658,14 +1662,13 @@ function drawNodeContent(gc, jobMeta){
 
 
 		//三种状态头部颜色
-        if (okJobMetaList.indexOf(jobMeta.id) >= 0) {
+        if (okJobMetaList && okJobMetaList.indexOf(jobMeta.id) >= 0) {
             gc.fillStyle = "#0F7CEE";
-            //} else if(doingWorkStatusList.indexOf(jobMeta) >=0) {
-            //	gc.fillStyle = "rgb(128, 167, 229)";
+        } else if(doingJobMetaList && doingJobMetaList.indexOf(jobMeta.id) >=0) {
+            gc.fillStyle = "rgb(128, 167, 229)";
         } else {
             gc.fillStyle = "rgb(179, 184, 193)";
         }
-
 
 
 		//绘制小矩形框的头部
