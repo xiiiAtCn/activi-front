@@ -187,6 +187,7 @@
                 return len*7 + 40;
             },
             getColumnsDataWay (c) {
+                this.columnsData = []
                 c.forEach((val, i) => {
                     let self =this
                     this.columnsData[i] = {
@@ -247,8 +248,8 @@
                     this.checkAllGroup = _.cloneDeep(this.testList)
                     this.dataListChange = _.cloneDeep(this.testList)
                 }
-                this.checkRowClick()
-                this.checkValue()
+
+                this.handleContent()
             },
             //判断是否存在
             judgeExistence(key,text){
@@ -363,6 +364,8 @@
                     this.columnsData = []
                     if(this.showModalBtn) {this.showButton()}
                 }
+                this.showButton()
+                this.checkRowClick()
                 this.dataListChange = _.cloneDeep(this.checkAllGroup)
             },
             checkAllGroupChange (data) {
@@ -450,7 +453,6 @@
             //行单选存数据
             handleRowClick(data){
                 this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form || 'form'})
-
                 this.idList.push(data.id)
             },
 
@@ -477,8 +479,6 @@
                     })
                 }
             },
-
-
             checkValue(){
                 //判断表格宽度更改表格渲染
                 let width=0,arr=[]
@@ -489,20 +489,22 @@
                     // }
                 })
                 if(width < this.$refs.tableCt.clientWidth){
-                    this.columnsData.forEach((val,i)=>{
+                    let val={}
+                    for(let i=this.columnsData.length-1; i>0 ; i--){
                         // for(let j=0;j<arr.length;j++){
                         //     if(arr[j] === i){
                         //         return
                         //     }
                         // }
+                        delete this.columnsData[i].width
+                        val=this.columnsData[i]
                         if(val.key && val.key === 'action'){
                             this.columnsData.splice(i,1)
                         }
                         if(val.type && val.type === 'selection'){
                             this.columnsData.splice(i,1)
                         }
-                        delete val.width
-                    })
+                    }
                 }
                 this.showButton()
                 this.removeColButton()
