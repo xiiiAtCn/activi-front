@@ -273,7 +273,6 @@
                 if(this.judgeExistence('key','action')){
                     return
                 }
-
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -470,7 +469,7 @@
                     if(this.judgeExistence('type','selection')){
                         return
                     }
-                    this.columnsData.push({
+                    this.columnsData.unshift({
                         type: 'selection',
                         width: 60,
                         fixed: 'left',
