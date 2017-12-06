@@ -135,7 +135,7 @@ export default {
         }
     },
     watch: {
-        define () {
+        relation () {
             this.getSelectData(this.firstInCallback)
         }
     }

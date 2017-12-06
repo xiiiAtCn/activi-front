@@ -3,16 +3,16 @@
         <!-- select部分 -->
         <Row class="nav-select">
             <mNavSelect
-                :define="navSelectDefine"
+                :relation="navSelectDefine"
                 :form="form"/>
         </Row>
         <!-- filter部分 -->
         <mBoFilter
-            :define="filterDefine"
+            :relation="filterDefine"
             :form="form"/>
         <!-- table一览部分 -->
         <tableF-Shim
-            :define="tableDefine"
+            :relation="tableDefine"
             :form="form"/>
     </div>
 </template>

@@ -18,7 +18,7 @@ let NoData = Symbol('NoData')
 
 const mixin = {
     props: {
-        define: {
+        relation: {
             type: Object,
             default: {}
         },
@@ -35,8 +35,8 @@ const mixin = {
          * @param {*} callback 回调
          */
         getDataUrlObj (type) {
-            // 此时define还未传入 
-            if (this.define && Object.keys(this.define).length > 0) {
+            // 此时relation还未传入 
+            if (this.relation && Object.keys(this.relation).length > 0) {
                 let dataLink = deepCopy(this.dataLink)
                 // 没有link对象
                 if (Object.keys(dataLink).length > 0) {
@@ -117,7 +117,7 @@ const mixin = {
     computed: {
         // 组件id
         id () {
-            return _.get(this.define, 'id', '')
+            return _.get(this.relation, 'id', '')
         },
         // 组件id + 数据区域
         idObj () {
@@ -131,7 +131,7 @@ const mixin = {
         },
         // 是否与其他组件关联
         isRelated () {
-            return _.get(this.define, 'related', false)
+            return _.get(this.relation, 'related', false)
         },
         // 与其他组件关联的数据
         relationData () {
@@ -141,7 +141,7 @@ const mixin = {
             let arrData = []
             let source = this.$store.state.componentPageData
             if (this.form) {
-                for (let id of this.define.relation) {
+                for (let id of this.relation.relation) {
                     if (source[this.form]) {
                         arrData.push(source[this.form][id] || '')
                     } else {
@@ -149,7 +149,7 @@ const mixin = {
                     }
                 }
             } else {
-                for (let id of this.define.relation) {
+                for (let id of this.relation.relation) {
                     arrData.push(source[id] || '')
                 }
             }
@@ -157,7 +157,7 @@ const mixin = {
         },
         // 组件获取数据link对象
         dataLink () {
-            return _.get(this.define, 'dataLink', {})
+            return _.get(this.relation, 'dataLink', {})
         }
     },
     watch: {
