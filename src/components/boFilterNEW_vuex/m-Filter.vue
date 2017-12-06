@@ -144,6 +144,11 @@ const defaultRowOption = {
 
 export default{
     mixins: [mixin],
+    props: {
+        addComponent: {
+            type: Function
+        }
+    },
     data () {
         return {
             // filterBody数据
@@ -157,6 +162,9 @@ export default{
             defaultGlobalOption: defaultGlobalOption,
             defaultRowOption: defaultRowOption
         }
+    },
+    mounted(){
+        this.addComponent()
     },
     computed: {
         // 全局设置
@@ -198,8 +206,8 @@ export default{
     watch: {
         queryData (val) {
             let queryData = deepCopy(val)
-            queryData = this.changeQueryDataToPostData(queryData)
-            this.commitData(queryData)
+                queryData = this.changeQueryDataToPostData(queryData)
+                this.commitData(queryData)
         }
     },
     methods: {

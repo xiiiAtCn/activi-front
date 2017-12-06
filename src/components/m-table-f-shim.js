@@ -59,6 +59,9 @@ let tableFShim = Vue.component('tableF-Shim', {
         form:{
             type:String,
             default:''
+        },
+        addComponent: {
+            type: Function
         }
     },
     computed:{
@@ -67,6 +70,7 @@ let tableFShim = Vue.component('tableF-Shim', {
         }
     },
     mounted () {
+        this.addComponent()
         Object.keys(this.relation).length === 0 && this.initialize(this.define)
     },
     methods: {
@@ -86,7 +90,6 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableHeight = _.get(def,'tableHeight', null)
             this.serverPage = _.get(def,'serverPage', false)
             this.checkRow= _.get(def,'checkRow', '')
-
             Object.keys(this.relation).length === 0 && this.tableGetData(this.url,'data')
         },
         getTableDefine () {
@@ -109,7 +112,11 @@ let tableFShim = Vue.component('tableF-Shim', {
                 }
             })
         },
-        watchValuesChanged () {
+        watchValuesChanged (newval, oldval) {
+            if (newval[0] === oldval[0] && Object.keys(newval[1]).length === 0 && !oldval[1]) {
+                return 
+            }
+
             this.getTableDefine()
             this.getTableData()
         },

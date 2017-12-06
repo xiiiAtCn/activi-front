@@ -40,6 +40,15 @@ import { getData } from 'utils/actionUtils'
 
 export default {
     mixins: [mixin],
+    props: {
+        firstSelect: {
+            type: Boolean,
+            default: false
+        },
+        addComponent: {
+            type: Function
+        }
+    },
     data () {
         return {
             // 当前选中值
@@ -71,7 +80,7 @@ export default {
      * todo 如果传入初始化数组，按数组显示，否则选择第一项
      */
     mounted () {
-        this.getSelectData(this.firstInCallback)
+        this.addComponent()
     },
     methods: {
         // 设置对应项的selected并emit事件
@@ -137,6 +146,11 @@ export default {
     watch: {
         relation () {
             this.getSelectData(this.firstInCallback)
+        },
+        firstSelect (val) {
+            if (val) {
+                this.getSelectData(this.firstInCallback)
+            }
         }
     }
 }

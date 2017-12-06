@@ -138,21 +138,21 @@ const mixin = {
         // 与其他组件关联的数据
         relationData () {
             if (!this.isRelated) {
-                return ['']
+                return []
             }
             let arrData = []
             let source = this.$store.state.componentPageData
             if (this.form) {
                 for (let id of this.relation.relation) {
                     if (source[this.form]) {
-                        arrData.push(source[this.form][id] || '')
+                        arrData.push(source[this.form][id] || null)
                     } else {
-                        arrData.push('')
+                        arrData.push(null)
                     }
                 }
             } else {
                 for (let id of this.relation.relation) {
-                    arrData.push(source[id] || '')
+                    arrData.push(source[id] || null)
                 }
             }
             return arrData
@@ -164,6 +164,7 @@ const mixin = {
     },
     watch: {
         relationData (newVal, oldVal) {
+            
             if (!_.isEqual(newVal, oldVal)) {
                 this.watchValuesChanged(newVal, oldVal)
             }
