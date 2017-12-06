@@ -63,17 +63,11 @@ let tableFShim = Vue.component('tableF-Shim', {
     },
     computed:{
         name () {
-            return _.get(this.define, 'id', '')
-        }
-    },
-    watch:{
-        define () {
-            this.initialize(this.define)
+            return _.get(this.relation, 'id', '')
         }
     },
     mounted () {
-        console.log(this.define)
-        this.initialize(this.define)
+        Object.keys(this.relation).length === 0 && this.initialize(this.define)
     },
     methods: {
         initialize (def) {
@@ -93,7 +87,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.serverPage = _.get(def,'serverPage', false)
             this.checkRow= _.get(def,'checkRow', '')
 
-            this.tableGetData(this.url,'data')
+            Object.keys(this.relation).length === 0 && this.tableGetData(this.url,'data')
         },
         getTableDefine () {
             let urlDefine = this.getDataUrlObj('tableDefine')
@@ -104,12 +98,9 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableGetData(urlData,'data')
         },
         tableGetData(url,key){
-            if(!url || url === [] || url === {} || url.length === 0){return}
+            if(!url || url.length === 0){return}
             getData(url, (data) => {
                 if(data){
-                    if(!data || data === [] || data === {} || data.length === 0){
-                        return
-                    }
                     if(key === 'define'){
                         this.initialize(data)
                     }else{
