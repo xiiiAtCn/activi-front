@@ -66,29 +66,55 @@ let tableFShim = Vue.component('tableF-Shim', {
             return _.get(this.define, 'id', '')
         }
     },
+    watch:{
+        define () {
+            this.initialize(this.define)
+        }
+    },
+    mounted () {
+        console.log(this.define)
+        this.initialize(this.define)
+    },
     methods: {
         initialize (def) {
-            this.operation = _.get(def, ['ui_define', 'operation'], [])
-            this.showModalBtn = _.get(def, ['ui_define', 'showModalBtn'], [])
-            this.cols = _.get(def, ['ui_define', 'cols'], [])
-            this.url = _.get(def, ['ui_define', 'data_url'], {})
-            this.showSearch = _.get(def, ['ui_define', 'showSearch'], false)
-            this.tableName = _.get(def, ['ui_define', 'tableName'], '')
-            this.tableHeight = _.get(def, ['ui_define', 'tableHeight'], null)
-            this.serverPage = _.get(def, ['ui_define', 'serverPage'], false)
-            this.checkRow=  _.get(def, ['ui_define', 'checkRow'], '')
+            if(def.ui_define){
+                def = def.ui_define
+            }
+            if(!def.cols){
+                return
+            }
+            this.operation = _.get(def,'operation', [])
+            this.showModalBtn = _.get(def,'showModalBtn', [])
+            this.cols = _.get(def,'cols', [])
+            this.url = _.get(def,'data_url', {})
+            this.showSearch = _.get(def,'showSearch', false)
+            this.tableName = _.get(def,'tableName', '')
+            this.tableHeight = _.get(def,'tableHeight', null)
+            this.serverPage = _.get(def,'serverPage', false)
+            this.checkRow= _.get(def,'checkRow', '')
+
+            this.tableGetData(this.url,'data')
         },
         getTableDefine () {
-            this.getData('tableDefine', (data, err) => {
-                if (data) {
-                    this.initialize(data)
-                }
-            })
+            let urlDefine = this.getDataUrlObj('tableDefine')
+            this.tableGetData(urlDefine,'define')
         },
         getTableData () {
-            this.getData('tableData', (data, err) => {
-                if (data) {
-                    this.rowsContent = data
+            let urlData = this.getDataUrlObj('tableData')
+            this.tableGetData(urlData,'data')
+        },
+        tableGetData(url,key){
+            if(!url || url === [] || url === {} || url.length === 0){return}
+            getData(url, (data) => {
+                if(data){
+                    if(!data || data === [] || data === {} || data.length === 0){
+                        return
+                    }
+                    if(key === 'define'){
+                        this.initialize(data)
+                    }else{
+                        this.rowsContent = data
+                    }
                 }
             })
         },
