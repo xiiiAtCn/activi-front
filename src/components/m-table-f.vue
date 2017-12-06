@@ -274,6 +274,7 @@
                 if(this.judgeExistence('key','action')){
                     return
                 }
+                if(!this.showModalBtn){return}
                 this.columnsData.push({
                     title: '操作',
                     key: 'action',
@@ -387,6 +388,7 @@
                     window.localStorage.setItem(this.tableName+'.checkAllGroup',JSON.stringify(data))
                 }
             },
+            //添加或删除列
             handleColumnsData (obj) {
                 if (!obj) {
                     return
@@ -466,6 +468,7 @@
                 this.$store.commit(FORM_ELEMENT_VALUE, {list, form: this.form || 'form'})
             },
 
+            //行多选加列
             checkRowClick(){
                 if(this.checkRow === 'M'){
                     if(this.judgeExistence('type','selection')){

@@ -33,7 +33,7 @@ let tableFShim = Vue.component('tableF-Shim', {
     data () {
         return {
             url: '',
-            showModalBtn: [],
+            showModalBtn: '',
             rowsContent: [],
             operation: [],
             cols:[],
@@ -78,7 +78,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                 return
             }
             this.operation = _.get(def,'operation', [])
-            this.showModalBtn = _.get(def,'showModalBtn', [])
+            this.showModalBtn = _.get(def,'showModalBtn','')
             this.cols = _.get(def,'cols', [])
             this.url = _.get(def,'data_url', {})
             this.showSearch = _.get(def,'showSearch', false)
