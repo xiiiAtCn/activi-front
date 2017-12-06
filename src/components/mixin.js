@@ -11,7 +11,7 @@
  */
 import _ from 'lodash'
 import Mutations from 'store/Mutation'
-import { getData } from 'utils/actionUtils'
+// import { getData } from 'utils/actionUtils'
 import { deepCopy } from 'utils/utils'
 
 let NoData = Symbol('NoData')
@@ -34,7 +34,7 @@ const mixin = {
          * @param {*} type dataLink类型
          * @param {*} callback 回调
          */
-        getData (type, callback) {
+        getDataUrlObj (type) {
             // 此时define还未传入 
             if (this.define && Object.keys(this.define).length > 0) {
                 let dataLink = deepCopy(this.dataLink)
@@ -47,9 +47,10 @@ const mixin = {
                     obj.link.pathParams = this.getRealParamData(obj.link.pathParams)
                     obj.link.queryParams = this.getRealParamData(obj.link.queryParams)
                     obj.link.body = this.getRealParamData(obj.link.body)
-                    getData(obj.link, (data, err) => {
-                        callback(data, err)
-                    })
+                    // getData(obj.link, (data, err) => {
+                    //     callback(data, err)
+                    // })
+                    return obj.link
                 }
             }
         },

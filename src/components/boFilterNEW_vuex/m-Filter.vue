@@ -112,6 +112,7 @@ import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 import mixin from '../mixin'
 import Mutation from 'store/Mutation'
+import { getData } from 'utils/actionUtils'
 
 // 默认全局设置
 const defaultGlobalOption = {
@@ -253,7 +254,15 @@ export default{
             return result
         },
         getFilterData () {
-            this.getData('bodyData', (data, err) => {
+            // this.getData('bodyData', (data, err) => {
+            //     if (data) {
+            //         this.bodyData = data.rows
+            //     } else {
+            //         this.bodyData = []
+            //     }
+            //     this.queryData = []
+            // })
+            getData(this.getDataUrlObj('bodyData'), (data, err) => {
                 if (data) {
                     this.bodyData = data.rows
                 } else {

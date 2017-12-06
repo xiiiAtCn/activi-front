@@ -36,6 +36,7 @@ import _ from 'lodash'
 import { deepCopy } from 'utils/utils'
 import mixin from '../mixin'
 import Mutations from 'store/Mutation'
+import { getData } from 'utils/actionUtils'
 
 export default {
     mixins: [mixin],
@@ -105,7 +106,15 @@ export default {
          * 获取数据
          */
         getSelectData (callback) {
-            this.getData('selectData', (data, err) => {
+            // this.getData('selectData', (data, err) => {
+            //     if (data) {
+            //         this.selectData.push(data)
+            //     }
+            //     if (callback) {
+            //         callback(data, err)
+            //     }
+            // })
+            getData(this.getDataUrlObj('selectData'), (data, err) => {
                 if (data) {
                     this.selectData.push(data)
                 }
