@@ -20,7 +20,9 @@ const mixin = {
     props: {
         relation: {
             type: Object,
-            default: {}
+            default () {
+                return {}
+            }
         },
         // 组件数据区域
         form: {
