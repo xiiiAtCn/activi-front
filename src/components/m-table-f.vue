@@ -300,7 +300,7 @@
                                     marginRight:'5px',
                                     marginLeft:'-5px'
                                 }
-                            }, params.index + 1 ),
+                            }, params.index + 1 + (this.currentPage-1)*Number(this.rowCount)),
                             h('Button', {
                                 props:{
                                   size:'small'
@@ -457,6 +457,7 @@
 
             //改变 显示行数
             changePage(arg){
+                this.currentPage = arg
                 if(!this.serverPage){
                     this.dataTable = this.rowsContent.slice((arg-1)*this.rowCount,arg*this.rowCount)
                 }else{
