@@ -1,7 +1,7 @@
 <template>
     <div>
         <mBarrier :height="10"></mBarrier>
-        <div  class="operation" v-if="editable.contains('add')">
+        <div  class="operation" v-if="addable">
             <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
@@ -32,7 +32,6 @@
 <script>
     import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER } from 'store/Mutation'
     import {SUBMIT_FORM_DATA, DELETE_TABLE_DATA} from 'store/Action'
-    import _ from 'lodash'
     export default {
         props: {
             alias: {
@@ -63,7 +62,7 @@
                 default: false
             },
             editable: {
-                type: [Boolean | String],
+                type: [String],
                 default: false
             },
             loading: {
@@ -76,7 +75,11 @@
             }
         },
         computed: {
+            addable() {
+                return this.editable.split('_').indexOf('add') !== -1
+            },
             mixColumns() {
+                debugger
                 let columns = this.columns
                 let actions = this.editable.split('_')
                 let operation = {
@@ -115,7 +118,7 @@
                                             this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
                                         }
                                     }
-                                }, '删除'): undefined
+                                }, '删除'): ''
                             ]
                         )
                         
