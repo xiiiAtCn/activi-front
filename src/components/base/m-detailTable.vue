@@ -1,7 +1,7 @@
 <template>
     <div>
         <mBarrier :height="10"></mBarrier>
-        <div  class="operation" v-if="editable">
+        <div  class="operation" v-if="editable.contains('add')">
             <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
             @click="openLayer(operation.action)">{{operation.name}}</Button>
         </div>
@@ -10,7 +10,7 @@
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>
         </div>
-        <mLayer v-if="editable" v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
+        <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
             <Card style="width: 60%; margin: 0 auto;">
                 <Form style="width: 85%; margin: 0 auto;">
                     <Row v-for="(column, index) in mixColumns" :key="index">
@@ -63,7 +63,7 @@
                 default: false
             },
             editable: {
-                type: Boolean,
+                type: [Boolean | String],
                 default: false
             },
             loading: {
@@ -78,51 +78,50 @@
         computed: {
             mixColumns() {
                 let columns = this.columns
-                if(this.editable) {
-                    let operation = {
-                        title: '操作',
-                        render: (h, mixture) => {
-                            return h('div', 
-                                {
-                                },
-                                [
-                                    h('Button', {
-                                        props: {
-                                            type: 'info',
-                                            size:'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.action = 'update'
-                                                this.dataIndex = mixture.index
-                                                this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
-                                            }
+                let actions = this.editable.split('_')
+                let operation = {
+                    title: '操作',
+                    render: (h, mixture) => {
+                        return h('div', 
+                            {
+                            },
+                            [
+                                h('Button', {
+                                    props: {
+                                        type: 'info',
+                                        size:'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.action = 'update'
+                                            this.dataIndex = mixture.index
+                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
                                         }
-                                    }, '编辑'),
-                                    h('Button', {
-                                        props: {
-                                            type: 'error',
-                                            size:'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
-                                            }
+                                    }
+                                }, '编辑'),
+                                actions.indexOf('del') !== -1 ? h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size:'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
                                         }
-                                    }, '删除')
-                                ]
-                            )
-                            
-                        }
+                                    }
+                                }, '删除'): undefined
+                            ]
+                        )
+                        
                     }
-                    columns.push(operation)
                 }
+                columns.push(operation)
                 return columns
             },
             source() {
@@ -145,10 +144,6 @@
         },
         methods: {
             openLayer(action) {
-                let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
-                if(editable !== 'editable') {
-                    return
-                }
                 this.action = action
                 this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
             },

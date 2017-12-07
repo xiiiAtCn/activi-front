@@ -107,10 +107,7 @@ Vue.component('mDetailTable', {
         },
         readonly() {
             let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
-            if(editable === 'editable') {
-                return true
-            }
-            return false
+            return editable
         },
         visible() {
             return _.get(this.$store.state.formData, [this.name, 'visible'], false)
@@ -146,11 +143,7 @@ Vue.component('mDetailTable', {
     },
     methods: {
         valid() {
-            if(!this.readonly) {
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
-            } else {
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
-            }
+            this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
         },
         getDataFromUrl(url) {
             this.$store.dispatch(FETCH_TABLE_DATA, {url})
