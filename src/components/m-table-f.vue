@@ -41,8 +41,8 @@
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="rowsContent.length" :page-size="parseInt(rowCount)" :current="currentPage" @on-change="changePage"></Page>
+            <div style="float: right;" ref="pageCt">
+                <Page :total="pageTotal || rowsContent.length" :page-size="parseInt(rowCount)" :current="currentPage" @on-change="changePage"></Page>
             </div>
         </div>
     </div>
@@ -75,6 +75,10 @@
                 type: Boolean,
                 default: false
             },
+            pageTotal:{
+                type: Number,
+                default: null
+            },
             tableName:{
                 type: null,
                 default: undefined
@@ -94,6 +98,12 @@
             name:{
                 type: null,
                 default: ''
+            },
+            reload:{
+                type: Function,
+                default () {
+                    return function () {}
+                }
             }
         },
         data () {
@@ -139,10 +149,11 @@
                 ],
                 rowCount:10,
                 currentPage:1,
+                lastId:'',
                 //table宽度
                 tableWidth:'',
                 //post 的 id数组
-                idList:[]
+                idList:[],
             }
         },
         watch: {
@@ -306,8 +317,13 @@
             },
             //tableData存入行数据
             handleContent(){
+                if(this.rowsContent.length === undefined || this.rowsContent.length === 0){
+                    this.dataTable = []
+                    return
+                }
                 if(this.serverPage){
                     this.dataTable = this.rowsContent
+                    this.lastId = this.rowsContent[this.rowsContent.length-1].id
                 }else{
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
                 }
@@ -332,11 +348,14 @@
 
             // 处理顶部按钮
             handleTopButton (action) {
-                console.log(this.idList)
-                if(action.type !== 'link'){
-                    action.url.body = this.idList
+                let actions = _.cloneDeep(action)
+                if(actions.type !== 'link'){
+                    actions.url.body = this.idList
                 }
-                dispatch(action)
+                if(actions.callbackMethodName && actions.callbackMethodName === 'reloadData'){
+                    actions.callback = this.reload
+                }
+                dispatch(actions)
             },
             //发送搜索事件数据
             handleTopSearch(){
@@ -441,15 +460,18 @@
                 if(!this.serverPage){
                     this.dataTable = this.rowsContent.slice((arg-1)*this.rowCount,arg*this.rowCount)
                 }else{
-                    this.$emit('rowsPageChange', {from:arg, size:this.rowCount})
+                    this.$emit('rowsPageChange', {from:arg, size:this.rowCount,lastDataId:this.lastId})
                 }
             },
             //用户选择一页显示行数时
             changeSelect(arg){
                 this.rowCount = arg
                 this.dataTable = this.rowsContent.slice(0,arg)
-                this.currentPage = 1
-                window.localStorage.setItem(this.tableName+'.rowCount',arg)
+                this.$refs.pageCt.querySelector('.ivu-page-item').click()
+                this.tableName && window.localStorage.setItem(this.tableName+'.rowCount',arg)
+                if(this.serverPage){
+                    this.$emit('rowsPageChange', {from:1, size:this.rowCount,lastDataId:this.lastId})
+                }
             },
 
             //行单选存数据
