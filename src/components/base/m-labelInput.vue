@@ -1,14 +1,12 @@
 <template>
     <div class="ivu-form-item m-flex" style="margin-bottom: 0px;">
-        <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" :for="uid">{{label}}</label>
+        <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" >{{label}}</label>
         <div class="ivu-form-item-content m-input">
             <component 
                 :formTmp="formTmp" 
                 :statusKey="statusKey" 
                 :is="itemType" 
                 :define="childContent" 
-                :uid="uid" 
-                :focusId="uid"
             >
             </component>
         </div>

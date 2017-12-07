@@ -9,7 +9,6 @@
             <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
                     :is="downData.ui_type"
-                    :uid="downData.ui_id"
                     :define="downData.ui_define"
                     :form="downData.ui_form"
                 ></component>
@@ -28,90 +27,90 @@
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
 
-export default {
-    name: 'm-input-choose',
-    mixins: [mixin],
-    data () {
-        return {
-            showLayer:false,
-            downData:[],
-            isError:false
-        }
-    },
-    computed: {
-        url () {
-            return _.get(this.define, 'url', '')
-        },
-        placeholder () {
-            return _.get(this.define, 'placeholder', '请选择相关信息')
-        },
-        dataDomain () {
-            return _.get(this.define, 'dataDomain', '')
-        },
-        tableName () {
-            return _.get(this.define, 'tableName', '')
-        },
-        backUrl(){
-            return _.get(this.define, 'backUrl', '')
-        }
-    },
-    mounted(){
-        getData(this.url,(data,err)=>{
-            if (data) {
-                this.downData = data.ui_content[0]
+    export default {
+        name: 'm-input-choose',
+        mixins: [mixin],
+        data () {
+            return {
+                showLayer:false,
+                downData:[],
+                isError:false
             }
-        })
-    },
-    methods: {
-        handleChooseClick(){
-            if(this.readonly){return}
-            this.showLayer = true
         },
-        handleCancel(){
-            this.showLayer = false
-            this.valid()
-        },
-        handleOk(){
-            this.showLayer = false
-            this.getChooseData()
-        },
-        getChooseData(){
-            let action={
-                url:this.backUrl,
-                type: 'GET',
-                queryParams:{
-                    id:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'id'], '')
-                }
+        computed: {
+            url () {
+                return _.get(this.define, 'url', '')
+            },
+            placeholder () {
+                return _.get(this.define, 'placeholder', '请选择相关信息')
+            },
+            dataDomain () {
+                return _.get(this.define, 'dataDomain', '')
+            },
+            tableName () {
+                return _.get(this.define, 'tableName', '')
+            },
+            backUrl(){
+                return _.get(this.define, 'backUrl', '')
             }
-            getData(action,(data)=>{
+        },
+        mounted(){
+            getData(this.url,(data,err)=>{
                 if (data) {
-                    for(let key of Object.keys(data)){
-                        this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: this.formTmp?this.formTmp:'form'})
-                    }
-                }
-
-                this.valid()
-                if (this.objectModel !== '') {
-                    this.isError = false
-                    this.errorMessage = ''
+                    this.downData = data.ui_content[0]
                 }
             })
         },
-        valid(){
-            if (!this.readonly) {
-                if (this.required) {
-                    if (this.objectModel === '') {
-                        this.isError = true
-                        this.errorMessage = '请选择必填项'
+        methods: {
+            handleChooseClick(){
+                if(this.readonly){return}
+                this.showLayer = true
+            },
+            handleCancel(){
+                this.showLayer = false
+                this.valid()
+            },
+            handleOk(){
+                this.showLayer = false
+                this.getChooseData()
+            },
+            getChooseData(){
+                let action={
+                    url:this.backUrl,
+                    type: 'GET',
+                    queryParams:{
+                        id:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'id'], '')
                     }
                 }
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: this.form})
-            } else {
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                getData(action,(data)=>{
+                    if (data) {
+                        for(let key of Object.keys(data)){
+                            this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: this.formTmp?this.formTmp:'form'})
+                        }
+                    }
+
+                    this.valid()
+                    if (this.objectModel !== '') {
+                        this.isError = false
+                        this.errorMessage = ''
+                    }
+                })
+            },
+            valid(){
+                if (!this.readonly) {
+                    if (this.required) {
+                        if (this.objectModel === '') {
+                            this.isError = true
+                            this.errorMessage = '请选择必填项'
+                        }
+                    }
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: this.form})
+                } else {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                }
             }
         }
     }
-}
 </script>
 <style scoped>
 

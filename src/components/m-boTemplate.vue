@@ -1,9 +1,9 @@
 <template>
     <Row :gutter="16" class="wrap">
-        <Row v-for="item in items" class="row">
+        <Row v-for="(item, index) in items" :key="index" class="row">
             <Button icon="navicon-round" :class="item.template.type">{{item.template.title}}</Button>
             <div class="rowBorder"></div>
-            <Col v-for="boMeta in item.children" :key="item.ui_id" class="childRow">
+            <Col v-for="(boMeta, sequence) in item.children" :key="sequence" class="childRow">
             <Button-group>
                 <Button :key="button.text" v-for="button in boMeta.buttons" :type="button.type"
                         @click="getMeta(button.url)">{{button.text}}

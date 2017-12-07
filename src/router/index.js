@@ -78,7 +78,6 @@ const router = new VueRouter({
     routes: [
         {path: '/', component: mLogin},
         {
-
             path: '/layoutContent/:id',
             component: mLayoutContent,
             children: [

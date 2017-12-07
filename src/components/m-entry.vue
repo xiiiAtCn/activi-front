@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="data.ui_type" :id="data.ui_id" v-bind:define="data.ui_define" v-bind:content="data.ui_content"></component>
+    <component :is="data.ui_type" v-bind:define="data.ui_define" v-bind:content="data.ui_content"></component>
   </div>
 </template>
 <script>

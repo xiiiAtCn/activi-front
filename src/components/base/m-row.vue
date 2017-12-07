@@ -2,15 +2,14 @@
     <Row :gutter="gutter" :type="type">
         <transition-group name="fade" mode="out-in">
             <Col
-                v-for="item in content"
+                v-for="(item, index) in content"
                 :span="item.ui_define.col"
                 :push="item.ui_define.offset"
-                :key="item.ui_id"
+                :key="index"
             >
                 <component
                     v-if="item.ui_content ? true : false"
                     :is="item.ui_content[0].ui_type"
-                    :uid="item.ui_content[0].ui_id"
                     :define="item.ui_content[0].ui_define"
                     :content="item.ui_content[0].ui_content"
                 >

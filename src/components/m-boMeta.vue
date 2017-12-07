@@ -1,16 +1,15 @@
 <template>
     <div>
         <Row :gutter="16" style="padding: 0 10px">
-            <Row v-for="item in items" style="margin: 10px 0 30px 0">
+            <Row v-for="(item, index) in items" :key="index" style="margin: 10px 0 30px 0">
                 <Button v-if="!!item.template" icon="navicon-round" type="info" style="border-radius: 0">{{item.template.title}}
                 </Button>
                 <div style="border-bottom: 1px solid #2db7f5; margin-bottom: 16px"></div>
-                <Col v-for="boMeta in item.children" :key="item.ui_id"
+                <Col v-for="(boMeta, sequence) in item.children" :key="sequence"
                      style="display: inline-block; margin-right: 12px">
                 <Button-group>
                     <Button :key="button.text" v-for="button in boMeta.buttons" :type="button.type"
                             @click="getMeta(button.url)">{{button.text}}
-
                     </Button>
                 </Button-group>
                 </Col>

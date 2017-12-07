@@ -4,7 +4,6 @@
         <mLayer :value="showLayer" :titleText="define.text" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
                 :is="downData.ui_type"
-                :uid="downData.ui_id"
                 :define="downData.ui_define"
                 :form="downData.ui_form"
             ></component>
@@ -13,8 +12,6 @@
 </template>
 <script>
     import _ from 'lodash'
-    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
-    import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
 
     export default {

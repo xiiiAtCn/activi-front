@@ -17,15 +17,15 @@
                     </Breadcrumb>
                 </Breadcrumb>
 
-                <div class="btn-container-top-left" v-for="item in topLeft">
-                    <template name="fade" mode="out-in"  v-for="(btn, index) in item">
-                        <Poptip placement="bottom" v-if="btn && btn.child">
+                <div class="btn-container-top-left" v-for="(item, sequence) in topLeft" :key="sequence">
+                    <template name="fade" mode="out-in"  v-for="(btn, index) in item" >
+                        <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
                             <Button :type="btn.type || 'default'">
                                 {{btn.text}}
                                 <Icon type="arrow-down-b"></Icon>
                             </Button>
                             <div slot="content" style="padding: 0 14px;">
-                                <div  v-for="(v, index) in btn.child">
+                                <div  v-for="(v, key) in btn.child" :key="key">
                                     <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
                                     <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                                     <Button
@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                         </Poptip>
-                        <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
+                        <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn" :key="index"></mButtonIframe>
                         <Button
                             v-else
                             :type="btn.type || 'default'"
@@ -77,25 +77,25 @@
         <div>
             <form class="ivu-form ivu-form-label-right">
                 <transition-group name="fade" mode="out-in" tag="div" v-if="content.length > 1">
-                    <component :key="item.ui_id" :is="item.ui_type" :uid="item.ui_id"
-                               v-for="item in content" :define="item.ui_define"
+                    <component :key="index" :is="item.ui_type"
+                               v-for="(item, index) in content" :define="item.ui_define"
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition-group>
                 <transition name="fade" mode="out-in" tag="div" v-else>
-                    <component :key="item.ui_id" :is="item.ui_type" :uid="item.ui_id"
-                               v-for="item in content" :define="item.ui_define"
+                    <component :key="index" :is="item.ui_type"
+                               v-for="(item, index) in content" :define="item.ui_define"
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
-            <div class="btn-container-bottom-right" v-for="item in bottomRight">
-                <template name="fade" mode="out-in"  v-for="(btn, index) in item">
-                    <Poptip placement="bottom" v-if="btn && btn.child">
+            <div class="btn-container-bottom-right" v-for="(item, sequence) in bottomRight" :key="sequence">
+                <template name="fade" mode="out-in"  v-for="(btn, index) in item" >
+                    <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
                         <Button :type="btn.type || 'default'">
                             {{btn.text}}
                             <Icon type="arrow-down-b"></Icon>
                         </Button>
                         <div slot="content" style="padding: 0 14px;">
-                            <div  v-for="(v, index) in btn.child">
+                            <div  v-for="(v, key) in btn.child" :key="key">
                                 <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
                                 <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
                                 <Button
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                     </Poptip>
-                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
+                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn" :key="index"></mButtonIframe>
                     <Button
                         v-else
                         :type="btn.type || 'default'"
@@ -128,10 +128,9 @@
 <script>
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
-    import {dispatch,getData} from '../utils/actionUtils'
+    import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
-    import iView from 'iview'
 
     export default {
         router,

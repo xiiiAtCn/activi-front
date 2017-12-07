@@ -12,7 +12,7 @@ Vue.component('mDetailTable', {
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                formTmp: this.uid,
+                formTmp: this.name,
                 name: this.name,
                 editable: this.readonly
             }
@@ -33,26 +33,25 @@ Vue.component('mDetailTable', {
             type: String,
             default: 'form'
         },
-        uid: {
-            type: String,
-            required: true
-        }
     },
     computed: {
+        required() {
+            return _.get(this.define, 'required', true)
+        },
         columns() {
             let cols = this.define['columns'] || []
             let columns = this.handleColumns(cols)
-            let tmp = _.get(this.$store.state.formData, this.uid)
+            let tmp = _.get(this.$store.state.formData, this.name)
             if(tmp === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
                     {
-                        attribute: this.uid,
+                        attribute: this.name,
                         value: {
                             loading: true,
                             reset: false,
                             validate: false,
                             visible: false,
-                            [this.uid + 'waitCheck']: []
+                            [this.name + 'waitCheck']: []
                         }
                     }
                 )
@@ -87,7 +86,8 @@ Vue.component('mDetailTable', {
                             value: [],
                             type: this.$options._componentTag
                         },
-                        checkKey: this.name
+                        checkKey: this.name,
+                        required: this.required
                     })
             source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
             let type = _.get(this.$store.state.formData, ['form', this.name, 'type'])
@@ -99,7 +99,8 @@ Vue.component('mDetailTable', {
                             value: source,
                             type: this.$options._componentTag
                         },
-                        checkKey: this.name
+                        checkKey: this.name,
+                        required: this.required
                     }
                 )
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
@@ -112,10 +113,10 @@ Vue.component('mDetailTable', {
             return false
         },
         visible() {
-            return _.get(this.$store.state.formData, [this.uid, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.name, 'visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.uid, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.name, 'loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''

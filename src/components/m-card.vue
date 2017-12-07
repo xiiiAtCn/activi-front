@@ -1,6 +1,6 @@
 <template>
   <Row :gutter="16">
-    <Col :md="4" v-for="item in items" :key="item.ui_id">
+    <Col :md="4" v-for="(item, index) in items" :key="index">
     <Card>
       <p slot="title">{{item.text}}</p>
       <p style="margin-bottom: 4px">{{item.description}}</p>

@@ -3,7 +3,7 @@
     <div class="page-header">
       <h3>{{content.ui_alias}}</h3>
     </div>
-    <component :is="content.ui_type" :id="content.ui_id" v-bind:define="content.ui_define" v-bind:content="content.ui_content"></component>
+    <component :is="content.ui_type" :define="content.ui_define" :content="content.ui_content"></component>
   </div>
 </template>
 <script>

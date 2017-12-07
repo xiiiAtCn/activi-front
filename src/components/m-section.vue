@@ -1,7 +1,7 @@
 <template>
     <div class="ivu-form ivu-form-label-right">
         <transition-group name="fade" mode="out-in">
-            <component :key="item.ui_id" :is="item.ui_type" v-for="item in tempContent" :define="item.ui_content"
+            <component :is="item.ui_type" v-for="(item, index) in tempContent" :key="index" :define="item.ui_content"
                        :content="item.ui_content"></component>
         </transition-group>
     </div>

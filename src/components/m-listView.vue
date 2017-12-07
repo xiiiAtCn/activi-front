@@ -28,7 +28,7 @@
     <!--</Row>-->
     <!--</Col>-->
     <!--</Row>-->
-    <div v-for="row in rows" style="margin-top: 20px;" :key="ui_id">
+    <div v-for="(row, index) in rows" style="margin-top: 20px;" :key="index">
       <!--{{row['details'].length}}-->
       <Row style="margin-bottom: 5px">
         <Col span="6" v-for="item in define.titleDefine">
