@@ -17,12 +17,14 @@ let tableFShim = Vue.component('tableF-Shim', {
                 tableHeight: this.tableHeight,
                 search:this.showSearch,//是否显示搜索框
                 tableName:'',//为本地存贮提供表格名字
-                serverPage:false,//是否服务器分页
+                serverPage:this.serverPage,//是否服务器分页
+                pageTotal:this.pageTotal,
                 checkRow:this.checkRow, //是否行单选
 
                 form:this.form, //往vuex存数据的地址
-                name:this.name //selectid
+                name:this.name, //selectid
 
+                reload:this.reloadData
             },
             on:{
                 rowsPageChange : this.handleRowsPageChange
@@ -42,7 +44,9 @@ let tableFShim = Vue.component('tableF-Shim', {
             tableName:'',
             tableHeight:null,
             serverPage:false,
-            checkRow:false
+            checkRow:false,
+            lastUrlData:{},
+            pageTotal:null
         }
     },
     props: {
@@ -61,7 +65,10 @@ let tableFShim = Vue.component('tableF-Shim', {
             default:''
         },
         addComponent: {
-            type: Function
+            type: Function,
+            default () {
+                return function () {}
+            }
         }
     },
     computed:{
@@ -88,9 +95,12 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.showSearch = _.get(def,'showSearch', false)
             this.tableName = _.get(def,'tableName', '')
             this.tableHeight = _.get(def,'tableHeight', null)
-            this.serverPage = _.get(def,'serverPage', false)
             this.checkRow= _.get(def,'checkRow', '')
-            Object.keys(this.relation).length === 0 && this.tableGetData(this.url,'data')
+
+            if(Object.keys(this.relation).length === 0){
+                this.lastUrlData = _.cloneDeep(this.url)
+                this.tableGetData(this.url,'data')
+            }
         },
         getTableDefine () {
             let urlDefine = this.getDataUrlObj('tableDefine')
@@ -98,29 +108,48 @@ let tableFShim = Vue.component('tableF-Shim', {
         },
         getTableData () {
             let urlData = this.getDataUrlObj('tableData')
+            this.lastUrlData = _.cloneDeep(urlData)
             this.tableGetData(urlData,'data')
         },
         tableGetData(url,key){
             if(!url || url.length === 0){return}
+            if( key === 'data' && !url.queryParams.size){
+                url.queryParams.size = 10
+            }
             getData(url, (data) => {
                 if(data){
                     if(key === 'define'){
                         this.initialize(data)
                     }else{
-                        this.rowsContent = data
+                        if(data.total){
+                            this.rowsContent = data.datas
+                            this.serverPage = true
+                            this.pageTotal = data.total
+                        }else{
+                            this.serverPage = false
+                            this.rowsContent = data
+                        }
                     }
                 }
             })
         },
+        reloadData(){
+            let url = _.cloneDeep(this.lastUrlData)
+            this.tableGetData(url,'data')
+        },
         watchValuesChanged (newval, oldval) {
             if (newval[0] === oldval[0] && Object.keys(newval[1]).length === 0 && !oldval[1]) {
-                return 
+                return
             }
-
             this.getTableDefine()
             this.getTableData()
         },
         handleRowsPageChange(arg){
+            let url = _.cloneDeep(this.lastUrlData)
+            for(let key in arg){
+                url.queryParams[key] = arg[key]
+            }
+            this.tableGetData(url,'data')
             this.commitData(arg)
         }
     }
