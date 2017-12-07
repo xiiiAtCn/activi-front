@@ -88,6 +88,9 @@ export const getData = (action, callback) => {
             }, 1000)
 
             callback(result, err)
+            if(!err && action.callback) {
+                action.callback()
+            }
         })
     } else {
         request.setUrl(url).forGet((result, err) => {
@@ -97,6 +100,9 @@ export const getData = (action, callback) => {
                     bus.$emit('hide-my-full-loading')
             }, 1000)
             callback(result, err)
+            if(!err && action.callback) {
+                action.callback()
+            }
         })
     }
 }
@@ -137,25 +143,22 @@ function asLink(action) {
                 routLinkParam.path = action.at
             }
 
-            // if (routLinkParam.path && !_.startsWith(routLinkParam.path, '/')) {
-
-            //     routLinkParam.path = router.currentRoute.path + '/' + routLinkParam.path;
-            // }
             //144-145 change by f in 12.1
             action.url = urlToString(action)
 
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
             } else {
-                // /layoutContent/:id/isBuilding
                 action.url = '/api/program/isBuilding/template?at=' + action.at
                 routLinkParam.query = extend({ url: action.url }, action.query)
             }
-            // console.log('action', action);
             if (action.mode === 'replace') {
                 router.replace(routLinkParam)
             } else {
                 router.push(routLinkParam)
+            }
+            if(action.callback) {
+                action.callback()
             }
         }
     }
@@ -197,6 +200,9 @@ function asSubmit(action) {
             if (error === null) {
                 store.dispatch('clearData', {})
                 dispatch(body)
+                if(!error && action.callback) {
+                    action.callback()
+                }
             }
         })
     }
@@ -226,7 +232,6 @@ function asSubmit(action) {
         console.log('store.state.validStatus.valid', store.state.validStatus.valid)
         console.log('校验没有通过~')
     }
-    // console.log("post data : ", store.state.pageData.data);
 }
 
 /**
@@ -248,6 +253,9 @@ function asServerAction(action) {
                 return
             }
             dispatch(result)
+            if(action.callback) {
+                action.callback()
+            }
         })
     }
 
@@ -287,6 +295,9 @@ function asMessage(action) {
 
     if (action.alert) {
         iView.Message.success(action.alert)
+    }
+    if(action.callback) {
+        action.callback()
     }
 }
 
