@@ -8,6 +8,7 @@
             </div>
             <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
+                    v-if="downData"
                     :is="downData.ui_type"
                     :define="downData.ui_define"
                     :form="downData.ui_form"
@@ -55,15 +56,15 @@
             }
         },
         mounted(){
-            getData(this.url,(data,err)=>{
-                if (data) {
-                    this.downData = data.ui_content[0]
-                }
-            })
         },
         methods: {
             handleChooseClick(){
                 if(this.readonly){return}
+                getData(this.url,(data,err)=>{
+                    if (data) {
+                        this.downData = data.ui_content[0]
+                    }
+                })
                 this.showLayer = true
             },
             handleCancel(){

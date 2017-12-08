@@ -3,6 +3,7 @@
         <Button :type="define.type || 'default'" :size="define.size || 'default'" @click="handleClick">{{define.text}}</Button>
         <mLayer :value="showLayer" :titleText="define.text" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
+                v-if="downData"
                 :is="downData.ui_type"
                 :define="downData.ui_define"
                 :form="downData.ui_form"
@@ -24,17 +25,13 @@
                 downData:{}
             }
         },
-        computed: {
-        },
-        mounted(){
-            getData(this.define.getDataAction.url,(data)=>{
-                if (data) {
-                    this.downData= data.ui_content[0]
-                }
-            })
-        },
         methods: {
             handleClick(){
+                getData(this.define.getDataAction.url,(data)=>{
+                    if (data) {
+                        this.downData= data.ui_content[0]
+                    }
+                })
                 this.showLayer =true
             },
             handleOk(){
