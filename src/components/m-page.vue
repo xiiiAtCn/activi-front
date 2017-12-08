@@ -23,8 +23,8 @@
             return {
                 bus: bus,
                 position: {
-                    top: '30vh',
-                    left: '45vw'
+                    // top: '30vh',
+                    // left: '45vw'
                 }
             }
         }
