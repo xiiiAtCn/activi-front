@@ -106,7 +106,7 @@ Vue.component('mDetailTable', {
             return _.get(this.$store.state.formData, ['form', this.name, 'value'])
         },
         readonly() {
-            let editable = _.get(this.$store.state.pageStatus, ['status', this.name])
+            let editable = _.get(this.$store.state.pageStatus, ['status', this.name], '')
             return editable
         },
         visible() {

@@ -79,7 +79,6 @@
                 return this.editable.split('_').indexOf('add') !== -1
             },
             mixColumns() {
-                debugger
                 let columns = this.columns
                 let actions = this.editable.split('_')
                 let operation = {
@@ -104,7 +103,7 @@
                                             this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
                                         }
                                     }
-                                }, '编辑'),
+                                }, actions.indexOf('del') !== -1 ?'编辑':'查看'),
                                 actions.indexOf('del') !== -1 ? h('Button', {
                                     props: {
                                         type: 'error',
