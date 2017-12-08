@@ -21,10 +21,6 @@
                                 <Icon :type="secondIcon"></Icon>
                                 <span>{{secondTitle}}</span>
                             </BreadcrumbItem>
-                            <BreadcrumbItem v-if="thirdShow" class="title_main">
-                                <Icon :type="thirdIcon"></Icon>
-                                <span>{{thirdTitle}}</span>
-                            </BreadcrumbItem>
                         </Breadcrumb>
                     </i-col>
                     <div class="daJieStyle1">
