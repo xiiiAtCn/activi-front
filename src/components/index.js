@@ -151,6 +151,14 @@ const tableFShim = resolve => {
     require(['./m-table-f-shim'], resolve)
 }
 
+const mTabs = resolve => {
+    require(['./m-tabs.vue'], resolve)
+}
+
+const mUrlSection = resolve => {
+    require(['./m-url-section.vue'], resolve)
+}
+
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBillMeta', mBillMeta)
 Vue.component('mBoMeta', mBoMeta)
@@ -187,4 +195,5 @@ Vue.component('mTableF', mTableF)
 Vue.component('mTree', mTree)
 Vue.component('mLayer', mLayer)
 Vue.component('tableFShim', tableFShim)
-
+Vue.component('mTabs', mTabs)
+Vue.component('mUrlSection', mUrlSection)
