@@ -13,7 +13,7 @@
 </template>
 <script>
     import _ from 'lodash'
-    import {getData} from 'utils/actionUtils'
+    import {getData,dispatch} from 'utils/actionUtils'
 
     export default {
         props:{
