@@ -72,7 +72,7 @@
                 default: false
             },
             overlay: {
-                default: true
+                default: false
             },
             // central event bus
             eventBus: {
