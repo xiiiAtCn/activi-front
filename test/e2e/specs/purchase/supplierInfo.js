@@ -1,4 +1,3 @@
-const paths = require('path')
 module.exports = {
     'supplier information': function(browser) {
         let host = browser.globals.devServerURL
@@ -10,13 +9,16 @@ module.exports = {
             .pause(5000)
             .waitForElementVisible('body', 1000)
             .assert.title('供应商档案')
-            .elements('css selector' , '.out-use-menu-horizontal a', function(res) {
+            .elements('xpath' , '//*[@id="app"]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/span', function(res) {
                 console.log('.out-use-menu-horizontal a')
                 console.log(res)
+                for(let i = 0, length = res.length; i < length; i++) {
+                    console.log(res[i].innerHTML)
+                }
             })
             .refresh()
             .pause(5000)
-            .saveScreenshot( browser.globals.screenshot + 'supplierInfo.png')
+            .saveScreenshot( browser.globals.screenshot + '/supplierInfo.png')
             .end()
     }
 }
