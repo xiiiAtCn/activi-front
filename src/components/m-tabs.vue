@@ -8,13 +8,15 @@
         </Menu>
         <div class="container">
             <div v-for="(item, key) in content" :key="key">
-                <component
-                    v-show="menuName === key"
-                    :is="item.ui_content[0].ui_type"
-                    :define="item.ui_content[0].ui_define"
-                    :content="item.ui_content[0].ui_content"
-                    :form="item.ui_content[0].ui_form"
-                ></component>
+                <div v-show="menuName === key">
+                    <component
+                        v-for="val in item.ui_content"
+                        :is="val.ui_type"
+                        :define="val.ui_define"
+                        :content="val.ui_content"
+                        :form="val.ui_form"
+                    ></component>
+                </div>
             </div>
         </div>
     </div>
