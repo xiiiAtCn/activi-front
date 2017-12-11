@@ -2,7 +2,7 @@
     <div>
         <mBarrier :height="10"></mBarrier>
         <div  class="operation">
-            <Button v-for="(operation, index) in operations" v-if="!operation.own || editable" :key="index" :type="operation.type" style="margin-left: 20px;"
+            <Button v-for="(operation, index) in operations" v-if="!operation.own || (operation.own && addable)" :key="index" :type="operation.type" style="margin-left: 20px;"
             @click="tableAction(operation.action)">{{operation.text}}</Button>
         </div>
         <div style="padding: 0 20px;clear: both; margin-bottom: 20px;">
