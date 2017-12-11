@@ -172,7 +172,6 @@
                 }
             },
             submit2Table() { 
-                debugger
                 let action = {}
                 action = {
                     ...this.action

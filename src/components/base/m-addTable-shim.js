@@ -148,7 +148,15 @@ Vue.component('mDetailTable', {
     },
     methods: {
         valid() {
-            this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
+            if(this.dataSource.length == 0) {
+                this.$Modal.error({
+                    title:'警告',
+                    content: `请至少在${this.alias}中填入一条数据`
+                })
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: true, form: this.ui_form})
+            } else {
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.ui_form})
+            }
         },
         getDataFromUrl(url) {
             this.$store.dispatch(FETCH_TABLE_DATA, {url})
