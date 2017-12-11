@@ -3,10 +3,11 @@
         <Button :type="define.type || 'default'" :size="define.size || 'default'" @click="handleClick">{{define.text}}</Button>
         <mLayer :value="showLayer" :titleText="define.text" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
-                v-if="downData"
-                :is="downData.ui_type"
-                :define="downData.ui_define"
-                :form="downData.ui_form"
+                v-if="item"
+                v-for="item in downData.ui_content"
+                :is="item.ui_type"
+                :define="item.ui_define"
+                :form="item.ui_form"
             ></component>
         </mLayer>
     </div>
@@ -29,7 +30,7 @@
             handleClick(){
                 getData(this.define.getDataAction.url,(data)=>{
                     if (data) {
-                        this.downData= data.ui_content[0]
+                        this.downData= data
                     }
                 })
                 this.showLayer =true
