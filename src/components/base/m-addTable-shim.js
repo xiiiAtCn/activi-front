@@ -123,10 +123,15 @@ Vue.component('mDetailTable', {
             return this.define['name']
         },
         operations() {
-            let operations = this.define['operations'] || [{
-                action: 'add',
-                name: '添加'
-            }]
+            let operations = this.define['buttons'] || []
+            operations.unshift({
+                type: 'primary',
+                text: '添加',
+                own: true,
+                action: {
+                    type: 'add'
+                }
+            })
             return operations
         },
         url() {
@@ -151,12 +156,6 @@ Vue.component('mDetailTable', {
         //处理表头数据
         handleColumns(cols) {
             let columns = []
-            columns.push({
-                type: 'index',
-                title: '编号',
-                width: 60,
-                align: 'center'
-            })
             if(Array.isArray(cols)) {
                 cols.forEach(col => {
                     let column = {

@@ -1,12 +1,12 @@
 <template>
     <div>
         <mBarrier :height="10"></mBarrier>
-        <div  class="operation" v-if="addable">
-            <Button v-for="(operation, index) in operations" :key="index" type="primary" style="margin-left: 20px;"
-            @click="openLayer(operation.action)">{{operation.name}}</Button>
+        <div  class="operation">
+            <Button v-for="(operation, index) in operations" v-if="!operation.own || editable" :key="index" :type="operation.type" style="margin-left: 20px;"
+            @click="tableAction(operation.action)">{{operation.text}}</Button>
         </div>
         <div style="padding: 0 20px;clear: both; margin-bottom: 20px;">
-            <Table :columns="mixColumns" :data="source" size="small">
+            <Table :columns="mixColumns" :data="source" size="small" @on-selection-change="selectRow">
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>
         </div>
@@ -32,6 +32,8 @@
 <script>
     import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER } from 'store/Mutation'
     import {SUBMIT_FORM_DATA, DELETE_TABLE_DATA} from 'store/Action'
+    import _ from 'lodash'
+    import { dispatch} from 'utils/actionUtils'
     export default {
         props: {
             alias: {
@@ -87,7 +89,7 @@
                         return h('div', 
                             {
                             },
-                            [
+                            [   
                                 h('Button', {
                                     props: {
                                         type: 'info',
@@ -120,10 +122,21 @@
                                 }, '删除'): ''
                             ]
                         )
-                        
                     }
                 }
-                columns.push(operation)
+                columns.unshift(operation)
+                columns.unshift({
+                    type: 'index',
+                    title: '编号',
+                    width: 60,
+                    align: 'center'
+                })
+                let index = {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                }
+                columns.unshift(index)
                 return columns
             },
             source() {
@@ -137,21 +150,33 @@
                 return source
             }
         },
-        
         data() {
             return {
                 action: '',
-                dataIndex: -1
+                dataIndex: -1,
+                rowSelected: []
             }
         },
         methods: {
-            openLayer(action) {
-                this.action = action
-                this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
+            tableAction(action) {
+                action = _.cloneDeep(action)
+                if(action.type === 'add') {
+                    this.action = action
+                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
+                } else if (action.type !== 'link') {
+                    let ids = this.rowSelected.map(element => element['id']['value'])
+                    action['url']['body'] = ids
+                    dispatch(action) 
+                } else {
+                    dispatch(action)
+                }
             },
             submit2Table() { 
+                debugger
                 let action = {}
-                action.type = this.action
+                action = {
+                    ...this.action
+                }
                 action.value = this.name
                 action.index = this.dataIndex
                 this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, action: action})
@@ -159,6 +184,10 @@
             cancel() {
                 this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
                 this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
+            },
+            selectRow(selection ) {
+                console.log('selection ' ,selection)
+                this.rowSelected = selection
             }
         }
     }
