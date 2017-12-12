@@ -8,10 +8,11 @@
             </div>
             <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
-                    v-if="downData"
-                    :is="downData.ui_type"
-                    :define="downData.ui_define"
-                    :form="downData.ui_form"
+                    v-if="item"
+                    v-for="item in downData.ui_content"
+                    :is="item.ui_type"
+                    :define="item.ui_define"
+                    :form="item.ui_form"
                 ></component>
             </mLayer>
         </Row>
@@ -62,7 +63,7 @@
                 if(this.readonly){return}
                 getData(this.url,(data,err)=>{
                     if (data) {
-                        this.downData = data.ui_content[0]
+                        this.downData = data
                     }
                 })
                 this.showLayer = true

@@ -8,10 +8,11 @@
                 :key="index"
             >
                 <component
-                    v-if="item.ui_content ? true : false"
-                    :is="item.ui_content[0].ui_type"
-                    :define="item.ui_content[0].ui_define"
-                    :content="item.ui_content[0].ui_content"
+                    v-if="val"
+                    v-for="val in item.ui_content"
+                    :is="val.ui_type"
+                    :define="val.ui_define"
+                    :content="val.ui_content"
                 >
                 </component>
                 <div v-else class="box"></div>
@@ -23,6 +24,9 @@
   import _ from 'lodash'
   export default {
       props: ['define', 'content'],
+      mounted () {
+          console.log('row is mounted')
+      },
       computed: {
           gutter () {
               return _.get(this.define, 'gutter', 5)
