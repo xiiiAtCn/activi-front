@@ -10,25 +10,23 @@
         </Col>
         <Col span="20">
             <div class="container">
-                <!--<mDetailTable-->
+                <div class="detailTable">
+                    <!--<mDetailTable-->
                     <!--v-show="showDetailTable"-->
-                    <!--:alias=""-->
-                    <!--:name=""-->
-                    <!--:columns=""-->
+                    <!--:alias=".alias"-->
+                    <!--:name=".name"-->
+                    <!--:columns=".columns"-->
                     <!--:dataSource=""-->
                     <!--:visible=""-->
                     <!--:editable=""-->
                     <!--:formTmp=""-->
-                <!--&gt;</mDetailTable>-->
-                <div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
-                    </div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
-                    </div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
+                    <!--&gt;</mDetailTable>-->
+                </div>
+                <div class="cardTable">
+                    <div class="card-container" v-for="item in content">
+                        <mCardTable
+                            :content="item"
+                        ></mCardTable>
                     </div>
                 </div>
             </div>
@@ -80,5 +78,11 @@
     }
     .card-container{
         margin-bottom: 20px;
+    }
+    .detailTable{
+
+    }
+    .cardTable{
+
     }
 </style>

@@ -163,6 +163,10 @@ const mJobOrchestrate = resolve => {
     require(['./m-job-orchestrate.vue'], resolve)
 }
 
+const mJobTrack = resolve => {
+    require(['./m-job-track.vue'], resolve)
+}
+
 const mCardTable = resolve => {
     require(['./m-card-table.vue'], resolve)
 }
@@ -206,4 +210,5 @@ Vue.component('tableFShim', tableFShim)
 Vue.component('mTabs', mTabs)
 Vue.component('mUrlSection', mUrlSection)
 Vue.component('mJobOrchestrate', mJobOrchestrate)
+Vue.component('mJobTrack', mJobTrack)
 Vue.component('mCardTable', mCardTable)
