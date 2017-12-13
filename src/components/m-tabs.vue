@@ -1,25 +1,25 @@
 <template>
-    <div :class="define.mode === 'horizontal' ? 'horizontal' : 'vertical'">
-        <Menu :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu">
-            <MenuItem v-for="(item, key) in content" :key="key" :name="key">
-                <Icon v-if="item.icon" type="item.icon"></Icon>
-                    {{item.ui_define.title}}
-            </MenuItem>
-        </Menu>
-        <div class="container">
-            <div v-for="(item, key) in content" :key="key">
-                <div v-show="menuName === key">
-                    <component
-                        v-for="val in item.ui_content"
-                        :is="val.ui_type"
-                        :define="val.ui_define"
-                        :content="val.ui_content"
-                        :form="val.ui_form"
-                    ></component>
-                </div>
+    <Row>
+        <Col :span="define.mode === 'vertical' ? 3 :24">
+            <Menu :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu" width="auto">
+                <MenuItem v-for="(item, key) in content" :key="key" :name="key">
+                    <Icon v-if="item.icon" type="item.icon"></Icon>
+                        {{item.ui_define.title}}
+                </MenuItem>
+            </Menu>
+        </Col>
+        <Col :span="define.mode === 'vertical' ? 21 :24">
+            <div class="container">
+                <component
+                    v-for="item in menuSection"
+                    :is="item.ui_type"
+                    :define="item.ui_define"
+                    :content="item.ui_content"
+                    :form="item.ui_form"
+                ></component>
             </div>
-        </div>
-    </div>
+        </Col>
+    </Row>
 </template>
 
 <script>
@@ -28,15 +28,17 @@
         data () {
             return {
                 theme1: 'light',
-                menuName: 0,
-                activeNumber:0
+                activeNumber:0,
+                menuSection:{}
             }
         },
         mounted(){
+            this.menuSection = this.content[this.activeNumber].ui_content
         },
         methods:{
             handleSelect(name){
-                this.menuName = Number(name)
+                console.log(this.content)
+                this.menuSection = this.content[Number(name)].ui_content
             },
         }
     }
@@ -54,8 +56,7 @@
     div.vertical .menu{
         float: left;
     }
-    div.vertical .container{
-        padding-left: 15px;
-        height: 100%;
+    .container{
+        padding: 20px;
     }
 </style>

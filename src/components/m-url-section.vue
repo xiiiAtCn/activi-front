@@ -15,7 +15,9 @@
         props:{
             define:{
                 type:null,
-                default:''
+                default () {
+                    return {}
+                }
             }
         },
         data() {

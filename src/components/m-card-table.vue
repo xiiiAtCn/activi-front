@@ -1,17 +1,19 @@
 <template>
-    <Card :bordered="true">
-        <div slot="title">
-            <Table :columns="columnsData" :data="content.tableData" style="text-align: center"></Table>
-        </div>
-        <div>
-            <Row class="container">
-                <Col span="6" v-for="item in content.contentData">
-                    <span class="title">{{item.title}}</span>
-                    <span class="content">{{item.content}}</span>
-                </Col>
-            </Row>
-        </div>
-    </Card>
+    <div>
+        <Card :bordered="true" v-for="(item,key) in tableData">
+            <div slot="title">
+                <Table :columns="columnsData" :data="item" style="text-align: center"></Table>
+            </div>
+            <div>
+                <Row class="container">
+                    <Col span="6" v-for="val in content[key]">
+                        <span class="title">{{val.title}}</span>
+                        <span class="content">{{val.content}}</span>
+                    </Col>
+                </Row>
+            </div>
+        </Card>
+    </div>
 </template>
 <script>
   //  import Vue from 'vue'
@@ -23,8 +25,19 @@
       props:{
           content:{
               type:null,
-              default:{}
+              default (){
+                  return {}
+              }
+          },
+          define:{
+              type:null,
+              default (){
+                  return {}
+              }
           }
+      },
+      mounted(){
+          this.handleDatas()
       },
       data () {
           return {
@@ -89,7 +102,32 @@
                       key: 'FactualEnd',
                       align:'center'
                   },
-              ]
+              ],
+              tableData:[],
+              spanData:[]
+          }
+      },
+      methods:{
+          handleDatas(){
+              let datas = this.define.datas
+              let columnsData = this.columnsData
+              let tableData=[]
+              let spanData=[]
+              for(let i=0;i<datas.length;i++){
+                  tableData[i] = []
+                  spanData[i] = []
+                  for(let j=0;j<datas[i].length;j++){
+                      for(let n=0;n<columnsData.length;n++){
+                          if(datas[i][j].key === columnsData[n].key){
+                              tableData[i].push(datas[i][j])
+                          }else{
+                              spanData[i].push(datas[i][j])
+                          }
+                      }
+                  }
+              }
+              this.tableData = tableData
+              this.spanData = spanData
           }
       }
   }

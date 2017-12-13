@@ -171,6 +171,10 @@ const mCardTable = resolve => {
     require(['./m-card-table.vue'], resolve)
 }
 
+const mChoreographContent = resolve => {
+    require(['./m-choreograph-content.vue'], resolve)
+}
+
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBillMeta', mBillMeta)
 Vue.component('mBoMeta', mBoMeta)
@@ -212,3 +216,4 @@ Vue.component('mUrlSection', mUrlSection)
 Vue.component('mJobOrchestrate', mJobOrchestrate)
 Vue.component('mJobTrack', mJobTrack)
 Vue.component('mCardTable', mCardTable)
+Vue.component('mChoreographContent', mChoreographContent)
