@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Card :bordered="true" v-for="(item,key) in tableData">
+        <Card :bordered="true" v-for="(item,key) in tableData" class="card">
             <div slot="title">
                 <Table :columns="columnsData" :data="item" style="text-align: center"></Table>
             </div>
@@ -143,6 +143,9 @@
         width: 30%;
         padding: 0 5px;
         font-weight: bold;
+    }
+    .card{
+        margin-bottom: 15px;
     }
     .container .content{
         width: 70%;
