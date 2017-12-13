@@ -2,7 +2,7 @@
     <div ref="tableCt">
         <Row class="top-content" style="text-align: right">
             <Col span="24">
-                <div class="search" v-show="search">
+                <div class="button-container" v-show="search">
                     <Input v-model="valueSearch" placeholder="筛选">
                     <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
                     </Input>
@@ -547,6 +547,7 @@
         display: inline-block;
         min-width:65px;
         margin-right: 8px;
+        vertical-align: middle;
     }
 
     .columns-select{
