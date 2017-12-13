@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <div class="detailTable">
             <component
                 :define="tableModel.ui_define"

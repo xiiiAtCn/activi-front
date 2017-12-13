@@ -36,8 +36,6 @@
                         this.downData= data
                     }
                 })
-                console.log('url is',url)
-                console.log(this.downData)
             }
         }
     }

@@ -9,9 +9,10 @@
             </Menu>
         </Col>
         <Col :span="define.mode === 'vertical' ? 21 :24">
-            <div class="container">
+            <div class="container" v-for="(val,key) in content">
                 <component
-                    v-for="item in menuSection"
+                    v-for="item in val.ui_content"
+                    v-show="key === menuName"
                     :is="item.ui_type"
                     :define="item.ui_define"
                     :content="item.ui_content"
@@ -29,17 +30,14 @@
             return {
                 theme1: 'light',
                 activeNumber:0,
+                menuName:0,
                 menuSection:{}
             }
         },
-        mounted(){
-            this.menuSection = this.content[this.activeNumber].ui_content
-        },
         methods:{
             handleSelect(name){
-                console.log(this.content)
-                this.menuSection = this.content[Number(name)].ui_content
-            },
+                this.menuName = Number(name)
+            }
         }
     }
 </script>
@@ -57,6 +55,6 @@
         float: left;
     }
     .container{
-        padding: 20px;
+        margin: 20px;
     }
 </style>
