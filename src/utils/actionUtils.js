@@ -16,6 +16,7 @@ import {post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
 import Request, { replace, addQuery } from './request-addon'
+import {SUBMIT_FORM_DATA} from 'store/Action'
 
 // import _ from 'lodash'
 
@@ -180,58 +181,14 @@ function asLink(action) {
 }
 
 /**
- * 提交处理
- * @param action
- *  例：
- *  {
- *      type: "submit",             // 固定
- *      url: "/api/XXXXx",          // 一般是后端指定
- *      confirm: "您确定要XXXX吗",   // 可选  按钮按下后的确认信息(是否两个按钮)
- *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
- *  }
+ * 
+ * @param {*} action  
+ *  提交表单时需要将type类型从后台返回的类型中取出，指定form值，并将action放在request属性中
+ *  形如{type: ,form: 'form', request: btn.action}
  */
 function asSubmit(action) {
-    console.log('dispatch submit', action)
-
-    bus.$emit('forceValid')
-
-    let targetAction = function () {
-        post(action.url, store.state.pageData.data, function (error, body) {
-            if (error === null) {
-                store.dispatch('clearData', {})
-                dispatch(body)
-                if(!error && action.callback) {
-                    action.callback()
-                }
-            }
-        })
-    }
-
-    bus.$emit('forceValid')
-
-    if (store.state.validStatus.valid === 'VALID') {
-        if (action.alert) {
-            iView.Message.success(action.alert)
-        }
-
-        if (action.confirm) {
-            iView.Modal.confirm({
-                title: '确认',
-                content: '<p>' + action.confirm + '</p>',
-                onOk: () => {
-                    targetAction()
-                },
-                onCancel: () => {
-                    iView.Message.info('点击了取消')
-                }
-            })
-        } else {
-            targetAction()
-        }
-    } else {
-        console.log('store.state.validStatus.valid', store.state.validStatus.valid)
-        console.log('校验没有通过~')
-    }
+    delete action.type
+    store.dispatch( SUBMIT_FORM_DATA, action)
 }
 
 /**
