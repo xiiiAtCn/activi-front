@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="submit-cantainer">
+            <Button type="primary" @click="handleSubmit">确定</Button>
+        </div>
         <div class="detailTable">
             <component
                 :define="tableModel.ui_define"
@@ -9,7 +12,7 @@
             ></component>
         </div>
         <div class="button-cantainer">
-            <Button @click="jobEdit">任务编排</Button>
+            <Button type="ghost" @click="jobEdit">任务编排</Button>
         </div>
         <div class="cardTable" v-if="taskTrack">
             <h3>已编排任务</h3>
@@ -24,7 +27,7 @@
 
 <script>
 
-    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
+    import { FORM_ELEMENT_VALUE,CHANGE_PAGE_STATUS } from 'store/Mutation'
     import { dispatch } from 'utils/actionUtils'
 
     export default {
@@ -61,10 +64,14 @@
             handleDefault(){
                 this.tableModel = this.define.table
                 this.taskTrack = this.define.taskTrack
-                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'value': this.define.tableData}, form: this.form})
+                this.define.tableData && this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'value': this.define.tableData}, form: this.form})
+                this.$store.commit( CHANGE_PAGE_STATUS, {[this.define.tableName]:this.define.tableStatus,[this.define.tableName + '_detail']:this.define.statusMap})
             },
             jobEdit(){
                 dispatch(this.define.action)
+            },
+            handleSubmit(){
+                dispatch(this.define.tableSubmitAction)
             }
         }
     }
@@ -82,7 +89,9 @@
     }
     .button-cantainer{
         padding: 20px;
-
+    }
+    .submit-cantainer{
+        padding:5px 20px;
     }
     .detailTable{
 
