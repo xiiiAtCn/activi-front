@@ -64,7 +64,7 @@
                 this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'value': this.define.tableData}, form: this.form})
             },
             jobEdit(){
-                dispatch(this.define.jobEditUrl.url)
+                dispatch(this.define.action)
             }
         }
     }
