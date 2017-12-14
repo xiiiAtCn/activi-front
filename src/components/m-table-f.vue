@@ -359,7 +359,7 @@
             },
             //发送搜索事件数据
             handleTopSearch(){
-                bus.$emit('topSearchMsg',this.valueSearch)
+                this.$emit('topSearchMsg',this.valueSearch)
             },
             // 处理表内按钮点击
             handleButtonClick (buttons) {

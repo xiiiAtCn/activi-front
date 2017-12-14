@@ -27,7 +27,8 @@ let tableFShim = Vue.component('tableF-Shim', {
                 reload:this.reloadData
             },
             on:{
-                rowsPageChange : this.handleRowsPageChange
+                rowsPageChange : this.handleRowsPageChange,
+                topSearchMsg: this.keyWordSearch
             }
         })
     },
@@ -110,6 +111,12 @@ let tableFShim = Vue.component('tableF-Shim', {
             let urlData = this.getDataUrlObj('tableData')
             this.lastUrlData = _.cloneDeep(urlData)
             this.tableGetData(urlData,'data')
+        },
+        keyWordSearch(keyWord) {
+            debugger
+            let urlData = _.cloneDeep(this.lastUrlData)
+            urlData['queryParams']['conditionWord'] = keyWord
+            this.tableGetData(urlData, 'data')
         },
         tableGetData(url,key){
             if(!url || url.length === 0){return}
