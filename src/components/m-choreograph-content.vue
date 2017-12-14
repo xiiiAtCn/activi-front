@@ -9,7 +9,7 @@
             ></component>
         </div>
         <div class="button-cantainer">
-            <Button>任务编排</Button>
+            <Button @click="jobEdit">任务编排</Button>
         </div>
         <div class="cardTable" v-if="taskTrack">
             <h3>已编排任务</h3>
@@ -23,6 +23,10 @@
 </template>
 
 <script>
+
+    import { FORM_ELEMENT_VALUE } from 'store/Mutation'
+    import { dispatch } from 'utils/actionUtils'
+
     export default {
         props:{
             define:{
@@ -36,6 +40,10 @@
                 default () {
                     return {}
                 }
+            },
+            form:{
+                type:null,
+                default:'form'
             }
         },
         data () {
@@ -47,10 +55,17 @@
         computed:{
         },
         mounted(){
-            this.tableModel = this.define.table
-            this.taskTrack = this.define.taskTrack
+            this.handleDefault()
         },
         methods:{
+            handleDefault(){
+                this.tableModel = this.define.table
+                this.taskTrack = this.define.taskTrack
+                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'value': this.define.tableData}, form: this.form})
+            },
+            jobEdit(){
+                dispatch(this.define.jobEditUrl.url)
+            }
         }
     }
 </script>
