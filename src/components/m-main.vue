@@ -87,6 +87,7 @@
                                :content="item.ui_content" :form="item.ui_form"></component>
                 </transition>
             </form>
+            <hr/>
             <div class="btn-container-bottom-right" v-for="(item, sequence) in bottomRight" :key="sequence">
                 <template name="fade" mode="out-in"  v-for="(btn, index) in item" >
                     <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
