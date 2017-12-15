@@ -187,8 +187,9 @@ function asLink(action) {
  *  形如{type: ,form: 'form', request: btn.action}
  */
 function asSubmit(action) {
-    delete action.type
-    store.dispatch( SUBMIT_FORM_DATA, action)
+    let form = action.form
+    if(!action.form) form = 'form'
+    store.dispatch( SUBMIT_FORM_DATA,{ form, request: action })
 }
 
 /**

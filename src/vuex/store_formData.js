@@ -22,7 +22,7 @@ export default {
                 ...state[form],
                 ...rest
             }
-            let checkList = state[form][form + 'waitCheck']
+            let checkList = state[form][form + 'waitCheck'] || []
             if(checkList && checkKey && checkList.indexOf(checkKey) === -1)
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
@@ -49,7 +49,7 @@ export default {
             state.table = data
         },
         [Mutations.OPEN_TABLE_LAYER] (state, payload) {
-            let { form,formName } = payload
+            let { form } = payload
             state[form] = {
                 ...state[form],
                 visible: true,
@@ -57,7 +57,7 @@ export default {
             }
             if(payload.dataKey !== undefined) {
                 let {dataKey, index} = payload
-                let data = state[formName][dataKey]['value'][index]
+                let data = state['form'][dataKey]['value'][index]
                 state[form] = {
                     ...state[form],
                     ...data
