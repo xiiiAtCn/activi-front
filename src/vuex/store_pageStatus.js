@@ -15,6 +15,12 @@ export default {
         [Mutations.CHANGE_PAGE_STATUS](state, data) {
             state.status = data
         },
+        [Mutations.ADD_PAGE_STATUS](state, data) {
+            state.status = {
+                ...state.status,
+                ...data
+            }
+        },
         [CLEAR_FORM_STATUS](state) {
             state.status = {}
         }
