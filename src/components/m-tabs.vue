@@ -1,7 +1,7 @@
 <template>
     <Row>
         <Col :span="define.mode === 'vertical' ? 3 :24">
-            <Menu :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu" width="auto">
+            <Menu ref="menuCt" :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu" width="auto">
                 <MenuItem v-for="(item, key) in content" :key="key" :name="key">
                     <Icon v-if="item.icon" type="item.icon"></Icon>
                         {{item.ui_define.title}}
@@ -32,6 +32,11 @@
                 activeNumber:0,
                 menuName:0,
                 menuSection:{}
+            }
+        },
+        watch:{
+            define(){
+                this.$refs.menuCt.$el.querySelector('.ivu-menu-item').click()
             }
         },
         methods:{

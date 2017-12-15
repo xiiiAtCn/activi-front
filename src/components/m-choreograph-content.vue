@@ -4,12 +4,14 @@
             <Button type="primary" @click="handleSubmit">确定</Button>
         </div>
         <div class="detailTable">
-            <component
-                :define="tableModel.ui_define"
-                :content="tableModel.ui_content"
-                :ui_form="form"
-                :is="tableModel.ui_type"
-            ></component>
+            <div>
+                <component
+                    :define="tableModel.ui_define"
+                    :content="tableModel.ui_content"
+                    :ui_form="form"
+                    :is="tableModel.ui_type"
+                ></component>
+            </div>
         </div>
         <div class="button-cantainer">
             <Button type="ghost" @click="jobEdit">任务编排</Button>
@@ -28,7 +30,7 @@
 
 <script>
     import _ from 'lodash'
-    import { FORM_ELEMENT_VALUE,CHANGE_PAGE_STATUS,ADD_NEW_OBJECT } from 'store/Mutation'
+    import { FORM_ELEMENT_VALUE,ADD_PAGE_STATUS,ADD_NEW_OBJECT } from 'store/Mutation'
     import { dispatch,getData } from 'utils/actionUtils'
 
     export default {
@@ -91,7 +93,7 @@
 
                 this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'type' :"m-detail-table", 'value' : this.define.tableData}, form: this.form})
                 //状态提交
-                this.$store.commit( CHANGE_PAGE_STATUS, {[this.define.tableName]:this.define.tableStatus,[this.define.tableName + '_detail']:this.define.statusMap})
+                this.$store.commit( ADD_PAGE_STATUS, {[this.form]:this.define.tableStatus,[this.form + '_detail']:this.define.statusMap})
             },
             jobEdit(){
                 let url = _.cloneDeep(this.define.action)
@@ -100,7 +102,7 @@
             handleSubmit(){
                 let url = _.cloneDeep(this.define.submitUrl)
                 url.body={
-                    [this.form] : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                    'data' : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
                 }
 
                 getData(url, (result, err) => {
@@ -132,7 +134,10 @@
         padding:5px 20px;
     }
     .detailTable{
-
+        overflow-x: auto;
+    }
+    .detailTable>div{
+        width: 2000px;
     }
     .cardTable{
         border-top: 2px solid #777;

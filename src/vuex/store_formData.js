@@ -49,7 +49,8 @@ export default {
             state.table = data
         },
         [Mutations.OPEN_TABLE_LAYER] (state, payload) {
-            let { form } = payload
+            debugger
+            let { form, formName } = payload
             state[form] = {
                 ...state[form],
                 visible: true,
@@ -57,7 +58,7 @@ export default {
             }
             if(payload.dataKey !== undefined) {
                 let {dataKey, index} = payload
-                let data = state['form'][dataKey]['value'][index]
+                let data = state[formName][dataKey]['value'][index]
                 state[form] = {
                     ...state[form],
                     ...data
@@ -161,7 +162,7 @@ export default {
                     if(state[form]['action'] !== undefined) {
                         let action = state[form]['action']
                         delete state[form]['action']
-                        let array = state['form'][action['value']]['value']
+                        let array = state[action.form][action['value']]['value']
                         if(array === undefined) {
                             array = (state['form'][action['value']] = [])
                         }
@@ -185,7 +186,7 @@ export default {
                             }
                             array.splice(action.index, 1, formCopy)
                         }
-                        commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [action.value]: { value: array, type: 'm-detail-table' }})
+                        commit(Mutations.FORM_ELEMENT_VALUE, {form: action.form, [action.value]: { value: array, type: 'm-detail-table' }})
                         commit(Mutations.CLOSE_TABLE_LAYER, {form})
                         commit(Mutations.CLEAR_FORM_DATA, {form})
                     } else {
