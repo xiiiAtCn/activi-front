@@ -12,7 +12,7 @@ Vue.component('mDetailTable', {
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                ui_form: this.name,
+                ui_form: this.temporary_form,
                 name: this.name,
                 editable: this.readonly,
                 formName:this.ui_form
@@ -36,6 +36,9 @@ Vue.component('mDetailTable', {
         },
     },
     computed: {
+        temporary_form() {
+            return this.name + this.ui_form
+        },
         required() {
             return _.get(this.define, 'required', true)
         },
@@ -111,10 +114,10 @@ Vue.component('mDetailTable', {
             return editable
         },
         visible() {
-            return _.get(this.$store.state.formData, [this.name, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.temporary_form, 'visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.name, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.temporary_form, 'loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''

@@ -108,7 +108,8 @@
                                                 type: 'update'
                                             }
                                             this.dataIndex = mixture.index
-                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, dataKey: this.name, index: mixture.index})
+                                            debugger
+                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
                                         }
                                     }
                                 }, actions.indexOf('del') !== -1 ?'编辑':'查看'),
@@ -122,7 +123,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
+                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, formName: this.formName, index: mixture.index})
                                         }
                                     }
                                 }, '删除'): ''
@@ -154,7 +155,7 @@
                     return true
                 })
                 return source
-            }
+            },
         },
         data() {
             return {
@@ -184,6 +185,7 @@
                 }
                 action.value = this.name
                 action.index = this.dataIndex
+                action.form = this.formName
                 this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.ui_form, action: action})
             },
             cancel() {
