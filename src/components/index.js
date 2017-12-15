@@ -3,6 +3,7 @@ import Vue from 'vue'
 import './base'
 import './boFilterNEW_vuex'
 import './taskPlan'
+import './saleDashboard'
 
 const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
