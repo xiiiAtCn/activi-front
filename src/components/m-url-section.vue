@@ -9,7 +9,6 @@
 </template>
 
 <script>
-    import fetch from '../utils/DefineFetcher'
     import {getData} from 'utils/actionUtils'
 
     export default {

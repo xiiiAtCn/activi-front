@@ -12,7 +12,7 @@ const mixin = {
             type: [String, Number],
             default: ''
         },
-        formTmp: {
+        ui_form: {
             type: [String, Number],
             default: ''
         },
@@ -23,7 +23,7 @@ const mixin = {
     },
     computed: {
         form () {
-            return this.formTmp || 'form'
+            return this.ui_form || 'form'
         },
         readonly () {
             let editable
