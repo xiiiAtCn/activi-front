@@ -7,7 +7,7 @@
             <component
                 :define="tableModel.ui_define"
                 :content="tableModel.ui_content"
-                :ui_form="tableModel.ui_form"
+                :ui_form="form"
                 :is="tableModel.ui_type"
             ></component>
         </div>
@@ -20,15 +20,16 @@
                 :is="taskTrack.ui_type"
                 :define="taskTrack.ui_define"
                 :content="taskTrack.ui_content"
+                :form="form"
             ></component>
         </div>
     </div>
 </template>
 
 <script>
-
-    import { FORM_ELEMENT_VALUE,CHANGE_PAGE_STATUS } from 'store/Mutation'
-    import { dispatch } from 'utils/actionUtils'
+    import _ from 'lodash'
+    import { FORM_ELEMENT_VALUE,CHANGE_PAGE_STATUS,ADD_NEW_OBJECT } from 'store/Mutation'
+    import { dispatch,getData } from 'utils/actionUtils'
 
     export default {
         props:{
@@ -64,14 +65,51 @@
             handleDefault(){
                 this.tableModel = this.define.table
                 this.taskTrack = this.define.taskTrack
-                this.define.tableData && this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'value': this.define.tableData}, form: this.form})
+                //表格内容提交
+                let keyList = Object.keys(this.define.tableData[0])
+
+                this.$store.commit( ADD_NEW_OBJECT , {
+                    attribute: this.form ,
+                    value: {
+                        loading: true,
+                        reset: false,
+                        validate: false,
+                        visible: false,
+                        [ this.form + 'waitCheck']: []
+                    }
+                })
+                let value = {
+                    form: this.form
+                }
+                keyList.forEach(element => {
+                    value[element] = {
+                        value: this.define.tableData[0][element]['value']
+                    }
+                })
+
+                this.$store.commit( FORM_ELEMENT_VALUE,value)
+
+                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'type' :"m-detail-table", 'value' : this.define.tableData}, form: this.form})
+                //状态提交
                 this.$store.commit( CHANGE_PAGE_STATUS, {[this.define.tableName]:this.define.tableStatus,[this.define.tableName + '_detail']:this.define.statusMap})
             },
             jobEdit(){
-                dispatch(this.define.action)
+                let url = _.cloneDeep(this.define.action)
+                dispatch(url)
             },
             handleSubmit(){
-                dispatch(this.define.tableSubmitAction)
+                let url = _.cloneDeep(this.define.submitUrl)
+                url.body={
+                    [this.form] : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                }
+
+                getData(url, (result, err) => {
+                    if(err) {
+                        iView.Message.error('服务器出错了, 请稍后再试!')
+                        return
+                    }
+                    dispatch(result)
+                })
             }
         }
     }

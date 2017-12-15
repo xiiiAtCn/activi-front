@@ -23,7 +23,7 @@ export default {
                 ...rest
             }
             let checkList = state[form][form + 'waitCheck']
-            if(checkList && checkKey && checkList.indexOf(checkKey) === -1) 
+            if(checkList && checkKey && checkList.indexOf(checkKey) === -1)
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
         },
@@ -49,7 +49,7 @@ export default {
             state.table = data
         },
         [Mutations.OPEN_TABLE_LAYER] (state, payload) {
-            let { form } = payload
+            let { form,formName } = payload
             state[form] = {
                 ...state[form],
                 visible: true,
@@ -57,7 +57,7 @@ export default {
             }
             if(payload.dataKey !== undefined) {
                 let {dataKey, index} = payload
-                let data = state['form'][dataKey]['value'][index]
+                let data = state[formName][dataKey]['value'][index]
                 state[form] = {
                     ...state[form],
                     ...data
@@ -204,7 +204,7 @@ export default {
                                 delete copies[form + 'waitCheck']
                                 if(action !== undefined) {
                                     try {
-                                        let url 
+                                        let url
                                         action = _.cloneDeep(action)
                                         let urlObject = action.url
                                         if (urlObject.method !== 'POST') {
@@ -244,7 +244,7 @@ export default {
                 }
             }
         },
-        
+
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },
@@ -263,7 +263,7 @@ export default {
             getData(url, data => {
                 let keyList = Object.keys(data)
                 //此处的form为后台返回的值
-                if(state.form === undefined) 
+                if(state.form === undefined)
                     commit(Mutations.ADD_NEW_OBJECT, {
                         attribute: 'form',
                         value: {

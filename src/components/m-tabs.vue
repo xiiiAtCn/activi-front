@@ -16,7 +16,7 @@
                     :is="item.ui_type"
                     :define="item.ui_define"
                     :content="item.ui_content"
-                    :form="item.ui_form"
+                    :form=" item.ui_form + '_tab'+ key "
                 ></component>
             </div>
         </Col>
