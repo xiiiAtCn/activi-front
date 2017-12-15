@@ -30,3 +30,13 @@ export function deepCopy (source) {
 export function isEmptyObj (obj) {
     return Object.keys(obj).length === 0
 }
+
+// 数组中最大值
+export function arrMax (arr, getFunc) {
+    if (getFunc) {
+        return getFunc(arr.reduce((preValue, curValue) => getFunc(preValue) > getFunc(curValue) ? preValue : curValue  ))     
+    } else {
+        return arr.reduce((preValue, curValue) => preValue > curValue ? preValue : curValue)
+    }
+    
+}
