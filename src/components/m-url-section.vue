@@ -4,6 +4,7 @@
         :is="downData.ui_type"
         :define="downData.ui_define"
         :content="downData.ui_content"
+        :form="form"
     ></component>
 </template>
 
@@ -17,6 +18,10 @@
                 default () {
                     return {}
                 }
+            },
+            form:{
+                type:String,
+                default:'form'
             }
         },
         data() {

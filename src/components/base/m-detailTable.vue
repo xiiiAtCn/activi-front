@@ -14,12 +14,12 @@
             <Card style="width: 60%; margin: 0 auto;">
                 <Form style="width: 85%; margin: 0 auto;">
                     <Row v-for="(column, index) in mixColumns" :key="index">
-                        <component 
+                        <component
                             v-if="column['ui_define']"
                             :ui_form="ui_form" 
                             :statusKey="name"
-                            :is="column['ui_define']['ui_type']" 
-                            :define="column['ui_define']['ui_define']" 
+                            :is="column['ui_define']['ui_type']"
+                            :define="column['ui_define']['ui_define']"
                             :content="column['ui_define']['ui_content']"
                         >
                         </component>
@@ -74,6 +74,10 @@
             ui_form: {
                 type: [String, Number],
                 required: true
+            },
+            formName:{
+                type: [String],
+                default: 'form'
             }
         },
         computed: {
@@ -86,10 +90,10 @@
                 let operation = {
                     title: '操作',
                     render: (h, mixture) => {
-                        return h('div', 
+                        return h('div',
                             {
                             },
-                            [   
+                            [
                                 h('Button', {
                                     props: {
                                         type: 'info',
@@ -168,12 +172,12 @@
                 } else if (action.type !== 'link') {
                     let ids = this.rowSelected.map(element => element['id']['value'])
                     action['url']['body'] = ids
-                    dispatch(action) 
+                    dispatch(action)
                 } else {
                     dispatch(action)
                 }
             },
-            submit2Table() { 
+            submit2Table() {
                 let action = {}
                 action = {
                     ...this.action

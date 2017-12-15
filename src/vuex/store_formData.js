@@ -23,7 +23,7 @@ export default {
                 ...rest
             }
             let checkList = state[form][form + 'waitCheck'] || []
-            if(checkList && checkKey && checkList.indexOf(checkKey) === -1) 
+            if(checkList && checkKey && checkList.indexOf(checkKey) === -1)
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
         },
@@ -94,7 +94,7 @@ export default {
                 validate: true,
                 checkedCount: 0,
             }
-            debugger
+
             if(payload.request !== undefined) {
                 state[form] = {
                     ...state[form],
@@ -126,7 +126,6 @@ export default {
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
             let keys = Object.keys(state)
             let { form } = payload
-            debugger
             keys.forEach(element => {
                 if(element.startsWith(form)) {
                     delete state[element]
@@ -205,7 +204,7 @@ export default {
                                 delete copies[form + 'waitCheck']
                                 if(action !== undefined) {
                                     try {
-                                        let url 
+                                        let url
                                         action = _.cloneDeep(action)
                                         let urlObject = action.url
                                         if (urlObject.method !== 'POST') {
@@ -245,7 +244,7 @@ export default {
                 }
             }
         },
-        
+
         [Actions.SUBMIT_FORM_DATA] ({commit}, payload) {
             commit(Mutations.FORM_DATA_VALIDATE, payload)
         },
@@ -264,7 +263,7 @@ export default {
             getData(url, data => {
                 let keyList = Object.keys(data)
                 //此处的form为后台返回的值
-                if(state.form === undefined) 
+                if(state.form === undefined)
                     commit(Mutations.ADD_NEW_OBJECT, {
                         attribute: 'form',
                         value: {

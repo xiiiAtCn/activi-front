@@ -69,9 +69,6 @@
         },
         mounted(){
             this.taskTrack = this.define.taskTrack
-
-            console.log(this.tableModel)
-            console.log(this.taskTrack)
         },
         methods:{
             handleSelect(name){
