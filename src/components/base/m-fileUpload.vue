@@ -78,7 +78,7 @@
             },
             //文件后缀
             format() {
-                return _.get(this.define, 'appendix', ['doc', 'docx', 'pdf'])
+                return _.get(this.define, 'appendix', [])
             },
             //支持上传的文件的最大尺寸(单位为kb)
             maxSize() {

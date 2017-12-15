@@ -1,17 +1,19 @@
 <template>
-    <Card :bordered="true">
-        <div slot="title">
-            <Table :columns="columnsData" :data="tableData"></Table>
-        </div>
-        <div>
-            <Row class="container">
-                <Col span="6" v-for="item in contentData">
-                    <span class="title">{{item.title}}</span>
-                    <span class="content">{{item.content}}</span>
-                </Col>
-            </Row>
-        </div>
-    </Card>
+    <div>
+        <Card :bordered="true" v-for="(item,key) in tableData" class="card">
+            <div slot="title">
+                <Table :columns="columnsData" :data="item" style="text-align: center"></Table>
+            </div>
+            <div>
+                <Row class="container">
+                    <Col span="6" v-for="val in content[key]">
+                        <span class="title">{{val.title}}</span>
+                        <span class="content">{{val.content}}</span>
+                    </Col>
+                </Row>
+            </div>
+        </Card>
+    </div>
 </template>
 <script>
   //  import Vue from 'vue'
@@ -20,101 +22,112 @@
   import { dispatch } from '../utils/actionUtils'
 
   export default {
+      props:{
+          content:{
+              type:null,
+              default (){
+                  return {}
+              }
+          },
+          define:{
+              type:null,
+              default (){
+                  return {}
+              }
+          }
+      },
+      mounted(){
+          this.handleDatas()
+      },
       data () {
           return {
               columnsData: [
                   {
                       title: '任务ID',
-                      key: 'name'
+                      key: 'FID',
+                      align:'center'
                   },
                   {
-                      title: '负责人',
-                      key: 'age'
+                      title: '负责人姓名',
+                      key: 'FchargeName',
+                      align:'center'
                   },
                   {
-                      title: '工作中心',
-                      key: 'address'
+                      title: '负责人ID',
+                      key: 'FchargeID',
+                      align:'center'
                   },
                   {
-                      title: '计划开始',
-                      key: 'address'
+                      title: '工作中心名称',
+                      key: 'FworkcenterName',
+                      align:'center'
                   },
                   {
-                      title: '计划结束',
-                      key: 'address'
+                      title: '工作中心ID',
+                      key: 'FworkcenterID',
+                      align:'center'
+                  },
+                  {
+                      title: '计划开始时间',
+                      key: 'FplanStart',
+                      align:'center'
+                  },
+                  {
+                      title: '计划结束时间',
+                      key: 'FplanEnd',
+                      align:'center'
                   },
                   {
                       title: '工期',
-                      key: 'address'
+                      key: 'Fschedule',
+                      align:'center'
                   },
                   {
                       title: '前置任务',
-                      key: 'address'
+                      key: 'FpreTask',
+                      align:'center'
                   },
                   {
-                      title: '时间延搁',
-                      key: 'address'
+                      title: '延搁时间',
+                      key: 'FlagTime',
+                      align:'center'
                   },
                   {
                       title: '实际开始',
-                      key: 'address'
+                      key: 'FactualStart',
+                      align:'center'
                   },
                   {
                       title: '实际结束',
-                      key: 'address'
+                      key: 'FactualEnd',
+                      align:'center'
                   },
               ],
-              tableData:[
-                  {
-                      name: 'John Brown',
-                      age: 18,
-                      address: 'New York'
-                  }
-              ],
-              contentData:[
-                  {
-                      title:'制单人',
-                      content:'高雪春'
-                  },
-                  {
-                      title:'单号',
-                      content:'bill-20171205-8'
-                  },
-                  {
-                      title:'询价单内码',
-                      content:'xunjia-20171205-11'
-                  },
-                  {
-                      title:'供应商名称',
-                      content:'北京市燃气集团有限责122222222222任公司第3分公司'
-                  },
-                  {
-                      title:'使用部门id',
-                      content:'09'
-                  },
-                  {
-                      title:'单号',
-                      content:'bill-20171205-8'
-                  },
-                  {
-                      title:'询价单内码',
-                      content:'xunjia-20171205-11'
-                  },
-                  {
-                      title:'供应商名称',
-                      content:'北京市燃气集团有限责任公司第3分公司'
-                  },
-                  {
-                      title:'使用部门id',
-                      content:'09'
-                  },
-              ]
+              tableData:[],
+              spanData:[]
           }
       },
-      props: {
-          'define': {
-              type: Object,
-              default:{}
+      methods:{
+          handleDatas(){
+              let datas = this.define.datas
+              let columnsData = this.columnsData
+              let tableData=[]
+              let spanData=[]
+              for(let i=0;i<datas.length;i++){
+                  tableData[i] = []
+                  spanData[i] = []
+                  for(let j=0;j<datas[i].length;j++){
+                      for(let n=0;n<columnsData.length;n++){
+                          if(datas[i][j].key === columnsData[n].key){
+                              tableData[i].push(datas[i][j])
+                          }else{
+                              spanData[i].push(datas[i][j])
+                          }
+                      }
+                  }
+              }
+              this.tableData = tableData
+              this.spanData = spanData
           }
       }
   }
@@ -130,6 +143,9 @@
         width: 30%;
         padding: 0 5px;
         font-weight: bold;
+    }
+    .card{
+        margin-bottom: 15px;
     }
     .container .content{
         width: 70%;

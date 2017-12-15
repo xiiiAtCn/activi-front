@@ -4,17 +4,24 @@
         :is="downData.ui_type"
         :define="downData.ui_define"
         :content="downData.ui_content"
+        :form="form"
     ></component>
 </template>
 
 <script>
-    import fetch from '../utils/DefineFetcher'
+    import {getData} from 'utils/actionUtils'
 
     export default {
         props:{
-            url:{
+            define:{
                 type:null,
-                default:''
+                default () {
+                    return {}
+                }
+            },
+            form:{
+                type:String,
+                default:'form'
             }
         },
         data() {
@@ -23,16 +30,14 @@
             }
         },
         mounted() {
-            this.handleUrl(this.url)
+            this.handleUrl(this.define.urlObject)
         },
         methods:{
             handleUrl(url){
                 if(url === '' || Object.keys(url).length === 0){return}
-                fetch(url, (err, data) => {
-                    if (err) {
-                        console.log('url-section error:', err.message)
-                    } else {
-                        this.downData = data
+                getData(url,(data)=>{
+                    if (data) {
+                        this.downData= data
                     }
                 })
             }

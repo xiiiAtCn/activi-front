@@ -197,11 +197,7 @@
                 dispatch(url)
             },
             btnClick (btn) {
-                if(btn.action.type === 'serverAction'  || btn.action.type === 'link') {
-                    dispatch(btn.action)
-                } else {
-                    this.$store.dispatch(SUBMIT_FORM_DATA, {form: 'form', request: btn.action})
-                }
+                dispatch(btn.action)
             },
             handleButtonList(list){
                 this.topLeft={}

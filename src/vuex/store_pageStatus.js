@@ -4,6 +4,7 @@
 import { default as fetch } from '../utils/DefineFetcher'
 import { getData } from '../utils/actionUtils'
 import { CLEAR_FORM_STATUS } from './Mutation'
+import Mutations from "./Mutation";
 // 放画面初始状态的
 export default {
     state: {
@@ -11,8 +12,14 @@ export default {
     },
     mutations: {
         /* 更新状态 */
-        changeStauts(state, data) {
+        [Mutations.CHANGE_PAGE_STATUS](state, data) {
             state.status = data
+        },
+        [Mutations.ADD_PAGE_STATUS](state, data) {
+            state.status = {
+                ...state.status,
+                ...data
+            }
         },
         [CLEAR_FORM_STATUS](state) {
             state.status = {}
@@ -23,7 +30,7 @@ export default {
         putStatus: function ({ commit }, action) {
             getData(action, (result, err) => {
                 if (err === null) {
-                    commit('changeStauts', result.status)
+                    commit(Mutations.CHANGE_PAGE_STATUS, result.status)
                 }
             })
         }

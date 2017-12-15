@@ -1,25 +1,26 @@
 <template>
-    <div :class="define.mode === 'horizontal' ? 'horizontal' : 'vertical'">
-        <Menu :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu">
-            <MenuItem v-for="(item, key) in content" :key="key" :name="key">
-                <Icon v-if="item.icon" type="item.icon"></Icon>
-                    {{item.ui_define.title}}
-            </MenuItem>
-        </Menu>
-        <div class="container">
-            <div v-for="(item, key) in content" :key="key">
-                <div v-show="menuName === key">
-                    <component
-                        v-for="val in item.ui_content"
-                        :is="val.ui_type"
-                        :define="val.ui_define"
-                        :content="val.ui_content"
-                        :form="val.ui_form"
-                    ></component>
-                </div>
+    <Row>
+        <Col :span="define.mode === 'vertical' ? 3 :24">
+            <Menu ref="menuCt" :mode="define.mode" :active-name="activeNumber" @on-select="handleSelect" class="menu" width="auto">
+                <MenuItem v-for="(item, key) in content" :key="key" :name="key">
+                    <Icon v-if="item.icon" type="item.icon"></Icon>
+                        {{item.ui_define.title}}
+                </MenuItem>
+            </Menu>
+        </Col>
+        <Col :span="define.mode === 'vertical' ? 21 :24">
+            <div class="container" v-for="(val,key) in content">
+                <component
+                    v-for="item in val.ui_content"
+                    v-show="key === menuName"
+                    :is="item.ui_type"
+                    :define="item.ui_define"
+                    :content="item.ui_content"
+                    :form=" item.ui_form + '_tab'+ key "
+                ></component>
             </div>
-        </div>
-    </div>
+        </Col>
+    </Row>
 </template>
 
 <script>
@@ -28,16 +29,20 @@
         data () {
             return {
                 theme1: 'light',
-                menuName: 0,
-                activeNumber:0
+                activeNumber:0,
+                menuName:0,
+                menuSection:{}
             }
         },
-        mounted(){
+        watch:{
+            define(){
+                this.$refs.menuCt.$el.querySelector('.ivu-menu-item').click()
+            }
         },
         methods:{
             handleSelect(name){
                 this.menuName = Number(name)
-            },
+            }
         }
     }
 </script>
@@ -54,8 +59,7 @@
     div.vertical .menu{
         float: left;
     }
-    div.vertical .container{
-        padding-left: 15px;
-        height: 100%;
+    .container{
+        margin: 20px;
     }
 </style>

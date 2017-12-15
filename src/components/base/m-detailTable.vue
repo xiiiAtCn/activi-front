@@ -14,12 +14,12 @@
             <Card style="width: 60%; margin: 0 auto;">
                 <Form style="width: 85%; margin: 0 auto;">
                     <Row v-for="(column, index) in mixColumns" :key="index">
-                        <component 
+                        <component
                             v-if="column['ui_define']"
-                            :formTmp="formTmp" 
+                            :ui_form="ui_form" 
                             :statusKey="name"
-                            :is="column['ui_define']['ui_type']" 
-                            :define="column['ui_define']['ui_define']" 
+                            :is="column['ui_define']['ui_type']"
+                            :define="column['ui_define']['ui_define']"
                             :content="column['ui_define']['ui_content']"
                         >
                         </component>
@@ -71,9 +71,13 @@
                 type: Boolean,
                 default: true
             },
-            formTmp: {
+            ui_form: {
                 type: [String, Number],
                 required: true
+            },
+            formName:{
+                type: [String],
+                default: 'form'
             }
         },
         computed: {
@@ -86,10 +90,10 @@
                 let operation = {
                     title: '操作',
                     render: (h, mixture) => {
-                        return h('div', 
+                        return h('div',
                             {
                             },
-                            [   
+                            [
                                 h('Button', {
                                     props: {
                                         type: 'info',
@@ -100,9 +104,12 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.action = 'update'
+                                            this.action = {
+                                                type: 'update'
+                                            }
                                             this.dataIndex = mixture.index
-                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp, dataKey: this.name, index: mixture.index})
+                                            debugger
+                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
                                         }
                                     }
                                 }, actions.indexOf('del') !== -1 ?'编辑':'查看'),
@@ -116,7 +123,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, index: mixture.index})
+                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, formName: this.formName, index: mixture.index})
                                         }
                                     }
                                 }, '删除'): ''
@@ -148,7 +155,7 @@
                     return true
                 })
                 return source
-            }
+            },
         },
         data() {
             return {
@@ -162,27 +169,28 @@
                 action = _.cloneDeep(action)
                 if(action.type === 'add') {
                     this.action = action
-                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.formTmp})
+                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form})
                 } else if (action.type !== 'link') {
                     let ids = this.rowSelected.map(element => element['id']['value'])
                     action['url']['body'] = ids
-                    dispatch(action) 
+                    dispatch(action)
                 } else {
                     dispatch(action)
                 }
             },
-            submit2Table() { 
+            submit2Table() {
                 let action = {}
                 action = {
                     ...this.action
                 }
                 action.value = this.name
                 action.index = this.dataIndex
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.formTmp, action: action})
+                action.form = this.formName
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.ui_form, action: action})
             },
             cancel() {
-                this.$store.commit(CLEAR_FORM_DATA, {form: this.formTmp})
-                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.formTmp})
+                this.$store.commit(CLEAR_FORM_DATA, {form: this.ui_form})
+                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.ui_form})
             },
             selectRow(selection ) {
                 console.log('selection ' ,selection)

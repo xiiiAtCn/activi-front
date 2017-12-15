@@ -1,6 +1,6 @@
 <template>
     <Row>
-        <Col span="4">
+        <Col span="3">
             <Menu mode="vertical" :active-name="activeNumber" @on-select="handleSelect" class="menu" width="auto">
                 <MenuItem v-for="(item, key) in titleList" :key="key" :name="key">
                     <Icon v-if="item.icon" type="item.icon"></Icon>
@@ -8,28 +8,22 @@
                 </MenuItem>
             </Menu>
         </Col>
-        <Col span="20">
+        <Col span="21">
             <div class="container">
-                <!--<mDetailTable-->
-                    <!--v-show="showDetailTable"-->
-                    <!--:alias=""-->
-                    <!--:name=""-->
-                    <!--:columns=""-->
-                    <!--:dataSource=""-->
-                    <!--:visible=""-->
-                    <!--:editable=""-->
-                    <!--:formTmp=""-->
-                <!--&gt;</mDetailTable>-->
-                <div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
-                    </div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
-                    </div>
-                    <div class="card-container">
-                        <mCardTable></mCardTable>
-                    </div>
+                <div class="detailTable">
+                    <mDetailTable
+                    :define="tableModel.ui_define"
+                    :content="tableModel.ui_content"
+                    :ui_form="tableModel.ui_form"
+                    ></mDetailTable>
+                </div>
+                <div class="cardTable">
+                    <component
+                        v-if="taskTrack"
+                        :is="taskTrack.ui_type"
+                        :define="taskTrack.ui_define"
+                        :content="taskTrack.ui_content"
+                    ></component>
                 </div>
             </div>
         </Col>
@@ -41,11 +35,15 @@
         props:{
             define:{
                 type:null,
-                default:{}
+                default () {
+                    return {}
+                }
             },
             content:{
                 type:null,
-                default:{}
+                default () {
+                    return {}
+                }
             }
         },
         data () {
@@ -61,10 +59,16 @@
                     {title:'售后'},
                     {title:'应收应付'}
                 ],
-                showDetailTable:false
+                taskTrack:{}
+            }
+        },
+        computed:{
+            tableModel () {
+                return this.define.table
             }
         },
         mounted(){
+            this.taskTrack = this.define.taskTrack
         },
         methods:{
             handleSelect(name){
@@ -80,5 +84,11 @@
     }
     .card-container{
         margin-bottom: 20px;
+    }
+    .detailTable{
+
+    }
+    .cardTable{
+
     }
 </style>

@@ -166,7 +166,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 900;
+    z-index: 950;
     background-color: rgba(55,55,55,.6);
     transition: all .5s;
 }

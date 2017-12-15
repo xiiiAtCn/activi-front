@@ -3,7 +3,7 @@
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" >{{label}}</label>
         <div class="ivu-form-item-content m-input">
             <component 
-                :formTmp="formTmp" 
+                :ui_form="ui_form" 
                 :statusKey="statusKey" 
                 :is="itemType" 
                 :define="childContent" 
@@ -16,7 +16,7 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'uid', 'formTmp', 'content', 'statusKey'],
+    props: ['define', 'ui_form', 'content', 'statusKey'],
     computed: {
         name() {
             return _.get(this.define, 'name', '')
@@ -27,6 +27,7 @@ export default {
         hidden() {
             return _.get(this.define, 'hidden', false)
         },
+        //无法获取ui_type类型时默认为输入框
         itemType() {
             if(this.content instanceof Array) {
                 return _.get(this.content[0], 'ui_type', 'mInput')

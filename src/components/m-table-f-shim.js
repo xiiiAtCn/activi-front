@@ -2,9 +2,7 @@ import Vue from 'vue'
 import _ from 'lodash'
 import mTableF from './m-table-f.vue'
 import { getData } from 'utils/actionUtils'
-import { deepCopy } from 'utils/utils'
 import mixin from './mixin'
-import Mutations from 'store/Mutation'
 
 let tableFShim = Vue.component('tableF-Shim', {
     render: function (h) {
@@ -23,11 +21,13 @@ let tableFShim = Vue.component('tableF-Shim', {
 
                 form:this.form, //往vuex存数据的地址
                 name:this.name, //selectid
-
-                reload:this.reloadData
+                wordList: this.wordList,    //分词结果
+                reload:this.reloadData,
+                suggestUrl: this.suggestUrl
             },
             on:{
-                rowsPageChange : this.handleRowsPageChange
+                rowsPageChange : this.handleRowsPageChange,
+                topSearchMsg: this.keyWordSearch
             }
         })
     },
@@ -46,7 +46,9 @@ let tableFShim = Vue.component('tableF-Shim', {
             serverPage:false,
             checkRow:false,
             lastUrlData:{},
-            pageTotal:null
+            pageTotal:null,
+            wordList: [],
+            suggestUrl: {}
         }
     },
     props: {
@@ -96,7 +98,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableName = _.get(def,'tableName', '')
             this.tableHeight = _.get(def,'tableHeight', null)
             this.checkRow= _.get(def,'checkRow', '')
-
+            this.suggestUrl = _.get(def, 'suggestUrl', {})
             if(Object.keys(this.relation).length === 0){
                 this.lastUrlData = _.cloneDeep(this.url)
                 this.tableGetData(this.url,'data')
@@ -110,6 +112,15 @@ let tableFShim = Vue.component('tableF-Shim', {
             let urlData = this.getDataUrlObj('tableData')
             this.lastUrlData = _.cloneDeep(urlData)
             this.tableGetData(urlData,'data')
+        },
+        keyWordSearch(keyWord) {
+            if(keyWord === '') {
+                this.getTableData()
+            } else {
+                let urlData = _.cloneDeep(this.lastUrlData)
+                urlData['queryParams']['conditionWord'] = keyWord
+                this.tableGetData(urlData, 'data')
+            }
         },
         tableGetData(url,key){
             if(!url || url.length === 0){return}
@@ -125,9 +136,11 @@ let tableFShim = Vue.component('tableF-Shim', {
                             this.rowsContent = data.datas
                             this.serverPage = true
                             this.pageTotal = data.total
+                            this.wordList = data.wordList || []
                         }else{
                             this.serverPage = false
                             this.rowsContent = data
+                            this.wordList = data.wordList || []
                         }
                     }
                 }

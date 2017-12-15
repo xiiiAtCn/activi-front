@@ -2,10 +2,24 @@
     <div ref="tableCt">
         <Row class="top-content" style="text-align: right">
             <Col span="24">
-                <div class="search" v-show="search">
-                    <Input v-model="valueSearch" placeholder="筛选">
-                    <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
-                    </Input>
+                <div class="button-container search" v-if="search" >
+                    <Row>
+                        <Col span="18">
+                            <AutoComplete
+                                v-model="valueSearch"
+                                placeholder="查询"
+                                @on-search="searchSuggest"
+                                @enter="handleTopSearch"
+                            >
+                                <Option v-for="(option, index) in suggestList" :value="option" :key="index">
+                                    {{option}}
+                                </Option>
+                            </AutoComplete>
+                        </Col>
+                        <Col span="6">
+                            <Button @click="handleTopSearch" type="primary">搜索</Button>
+                        </Col>
+                    </Row>
                 </div>
                 <div class="button-container" >
                     <Poptip placement="bottom">
@@ -17,7 +31,7 @@
                                           @click.prevent.native="handleCheckAll">全选</Checkbox>
                             </div>
                             <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange" style="height: 400px;overflow-y: scroll">
-                                <div v-for='item in dataList'>
+                                <div v-for='(item, index) in dataList' :key="index">
                                     <Checkbox :label="item.label"></Checkbox>
                                 </div>
                             </CheckboxGroup>
@@ -31,7 +45,7 @@
                         </Select>
                     </div>
                 </div>
-                <div v-for="item in operation"  class="button-container" >
+                <div v-for="(item, index) in operation"  :key="index" class="button-container" >
                     <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.action)">{{item.text}}</Button>
                 </div>
             </Col>
@@ -48,8 +62,7 @@
     </div>
 </template>
 <script>
-    import bus from '../router/bus'
-    import { dispatch} from 'utils/actionUtils'
+    import { dispatch, getData} from 'utils/actionUtils'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE} from 'store/Mutation'
 
@@ -94,6 +107,14 @@
             form:{
                 type: [String, Number],
                 default: ''
+            },
+            wordList: {
+                type: [Array],
+                default: []
+            },
+            suggestUrl: {
+                type: [Object],
+                default: {}
             },
             name:{
                 type: null,
@@ -154,6 +175,10 @@
                 tableWidth:'',
                 //post 的 id数组
                 idList:[],
+                //提示数据列表
+                suggestList: [],
+                suggestFlag: false,
+                searchLoading: false
             }
         },
         watch: {
@@ -182,20 +207,20 @@
             },
             // columnsData存入设置
             getLength(str){
-                let len = 0;
+                let len = 0
                 if(!str){
                     return 0
                 }
                 for (let i = 0; i < str.length; i++) {
-                    let a = str.charAt(i);
+                    let a = str.charAt(i)
                     if (a.match(/[^\x00-\xff]/ig) != null) {
-                        len += 2;
+                        len += 2
                     }
                     else {
-                        len += 1;
+                        len += 1
                     }
                 }
-                return len*7 + 40;
+                return len*7 + 40
             },
             getColumnsDataWay (c) {
                 this.columnsData = []
@@ -216,6 +241,68 @@
                                     }
                                 })
                             }
+                            let data = params.row[val.field]
+                            let container = []
+                            if(this.wordList.length > 0 && typeof data === 'string' && data) {
+                                for(let i = 0; i < this.wordList.length; i++) {
+                                    let word = this.wordList[i]
+                                    data = data.replace(new RegExp(word, 'g'), $0 => `(${$0})`)
+                                }
+                                let header = 0
+                                let tail = 0
+                                for(let i = 0, length = data.length; i < length; i++) {
+                                    if(data[i] === '(') {
+                                        tail = i
+                                        container.push({
+                                            flag: false,
+                                            data: data.substring(header, tail)
+                                        })
+                                        header = i + 1
+                                        
+                                        continue
+                                    }
+                                    if(data[i] === ')') {
+                                        tail = i
+                                        container.push({
+                                            flag: true,
+                                            data: data.substring(header, tail)
+                                        })
+                                        header = i + 1 
+                                    }
+                                }
+                                if(tail !== data.length) {
+                                    container.push({
+                                        flag: false,
+                                        data: data.substring(header)
+                                    })
+                                }
+                            } else {
+                                container = [{
+                                    flag: false,
+                                    data: data
+                                }]
+                            }
+                            if(container[0]['data'] === '(') {
+                                container.shift()
+                            }
+                            let contentRender = []
+                            for(let i = 0; i < container.length; i++) {
+                                let element = container[i]
+                                if(element.flag) {
+                                    contentRender.push(h('span', 
+                                        {
+                                            style:{
+                                                color: 'red'
+                                            }
+                                        },
+                                        element['data']
+                                    ))
+                                } else {
+                                    contentRender.push(h('span', 
+                                        element['data']
+                                    ))
+                                }
+                            }
                             if (val.icon) {
                                 return h('div', [
                                     h('Icon', {
@@ -223,11 +310,10 @@
                                             type: val.icon
                                         }
                                     }),
-                                    h('strong', params.row[val.field])
+                                    h('strong', data)
                                 ])
                             } else {
-                                return h('div',[h('span', params.row[val.field])]
-                                )
+                                return h('div',contentRender)
                             }
                         }
                     }
@@ -359,7 +445,7 @@
             },
             //发送搜索事件数据
             handleTopSearch(){
-                bus.$emit('topSearchMsg',this.valueSearch)
+                this.$emit('topSearchMsg',this.valueSearch)
             },
             // 处理表内按钮点击
             handleButtonClick (buttons) {
@@ -536,6 +622,25 @@
                 this.removeColButton()
                 this.checkRowClick()
             },
+            //查询提示词
+            searchSuggest(words) {
+                this.suggestFlag = false
+                let suggestUrl = _.cloneDeep(this.suggestUrl)
+                suggestUrl['queryParams'] = {
+                    conditionWord: words,
+                    size: 10
+                }
+                setTimeout(() => {
+                    this.suggestFlag = true
+                }, 500)
+                setTimeout(() => {
+                    if(this.suggestFlag === true) {
+                        getData(suggestUrl, data => {
+                            this.suggestList = data
+                        })
+                    }
+                }, 500)
+            }
         }
     }
 </script>
@@ -547,6 +652,10 @@
         display: inline-block;
         min-width:65px;
         margin-right: 8px;
+        vertical-align: middle;
+    }
+    .search{
+        min-width: 300px;
     }
 
     .columns-select{

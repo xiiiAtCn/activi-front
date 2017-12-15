@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import _ from 'lodash'
-import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT } from 'store/Action'
-import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE} from 'store/Mutation'
+import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT} from 'store/Action'
+import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE,CLEAR_FORM_STATUS, DESTROY_FORM_DATA } from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
@@ -12,9 +12,10 @@ Vue.component('mDetailTable', {
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                formTmp: this.name,
+                ui_form: this.temporary_form,
                 name: this.name,
-                editable: this.readonly
+                editable: this.readonly,
+                formName:this.ui_form
             }
         })
     },
@@ -35,6 +36,9 @@ Vue.component('mDetailTable', {
         },
     },
     computed: {
+        temporary_form() {
+            return this.name + this.ui_form
+        },
         required() {
             return _.get(this.define, 'required', true)
         },
@@ -77,11 +81,11 @@ Vue.component('mDetailTable', {
                     }
                 )
             }
-            let source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
+            let source = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'value'])
             if(source === undefined )
-                this.$store.commit(FORM_ELEMENT_VALUE, 
-                    {   
-                        form: 'form', 
+                this.$store.commit(FORM_ELEMENT_VALUE,
+                    {
+                        form: this.ui_form,
                         [this.name]: {
                             value: [],
                             type: this.$options._componentTag
@@ -89,12 +93,12 @@ Vue.component('mDetailTable', {
                         checkKey: this.name,
                         required: this.required
                     })
-            source = _.get(this.$store.state.formData, ['form', this.name, 'value'])
-            let type = _.get(this.$store.state.formData, ['form', this.name, 'type'])
-            if(type === undefined) 
-                this.$store.commit(FORM_ELEMENT_VALUE, 
+            source = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'value'])
+            let type = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'type'])
+            if(type === undefined)
+                this.$store.commit(FORM_ELEMENT_VALUE,
                     {
-                        form: 'form', 
+                        form: this.ui_form,
                         [this.name]: {
                             value: source,
                             type: this.$options._componentTag
@@ -103,17 +107,17 @@ Vue.component('mDetailTable', {
                         required: this.required
                     }
                 )
-            return _.get(this.$store.state.formData, ['form', this.name, 'value'])
+            return _.get(this.$store.state.formData, [this.ui_form , this.name, 'value'])
         },
         readonly() {
             let editable = _.get(this.$store.state.pageStatus, ['status', this.name], '')
             return editable
         },
         visible() {
-            return _.get(this.$store.state.formData, [this.name, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.temporary_form, 'visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.name, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.temporary_form, 'loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''
@@ -186,5 +190,9 @@ Vue.component('mDetailTable', {
             }
             return columns
         }
+    },
+    beforeDestroy() {
+        this.$store.commit(DESTROY_FORM_DATA, {form: this.ui_form})
+        this.$store.commit(CLEAR_FORM_STATUS)
     }
 })
