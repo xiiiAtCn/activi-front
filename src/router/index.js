@@ -68,9 +68,7 @@ const writeEmail = resolve => require(['../components/businessModule/email/write
 const checkEmail = resolve => require(['../components/businessModule/email/checkEmail.vue'], resolve)
 const emailDetail = resolve => require(['../components/businessModule/email/emailDetail.vue'], resolve)
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
-
-
- //const test = resolve => require(['../components/base/test.vue'], resolve)
+const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDashboard.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -230,16 +228,15 @@ const router = new VueRouter({
             path: '/productPrice',
             component: productPrice
         },
-        //todo 测试用
-        // {
-        //     path: '/test',
-        //     component: test,
-        //     children: [
-        //         {
-        //             path: '/base/test.vue', component: test
-        //         }
-        //     ]
-        // }
+        {
+            path: '/saleDashBoard',
+            component: saleDashboard,
+            children: [
+                {
+                    path: '/', component: saleDashboard
+                }
+            ]
+        }
 
     ]
 })
