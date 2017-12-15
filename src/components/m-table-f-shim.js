@@ -22,7 +22,8 @@ let tableFShim = Vue.component('tableF-Shim', {
                 form:this.form, //往vuex存数据的地址
                 name:this.name, //selectid
                 wordList: this.wordList,    //分词结果
-                reload:this.reloadData
+                reload:this.reloadData,
+                suggestUrl: this.suggestUrl
             },
             on:{
                 rowsPageChange : this.handleRowsPageChange,
@@ -46,7 +47,8 @@ let tableFShim = Vue.component('tableF-Shim', {
             checkRow:false,
             lastUrlData:{},
             pageTotal:null,
-            wordList: []
+            wordList: [],
+            suggestUrl: {}
         }
     },
     props: {
@@ -96,7 +98,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableName = _.get(def,'tableName', '')
             this.tableHeight = _.get(def,'tableHeight', null)
             this.checkRow= _.get(def,'checkRow', '')
-
+            this.suggestUrl = _.get(def, 'suggestUrl', {})
             if(Object.keys(this.relation).length === 0){
                 this.lastUrlData = _.cloneDeep(this.url)
                 this.tableGetData(this.url,'data')
@@ -112,10 +114,13 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableGetData(urlData,'data')
         },
         keyWordSearch(keyWord) {
-            debugger
-            let urlData = _.cloneDeep(this.lastUrlData)
-            urlData['queryParams']['conditionWord'] = keyWord
-            this.tableGetData(urlData, 'data')
+            if(keyWord === '') {
+                this.getTableData()
+            } else {
+                let urlData = _.cloneDeep(this.lastUrlData)
+                urlData['queryParams']['conditionWord'] = keyWord
+                this.tableGetData(urlData, 'data')
+            }
         },
         tableGetData(url,key){
             if(!url || url.length === 0){return}

@@ -3,9 +3,23 @@
         <Row class="top-content" style="text-align: right">
             <Col span="24">
                 <div class="button-container search" v-if="search" >
-                    <Input v-model="valueSearch" placeholder="筛选" >
-                    <Button slot="append" icon="ios-search" @click="handleTopSearch"></Button>
-                    </Input>
+                    <Row>
+                        <Col span="18">
+                            <AutoComplete
+                                v-model="valueSearch"
+                                placeholder="查询"
+                                @on-search="searchSuggest"
+                                @enter="handleTopSearch"
+                            >
+                                <Option v-for="(option, index) in suggestList" :value="option" :key="index">
+                                    {{option}}
+                                </Option>
+                            </AutoComplete>
+                        </Col>
+                        <Col span="6">
+                            <Button @click="handleTopSearch" type="primary">搜索</Button>
+                        </Col>
+                    </Row>
                 </div>
                 <div class="button-container" >
                     <Poptip placement="bottom">
@@ -48,7 +62,7 @@
     </div>
 </template>
 <script>
-    import { dispatch} from 'utils/actionUtils'
+    import { dispatch, getData} from 'utils/actionUtils'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE} from 'store/Mutation'
 
@@ -97,6 +111,10 @@
             wordList: {
                 type: [Array],
                 default: []
+            },
+            suggestUrl: {
+                type: [Object],
+                default: {}
             },
             name:{
                 type: null,
@@ -157,6 +175,10 @@
                 tableWidth:'',
                 //post 的 id数组
                 idList:[],
+                //提示数据列表
+                suggestList: [],
+                suggestFlag: false,
+                searchLoading: false
             }
         },
         watch: {
@@ -600,6 +622,25 @@
                 this.removeColButton()
                 this.checkRowClick()
             },
+            //查询提示词
+            searchSuggest(words) {
+                this.suggestFlag = false
+                let suggestUrl = _.cloneDeep(this.suggestUrl)
+                suggestUrl['queryParams'] = {
+                    conditionWord: words,
+                    size: 10
+                }
+                setTimeout(() => {
+                    this.suggestFlag = true
+                }, 500)
+                setTimeout(() => {
+                    if(this.suggestFlag === true) {
+                        getData(suggestUrl, data => {
+                            this.suggestList = data
+                        })
+                    }
+                }, 500)
+            }
         }
     }
 </script>
