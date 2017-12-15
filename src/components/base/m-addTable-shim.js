@@ -12,7 +12,7 @@ Vue.component('mDetailTable', {
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                formTmp: this.name,
+                ui_form: this.name,
                 name: this.name,
                 editable: this.readonly
             }
