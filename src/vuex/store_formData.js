@@ -22,7 +22,7 @@ export default {
                 ...state[form],
                 ...rest
             }
-            let checkList = state[form][form + 'waitCheck']
+            let checkList = state[form][form + 'waitCheck'] || []
             if(checkList && checkKey && checkList.indexOf(checkKey) === -1) 
                 checkList = checkList.concat(checkKey)
             state[form][form + 'waitCheck'] = checkList
@@ -94,7 +94,7 @@ export default {
                 validate: true,
                 checkedCount: 0,
             }
-
+            debugger
             if(payload.request !== undefined) {
                 state[form] = {
                     ...state[form],
@@ -126,6 +126,7 @@ export default {
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
             let keys = Object.keys(state)
             let { form } = payload
+            debugger
             keys.forEach(element => {
                 if(element.startsWith(form)) {
                     delete state[element]
