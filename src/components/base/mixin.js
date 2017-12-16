@@ -31,7 +31,7 @@ const mixin = {
             if(this.formTmp) {
                 editable = _.get(this.$store.state.pageStatus, ['status', this.statusKey + '_detail', this.name])
             } else {
-                editable = _.get(this.$store.state.pageStatus,  ['status', this.name])
+                editable = _.get(this.$store.state.pageStatus,  ['status', this.ui_form])
             }
             if(editable === 'editable') {
                 flag = false

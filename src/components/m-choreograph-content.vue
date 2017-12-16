@@ -65,7 +65,9 @@
         },
         methods:{
             handleDefault(){
+                debugger
                 this.tableModel = this.define.table
+                let name = this.define.tableName
                 this.taskTrack = this.define.taskTrack
                 //表格内容提交
                 let keyList = Object.keys(this.define.tableData[0])
@@ -91,9 +93,9 @@
 
                 this.$store.commit( FORM_ELEMENT_VALUE,value)
 
-                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'type' :"m-detail-table", 'value' : this.define.tableData}, form: this.form})
+                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { type: 'm-detail-table', value: this.define.tableData}, form: this.form})
                 //状态提交
-                this.$store.commit( ADD_PAGE_STATUS, {[this.form]:this.define.tableStatus,[this.form + '_detail']:this.define.statusMap})
+                this.$store.commit( ADD_PAGE_STATUS, {[name + this.form]:this.define.tableStatus,[name + this.form + '_detail']:this.define.statusMap})
             },
             jobEdit(){
                 let url = _.cloneDeep(this.define.action)
