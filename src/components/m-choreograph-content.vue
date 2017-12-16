@@ -103,8 +103,11 @@
             },
             handleSubmit(){
                 let url = _.cloneDeep(this.define.submitUrl)
+                debugger
+                let data = _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                delete data[this.define.tableName + 'waitCheck']
                 url.body={
-                    'data' : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                    data
                 }
 
                 getData(url, (result, err) => {
