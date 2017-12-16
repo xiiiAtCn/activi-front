@@ -100,6 +100,7 @@
         },
         methods: {
             valid() {
+                let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel == undefined ? [] : this.objectModel
@@ -109,7 +110,7 @@
                             this.errorMessage = '请上传图片'
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
                 }
             },
             handleBeforeUpload (file) {

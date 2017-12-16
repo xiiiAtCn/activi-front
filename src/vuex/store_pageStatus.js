@@ -30,7 +30,7 @@ export default {
         putStatus: function ({ commit }, action) {
             getData(action, (result, err) => {
                 if (err === null) {
-                    commit(Mutations.CHANGE_PAGE_STATUS, result.status)
+                    commit(Mutations.CHANGE_PAGE_STATUS, {form: {...result.status }})
                 }
             })
         }

@@ -49,6 +49,7 @@
         },
         methods: {
             valid () {
+                let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     let hasError = false
                     let value = String(this.objectModel == undefined ? '' : this.objectModel)
@@ -70,7 +71,7 @@
                             }
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
                 }
             },
             inputCheck () {

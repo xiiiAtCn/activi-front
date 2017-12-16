@@ -4,6 +4,7 @@
         <div class="ivu-form-item-content m-input">
             <component 
                 :ui_form="ui_form" 
+                :form="form"
                 :statusKey="statusKey" 
                 :is="itemType" 
                 :define="childContent" 
@@ -16,7 +17,7 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'ui_form', 'content', 'statusKey'],
+    props: ['define', 'ui_form', 'content', 'statusKey', 'form'],
     computed: {
         name() {
             return _.get(this.define, 'name', '')

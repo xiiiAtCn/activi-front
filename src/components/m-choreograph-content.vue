@@ -95,7 +95,7 @@
 
                 this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { type: 'm-detail-table', value: this.define.tableData}, form: this.form})
                 //状态提交
-                this.$store.commit( ADD_PAGE_STATUS, {[name + this.form]:this.define.tableStatus,[name + this.form + '_detail']:this.define.statusMap})
+                this.$store.commit( ADD_PAGE_STATUS, {[this.form]: {[name]: this.define.tableStatus,  [name + '_detail']:this.define.statusMap}})
             },
             jobEdit(){
                 let url = _.cloneDeep(this.define.action)
@@ -106,7 +106,7 @@
                 url.body={
                     'data' : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
                 }
-                
+
                 getData(url, (result, err) => {
                     if(err) {
                         this.$Message.error('服务器出错了, 请稍后再试!')
