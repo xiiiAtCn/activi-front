@@ -106,10 +106,10 @@
                 url.body={
                     'data' : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
                 }
-
+                
                 getData(url, (result, err) => {
                     if(err) {
-                        iView.Message.error('服务器出错了, 请稍后再试!')
+                        this.$Message.error('服务器出错了, 请稍后再试!')
                         return
                     }
                     dispatch(result)
