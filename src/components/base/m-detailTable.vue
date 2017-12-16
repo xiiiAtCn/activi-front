@@ -21,7 +21,8 @@
                     <Row v-for="(column, index) in mixColumns" :key="index">
                         <component
                             v-if="column['ui_define']"
-                            :ui_form="ui_form" 
+                            :ui_form="ui_form"
+                            :form="formName" 
                             :statusKey="name"
                             :is="column['ui_define']['ui_type']"
                             :define="column['ui_define']['ui_define']"

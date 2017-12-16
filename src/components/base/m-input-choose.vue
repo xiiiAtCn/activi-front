@@ -85,9 +85,10 @@
                     }
                 }
                 getData(action,(data)=>{
+                    let formFix = this.ui_form?this.ui_form: this.form
                     if (data) {
                         for(let key of Object.keys(data)){
-                            this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: this.formTmp?this.formTmp:'form'})
+                            this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
                         }
                     }
 
@@ -99,6 +100,8 @@
                 })
             },
             valid(){
+                debugger
+                let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     if (this.required) {
                         if (this.objectModel === '') {
@@ -106,9 +109,9 @@
                             this.errorMessage = '请选择必填项'
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
                 }
             }
         }

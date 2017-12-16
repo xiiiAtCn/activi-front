@@ -89,11 +89,11 @@ export default {
             }
         },
         [Mutations.FORM_DATA_VALIDATE] (state, payload) {
+            debugger
             let { form} = payload
             state[form] = {
                 ...state[form],
                 validate: true,
-                checkedCount: 0,
             }
 
             if(payload.request !== undefined) {
