@@ -287,8 +287,8 @@ export default {
             })
         },
         [Actions.DELETE_TABLE_DATA]({state, commit}, payload) {
-            let {dataKey, index} = payload
-            let array = state['form'][dataKey]['value'].slice()
+            let {dataKey, index, formName} = payload
+            let array = state[formName][dataKey]['value'].slice()
             let deletedArray = array.filter(ele => {
                 if(ele['flag']&& ele['flag']['value'] === 'delete') {
                     return true
@@ -316,7 +316,7 @@ export default {
                 }
             }
             primaryList = primaryList.concat(deletedArray)
-            commit(Mutations.FORM_ELEMENT_VALUE, {form: 'form', [dataKey]:{type: 'm-detail-table', value: primaryList}})
+            commit(Mutations.FORM_ELEMENT_VALUE, {form: formName, [dataKey]:{type: 'm-detail-table', value: primaryList}})
         }
     }
 }

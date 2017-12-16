@@ -10,7 +10,12 @@
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>
         </div>
-        <mLayer v-model="visible" :loading="loading" :autoClose="false" @on-ok="submit2Table" @on-cancel="cancel">
+        <mLayer 
+            v-model="visible" 
+            :loading="loading" 
+            :autoClose="false" 
+            @on-ok="submit2Table" 
+            @on-cancel="cancel">
             <Card style="width: 60%; margin: 0 auto;">
                 <Form style="width: 85%; margin: 0 auto;">
                     <Row v-for="(column, index) in mixColumns" :key="index">
@@ -123,6 +128,7 @@
                                     },
                                     on: {
                                         click: () => {
+                                            debugger
                                             this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, formName: this.formName, index: mixture.index})
                                         }
                                     }
