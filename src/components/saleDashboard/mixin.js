@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 export const ComputedType = {
     width: 'width',
@@ -76,7 +77,9 @@ export const mixin = {
     },
     watch: {
         chartData (newVal, oldVal) {
-            this.draw(newVal, oldVal)
+            if (!_.isEqual(newVal, oldVal)) {
+                this.draw(newVal, oldVal)
+            }
         }
     }
 }

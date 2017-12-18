@@ -147,6 +147,10 @@ Vue.component('mDetailTable', {
             if (newVal) {
                 this.valid()
             }
+        },
+        dataSource(newVal) {
+            if(newVal.length > 0)
+                this.valid()
         }
     },
     methods: {
