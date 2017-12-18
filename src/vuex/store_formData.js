@@ -224,10 +224,14 @@ export default {
                                             ...copies
                                         }
                                         //将所有非对象值转为字符串
+                                        debugger
                                         for(let i in body) {
                                             let element = body[i]
                                             if(typeof element['value'] !== 'object') {
-                                                element['value'] = element['value'] == 'null'? 'null': String(element['value'])
+                                                element['value'] = element['value'] === null? 'null': String(element['value'])
+                                            }
+                                            if(element['value'] === null) {
+                                                element['value'] = 'null'
                                             }
                                         }
                                         delete body[ form + 'request']
