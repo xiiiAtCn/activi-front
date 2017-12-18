@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     draw(newVal, oldVal) {
-      debugger
       if (this.chartData && this.chartData.length > 0) {
         this.drawGroups();
         this.drawRects();
