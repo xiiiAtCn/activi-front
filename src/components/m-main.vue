@@ -129,7 +129,7 @@
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
-    import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
+    import { FETCH_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
 
     export default {
@@ -197,6 +197,7 @@
                 dispatch(url)
             },
             btnClick (btn) {
+                debugger
                 dispatch(btn.action)
             },
             handleButtonList(list){

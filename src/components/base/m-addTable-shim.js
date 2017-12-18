@@ -55,7 +55,7 @@ Vue.component('mDetailTable', {
                             _reset: false,
                             _validate: false,
                             _visible: false,
-                            [this.name + 'waitCheck']: []
+                            ['_' + this.temporary_form + 'waitCheck']: []
                         }
                     }
                 )
@@ -63,7 +63,7 @@ Vue.component('mDetailTable', {
             return columns
         },
         validate () {
-            return _.get(this.$store.state.formData[this.ui_form], 'validate', false)
+            return _.get(this.$store.state.formData[this.ui_form], '_validate', false)
         },
         dataSource() {
             let form = _.get(this.$store.state.formData, this.ui_form || 'form')
@@ -76,7 +76,7 @@ Vue.component('mDetailTable', {
                             _reset: false,
                             _validate: false,
                             _visible: false,
-                            [ '_' + (this.ui_form || 'form') + 'waitCheck']: []
+                            [ '_' + this.temporary_form + 'waitCheck']: []
                         }
                     }
                 )
@@ -91,7 +91,6 @@ Vue.component('mDetailTable', {
                             type: this.$options._componentTag
                         },
                         checkKey: this.name,
-                        required: this.required
                     })
             source = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'value'])
             let type = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'type'])
@@ -104,7 +103,6 @@ Vue.component('mDetailTable', {
                             type: this.$options._componentTag
                         },
                         checkKey: this.name,
-                        required: this.required
                     }
                 )
             return _.get(this.$store.state.formData, [this.ui_form , this.name, 'value'])
@@ -145,6 +143,7 @@ Vue.component('mDetailTable', {
     },
     watch: {
         validate(newVal) {
+            debugger
             if (newVal) {
                 this.valid()
             }

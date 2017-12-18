@@ -32,7 +32,7 @@
                         <Icon type="document-text"></Icon>
                         <span>{{item.name}}</span>
                         <template >
-                            <div class="file-delete-action">
+                            <div class="file-delete-action" v-if="!readonly">
                                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                             </div>
                         </template>
@@ -112,6 +112,7 @@
                     }
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
                 }
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
             },
             handleBeforeUpload (file) {
                 const check = this.objectModel.length < this.picMaxNumber

@@ -100,7 +100,6 @@
                 })
             },
             valid(){
-                debugger
                 let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     if (this.required) {

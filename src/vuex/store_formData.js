@@ -22,10 +22,10 @@ export default {
                 ...state[form],
                 ...rest
             }
-            let checkList = state[form][form + 'waitCheck'] || []
+            let checkList = state[form][ '_'+ form + 'waitCheck'] || []
             if(checkList && checkKey && checkList.indexOf(checkKey) === -1)
                 checkList = checkList.concat(checkKey)
-            state[form][form + 'waitCheck'] = checkList
+            state[form]['_' + form + 'waitCheck'] = checkList
         },
 
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
@@ -49,12 +49,11 @@ export default {
             state.table = data
         },
         [Mutations.OPEN_TABLE_LAYER] (state, payload) {
-            debugger
             let { form, formName } = payload
             state[form] = {
                 ...state[form],
-                visible: true,
-                reset: false,
+                _visible: true,
+                _reset: false,
             }
             if(payload.dataKey !== undefined) {
                 let {dataKey, index} = payload
@@ -69,31 +68,30 @@ export default {
             let { form } = payload
             state[form] = {
                 ...state[form],
-                visible: false,
-                reset: true,
-                loading: true
+                _visible: false,
+                _reset: true,
+                _loading: true
             }
         },
         [Mutations.BUTTON_START_LOADING] (state, payload) {
             let { form } = payload
             state[form] = {
                 ...state[form],
-                loading: true
+                _loading: true
             }
         },
         [Mutations.BUTTON_CANCEL_LOADING] (state, payload) {
             let { form } = payload
             state[form] = {
                 ...state[form],
-                loading: false
+                _loading: false
             }
         },
         [Mutations.FORM_DATA_VALIDATE] (state, payload) {
-            debugger
             let { form} = payload
             state[form] = {
                 ...state[form],
-                validate: true,
+                _validate: true,
             }
 
             if(payload.request !== undefined) {
@@ -114,7 +112,7 @@ export default {
             let { form } = payload
             state[form] = {
                 ...state[form],
-                validate: false
+                _validate: false
             }
         },
         [Mutations.ELEMENT_VALIDATE_RESULT] (state, payload) {
@@ -146,7 +144,7 @@ export default {
         },
         [Actions.COUNT_CHECK_RESULT] ({commit, state}, payload) {
             let {form} = payload
-            let waitCheck = state[form][form + 'waitCheck']
+            let waitCheck = state[form]['_' + form + 'waitCheck']
             let finish = true
             let checkResult = Object.keys(state[form + 'checkResult'])
             for(let i = 0; i < waitCheck.length; i++) {
@@ -154,6 +152,7 @@ export default {
                     finish = false
                 }
             }
+            debugger
             if (finish) {
                 let flag = checkResult.every(element => state[form + 'checkResult'][element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
@@ -198,7 +197,7 @@ export default {
                                 let copies = _.cloneDeep(state[form])
                                 let keyList = Object.keys(copies)
                                 keyList.forEach(element => {
-                                    if(typeof copies[element] !== 'object') {
+                                    if(element.startsWith('_')) {
                                         delete copies[element]
                                     }
                                 })
@@ -219,18 +218,25 @@ export default {
                                             ...body,
                                             ...copies
                                         }
+                                        //将所有非对象值转为字符串
+                                        for(let i in body) {
+                                            let element = body[i]
+                                            if(typeof element['value'] !== 'object') {
+                                                element['value'] = element['value'] == 'null'? 'null': String(element['value'])
+                                            }
+                                        }
                                         delete body[ form + 'request']
                                         request.setUrl(url).setBody(body).forPost((data, err) => {
                                             if(err) {
                                                 console.log(err)
                                                 iView.Message.error('服务器出错了!')
-                                                commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                                commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
                                                 return
                                             }
                                             dispatch(data)
                                         })
                                     } catch (e) {
-                                        commit(Mutations.FORM_ELEMENT_VALUE, {form, validate: false})
+                                        commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
                                         console.error(e)
                                     }
                                 }
@@ -255,7 +261,7 @@ export default {
                 ...state[form + 'checkResult'],
                 ...rest
             }
-            if (state[form]['validate'] === true) {
+            if (state[form]['_validate'] === true) {
                 dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
         },
@@ -268,19 +274,26 @@ export default {
                     commit(Mutations.ADD_NEW_OBJECT, {
                         attribute: 'form',
                         value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false,
-                            ['form' + 'waitCheck']: []
+                            _loading: true,
+                            _reset: false,
+                            _validate: false,
+                            _visible: false,
+                            ['_' + 'form' + 'waitCheck']: []
                         }
                     })
                 let value = {
                     form: 'form'
                 }
                 keyList.forEach(element => {
-                    value[element] = {
-                        value: data[element]['value']
+                    let attribute
+                    try {
+                        attribute = JSON.parse(data[element]['value'])
+                    } catch(e) {
+                        attribute = data[element]['value']
+                    } finally {
+                        value[element] = {
+                            value: attribute
+                        }
                     }
                 })
                 commit(Mutations.FORM_ELEMENT_VALUE, value)

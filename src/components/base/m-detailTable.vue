@@ -114,7 +114,6 @@
                                                 type: 'update'
                                             }
                                             this.dataIndex = mixture.index
-                                            debugger
                                             this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
                                         }
                                     }
@@ -129,7 +128,6 @@
                                     },
                                     on: {
                                         click: () => {
-                                            debugger
                                             this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, formName: this.formName, index: mixture.index})
                                         }
                                     }

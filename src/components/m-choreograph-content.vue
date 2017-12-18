@@ -65,7 +65,6 @@
         },
         methods:{
             handleDefault(){
-                debugger
                 this.tableModel = this.define.table
                 let name = this.define.tableName
                 this.taskTrack = this.define.taskTrack
@@ -103,7 +102,6 @@
             },
             handleSubmit(){
                 let url = _.cloneDeep(this.define.submitUrl)
-                debugger
                 let data = _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
                 data.forEach(ele => delete ele[this.define.tableName + 'waitCheck'])
                 url.body={

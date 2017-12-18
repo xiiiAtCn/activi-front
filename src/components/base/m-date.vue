@@ -38,7 +38,7 @@
         },
         methods: {
             valid () {
-                let formFix = this.ui_form?this.ui_form: this.form
+                let formFix = this.ui_form? this.ui_form: this.form
                 if (!this.readonly) {
                     let value = this.objectModel
                     let hasError = false
