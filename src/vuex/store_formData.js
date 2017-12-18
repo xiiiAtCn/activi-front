@@ -149,6 +149,10 @@ export default {
             let waitCheck = state[form][form + 'waitCheck']
             let finish = true
             let checkResult = Object.keys(state[form + 'checkResult'])
+            console.group('start check count')
+            console.log(form + 'waitCheck is ', waitCheck)
+            console.log(form + 'checkResult is ', checkResult)
+            console.groupEnd()
             for(let i = 0; i < waitCheck.length; i++) {
                 if(checkResult.indexOf(waitCheck[i]) === -1) {
                     finish = false
@@ -174,6 +178,7 @@ export default {
                                 delete formCopy[element]
                             }
                         })
+                        debugger
                         delete formCopy[form + 'waitCheck']
                         if(action.type === 'add') {
                             formCopy['flag'] = { value: 'add' }

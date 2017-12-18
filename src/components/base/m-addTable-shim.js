@@ -55,7 +55,7 @@ Vue.component('mDetailTable', {
                             reset: false,
                             validate: false,
                             visible: false,
-                            [this.name + 'waitCheck']: []
+                            [this.temporary_form + 'waitCheck']: []
                         }
                     }
                 )
@@ -145,13 +145,19 @@ Vue.component('mDetailTable', {
     },
     watch: {
         validate(newVal) {
+            debugger
             if (newVal) {
                 this.valid()
             }
+        },
+        dataSource(newVal) {
+            if(newVal.length > 0)
+                this.valid()
         }
     },
     methods: {
         valid() {
+            debugger
             if(this.dataSource.length == 0) {
                 this.$Modal.error({
                     title:'警告',
