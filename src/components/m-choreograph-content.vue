@@ -65,7 +65,9 @@
         },
         methods:{
             handleDefault(){
+                debugger
                 this.tableModel = this.define.table
+                let name = this.define.tableName
                 this.taskTrack = this.define.taskTrack
                 //表格内容提交
                 let keyList = Object.keys(this.define.tableData[0])
@@ -91,9 +93,9 @@
 
                 this.$store.commit( FORM_ELEMENT_VALUE,value)
 
-                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { 'type' :"m-detail-table", 'value' : this.define.tableData}, form: this.form})
+                this.$store.commit( FORM_ELEMENT_VALUE, {[this.define.tableName]: { type: 'm-detail-table', value: this.define.tableData}, form: this.form})
                 //状态提交
-                this.$store.commit( ADD_PAGE_STATUS, {[this.form]:this.define.tableStatus,[this.form + '_detail']:this.define.statusMap})
+                this.$store.commit( ADD_PAGE_STATUS, {[this.form]: {[name]: this.define.tableStatus,  [name + '_detail']:this.define.statusMap}})
             },
             jobEdit(){
                 let url = _.cloneDeep(this.define.action)
@@ -101,13 +103,16 @@
             },
             handleSubmit(){
                 let url = _.cloneDeep(this.define.submitUrl)
+                debugger
+                let data = _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                data.forEach(ele => delete ele[this.define.tableName + 'waitCheck'])
                 url.body={
-                    'data' : _.get(this.$store.state.formData, [this.form , this.define.tableName , 'value'])
+                    data
                 }
 
                 getData(url, (result, err) => {
                     if(err) {
-                        iView.Message.error('服务器出错了, 请稍后再试!')
+                        this.$Message.error('服务器出错了, 请稍后再试!')
                         return
                     }
                     dispatch(result)

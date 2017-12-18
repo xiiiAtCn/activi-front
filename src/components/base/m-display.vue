@@ -22,8 +22,9 @@
         },
         methods: {
             valid() {
+                let formFix = this.ui_form?this.ui_form: this.form
                 console.log('valid will do nothing except commit no error')
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
             }
         }
     }

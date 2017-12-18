@@ -45,11 +45,11 @@ Vue.component('mDetailTable', {
         columns() {
             let cols = this.define['columns'] || []
             let columns = this.handleColumns(cols)
-            let tmp = _.get(this.$store.state.formData, this.name)
+            let tmp = _.get(this.$store.state.formData, this.temporary_form)
             if(tmp === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
                     {
-                        attribute: this.name,
+                        attribute: this.temporary_form,
                         value: {
                             loading: true,
                             reset: false,
@@ -85,7 +85,7 @@ Vue.component('mDetailTable', {
             if(source === undefined )
                 this.$store.commit(FORM_ELEMENT_VALUE,
                     {
-                        form: this.ui_form,
+                        form: this.ui_form || 'form',
                         [this.name]: {
                             value: [],
                             type: this.$options._componentTag
@@ -98,7 +98,7 @@ Vue.component('mDetailTable', {
             if(type === undefined)
                 this.$store.commit(FORM_ELEMENT_VALUE,
                     {
-                        form: this.ui_form,
+                        form: this.ui_form || 'form',
                         [this.name]: {
                             value: source,
                             type: this.$options._componentTag
@@ -110,7 +110,7 @@ Vue.component('mDetailTable', {
             return _.get(this.$store.state.formData, [this.ui_form , this.name, 'value'])
         },
         readonly() {
-            let editable = _.get(this.$store.state.pageStatus, ['status', this.name], '')
+            let editable = _.get(this.$store.state.pageStatus, ['status', this.ui_form, this.name], '')
             return editable
         },
         visible() {

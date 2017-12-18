@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row>
-            <Input :element-id="focusId"
+            <Input
                 v-model="objectModel"
                 :placeholder="placeholder"
                 :disabled="readonly"
@@ -38,6 +38,8 @@
         },
         methods: {
             valid () {
+                debugger
+                let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     let hasError = false
                     let value = String(this.objectModel == undefined ? '' : this.objectModel)
@@ -59,9 +61,9 @@
                             }
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
                 }
             },
             inputCheck () {
