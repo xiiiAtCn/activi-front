@@ -51,10 +51,10 @@ Vue.component('mDetailTable', {
                     {
                         attribute: this.temporary_form,
                         value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false,
+                            _loading: true,
+                            _reset: false,
+                            _validate: false,
+                            _visible: false,
                             [this.name + 'waitCheck']: []
                         }
                     }
@@ -72,11 +72,11 @@ Vue.component('mDetailTable', {
                     {
                         attribute: this.ui_form || 'form',
                         value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false,
-                            [(this.ui_form || 'form') + 'waitCheck']: []
+                            _loading: true,
+                            _reset: false,
+                            _validate: false,
+                            _visible: false,
+                            [ '_' + (this.ui_form || 'form') + 'waitCheck']: []
                         }
                     }
                 )
@@ -114,10 +114,10 @@ Vue.component('mDetailTable', {
             return editable
         },
         visible() {
-            return _.get(this.$store.state.formData, [this.temporary_form, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.temporary_form, '_visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.temporary_form, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.temporary_form, '_loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''

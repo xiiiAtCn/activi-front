@@ -55,7 +55,7 @@ const mixin = {
             return _.get(this.define, 'dataType', 'String')
         },
         reset () {
-            return _.get(this.$store.state.formData[this.form], 'reset', false)
+            return _.get(this.$store.state.formData[this.form], '_reset', false)
         },
         hasError: {
             get () {
@@ -78,9 +78,9 @@ const mixin = {
         },
         validate () {
             if(this.ui_form) {
-                return _.get(this.$store.state.formData[this.ui_form], 'validate', false)
+                return _.get(this.$store.state.formData[this.ui_form], '_validate', false)
             }
-            return _.get(this.$store.state.formData[this.form], 'validate', false)
+            return _.get(this.$store.state.formData[this.form], '_validate', false)
         },
         objectModel: {
             get () {
@@ -91,11 +91,11 @@ const mixin = {
                         {
                             attribute: formFix,
                             value: {
-                                loading: true,
-                                reset: false,
-                                validate: false,
-                                visible: false,
-                                [formFix + 'waitCheck']: []
+                                _loading: true,
+                                _reset: false,
+                                _validate: false,
+                                _visible: false,
+                                ['_' + formFix + 'waitCheck']: []
                             }
                         }
                     )
