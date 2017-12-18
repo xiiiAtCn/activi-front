@@ -18,3 +18,7 @@ src/components/zpTest
 .eslintcache
 config/index.js
 test/e2e/screenshot/
+package-lock.json
+config/index.js
+package-lock.json
+config/index.js
