@@ -10,14 +10,16 @@
         </Col>
         <Col :span="define.mode === 'vertical' ? 21 :24">
             <div class="container" v-for="(val,key) in content">
-                <component
-                    v-for="item in val.ui_content"
-                    v-show="key === menuName"
-                    :is="item.ui_type"
-                    :define="item.ui_define"
-                    :content="item.ui_content"
-                    :form=" item.ui_form + '_tab'+ key "
-                ></component>
+                <keep-alive>
+                    <component
+                        v-for="item in val.ui_content"
+                        v-if="key === menuName"
+                        :is="item.ui_type"
+                        :define="item.ui_define"
+                        :content="item.ui_content"
+                        :form=" item.ui_form + '_tab'+ key "
+                    ></component>
+                </keep-alive>
             </div>
         </Col>
     </Row>
@@ -28,14 +30,12 @@
         props:['define','content'],
         data () {
             return {
-                theme1: 'light',
                 activeNumber:0,
-                menuName:0,
-                menuSection:{}
+                menuName:0
             }
         },
         watch:{
-            define(){
+            content(){
                 this.$refs.menuCt.$el.querySelector('.ivu-menu-item').click()
             }
         },
