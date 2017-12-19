@@ -1,6 +1,8 @@
 <template>
     <div class="chart-conatiner">
-        <svg></svg>
+        <svg>
+            <text class="info"></text>
+        </svg>
     </div>
 </template>
 <script>
@@ -52,11 +54,7 @@ export default {
         },
         // 数据中的最大值
         dataMaxValue () {
-            return this.maxValue ? this.maxValue : d3.max(this.sortChartData, d => d.value)
-        },
-        // 排序后的数据
-        sortChartData () {
-            return this.chartData.sort((a, b) => b.value - a.value)
+            return this.maxValue ? this.maxValue : d3.max(this.chartData, d => d.value)
         },
         // 每个矩形的间距
         span () {
@@ -64,7 +62,7 @@ export default {
         },
         // 数据和
         sumValue () {
-            return d3.sum(this.sortChartData, d => d.value)
+            return d3.sum(this.chartData, d => d.value)
         },
         // 横向比例尺
         xScale () {
@@ -91,7 +89,7 @@ export default {
         draw () {
             let vue = this
             let groupUpdate = this.svg.selectAll('g')
-                .data(this.sortChartData)
+                .data(this.chartData)
             let groupEnter = groupUpdate.enter()
             let groupExit = groupUpdate.exit()
 
@@ -175,6 +173,20 @@ export default {
                         groupExit.remove()
                     })
             })
+
+            if (this.chartData.length === 0) {
+                this.svg.selectAll('text.info')
+                    .attr('y', this.height / 2)
+                    .attr('x', this.width / 2)
+                    .attr('fill', 'black')
+                    .style('text-anchor', 'middle')
+                    .style('dominant-baseline', 'middle')
+                    .text('暂无数据')
+                return 
+            } else {
+                this.svg.selectAll('text.info')
+                    .text('')
+            }
         }
     }
 }

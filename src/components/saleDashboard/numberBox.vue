@@ -30,7 +30,7 @@ export default {
       // 动画时间、缓动函数
       transition: d3
         .transition()
-        .duration(2000)
+        .duration(2500)
         .ease(d3.easeCircleInOut)
     };
   },
