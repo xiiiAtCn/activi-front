@@ -70,13 +70,13 @@ Vue.component('mDetailTable', {
             if(form === undefined) {
                 this.$store.commit(ADD_NEW_OBJECT,
                     {
-                        attribute: this.ui_form || 'form',
+                        attribute: this.ui_form,
                         value: {
                             _loading: true,
                             _reset: false,
                             _validate: false,
                             _visible: false,
-                            [ '_' + this.temporary_form + 'waitCheck']: []
+                            [ '_' + this.ui_form + 'waitCheck']: []
                         }
                     }
                 )
