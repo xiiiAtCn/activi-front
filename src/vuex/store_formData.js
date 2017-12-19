@@ -130,6 +130,11 @@ export default {
                     delete state[element]
                 }
             })
+        },
+        [Mutations.CLEAR_ALL_DATA](state) {
+            for(let i in state) {
+                delete state[i]
+            }
         }
     },
     actions: {
