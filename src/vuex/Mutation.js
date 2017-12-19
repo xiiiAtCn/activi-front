@@ -40,6 +40,9 @@ export const DESTROY_FORM_DATA = 'destroy_form_data'
 //form表单卸载时移除页面状态数据
 export const CLEAR_FORM_STATUS = 'clear_form_status'
 
+//路由跳转时清空页面数据
+export const CLEAR_ALL_DATA = 'clear_all_data'
+
 // 设置组件数据payload={id: '', data: ***}
 export const SET_COMPONENT_DATA = 'SET_COMPONENT_DATA'
 
@@ -73,5 +76,6 @@ export default {
     DEL_LAYER: DEL_LAYER,
     MODIFY_LAYER: MODIFY_LAYER,
     CHANGE_PAGE_STATUS:CHANGE_PAGE_STATUS,
-    ADD_PAGE_STATUS:ADD_PAGE_STATUS
+    ADD_PAGE_STATUS:ADD_PAGE_STATUS,
+    CLEAR_ALL_DATA: CLEAR_ALL_DATA
 }

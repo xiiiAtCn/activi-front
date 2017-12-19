@@ -12,13 +12,12 @@ import url from 'url'
 import util from 'util'
 import store from '../vuex/store'
 import extend from 'node.extend'
-import {post } from './DefineFetcher'
 import iView from 'iview'
 import bus from '../router/bus'
 import Request, { replace, addQuery } from './request-addon'
 import {SUBMIT_FORM_DATA} from 'store/Action'
+import {CLEAR_FORM_STATUS, CLEAR_ALL_DATA } from 'store/Mutation'
 
-// import _ from 'lodash'
 
 export function dispatch () {
     if (arguments.length === 0) {
@@ -78,6 +77,7 @@ export const getData = (action, callback) => {
     setTimeout(() => {
         if (stack !== 0) {
             bus.$emit('hide-my-full-loading')
+            stack = 0
             console.warn('network seems slow. overlay is forced to close even though request is not back')
         }
     }, 10000)
@@ -130,8 +130,8 @@ function asLink(action) {
     let targetAction = function () {
         if (action.mode === 'reload') {
             let c = router.currentRoute
-
-            // router.go(0)
+            store.commit(CLEAR_FORM_STATUS)
+            store.commit(CLEAR_ALL_DATA)
             router.replace({ path: c.path, query: c.query, hash: String(Date.now()) })
         } else {
             let routLinkParam = {}
