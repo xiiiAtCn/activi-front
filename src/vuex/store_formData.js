@@ -177,7 +177,7 @@ export default {
                         let formCopy = _.cloneDeep(state[form])
                         let keyList = Object.keys(formCopy)
                         keyList.forEach(element => {
-                            if(typeof formCopy[element] !== 'object') {
+                            if(element.startsWith('_')) {
                                 delete formCopy[element]
                             }
                         })
