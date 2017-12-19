@@ -197,7 +197,6 @@
                 dispatch(url)
             },
             btnClick (btn) {
-                debugger
                 dispatch(btn.action)
             },
             handleButtonList(list){
