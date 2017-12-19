@@ -153,4 +153,10 @@
         text-overflow:ellipsis;
         white-space: nowrap;
     }
+    .container .ivu-table-cell{
+        word-break:keep-all;
+    }
+    .ivu-table-cell {
+        line-height: 1.5;
+    }
 </style>
