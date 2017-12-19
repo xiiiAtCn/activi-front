@@ -156,7 +156,6 @@ export default {
                     finish = false
                 }
             }
-            debugger
             if (finish) {
                 let flag = checkResult.every(element => state[form + 'checkResult'][element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
@@ -177,7 +176,6 @@ export default {
                                 delete formCopy[element]
                             }
                         })
-                        debugger
                         delete formCopy[form + 'waitCheck']
                         if(action.type === 'add') {
                             formCopy['flag'] = { value: 'add' }
@@ -224,7 +222,6 @@ export default {
                                             ...copies
                                         }
                                         //将所有非对象值转为字符串
-                                        debugger
                                         for(let i in body) {
                                             let element = body[i]
                                             if(typeof element['value'] !== 'object') {

@@ -258,7 +258,7 @@
                                             data: data.substring(header, tail)
                                         })
                                         header = i + 1
-                                        
+
                                         continue
                                     }
                                     if(data[i] === ')') {
@@ -267,7 +267,7 @@
                                             flag: true,
                                             data: data.substring(header, tail)
                                         })
-                                        header = i + 1 
+                                        header = i + 1
                                     }
                                 }
                                 if(tail !== data.length) {
@@ -289,7 +289,7 @@
                             for(let i = 0; i < container.length; i++) {
                                 let element = container[i]
                                 if(element.flag) {
-                                    contentRender.push(h('span', 
+                                    contentRender.push(h('span',
                                         {
                                             style:{
                                                 color: 'red'
@@ -298,7 +298,7 @@
                                         element['data']
                                     ))
                                 } else {
-                                    contentRender.push(h('span', 
+                                    contentRender.push(h('span',
                                         element['data']
                                     ))
                                 }
@@ -440,6 +440,7 @@
                 }
                 if(actions.callbackMethodName && actions.callbackMethodName === 'reloadData'){
                     actions.callback = this.reload
+                    this.currentPage = 1
                 }
                 dispatch(actions)
             },

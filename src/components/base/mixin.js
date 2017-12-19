@@ -30,7 +30,6 @@ const mixin = {
             let editable
             let flag
             if(this.statusKey) {
-                debugger
                 editable = _.get(this.$store.state.pageStatus, ['status', this.form ,this.statusKey + '_detail', this.name])
             } else {
                 editable = _.get(this.$store.state.pageStatus,  ['status', this.form, this.name])

@@ -143,7 +143,6 @@ Vue.component('mDetailTable', {
     },
     watch: {
         validate(newVal) {
-            debugger
             if (newVal) {
                 this.valid()
             }

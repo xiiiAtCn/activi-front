@@ -159,6 +159,7 @@ let tableFShim = Vue.component('tableF-Shim', {
         },
         reloadData(){
             let url = _.cloneDeep(this.lastUrlData)
+            url.queryParams.from = 1
             this.tableGetData(url,'data')
         },
         watchValuesChanged (newval, oldval) {
@@ -173,6 +174,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             for(let key in arg){
                 url.queryParams[key] = arg[key]
             }
+            this.lastUrlData = _.cloneDeep(url)
             this.tableGetData(url,'data')
             this.commitData(arg)
         }
