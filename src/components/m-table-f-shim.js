@@ -82,6 +82,11 @@ let tableFShim = Vue.component('tableF-Shim', {
         this.addComponent()
         Object.keys(this.relation).length === 0 && this.initialize(this.define)
     },
+    watch: {
+        define () {
+            this.initialize(this.define)
+        }
+    },
     methods: {
         initialize (def) {
             if(def.ui_define){
@@ -124,8 +129,14 @@ let tableFShim = Vue.component('tableF-Shim', {
         },
         tableGetData(url,key){
             if(!url || url.length === 0){return}
-            if( key === 'data' && !url.queryParams.size){
-                url.queryParams.size = 10
+            if (key === 'data') {
+                if (!url.queryParams) {
+                    url.queryParams = {}
+                }
+
+                if (!url.queryParams.size) {
+                    url.queryParams.size = 10
+                }
             }
             getData(url, (data) => {
                 if(data){
@@ -165,7 +176,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableGetData(url,'data')
             this.commitData(arg)
         }
-    }
+    },
 })
 
 export default tableFShim
