@@ -20,6 +20,9 @@
               isError:false
           }
         },
+        mounted(){
+            (this.objectModel === '') && (this.objectModel = false)
+        },
         methods: {
             valid(){
                 this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
