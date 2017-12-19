@@ -51,11 +51,11 @@ Vue.component('mDetailTable', {
                     {
                         attribute: this.temporary_form,
                         value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false,
-                            [this.name + 'waitCheck']: []
+                            _loading: true,
+                            _reset: false,
+                            _validate: false,
+                            _visible: false,
+                            ['_' + this.temporary_form + 'waitCheck']: []
                         }
                     }
                 )
@@ -63,7 +63,7 @@ Vue.component('mDetailTable', {
             return columns
         },
         validate () {
-            return _.get(this.$store.state.formData[this.ui_form], 'validate', false)
+            return _.get(this.$store.state.formData[this.ui_form], '_validate', false)
         },
         dataSource() {
             let form = _.get(this.$store.state.formData, this.ui_form || 'form')
@@ -72,11 +72,11 @@ Vue.component('mDetailTable', {
                     {
                         attribute: this.ui_form || 'form',
                         value: {
-                            loading: true,
-                            reset: false,
-                            validate: false,
-                            visible: false,
-                            [(this.ui_form || 'form') + 'waitCheck']: []
+                            _loading: true,
+                            _reset: false,
+                            _validate: false,
+                            _visible: false,
+                            [ '_' + this.temporary_form + 'waitCheck']: []
                         }
                     }
                 )
@@ -91,7 +91,6 @@ Vue.component('mDetailTable', {
                             type: this.$options._componentTag
                         },
                         checkKey: this.name,
-                        required: this.required
                     })
             source = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'value'])
             let type = _.get(this.$store.state.formData, [ this.ui_form, this.name, 'type'])
@@ -104,7 +103,6 @@ Vue.component('mDetailTable', {
                             type: this.$options._componentTag
                         },
                         checkKey: this.name,
-                        required: this.required
                     }
                 )
             return _.get(this.$store.state.formData, [this.ui_form , this.name, 'value'])
@@ -114,10 +112,10 @@ Vue.component('mDetailTable', {
             return editable
         },
         visible() {
-            return _.get(this.$store.state.formData, [this.temporary_form, 'visible'], false)
+            return _.get(this.$store.state.formData, [this.temporary_form, '_visible'], false)
         },
         loading() {
-            return _.get(this.$store.state.formData, [this.temporary_form, 'loading'], true)
+            return _.get(this.$store.state.formData, [this.temporary_form, '_loading'], true)
         },
         alias() {
             let alias = this.define['alias'] || ''
@@ -148,6 +146,10 @@ Vue.component('mDetailTable', {
             if (newVal) {
                 this.valid()
             }
+        },
+        dataSource(newVal) {
+            if(newVal.length > 0)
+                this.valid()
         }
     },
     methods: {

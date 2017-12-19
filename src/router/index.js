@@ -206,6 +206,11 @@ const router = new VueRouter({
                         }
                     ]
                 },
+                // 销售看板
+                {
+                    path: '/layoutContent/:id/saleDashBoard',
+                    component: saleDashboard,
+                }
             ]
         },
         {
@@ -227,17 +232,7 @@ const router = new VueRouter({
         {
             path: '/productPrice',
             component: productPrice
-        },
-        {
-            path: '/saleDashBoard',
-            component: saleDashboard,
-            children: [
-                {
-                    path: '/', component: saleDashboard
-                }
-            ]
         }
-
     ]
 })
 

@@ -38,7 +38,6 @@
         },
         methods: {
             valid () {
-                debugger
                 let formFix = this.ui_form?this.ui_form: this.form
                 if (!this.readonly) {
                     let hasError = false

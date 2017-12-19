@@ -32,7 +32,7 @@
                         <Icon type="document-text"></Icon>
                         <span>{{item.name}}</span>
                         <template >
-                            <div class="file-delete-action">
+                            <div class="file-delete-action" v-if="!readonly">
                                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                             </div>
                         </template>
@@ -112,6 +112,7 @@
                     }
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
                 }
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
             },
             handleBeforeUpload (file) {
                 const check = this.objectModel.length < this.picMaxNumber
@@ -126,7 +127,7 @@
                 console.log(file)
                 let id = file.id
                 console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
-                this.setUrl(this.deleteAddress).setQuery({picId: id}).forGet((result, err) => {
+                this.setUrl(this.deleteAddress).setQuery({id: id}).forGet((result, err) => {
                     if(err) {
                         this.$Message.error(`删除文件${file.name}失败`)
                     } else {
@@ -142,6 +143,7 @@
             handleSuccess (res, file) {
                 file['url'] = file['response']['url']
                 file['id'] = file['response']['id']
+                this.valid()
                 this.$Message.success('上传成功')
             },
             handleError() {

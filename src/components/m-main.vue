@@ -130,8 +130,9 @@
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
-    import { FETCH_FORM_DATA, SUBMIT_FORM_DATA} from 'store/Action'
+    import { FETCH_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
+    import {CLEAR_FORM_STATUS, CLEAR_ALL_DATA } from 'store/Mutation'
 
     export default {
         router,
