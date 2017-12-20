@@ -16,7 +16,7 @@
         <div class="button-cantainer">
             <Button type="ghost" @click="jobEdit">任务编排</Button>
         </div>
-        <div class="cardTable" v-if="taskTrack">
+        <div class="cardTable" v-if="define.taskTrack.ui_define.datas.length !== 0">
             <h3>已编排任务</h3>
             <component
                 :is="taskTrack.ui_type"
