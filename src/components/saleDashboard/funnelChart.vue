@@ -96,6 +96,9 @@ export default {
             // enter部分添加事件
             groupEnter = groupEnter.append('g')
                 .on('mouseover', function (d, i) {
+                    if (d.value === 0) {
+                        return 
+                    }
                     d3.select(this)
                         .select('rect')
                         .transition()
@@ -140,6 +143,7 @@ export default {
                     .style('text-anchor', 'middle')
                     .style('dominant-baseline', 'initial')
                     .attr('font-size', '3')
+                    .attr('fill', '#D0D3D4')
                     .text(d.text)
             })
             // updata部分直接更改
@@ -156,9 +160,9 @@ export default {
                     .select('text')
                     .attr('y', vue.getTextY(i))
                     .attr('x', vue.width / 2)
-                    .attr('fill', 'white')
+                    .attr('fill', '#D0D3D4')
                     .style('text-anchor', 'middle')
-                    .style('dominant-baseline', 'middle')
+                    .style('dominant-baseline', 'initial')
                     .text(d.text)
             })
             // exit部分先缩小再删除

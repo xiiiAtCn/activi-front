@@ -266,10 +266,8 @@ export default {
                 .attr("width", d => this.xScale.bandwidth())
                 .attr("height", 0)
                 .attr("y", this.height - this.percentPaddingBottom)
-                .attr(
-                    "x",
-                    d => this.xScale(d.data[this.xAxisKey]) + this.percentPaddingLeft
-                )
+                .attr("x", d => this.xScale(d.data[this.xAxisKey]) + this.percentPaddingLeft)
+                .attr('z-index', 0)
                 .on("mouseover", function (d) {
                     let parent = d3.select(this.parentNode)
                     let self = d3.select(this)
@@ -307,42 +305,55 @@ export default {
         drawLengend() {
             let vue = this
 
+            let lengendGroup = this.svg.append('g')
+                .attr('class', 'lengend')
+                .attr('fill', 'white')
+            
+            let background = lengendGroup.append('rect')
+                .attr('class', 'lengend-background')
+                .attr('x', this.percentPaddingLeft + 20)
+                .attr("y", this.percentPaddingTop + 10)
+                .attr('opacity', 0.6)
+            
             // 绘制图例图标
-            let stackLabelRects = this.stackGroupsEnter
+            let stackLabelRects = lengendGroup
+                .selectAll('rect.labelRect')
+                .data(this.stackData)
+                .enter()
                 .append("rect")
                 .attr("class", "labelRect")
                 .attr("x", this.percentPaddingLeft + 20)
-                .attr(
-                    "y",
-                    (d, i) => this.percentPaddingTop + this.percentLabelStep * i + 10
-                )
+                .attr("y", (d, i) => this.percentPaddingTop + this.percentLabelStep * i + 10)
                 .attr("width", this.percentLabelWidth)
                 .attr("height", this.percentLabelHeight)
+                .attr('z-index', 1)
+                .attr('fill', d => this.dataColor[d.key])
                 .on("mouseover", function () {
-                    vue.labelRectMouseover(this);
-                    vue.stackMouseoverByLegend(arguments[1]);
+                    vue.labelRectMouseover(this)
+                    vue.stackMouseoverByLegend(arguments[1])
                 })
                 .on("mouseout", function () {
-                    vue.labelRectMouseout(this);
-                    vue.stackMouseoutByLegend();
-                });
+                    vue.labelRectMouseout(this)
+                    vue.stackMouseoutByLegend()
+                })
 
             // 绘制说明文字
-            this.stackGroupsEnter
+            lengendGroup.selectAll('text.labelText')
+                .data(this.stackData)
+                .enter()
                 .append("text")
                 .attr("class", "labelText")
                 .attr("x", this.percentPaddingLeft + 20 + this.percentLabelWidth + 10)
-                .attr(
-                    "y",
-                    (d, i) =>
-                    this.percentPaddingTop +
-                    this.percentLabelStep * i +
-                    this.percentLabelWidth / 2 +
-                    2
-                )
+                .attr("y", (d, i) => this.percentPaddingTop +this.percentLabelStep * i + this.percentLabelWidth / 2 + 2)
+                .attr('z-index', 1)
+                .attr('fill', d => this.dataColor[d.key])
                 .text(d => d.key)
                 .style("text-anchor", "start")
-                .style("dominant-baseline", "middle");
+                .style("dominant-baseline", "middle")
+
+            let bBox = lengendGroup.node().getBBox()
+            background.attr('width', bBox.width)
+                .attr('height', bBox.height)
 
             // let lineLabelRect = this.lineGroup.append('rect')
             //     .attr('class', 'line-label-rect')
