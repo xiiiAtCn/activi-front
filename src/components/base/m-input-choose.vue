@@ -36,7 +36,7 @@
             return {
                 showLayer:false,
                 downData:[],
-                isError:false
+                isError:true
             }
         },
         computed: {
@@ -106,12 +106,14 @@
                         if (this.objectModel === '') {
                             this.isError = true
                             this.errorMessage = '请选择必填项'
+                        }else{
+                            this.isError = false
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
+                    this.isError = false
                 }
+                this.$store.commit(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
             }
         }
     }
