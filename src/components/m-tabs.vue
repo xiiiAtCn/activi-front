@@ -36,7 +36,7 @@
         },
         watch:{
             content(){
-                this.$refs.menuCt.$el.querySelector('.ivu-menu-item').click()
+                this.$refs.menuCt.$el.querySelector('.ivu-menu-item') && this.$refs.menuCt.$el.querySelector('.ivu-menu-item').click()
             }
         },
         methods:{
