@@ -175,7 +175,9 @@
                 })
             },
             dataUrl(newUrl) {
+
                 this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
+
             },
             'define.status_url'() {
                 if (this.define.status_url) {

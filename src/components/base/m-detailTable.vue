@@ -10,11 +10,11 @@
                 <h3 slot="header" class="title">{{alias}}</h3>
             </Table>
         </div>
-        <mLayer 
-            v-model="visible" 
-            :loading="loading" 
-            :autoClose="false" 
-            @on-ok="submit2Table" 
+        <mLayer
+            v-model="visible"
+            :loading="loading"
+            :autoClose="false"
+            @on-ok="submit2Table"
             @on-cancel="cancel">
             <Card style="width: 60%; margin: 0 auto;">
                 <Form style="width: 85%; margin: 0 auto;">
@@ -22,7 +22,7 @@
                         <component
                             v-if="column['ui_define']"
                             :ui_form="ui_form"
-                            :form="formName" 
+                            :form="formName"
                             :statusKey="name"
                             :is="column['ui_define']['ui_type']"
                             :define="column['ui_define']['ui_define']"
@@ -36,7 +36,7 @@
     </div>
 </template>
 <script>
-    import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER } from 'store/Mutation'
+    import {CLEAR_FORM_DATA, OPEN_TABLE_LAYER, CLOSE_TABLE_LAYER ,ERASURE_DATA} from 'store/Mutation'
     import {SUBMIT_FORM_DATA, DELETE_TABLE_DATA} from 'store/Action'
     import _ from 'lodash'
     import { dispatch} from 'utils/actionUtils'
@@ -201,6 +201,11 @@
                 console.log('selection ' ,selection)
                 this.rowSelected = selection
             }
+        },
+        destroyed: function () {
+
+            let formFix = this.ui_form ? this.ui_form : this.form
+            this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         }
     }
 

@@ -45,6 +45,10 @@ module.exports = {
             '/webserverconf': {
                 target: 'http://localhost:80',
                 // target: 'http://192.168.1.97:1080'
+            },
+            '/oe': {
+                target: 'http://localhost:80',
+                // target: 'http://192.168.1.97:1080'
             }
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
