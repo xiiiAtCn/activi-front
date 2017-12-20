@@ -30,21 +30,27 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/api': {
-                target: 'http://localhost:80',
-                // target: 'http://192.168.1.97:1080',
-                // target: 'http://192.168.1.167',
+                // target: 'http://localhost:1082',
+                // target: 'http://localhost:80',
+                target: 'http://192.168.1.97:1080',
+                // target: 'http://192.168.1.167:80',
                 //target: 'http://192.168.1.176:80',
+                // target: 'http://192.168.1.165:1080',
                 pathRewrite: {
                     '^/api': '/api'
                 }
             },
+            '/oe': {
+                // target: 'http://192.168.1.167:80',
+                target: 'http://192.168.1.97:1080'
+            },
             '/prowf': {
-                target: 'http://localhost:80',
-                // target: 'http://192.168.1.97:1080',
+                // target: 'http://localhost:80',
+                target: 'http://192.168.1.97:1080',
             },
             '/webserverconf': {
-                target: 'http://localhost:80',
-                // target: 'http://192.168.1.97:1080'
+                // target: 'http://localhost:80',
+                target: 'http://192.168.1.97:1080'
             }
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
