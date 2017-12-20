@@ -109,6 +109,7 @@
       },
       methods:{
           handleDatas(){
+              if(this.define.datas === []){return}
               let datas = this.define.datas
               let columnsData = this.columnsData
               let tableData=[]
@@ -148,7 +149,8 @@
         text-align: right;
         width: 30%;
         padding: 0 5px;
-        font-weight: bold;
+        font-weight: 600;
+        color: #aaa;
     }
     .card{
         margin-bottom: 15px;
@@ -158,6 +160,7 @@
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+        color: #333;
     }
     .container .ivu-table-cell{
         word-break:keep-all;

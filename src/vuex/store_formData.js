@@ -135,6 +135,11 @@ export default {
             for(let i in state) {
                 delete state[i]
             }
+        },
+        [Mutations.ERASURE_DATA](state,payload) {
+            //
+            if(state[payload.form])
+                delete state[payload.form][payload.name]
         }
     },
     actions: {
@@ -280,7 +285,7 @@ export default {
             let { url } = payload
             getData(url, data => {
                 commit(Mutations.CLEAR_FORM_STATUS)
-                commit(Mutations.CLEAR_ALL_DATA) 
+                commit(Mutations.CLEAR_ALL_DATA)
                 let keyList = Object.keys(data)
                 //此处的form为后台返回的值
                 if(state.form === undefined)

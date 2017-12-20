@@ -36,7 +36,7 @@
             return {
                 showLayer:false,
                 downData:[],
-                isError:true
+                isError:false
             }
         },
         computed: {
@@ -118,6 +118,3 @@
         }
     }
 </script>
-<style scoped>
-
-</style>
