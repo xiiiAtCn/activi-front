@@ -127,8 +127,6 @@ function asLink(action) {
         iView.Message.success(action.alert)
     }
     let targetAction = function () {
-        store.commit(CLEAR_FORM_STATUS)
-        store.commit(CLEAR_ALL_DATA)
         if (action.mode === 'reload') {
             let c = router.currentRoute
             router.replace({ path: c.path, query: c.query, hash: String(Date.now()) })
