@@ -83,7 +83,7 @@ export default {
         },
         getTextY (i) {
             // debugger
-            return this.getRectY(i) + this.percentRectHeight / 2 - 2
+            return this.getRectY(i) + this.percentRectHeight / 2 + 1
             // return this.getRectY(i)
         },
         draw () {
@@ -138,8 +138,8 @@ export default {
                     .attr('x', vue.width / 2)
                     .attr('fill', 'white')
                     .style('text-anchor', 'middle')
-                    .style('dominant-baseline', 'middle')
-                    .style('font-size', '3')
+                    .style('dominant-baseline', 'initial')
+                    .attr('font-size', '3')
                     .text(d.text)
             })
             // updata部分直接更改

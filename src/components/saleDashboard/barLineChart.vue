@@ -4,8 +4,8 @@
     </div>
 </template>
 <script>
-import * as d3 from "d3";
-import { mixin, ComputedType } from "./mixin";
+import * as d3 from "d3"
+import { mixin, ComputedType } from "./mixin"
 
 export default {
     mixins: [mixin],
@@ -147,23 +147,14 @@ export default {
         },
         // 折线图纵坐标
         yAxisLine() {
-            return d3
-                .axisRight()
+            return d3.axisRight()
                 .scale(this.yScaleLineDraw)
                 .tickFormat(d3.format(".0%"));
         },
         line() {
-            return d3
-                .line()
-                .x(
-                    d =>
-                    this.xScale(d[this.xAxisKey]) +
-                    this.percentPaddingLeft +
-                    this.xScale.bandwidth() / 2
-                )
-                .y(
-                    d => this.height - this.percentPaddingBottom - this.yScaleLine(d.line)
-                );
+            return d3.line()
+                .x(d => this.xScale(d[this.xAxisKey]) + this.percentPaddingLeft + this.xScale.bandwidth() / 2)
+                .y(d => this.height - this.percentPaddingBottom - this.yScaleLine(d.line))
         }
     },
     methods: {
@@ -569,10 +560,9 @@ export default {
     text-align: center;
     vertical-align: middle;
     width: 100%;
-    padding-bottom: 62%;
+    padding-bottom: 60%;
     height: 0;
 }
-
 </style>
 
 <style>

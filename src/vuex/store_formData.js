@@ -279,6 +279,8 @@ export default {
         [Actions.FETCH_FORM_DATA]({commit, state}, payload) {
             let { url } = payload
             getData(url, data => {
+                commit(Mutations.CLEAR_FORM_STATUS)
+                commit(Mutations.CLEAR_ALL_DATA) 
                 let keyList = Object.keys(data)
                 //此处的form为后台返回的值
                 if(state.form === undefined)

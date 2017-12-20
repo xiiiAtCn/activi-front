@@ -52,10 +52,10 @@ export const mixin = {
             let length = null
             let svgLength = null
             if (computedType === ComputedType.width) {
-                length = this.svg.node().clientWidth
+                length = this.svg.node().clientWidth || this.svg.node().parentNode.clientWidth
                 svgLength = this.width
             } else {
-                length = this.svg.node().clientHeight
+                length = this.svg.node().clientHeight || this.svg.node().parentNode.clientHeight
                 svgLength = this.height
             }
 

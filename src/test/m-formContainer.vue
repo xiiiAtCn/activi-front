@@ -5,7 +5,6 @@
 </template> 
 <script> 
     import _ from 'lodash'
-    import { DESTROY_FORM_DATA } from 'store/Mutation'
     export default {
         props: {
             type: {
@@ -152,9 +151,6 @@
             form () {
                 return _.get(this.define, 'form', 'form')
             }
-        },
-        beforeDestroy () {
-            this.$store.commit(DESTROY_FORM_DATA, {form: this.form})
         }
     }
 </script>

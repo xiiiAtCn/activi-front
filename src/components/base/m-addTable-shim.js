@@ -192,9 +192,5 @@ Vue.component('mDetailTable', {
             }
             return columns
         }
-    },
-    beforeDestroy() {
-        this.$store.commit(DESTROY_FORM_DATA, {form: this.ui_form})
-        this.$store.commit(CLEAR_FORM_STATUS)
     }
 })

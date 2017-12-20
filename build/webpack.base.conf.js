@@ -78,5 +78,8 @@ module.exports = {
         }
       }
     ]
+  },
+  externals: {
+    'd4': 'window.d3'
   }
 }

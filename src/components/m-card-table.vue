@@ -6,9 +6,9 @@
             </div>
             <div>
                 <Row class="container">
-                    <Col span="6" v-for="v in content[key]">
-                        <span class="title">{{v.title}}</span>
-                        <span class="content">{{v.value}}</span>
+                    <Col span="6" v-for="v in spanData[key]">
+                        <span class="title">{{v.title}} </span>
+                        <span class="content"> {{v.value}}</span>
                     </Col>
                 </Row>
             </div>
@@ -44,7 +44,7 @@
               columnsData: [
                   {
                       title: '任务ID',
-                      key: 'FID',
+                      key: 'FTASKID',
                       align:'center'
                   },
                   {
@@ -127,9 +127,9 @@
                       }
                   }
                   tableData[i].push(row)
-                  spliceList.forEach((v)=>{
-                      datas[i].splice(v,1)
-                  })
+                  for(let k=spliceList.length-1;k>=0;k--){
+                      datas[i].splice(spliceList[k],1)
+                  }
                   spanData[i] = datas[i]
               }
               this.tableData = tableData

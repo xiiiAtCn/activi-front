@@ -70,6 +70,10 @@ const emailDetail = resolve => require(['../components/businessModule/email/emai
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDashboard.vue'], resolve)
 
+const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
+const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
+
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -232,6 +236,14 @@ const router = new VueRouter({
         {
             path: '/productPrice',
             component: productPrice
+        },
+        {
+            path: '/test',
+            component: fishBoneChart
+        },
+        {
+            path: '/test2',
+            component: copyFishBone
         }
     ]
 })
