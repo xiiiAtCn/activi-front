@@ -126,12 +126,9 @@ function asLink(action) {
     if (action.alert) {
         iView.Message.success(action.alert)
     }
-
     let targetAction = function () {
         if (action.mode === 'reload') {
             let c = router.currentRoute
-            store.commit(CLEAR_FORM_STATUS)
-            store.commit(CLEAR_ALL_DATA)
             router.replace({ path: c.path, query: c.query, hash: String(Date.now()) })
         } else {
             let routLinkParam = {}
@@ -154,8 +151,10 @@ function asLink(action) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
             }
             if (action.mode === 'replace') {
+                routLinkParam.hash = String(Date.now())
                 router.replace(routLinkParam)
             } else {
+                routLinkParam.hash = String(Date.now())
                 router.push(routLinkParam)
             }
             if(action.callback) {
