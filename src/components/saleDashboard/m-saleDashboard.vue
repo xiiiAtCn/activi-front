@@ -6,7 +6,9 @@
                 <Panel name="1">
                     <span class="panel-title">销售简报</span>
                     <div slot="content" class="number-container">
-                        <numberBox :chartData="numberBoxData" />
+                        <numberBox 
+                            :chartData="numberBoxData"
+                            :show="showNumberBox" />
                     </div>
                 </Panel>
                 <Panel name="2">
@@ -78,7 +80,7 @@
     export default {
         data() {
             return {
-                openPanel: [1, 2, 3],
+                openPanel: ["1", "2", "3"],
                 // nubmerBox相关
                 numberBoxData: [],
                 // 柱状图折线图相关
@@ -141,6 +143,9 @@
             }
         },
         computed: {
+            showNumberBox () {
+                return this.openPanel.includes("1")
+            },
             currentFunnelQuater() {
                 return this.funnelQuaterList.filter(item => item.id === this.funnelQuarter)[0]
             },
@@ -180,7 +185,7 @@
                 this.searchFunnelTableData()
             },
             panelChange() {
-                this.openPanel = [1, 2, 3];
+                // this.openPanel = [1, 2, 3];
             },
             searchResultTableData(index) {
                 let request = new Request()
