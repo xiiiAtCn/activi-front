@@ -114,11 +114,7 @@
                 funnelQuaterList: funnelQuaterList,
                 funnelData: [],
                 currPercent: '',
-                funnelTableDefine: {
-                    cols: [],
-                    data_url: {},
-                    showModalBtn: false,
-                },
+                funnelTableDefine: null,
                 currKey: ''
             }
         },
