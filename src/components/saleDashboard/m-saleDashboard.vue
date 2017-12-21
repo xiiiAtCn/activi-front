@@ -47,10 +47,8 @@
                             <Col span="12">
                             <Row class="funnel-right" type="flex" justify="center">
                                 <Col span="4" v-for="item in sortFunnelData" :key="item.text">
-                                    <div class="funnel-box" :class="{active: item.percent <= currPercent}">
+                                    <div class="funnel-box" :class="{active: Number(item.percent) <= Number(currPercent)}">
                                         <span>{{ item.text }}</span>
-                                        <br>
-                                        <span>{{ item.percent }}</span>
                                     </div>
                                 </Col>
                             </Row>
@@ -77,6 +75,18 @@
         getFunnelData: '/api/sales-board/sales-funnel-overview'
     }
 
+    let MonthList = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+    let funnelQuaterList = []
+
+    for (let i = 0; i < 12; i++) {
+        funnelQuaterList.push({
+            id: i,
+            year: '2017',
+            month: i + 1,
+            text: MonthList[i] 
+        })
+    }
+
     export default {
         data() {
             return {
@@ -101,37 +111,7 @@
                 resultTableData: [],
                 // 漏斗图相关
                 funnelQuarter: 1,
-                funnelQuaterList: [{
-                        id: 1,
-                        year: '2017',
-                        month: '1',
-                        text: "一月"
-                    },
-                    {
-                        id: 2,
-                        year: '2017',
-                        month: '2',
-                        text: "二月"
-                    },
-                    {
-                        id: 3,
-                        year: '2017',
-                        month: '3',
-                        text: "三月"
-                    },
-                    {
-                        id: 4,
-                        year: '2017',
-                        month: '4',
-                        text: "四月"
-                    },
-                    {
-                        id: 12,
-                        year: '2017',
-                        month: '12',
-                        text: "十二月"
-                    }
-                ],
+                funnelQuaterList: funnelQuaterList,
                 funnelMoment: 1,
                 funnelData: [],
                 currPercent: '',
@@ -139,7 +119,8 @@
                     cols: [],
                     data_url: {},
                     showModalBtn: false,
-                }
+                },
+                currKey: ''
             }
         },
         computed: {
@@ -158,7 +139,7 @@
             },
             // 排序后的数据
             sortFunnelData() {
-                return this.funnelData.sort((a, b) => a.percent.slice(0, a.length - 1) - b.percent.slice(0, a.length - 1))
+                return this.funnelData.sort((a, b) => Number(a) - Number(b))
             }
         },
         mounted() {
@@ -181,6 +162,7 @@
             },
             rectClick(data) {
                 this.currPercent = data.percent
+                this.currKey = data.key
                 this.searchFunnelData()
                 this.searchFunnelTableData()
             },
@@ -202,7 +184,7 @@
                 define.data_url.body = {
                     year: this.currentFunnelQuater.year,
                     month: this.currentFunnelQuater.month,
-                    phase: this.currPercent ? this.currPercent : '',
+                    phase: this.currKey,
                     flag: 'month'
                 }
                 this.funnelTableDefine = define
@@ -252,7 +234,12 @@
     .funnel-box {
         text-align: center;
         color: steelblue;
-        border: 1px solid steelblue;
+        border: 1px solid rgb(60, 104, 141);
+        min-height: 40px;
+    }
+
+    .funnel-box span {
+        line-height: 40px;
     }
 
     .funnel-table{
