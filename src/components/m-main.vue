@@ -175,7 +175,6 @@
                 })
             },
             dataUrl(newUrl) {
-
                 this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
 
             },

@@ -16,7 +16,6 @@ import iView from 'iview'
 import bus from '../router/bus'
 import Request, { replace, addQuery } from './request-addon'
 import {SUBMIT_FORM_DATA} from 'store/Action'
-import {CLEAR_FORM_STATUS, CLEAR_ALL_DATA } from 'store/Mutation'
 
 
 export function dispatch () {
@@ -38,12 +37,12 @@ export function dispatch () {
     } else if (util.isObject(arg0)) {
         (arg0.type === 'link' ? asLink
             : arg0.type === 'submit' ? asSubmit
-                : arg0.type === 'serverAction' ? asServerAction
-                        : asMessage)(arg0)
+            : arg0.type === 'selectOne'? selectOne
+            : arg0.type === 'serverAction' ? asServerAction
+            : asMessage)(arg0)
     } else {
         console.log('路由分发参数错误 1 ', arguments)
     }
-
     console.groupEnd()
 }
 
@@ -257,7 +256,54 @@ function asMessage(action) {
         action.callback()
     }
 }
+/**
+ * 
+ * @param {*} action 操作描述对象
+ * @add 2017-12-21 09:50:29
+ */
 
+export function selectOne(action) {
+    iView.Modal.warning({
+        title: `${action.message}`,
+        render:(h) => {
+            let buttons = action.buttons
+            let group = []
+            buttons.forEach((element, index) => {
+                let button = h(
+                    'Button',
+                    {
+                        props: {
+                            key: index,
+                            size: element.size || 'default',
+                            type: element.type || 'default'
+                        },
+                        style: {
+                            'marginLeft': '10px'
+                        },
+                        on: {
+                            click:() => {
+                                iView.Modal.remove()
+                                dispatch(element.action)
+                            }
+                        }
+                    },
+                    element.text
+                )
+                group.push(button)
+            })
+            return h(
+                'div',
+                {
+                    style:{
+                        'marginTop': '20px'
+                    }
+                },
+                group
+            )
+        },
+        okText: '取消'
+    })
+}
 /*
 * url对象转字符串
 * */
