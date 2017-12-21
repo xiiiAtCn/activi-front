@@ -110,9 +110,8 @@
                 ],
                 resultTableData: [],
                 // 漏斗图相关
-                funnelQuarter: 1,
+                funnelQuarter: 0,
                 funnelQuaterList: funnelQuaterList,
-                funnelMoment: 1,
                 funnelData: [],
                 currPercent: '',
                 funnelTableDefine: {
@@ -163,7 +162,6 @@
             rectClick(data) {
                 this.currPercent = data.percent
                 this.currKey = data.key
-                this.searchFunnelData()
                 this.searchFunnelTableData()
             },
             panelChange() {
