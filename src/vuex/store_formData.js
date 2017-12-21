@@ -42,7 +42,7 @@ export default {
                     form[i] = {}
                 }
             }
-            form['reset'] = true
+            form['_reset'] = true
         },
 
         [Mutations.SET_TABLE_DATA] (state, data) {

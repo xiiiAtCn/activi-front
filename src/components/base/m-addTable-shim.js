@@ -2,7 +2,7 @@ import Vue from 'vue'
 import _ from 'lodash'
 import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT} from 'store/Action'
 
-import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE,CLEAR_FORM_STATUS, DESTROY_FORM_DATA , ERASURE_DATA} from 'store/Mutation'
+import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE, ERASURE_DATA} from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
