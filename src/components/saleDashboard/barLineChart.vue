@@ -551,16 +551,24 @@ export default {
         },
         hideToolTip () {
             d3.select('body')
-                .select('div.tooltip')
+                .selectAll('div.tooltip')
                 .style('opacity', 0)
         }
     },
     mounted() {
-        // todo 判断有没有
-        this.tooltip = d3.select("body")  
+        let tooltip = d3.select('body').select('.tooltip')
+        if (!tooltip.empty()) {
+            this.tooltip = tooltip.attr("class","tooltip")  
+                .style("opacity",0.0)
+        } else {
+            this.tooltip = d3.select('body')  
             .append("div")  
             .attr("class","tooltip")  
             .style("opacity",0.0)
+        }
+    },
+    destroyed () {
+        d3.select('body').selectAll('div.tooltip').remove()
     }
 }
 </script>

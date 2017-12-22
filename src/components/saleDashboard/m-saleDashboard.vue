@@ -114,7 +114,7 @@
                 funnelQuaterList: funnelQuaterList,
                 funnelData: [],
                 currPercent: '',
-                funnelTableDefine: null,
+                funnelTableDefine: {},
                 currKey: ''
             }
         },
