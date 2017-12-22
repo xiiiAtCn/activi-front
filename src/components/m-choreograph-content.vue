@@ -74,11 +74,11 @@
                 this.$store.commit( ADD_NEW_OBJECT , {
                     attribute: this.form ,
                     value: {
-                        loading: true,
-                        reset: false,
-                        validate: false,
-                        visible: false,
-                        [ this.form + 'waitCheck']: []
+                        _loading: true,
+                        _reset: false,
+                        _validate: false,
+                        _visible: false,
+                        [ '_' + this.form + 'waitCheck']: []
                     }
                 })
                 let value = {
