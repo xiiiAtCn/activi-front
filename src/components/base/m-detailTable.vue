@@ -110,8 +110,10 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.action = {
-                                                type: 'update'
+                                            if(actions.indexOf('del') !== -1) {
+                                                this.action = {
+                                                    type: 'update'
+                                                }
                                             }
                                             this.dataIndex = mixture.index
                                             this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
