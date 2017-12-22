@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Card :bordered="true" v-for="(item,key) in tableData" class="card">
+        <Card :bordered="true" v-for="(item,key) in tableData" class="card-table">
             <div slot="title">
                 <Table :columns="columnsData" :data="item" style="text-align: center"></Table>
             </div>
@@ -151,8 +151,9 @@
         padding: 0 5px;
         font-weight: 600;
         color: #aaa;
+        font-size: 14px;
     }
-    .card{
+    .card-table{
         margin-bottom: 15px;
     }
     .container .content{
@@ -162,10 +163,10 @@
         white-space: nowrap;
         color: #333;
     }
-    .container .ivu-table-cell{
+</style>
+<style>
+    .card-table div.ivu-table-cell{
         word-break:keep-all;
-    }
-    .ivu-table-cell {
         line-height: 1.5;
     }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div ref="tableCt">
+    <div ref="tableCt" class="table-f">
         <Row class="top-content" style="text-align: right">
             <Col span="24">
                 <div class="button-container search" v-if="search" >
@@ -16,8 +16,8 @@
                                 </Option>
                             </AutoComplete>
                         </Col>
-                        <Col span="6">
-                            <Button @click="handleTopSearch" type="primary">搜索</Button>
+                        <Col span="6" class="btn-ct">
+                            <Button class="search-button" @click="handleTopSearch" type="info">搜索</Button>
                         </Col>
                     </Row>
                 </div>
@@ -145,27 +145,27 @@
                 rowList: [
                     {
                         value: '5',
-                        label: '5'
+                        label: '每页  5 行'
                     },
                     {
                         value: '10',
-                        label: '10'
+                        label: '每页 10 行'
                     },
                     {
                         value: '15',
-                        label: '15'
+                        label: '每页 15 行'
                     },
                     {
                         value: '20',
-                        label: '20'
+                        label: '每页 20 行'
                     },
                     {
                         value: '25',
-                        label: '25'
+                        label: '每页 25 行'
                     },
                     {
                         value: '30',
-                        label: '30'
+                        label: '每页 30 行'
                     }
                 ],
                 rowCount:10,
@@ -659,6 +659,15 @@
         min-width: 300px;
     }
 
+    .search .btn-ct{
+        text-align: left;
+    }
+    .search .search-button{
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+
     .columns-select{
         text-align: center;
     }
@@ -671,6 +680,10 @@
     }
 </style>
 <style>
+    .table-f .search .ivu-input{
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
     .ivu-table td{
         box-sizing: content-box !important;
     }
