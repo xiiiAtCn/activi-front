@@ -541,6 +541,7 @@ export default {
                 </div>`
             }
             this.tooltip.html(contentHtml)
+                .style('display', 'block')
                 .style("left", (d3.event.pageX) + "px")  
                 .style("top", (d3.event.pageY + 20) + "px")  
                 .style("opacity", 0.8)
@@ -553,6 +554,7 @@ export default {
             d3.select('body')
                 .selectAll('div.tooltip')
                 .style('opacity', 0)
+                .style('display', 'none')
         }
     },
     mounted() {
@@ -560,11 +562,13 @@ export default {
         if (!tooltip.empty()) {
             this.tooltip = tooltip.attr("class","tooltip")  
                 .style("opacity",0.0)
+                .style('display', 'none')
         } else {
             this.tooltip = d3.select('body')  
             .append("div")  
             .attr("class","tooltip")  
             .style("opacity",0.0)
+            .style('display', 'none')
         }
     },
     destroyed () {
