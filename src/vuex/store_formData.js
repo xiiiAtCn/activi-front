@@ -137,7 +137,6 @@ export default {
             }
         },
         [Mutations.ERASURE_DATA](state,payload) {
-            //
             if(state[payload.form])
                 delete state[payload.form][payload.name]
         }
@@ -159,7 +158,8 @@ export default {
             let checkResult = Object.keys(state[form + 'checkResult'])
             console.group('start check count')
             console.log(form + 'waitCheck is ', waitCheck)
-            console.log(form + 'checkResult is ', checkResult)
+            console.log(form + 'checkResult key is ', checkResult)
+            console.log(form + 'checkResult is ', state[form + 'checkResult'])
             console.groupEnd()
             for(let i = 0; i < waitCheck.length; i++) {
                 if(checkResult.indexOf(waitCheck[i]) === -1) {

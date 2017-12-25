@@ -147,10 +147,6 @@ Vue.component('mDetailTable', {
             if (newVal) {
                 this.valid()
             }
-        },
-        dataSource(newVal) {
-            if(newVal.length > 0)
-                this.valid()
         }
     },
     methods: {
@@ -198,5 +194,6 @@ Vue.component('mDetailTable', {
         
         let formFix = this.ui_form ? this.ui_form : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
+        this.$store.commit(ERASURE_DATA, { form: formFix + 'checkResult', name : this.name})
     }
 })

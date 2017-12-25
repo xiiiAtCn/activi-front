@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA} from 'store/Mutation'
+import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA, CLEAR_FORM_DATA} from 'store/Mutation'
 
 const mixin = {
     props: {
@@ -103,65 +103,65 @@ const mixin = {
                 let value = _.get(this.$store.state.formData[formFix], this.name)
                 if (value === undefined) {
                     switch (this.dataType) {
-                        case 'String':
-                            this.$store.commit(FORM_ELEMENT_VALUE,
-                                {
-                                    [this.name]: {
-                                        value: '',
-                                        type: this.$options._componentTag
-                                    },
-                                    form: formFix,
-                                    checkKey: this.name
-                                }
-                            )
-                            break
-                        case 'Array':
-                            this.$store.commit(FORM_ELEMENT_VALUE,
-                                {
-                                    [this.name]: {
-                                        value: [],
-                                        type: this.$options._componentTag
-                                    },
-                                    form: formFix,
-                                    checkKey: this.name
-                                }
-                            )
-                            break
-                        case 'Date':
-                            this.$store.commit(FORM_ELEMENT_VALUE,
-                                {
-                                    [this.name]: {
-                                        value: '',
-                                        type: this.$options._componentTag
-                                    },
-                                    form: formFix,
-                                    checkKey: this.name
-                                }
-                            )
-                            break
-                        case 'Object':
-                            this.$store.commit(FORM_ELEMENT_VALUE,
-                                {
-                                    [this.name]: {
-                                        value: {},
-                                        type: this.$options._componentTag
-                                    },
-                                    form: formFix,
-                                    checkKey: this.name
-                                }
-                            )
-                            break
-                        default:
-                            this.$store.commit(FORM_ELEMENT_VALUE,
-                                {
-                                    [this.name]: {
-                                        value: {},
-                                        type: this.$options._componentTag
-                                    },
-                                    form: formFix,
-                                    checkKey: this.name
-                                }
-                            )
+                    case 'String':
+                        this.$store.commit(FORM_ELEMENT_VALUE,
+                            {
+                                [this.name]: {
+                                    value: '',
+                                    type: this.$options._componentTag
+                                },
+                                form: formFix,
+                                checkKey: this.name
+                            }
+                        )
+                        break
+                    case 'Array':
+                        this.$store.commit(FORM_ELEMENT_VALUE,
+                            {
+                                [this.name]: {
+                                    value: [],
+                                    type: this.$options._componentTag
+                                },
+                                form: formFix,
+                                checkKey: this.name
+                            }
+                        )
+                        break
+                    case 'Date':
+                        this.$store.commit(FORM_ELEMENT_VALUE,
+                            {
+                                [this.name]: {
+                                    value: '',
+                                    type: this.$options._componentTag
+                                },
+                                form: formFix,
+                                checkKey: this.name
+                            }
+                        )
+                        break
+                    case 'Object':
+                        this.$store.commit(FORM_ELEMENT_VALUE,
+                            {
+                                [this.name]: {
+                                    value: {},
+                                    type: this.$options._componentTag
+                                },
+                                form: formFix,
+                                checkKey: this.name
+                            }
+                        )
+                        break
+                    default:
+                        this.$store.commit(FORM_ELEMENT_VALUE,
+                            {
+                                [this.name]: {
+                                    value: {},
+                                    type: this.$options._componentTag
+                                },
+                                form: formFix,
+                                checkKey: this.name
+                            }
+                        )
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[formFix], [this.name, 'value'], '')
@@ -224,9 +224,9 @@ const mixin = {
         }
     },
     destroyed: function () {
-        
         let formFix = this.ui_form ? this.ui_form : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
+        this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
     }
 }
 

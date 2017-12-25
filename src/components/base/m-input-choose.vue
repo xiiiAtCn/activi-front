@@ -113,7 +113,7 @@
                 } else {
                     this.isError = false
                 }
-                this.$store.commit(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
             }
         }
     }
