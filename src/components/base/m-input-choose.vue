@@ -17,7 +17,7 @@
             </mLayer>
         </Row>
         <Row>
-            <div v-if="isError" class="gateway-item-error">{{errorMessage}}</div>
+            <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
             <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
     </div>
@@ -35,8 +35,7 @@
         data () {
             return {
                 showLayer:false,
-                downData:[],
-                isError:false
+                downData:[]
             }
         },
         computed: {
@@ -94,26 +93,22 @@
 
                     this.valid()
                     if (this.objectModel !== '') {
-                        this.isError = false
                         this.errorMessage = ''
                     }
                 })
             },
             valid(){
                 let formFix = this.ui_form?this.ui_form: this.form
+                let hasError =false
                 if (!this.readonly) {
                     if (this.required) {
                         if (this.objectModel === '') {
-                            this.isError = true
+                            hasError = true
                             this.errorMessage = '请选择必填项'
-                        }else{
-                            this.isError = false
                         }
                     }
-                } else {
-                    this.isError = false
                 }
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: this.isError, form: formFix})
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
             }
         }
     }
