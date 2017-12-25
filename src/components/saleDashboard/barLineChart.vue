@@ -11,9 +11,9 @@ export default {
     mixins: [mixin],
     props: {
         chartData: {
-            type: Array,
+            type: Object,
             default () {
-                return [];
+                return {}
             }
         },
         xAxisKey: {
@@ -92,30 +92,39 @@ export default {
         yAxisLength() {
             return this.height - this.percentPaddingTop - this.percentPaddingBottom;
         },
+        maxValue () {
+            return this.chartData.max
+        },
+        stackOriginData () {    
+            return this.chartData.data.map(item => {
+                const {contractSum, month, receivedMoney} = item
+                return {
+                    contractSum: contractSum - receivedMoney,
+                    month,
+                    receivedMoney
+                }
+            })
+        },
         // 堆栈数据
         stackData() {
             return d3
                 .stack()
                 .keys(this.stackKeys)
                 .order(d3.stackOrderNone)
-                .offset(d3.stackOffsetNone)(this.chartData);
+                .offset(d3.stackOffsetNone)(this.stackOriginData);
         },
         xScale() {
             return d3
                 .scaleBand()
-                .domain(this.chartData.map(d => d[this.xAxisKey]))
+                .domain(this.stackOriginData.map(d => d[this.xAxisKey]))
                 .range([0, this.xAxisLength])
                 .paddingOuter(0.5)
                 .paddingInner(0.2);
         },
         yScaleBar() {
-            return d3
-                .scaleLinear()
-                .domain([
-                    0,
-                    d3.max(this.stackData[this.stackData.length - 1], d => d[1])
-                ])
-                .range([0, this.yAxisLength]);
+            return d3.scaleLinear()
+                    .domain([0, this.maxValue])
+                    .range([0, this.yAxisLength])
         },
         yScaleLine() {
             return d3
@@ -124,12 +133,8 @@ export default {
                 .range([0, this.yAxisLength]);
         },
         yScaleBarDraw() {
-            return d3
-                .scaleLinear()
-                .domain([
-                    0,
-                    d3.max(this.stackData[this.stackData.length - 1], d => d[1])
-                ])
+            return d3.scaleLinear()
+                .domain([0, this.maxValue])
                 .range([this.yAxisLength, 0]);
         },
         yScaleLineDraw() {
@@ -160,7 +165,7 @@ export default {
     methods: {
         // 绘制图形
         draw() {
-            if (this.chartData && this.chartData.length > 0) {
+            if (this.stackOriginData && this.stackOriginData.length > 0) {
                 this.drawStackGroup();
                 this.drawStackBar();
                 // this.drawLine()
@@ -276,7 +281,7 @@ export default {
                     for (let i of vue.stackKeys) {
                         content.push({
                             label: i,
-                            value: d.data[i],
+                            value: i === 'receivedMoney'? d.data[i] : d.data['contractSum'] + d.data['receivedMoney'],
                             color: vue.dataColor[i]
                         })
                     }
@@ -344,7 +349,7 @@ export default {
                 .append("text")
                 .attr("class", "labelText")
                 .attr("x", this.percentPaddingLeft + 20 + this.percentLabelWidth + 10)
-                .attr("y", (d, i) => this.percentPaddingTop +this.percentLabelStep * i + this.percentLabelWidth / 2 + 2)
+                .attr("y", (d, i) => this.percentPaddingTop +this.percentLabelStep * i + this.percentLabelWidth / 2 + 4)
                 .attr('z-index', 1)
                 .attr('fill', d => this.dataColor[d.key])
                 .text(d => d.key)
@@ -387,7 +392,7 @@ export default {
 
             this.chartLine = this.lineGroup
                 .append("path")
-                .datum(this.chartData)
+                .datum(this.stackOriginData)
                 .attr("fill", "none")
                 .attr("stroke", "red")
                 .attr("stroke-width", 3)
@@ -410,7 +415,7 @@ export default {
             // 折线文字数据
             this.lineGroup
                 .selectAll("text .line-text")
-                .data(this.chartData)
+                .data(this.stackOriginData)
                 .enter()
                 .append("text")
                 .attr("class", "line-text")

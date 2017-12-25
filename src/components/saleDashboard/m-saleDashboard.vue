@@ -104,7 +104,7 @@
                         key: 'contractSum'
                     },
                     {
-                        title: '汇款金额',
+                        title: '回款金额',
                         key: 'receivedMoney'
                     }
                 ],
@@ -167,7 +167,7 @@
                 let request = new Request()
                 request.setUrl(urlObj.getBarLineTableData).setPathVariables({
                     year: 2017,
-                    month: this.barLineData[index].month
+                    month: this.barLineData.data[index].month
                 })
                 request.forGet((data, err) => {
                     this.resultTableData = [data]
