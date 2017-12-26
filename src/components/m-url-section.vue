@@ -11,6 +11,8 @@
 <script>
     import {getData} from 'utils/actionUtils'
     import fetch from '../utils/DefineFetcher'
+    import { FETCH_FORM_DATA} from 'store/Action'
+    import _ from 'lodash'
 
     export default {
         props:{
@@ -23,47 +25,51 @@
             form:{
                 type:String,
                 default:'form'
-            },
-            query:{
-                type:null,
-                default () {
-                    return {}
-                }
             }
         },
         data() {
             return {
-                downData: {}
+                downData: {},
+                dataUrl: null,
+                statusUrl: null,
             }
         },
         provide: {
-            foo: 'bar'
+            form: 'form'
         },
         watch: {
-            $route () {
-                this.handleMainUrl(this.$route.query.url)
+            // $route () {
+            //     this.handleMainUrl(this.$route.query.url)
+            // },
+            define () {
+                this.handleDefine(this.define)
             },
+            dataUrl(newUrl) {
+                if(newUrl){
+                    this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
+                }
+            },
+            statusUrl(newUrl) {
+                if (newUrl) {
+                    this.$store.dispatch('putStatus',newUrl)
+                }
+            }
         },
         mounted() {
-            if(Object.keys(this.query).length !== 0){
-                this.handleMainUrl(this.query)
-            }else if(Object.keys(this.define).length !== 0){
-                this.handleUrl(this.define.urlObject)
+            if(Object.keys(this.define).length !== 0){
+                this.handleDefine(this.define)
             }else{
                 console.log('URL输入错误')
             }
         },
         methods:{
-            handleMainUrl(url){
-                fetch(url, (err, post) => {
-                    if (err) {
-                        console.log('main error:', err.message)
-                    } else {
-                        this.downData = post
-                    }
-                })
+            handleDefine(data){
+                this.dataUrl = data.dataUrl
+                this.statusUrl = data.statusUrl
+                this.handleUrl(data.defineUrl)
             },
-            handleUrl(url){
+            handleUrl(defineUrl){
+                let url = _.cloneDeep(defineUrl)
                 if(url === '' || Object.keys(url).length === 0){return}
                 getData(url,(data)=>{
                     if (data) {

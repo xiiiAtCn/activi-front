@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
+
 Vue.use(VueRouter)
 
 const mMain = resolve => require(['../components/m-main.vue'], resolve)
@@ -74,7 +75,7 @@ const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneC
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
 
 //urlSection
-const urlSection = resolve => require(['../components/m-url-section.vue'], resolve)
+const mHandleUrl = resolve => require(['../components/m-handle-url.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -91,8 +92,8 @@ const router = new VueRouter({
                 },
                 {
                     path: 'page',
-                    component: urlSection,
-                    props: (route) => ({ query: route.query})
+                    component: mHandleUrl,
+                    props: (route) => ({ query: route.query })
                 },
                 {
                     path: '/layoutContent/:id/workbench',

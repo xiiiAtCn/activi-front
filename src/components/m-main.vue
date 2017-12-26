@@ -152,8 +152,6 @@
         },
         data () {
             return {
-                dataUrl: null,
-                statusUrl: null,
                 topLeft:[],
                 bottomRight:[]
             }
@@ -169,29 +167,17 @@
         watch: {
             define () {
                 this.initialize(this.define)
-            },
-            dataUrl(newUrl) {
-                if(newUrl){
-                    this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
-                }
-            },
-            statusUrl(newUrl) {
-                if (newUrl) {
-                    this.$store.dispatch('putStatus',newUrl)
-                }
             }
         },
-        inject: ['foo'],
+        inject: ['form'],
         mounted () {
             this.initialize(this.define)
-            console.log(this.foo)
+            console.log('inject form',this.form)
         },
         methods: {
             initialize(define){
                 document.title = _.get( define , 'title', '')
                 this.handleButtonList( define.buttons )
-                this.dataUrl = _.get( define, 'data_url', null)
-                this.statusUrl = _.get( define, 'status_url', null)
             },
             edit: function (url) {
                 dispatch(url)

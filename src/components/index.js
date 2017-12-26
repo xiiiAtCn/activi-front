@@ -176,6 +176,10 @@ const mChoreographContent = resolve => {
     require(['./m-choreograph-content.vue'], resolve)
 }
 
+const mHandleUrl = resolve => {
+    require(['./m-handle-url.vue'], resolve)
+}
+
 Vue.component('mBoTemplate', mBoTemplate)
 Vue.component('mBillMeta', mBillMeta)
 Vue.component('mBoMeta', mBoMeta)
@@ -218,3 +222,4 @@ Vue.component('mJobOrchestrate', mJobOrchestrate)
 Vue.component('mJobTrack', mJobTrack)
 Vue.component('mCardTable', mCardTable)
 Vue.component('mChoreographContent', mChoreographContent)
+Vue.component('mHandleUrl', mHandleUrl)
