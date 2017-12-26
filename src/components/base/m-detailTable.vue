@@ -114,7 +114,12 @@
                                                 this.action = {
                                                     type: 'update'
                                                 }
+                                            } else {
+                                                this.action = {
+                                                    type: 'view'
+                                                }
                                             }
+                                            console.log(this.action)
                                             this.dataIndex = mixture.index
                                             this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
                                         }
@@ -187,6 +192,7 @@
             },
             submit2Table() {
                 let action = {}
+                debugger
                 action = {
                     ...this.action
                 }
@@ -204,8 +210,7 @@
                 this.rowSelected = selection
             }
         },
-        destroyed: function () {
-
+        destroyed() {
             let formFix = this.ui_form ? this.ui_form : this.form
             this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         }

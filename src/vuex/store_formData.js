@@ -112,7 +112,8 @@ export default {
             let { form } = payload
             state[form] = {
                 ...state[form],
-                _validate: false
+                _validate: false,
+                _reset: false
             }
         },
         [Mutations.ELEMENT_VALIDATE_RESULT] (state, payload) {

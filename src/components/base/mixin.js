@@ -223,7 +223,7 @@ const mixin = {
             errorMessage: ''
         }
     },
-    destroyed: function () {
+    destroyed() {
         let formFix = this.ui_form ? this.ui_form : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         this.$store.commit(CLEAR_FORM_DATA, {form: formFix})

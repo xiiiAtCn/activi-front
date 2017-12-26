@@ -2,7 +2,7 @@ import Vue from 'vue'
 import _ from 'lodash'
 import { FETCH_TABLE_DATA, ELEMENT_VALIDATE_RESULT} from 'store/Action'
 
-import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE, ERASURE_DATA} from 'store/Mutation'
+import {ADD_NEW_OBJECT, FORM_ELEMENT_VALUE, ERASURE_DATA, CLEAR_FORM_DATA} from 'store/Mutation'
 Vue.component('mDetailTable', {
     render: function (h) {
         return h('mTable2', {
@@ -151,6 +151,7 @@ Vue.component('mDetailTable', {
     },
     methods: {
         valid() {
+            debugger
             if(this.dataSource.length == 0) {
                 this.$Modal.error({
                     title:'警告',
@@ -190,10 +191,11 @@ Vue.component('mDetailTable', {
             return columns
         }
     },
-    destroyed: function () {
+    destroyed() {
         
         let formFix = this.ui_form ? this.ui_form : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         this.$store.commit(ERASURE_DATA, { form: formFix + 'checkResult', name : this.name})
+        this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
     }
 })
