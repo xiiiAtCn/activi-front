@@ -9,11 +9,8 @@
                                 v-model="valueSearch"
                                 placeholder="查询"
                                 @on-search="searchSuggest"
-                                @enter="handleTopSearch"
-                            >
-                                <Option v-for="(option, index) in suggestList" :value="option" :key="index">
-                                    {{option}}
-                                </Option>
+                                @enter="handleTopSearch">
+                                <Option v-for="(option, index) in suggestList" :value="option" :key="index">{{option}}</Option>
                             </AutoComplete>
                         </Col>
                         <Col span="6" class="btn-ct">
