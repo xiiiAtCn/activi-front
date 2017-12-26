@@ -69,7 +69,7 @@
               let urlObj={
                   type:'link',
                   at: item.url.split('&')[0].split('=')[1],
-                  url: `${Id}/${item.code}`
+                  url: `/api/menu/getPage/${Id}/${item.code}`
               }
               dispatch(urlObj)
 //            }

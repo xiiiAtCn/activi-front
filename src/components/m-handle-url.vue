@@ -30,13 +30,16 @@
             },
         },
         mounted() {
-            this.query.url && this.handleUrl('/api/menu/getPage/'+this.query.url)
+            this.query.url && this.handleUrl(this.query.url)
         },
         methods:{
             handleUrl(query){
                 let url = _.cloneDeep(query)
-                getData(url,(data)=>{
-                    if (data) {
+                console.log('handleurl is ',url)
+                getData(url,(data,err)=>{
+                    if(err){
+                        console.log('handle-url error')
+                    }else if (data) {
                         this.downData = data
                         this.downData.ui_type = 'm-url-section'
                     }

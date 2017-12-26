@@ -41,9 +41,9 @@
             // $route () {
             //     this.handleMainUrl(this.$route.query.url)
             // },
-            define () {
-                this.handleDefine(this.define)
-            },
+            // define () {
+            //     this.handleDefine(this.define)
+            // },
             dataUrl(newUrl) {
                 if(newUrl){
                     this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
@@ -71,6 +71,16 @@
             handleUrl(defineUrl){
                 let url = _.cloneDeep(defineUrl)
                 if(url === '' || Object.keys(url).length === 0){return}
+                getData(url,(data,err)=>{
+                    if(err){
+                        console.log('url-section error')
+                    }else if (data) {
+                        this.downData = data
+                    }
+                })
+            },
+            reloadData(dataUrl){
+                let url = _.cloneDeep(dataUrl)
                 getData(url,(data)=>{
                     if (data) {
                         this.downData = data
