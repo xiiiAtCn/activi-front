@@ -25,14 +25,16 @@
             }
         },
         watch: {
-
+            $route () {
+                this.handleUrl(this.$route.query.url)
+            },
         },
         mounted() {
-            this.query.url && this.handleUrl(this.query)
+            this.query.url && this.handleUrl('/api/menu/getPage/'+this.query.url)
         },
         methods:{
             handleUrl(query){
-                let url = '/api/menu/getPage/'+query.url
+                let url = _.cloneDeep(query)
                 getData(url,(data)=>{
                     if (data) {
                         this.downData = data

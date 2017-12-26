@@ -3,7 +3,7 @@
     <Row type="flex" v-if="details">
       <div class="container">
         <div class="at-grid" data-column="4" style="margin-left: -100px">
-          <div class="at-column" v-for="item in details" :key="item.code" @click="dispatchAction(item.code)">
+          <div class="at-column" v-for="item in details" :key="item.code" @click="dispatchAction(item)">
             <div class="at-user">
               <div class="at-user__avatar">
                 <Icon :type="item.icon" style="color: #2d8cf0"></Icon>
@@ -60,15 +60,16 @@
                       console.log(error)
                   )
           },
-          dispatchAction: function (code) {
+          dispatchAction: function (item) {
 //             if (this.$route.params.id === '00'){
 //                this.$router.push({ path:  + url })
 //            } else {
+              console.log(item)
               let Id = this.$route.params.id
               let urlObj={
                   type:'link',
-                  at: '/layoutContent/'+Id+'/page',
-                  url: `${Id}/${code}`
+                  at: item.url.split('&')[0].split('=')[1],
+                  url: `${Id}/${item.code}`
               }
               dispatch(urlObj)
 //            }
