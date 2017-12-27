@@ -41,9 +41,9 @@
             // $route () {
             //     this.handleMainUrl(this.$route.query.url)
             // },
-            // define () {
-            //     this.handleDefine(this.define)
-            // },
+            define () {
+                this.handleDefine(this.define)
+            },
             dataUrl(newUrl) {
                 if(newUrl){
                     this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
@@ -56,7 +56,7 @@
             }
         },
         mounted() {
-            if(Object.keys(this.define).length !== 0){
+            if(this.define && Object.keys(this.define).length !== 0){
                 this.handleDefine(this.define)
             }else{
                 console.log('URL输入错误')
