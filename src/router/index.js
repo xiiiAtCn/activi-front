@@ -91,8 +91,7 @@ const router = new VueRouter({
                 },
                 {
                     path: 'page',
-                    component: urlSection,
-                    props: (route) => ({ query: route.query})
+                    component: mMain
                 },
                 {
                     path: '/layoutContent/:id/workbench',

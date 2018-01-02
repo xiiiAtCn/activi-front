@@ -53,21 +53,21 @@
                 </div>
                 </Col>
                 <Col span="4" class="pull-right">
-                    <transition name="fade" mode="out-in">
-                        <Button type="primary" v-if="define.editUrl" shape="circle" @click="edit(define.editUrl)">
-                            <Icon type="document-text"></Icon>
-                            编辑
-                        </Button>
-                    </transition>
-                    <transition name="fade" mode="out-in">
-                        <Button type="ghost" v-if="define.backUrl" shape="circle" @click="backUrl(define.backUrl)">
-                            <Icon type="reply"></Icon>
-                            返回
-                        </Button>
-                        <Button type="ghost" shape="circle" @click="back" v-else>
-                            <Icon type="reply"></Icon>
-                            返回
-                        </Button>
+                <transition name="fade" mode="out-in">
+                    <Button type="primary" v-if="define.editUrl" shape="circle" @click="edit(define.editUrl)">
+                        <Icon type="document-text"></Icon>
+                        编辑
+                    </Button>
+                </transition>
+                <transition name="fade" mode="out-in">
+                    <Button type="ghost" v-if="define.backUrl" shape="circle" @click="backUrl(define.backUrl)">
+                        <Icon type="reply"></Icon>
+                        返回
+                    </Button>
+                    <Button type="ghost" shape="circle" @click="back" v-else>
+                        <Icon type="reply"></Icon>
+                        返回
+                    </Button>
                 </transition>
                 </Col>
             </Row>
@@ -127,33 +127,21 @@
     </div>
 </template>
 <script>
+    import fetch from '../utils/DefineFetcher'
+    import router from '../router'
     import {dispatch} from '../utils/actionUtils'
     import { FETCH_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
 
     export default {
-        props:{
-            define:{
-                type:null,
-                default () {
-                    return {}
-                }
-            },
-            form:{
-                type:String,
-                default:'form'
-            },
-            content:{
-                type:null,
-                default () {
-                    return {}
-                }
-            }
-        },
+        router,
         data () {
             return {
+                meta: null,
+                errorMessage: null,
+                define: {},
+                content: [],
                 dataUrl: null,
-                statusUrl: null,
                 topLeft:[],
                 bottomRight:[]
             }
@@ -167,32 +155,38 @@
             }
         },
         watch: {
-            define () {
-                this.initialize(this.define)
+            $route () {
+                this.meta = null
+                console.log('this.$route.query', this.$route.query)
+                let query = this.$route.query.url
+                fetch(query, (err, post) => {
+                    if (err) {
+                        this.errorMessage = err.message
+                    } else {
+                        console.log('post', post)
+                        this.meta = post
+                        this.define = _.get(post, 'ui_define', {})
+                        this.content = _.get(post, 'ui_content', [])
+                        document.title = _.get(this.define, 'title', '')
+                        let url = this.define.data_url
+                        this.handleButtonList(this.define.buttons)
+                        this.$store.dispatch(FETCH_FORM_DATA, {url: url})
+                    }
+                })
             },
             dataUrl(newUrl) {
-                if(newUrl){
-                    this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
-                }
+                this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
+
             },
-            statusUrl(newUrl) {
-                if (newUrl) {
-                    this.$store.dispatch('putStatus',newUrl)
+            'define.status_url'() {
+                if (this.define.status_url) {
+                    this.$store.dispatch('putStatus',  this.define.status_url)
                 }
             }
         },
-        inject: ['foo'],
         mounted () {
-            this.initialize(this.define)
-            console.log(this.foo)
         },
         methods: {
-            initialize(define){
-                document.title = _.get( define , 'title', '')
-                this.handleButtonList( define.buttons )
-                this.dataUrl = _.get( define, 'data_url', null)
-                this.statusUrl = _.get( define, 'status_url', null)
-            },
             edit: function (url) {
                 dispatch(url)
             },
@@ -208,7 +202,8 @@
                 dispatch(btn.action)
             },
             handleButtonList(list){
-                this.clearButtonList()
+                this.topLeft={}
+                this.bottomRight={}
                 if(!list){
                     return
                 }
@@ -232,7 +227,26 @@
                 this.topLeft={}
                 this.bottomRight={}
             }
-        }
+        },
+        beforeRouteEnter (to, from, next) {
+            fetch(to.query, (err, post) => {
+                if (err) {
+                    console.log('main error:', err.message)
+                    next(false)
+                } else {
+                    next(vm => {
+                        vm.meta = post
+                        vm.define = _.get(post, 'ui_define', {})
+                        vm.content = _.get(post, 'ui_content', [])
+                        vm.dataUrl = _.get(post, ['ui_define', 'data_url'], null)
+                        document.title = vm.define.title || '表单'
+                        console.log('beforeRouteEnter')
+                        vm.handleButtonList(vm.define.buttons)
+
+                    })
+                }
+            })
+        },
     }
 </script>
 
