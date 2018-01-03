@@ -1,5 +1,7 @@
+import "babel-polyfill"
 import Vue from 'vue'
 import Vuex from 'vuex'
+
 
 import pageData from './store_pageData'
 import pageStatus from './store_pageStatus'
