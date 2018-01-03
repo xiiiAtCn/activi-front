@@ -1,6 +1,7 @@
 import axios from 'axios'
 import urlUtil from 'url'
 import  _ from 'lodash'
+import iView from 'iview'
 /**
  *
  * @author  Lungern xiii.at.cn@gmail.com
@@ -36,6 +37,7 @@ Request.prototype.forGet = function (callback) {
             console.error(`err from get method %c${location.origin + url} \n`,
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.groupEnd()
+            iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
@@ -80,6 +82,7 @@ Request.prototype.forPost = function (callback) {
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
+            iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
