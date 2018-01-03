@@ -1,4 +1,5 @@
 // The Vue build version to load with the `import` command
+import "babel-polyfill"
 import mPage from './components/m-page.vue'
 import './assets/css/base.css'
 import iView from 'iview'
