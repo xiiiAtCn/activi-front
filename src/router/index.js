@@ -73,7 +73,7 @@ const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDas
 
 const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
-const stackChart = resolve => require(['../components/chart/test.vue'], resolve)
+const stackChart = resolve => require(['../components/chart/chartContainer.vue'], resolve)
 
 //urlSection
 const urlSection = resolve => require(['../components/m-url-section.vue'], resolve)
