@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import _ from 'lodash'
 
 export const ComputedType = {
     width: 'width',
@@ -10,7 +9,7 @@ export const mixin = {
     props: {
         paddingTop: {
             type: String,
-            default: '5%'
+            default: '10%'
         },
         paddingRight: {
             type: String,
@@ -18,7 +17,7 @@ export const mixin = {
         },
         paddingBottom: {
             type: String,
-            default: '5%'
+            default: '10%'
         },
         paddingLeft: {
             type: String,
@@ -74,12 +73,5 @@ export const mixin = {
         this.$nextTick(() => {
             this.draw()
         })
-    },
-    watch: {
-        chartData (newVal, oldVal) {
-            if (!_.isEqual(newVal, oldVal)) {
-                this.draw(newVal, oldVal)
-            }
-        }
     }
 }
