@@ -5,11 +5,12 @@
 </template>
 
 <script>
-import * as d3 from "d3";
-import { mixin, ComputedType } from "./mixin";
+import * as d3 from "d3"
+import { mixin, ComputedType } from "../chart/mixin"
+import { mixin as watchMixin } from '../chart/watchMixin'
 
 export default {
-    mixins: [mixin],
+    mixins: [mixin, watchMixin],
     props: {
         chartData: {
             type: Array,

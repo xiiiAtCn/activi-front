@@ -94,7 +94,7 @@
                 // nubmerBox相关
                 numberBoxData: [],
                 // 柱状图折线图相关
-                barLineData: [],
+                barLineData: {},
                 resultTableColums: [{
                         title: '目标',
                         key: 'target'

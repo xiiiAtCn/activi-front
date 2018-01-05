@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
+
 Vue.use(VueRouter)
 
 const mMain = resolve => require(['../components/m-main.vue'], resolve)
@@ -72,6 +73,7 @@ const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDas
 
 const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
+const stackChart = resolve => require(['../components/chart/test.vue'], resolve)
 
 //urlSection
 const urlSection = resolve => require(['../components/m-url-section.vue'], resolve)
@@ -246,6 +248,10 @@ const router = new VueRouter({
         {
             path: '/test2',
             component: copyFishBone
+        },
+        {
+            path: '/test4',
+            component: stackChart
         }
     ]
 })
