@@ -47,10 +47,12 @@ mock.mock(urlObj.stackChartData, {
     },
     "xAxis": [{
         "type": xAxisType[1],
-        "data": "@range(1, 13, 1)"
+        "data": "@range(1, 13, 1)",
+        "unit": "@cword('个斤米')"
     }],
     "yAxis": [{
-        type: xAxisType[0]
+        type: xAxisType[0],
+        "unit": "@cword('个斤米')"
     }],
     "series": seriesData,
     "title": {

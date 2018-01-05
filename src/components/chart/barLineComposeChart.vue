@@ -293,25 +293,52 @@ export default {
                     this._drawAxisForReal(this.percentPaddingLeft, 
                         index % 2 === 0 ? this.height - this.percentPaddingBottom : this.percentPaddingTop, 
                         `axis xAxis index-${index}`,
-                        this.xAxis[index])
+                        this.xAxis[index],
+                        item.unit,
+                        type)
                 })
             } else if (type === axisType.y) {
                 option.forEach((item, index) => {
                     this._drawAxisForReal(index % 2 === 0 ? this.percentPaddingLeft : this.width - this.percentPaddingRight, 
                         this.percentPaddingTop, 
                         `axis yAxis index-${index}`,
-                        this.yAxis[index])
+                        this.yAxis[index],
+                        item.unit,
+                        type)
                 })
             }
         },
         // 绘制轴
-        _drawAxisForReal (translateX, translateY, className, axisScale) {
+        _drawAxisForReal (translateX, translateY, className, axisScale, unit, type) {
             d3.selectAll(`.${className.split(" ").join(".")}`).remove()
-            return this.svg
+            let axis = this.svg
                 .append('g')
                 .attr("class", className)
                 .attr("transform", `translate(${translateX}, ${translateY})`)
-                .call(axisScale)
+                .call(axisScale),
+                bBox = axis.node().getBBox()
+
+            if (type === axisType.x) {
+                this.svg
+                    .append('text')
+                    .attr('class', className)
+                    .attr("x", translateX + bBox.width + 5)
+                    .attr('y', translateY)
+                    .text(unit)
+                    .style("text-anchor", "start")
+                    .style("dominant-baseline", "text-before-edge")
+                    .style('font-size', 10)
+            } else {
+                this.svg
+                    .append('text')
+                    .attr('class', className)
+                    .attr("x", translateX)
+                    .attr('y', translateY - 5)
+                    .text(unit)
+                    .style("text-anchor", "end")
+                    .style("dominant-baseline", "text-after-edge")
+                    .style('font-size', 10)
+            }
         },
         // 遍历serises绘制图形
         drawSeries () {
