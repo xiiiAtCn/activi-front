@@ -327,7 +327,7 @@ export default {
                     .text(unit)
                     .style("text-anchor", "start")
                     .style("dominant-baseline", "text-before-edge")
-                    .style('font-size', 10)
+                    .style('font-size', '10px')
             } else {
                 this.svg
                     .append('text')
@@ -337,7 +337,7 @@ export default {
                     .text(unit)
                     .style("text-anchor", "end")
                     .style("dominant-baseline", "text-after-edge")
-                    .style('font-size', 10)
+                    .style('font-size', '10px')
             }
         },
         // 遍历serises绘制图形
@@ -691,7 +691,7 @@ export default {
                     .text(item)
                     .style("text-anchor", "start")
                     .style("dominant-baseline", "central")
-                    .style('font-size', 5)
+                    .style('font-size', '5px')
             })  
         },
         _lengendClick (d, self) {
@@ -751,7 +751,7 @@ export default {
                     .attr('y', 0)
                     .style("text-anchor", "middle")
                     .style("dominant-baseline", "text-before-edge")
-                    .style('font-size', 10)
+                    .style('font-size', '10px')
                     
                 container.append('g')
                     .attr('class', 'subtitle')
@@ -761,7 +761,7 @@ export default {
                     .text(this.title.subtext)
                     .style("text-anchor", "middle")
                     .style("dominant-baseline", "text-before-edge")
-                    .style('font-size', 5)
+                    .style('font-size', '5px')
             }
         }
     },
