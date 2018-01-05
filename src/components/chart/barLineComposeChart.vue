@@ -81,6 +81,10 @@ export default {
         };
     },
     computed: {
+        // 标题
+        title () {
+            return this.chartData.title
+        },
         percentLengendWidth() {
             return this.computedLength(this.lengendWidth, ComputedType.width);
         },
@@ -170,6 +174,7 @@ export default {
                 this.drawAxis()
                 this.drawSeries()
                 this.drawLengend()
+                this.drawTitle()
             }
         },
         drawAxis () {
@@ -698,6 +703,39 @@ export default {
                 .selectAll('div.tooltip')
                 .style('opacity', 0)
                 .style('display', 'none')
+        },
+        drawTitle () {
+            let titleGroup = this.svg.selectAll('g.title-container')
+            if (titleGroup.node()) {
+                titleGroup.selectAll('g.title')
+                    .select('text')
+                    .text(this.title.text)
+                titleGroup.selectAll('g.subtitle')
+                    .select('text')
+                    .text(this.title.subtext)
+            } else {
+                let container = this.svg.append('g')
+                    .attr('class', 'title-container')
+                container.append('g')
+                    .attr('class', 'title')
+                    .append('text')
+                    .text(this.title.text)
+                    .attr('x', this.width / 2)
+                    .attr('y', 0)
+                    .style("text-anchor", "middle")
+                    .style("dominant-baseline", "text-before-edge")
+                    .style('font-size', 10)
+                    
+                container.append('g')
+                    .attr('class', 'subtitle')
+                    .append('text')
+                    .attr('x', this.width / 2)
+                    .attr('y', container.node().getBBox().height)
+                    .text(this.title.subtext)
+                    .style("text-anchor", "middle")
+                    .style("dominant-baseline", "text-before-edge")
+                    .style('font-size', 5)
+            }
         }
     },
     watch: {

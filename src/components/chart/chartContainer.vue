@@ -52,7 +52,11 @@ mock.mock(urlObj.stackChartData, {
     "yAxis": [{
         type: xAxisType[0]
     }],
-    "series": seriesData
+    "series": seriesData,
+    "title": {
+        text: '@title(3, 5)',
+        subtext: '@title(3, 5)'
+    }
 })
 
 export default {
