@@ -3,7 +3,7 @@
         <div v-if="define.title">
             <Row>
                 <Col span="20" style="display: flex; justify-content: flex-start; align-items: flex-end">
-                <Breadcrumb  style="margin-right: 10px">
+                <Breadcrumb  style="margin-right: 10px;font-size: 18px">
                     <Breadcrumb-item v-if="typeof define.title === 'string'">
                         <span v-text="define.title"></span>
                     </Breadcrumb-item>
