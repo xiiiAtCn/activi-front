@@ -169,7 +169,7 @@
                                                 OPEN_TABLE_LAYER, 
                                                 {
                                                     form: this.temporary_form, 
-                                                    baseForm: this.baseForm, 
+                                                    formName: this.form, 
                                                     dataKey: this.name, 
                                                     index: mixture.index
                                                 }
@@ -191,7 +191,7 @@
                                                 DELETE_TABLE_DATA, 
                                                 {
                                                     dataKey: this.name,
-                                                    baseForm: this.baseForm,
+                                                    formName: this.form,
                                                     index: mixture.index
                                                 }
                                             )
@@ -286,7 +286,7 @@
                 action = _.cloneDeep(action)
                 if(action.type === 'add') {
                     this.action = action
-                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.tmpForm})
+                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.temporary_form})
                 } else if (action.type !== 'link') {
                     let ids = this.rowSelected.map(element => element['id']['value'])
                     action['url']['body'] = ids
@@ -301,9 +301,9 @@
                         title:'警告',
                         content: `请至少在${this.alias}中填入一条数据`
                     })
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: true, form: this.temporary_form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: true, form: this.form})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.temporary_form})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
                 }
             },
             submit2Table() {
@@ -313,12 +313,12 @@
                 }
                 action.value = this.name
                 action.index = this.dataIndex
-                action.form = this.baseForm
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.tmpForm, action: action})
+                action.form = this.form
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.temporary_form, action: action})
             },
             cancel() {
-                this.$store.commit(CLEAR_FORM_DATA, {form: this.tmpForm})
-                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.tmpForm})
+                this.$store.commit(CLEAR_FORM_DATA, {form: this.temporary_form})
+                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.temporary_form})
             },
             selectRow(selection ) {
                 console.log('selection ' ,selection)

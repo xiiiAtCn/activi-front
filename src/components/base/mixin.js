@@ -5,7 +5,7 @@ const mixin = {
     inject: {
         baseForm: {
             default: ''
-        }, 
+        },
         tmpForm: {
             default: ''
         }
@@ -216,6 +216,7 @@ const mixin = {
     watch: {
         validate (newVal) {
             if (newVal) {
+                debugger
                 this.valid()
             }
         },

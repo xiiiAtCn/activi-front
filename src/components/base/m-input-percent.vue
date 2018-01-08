@@ -49,7 +49,7 @@
         },
         methods: {
             valid () {
-                let formFix = this.ui_form?this.ui_form: this.form
+                let formFix = this.tmpForm?this.tmpForm: this.form
                 if (!this.readonly) {
                     let hasError = false
                     let value = String(this.objectModel == undefined ? '' : this.objectModel)
