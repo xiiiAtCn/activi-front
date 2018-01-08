@@ -2,7 +2,7 @@
     <div>
         <div class="test-chart-container">
             <barLineComposeChart
-                :chartData="stackChartData"
+                :define="stackChartData"
                 :barClick="searchData"
             />
         </div>
@@ -58,7 +58,11 @@ mock.mock(urlObj.stackChartData, {
     "title": {
         text: '@title(3, 5)',
         subtext: '@title(3, 5)'
-    }
+    },
+    'tooltip|3': [{
+        label: '@cword(1, 5)',
+        value: '@sentence(3)'
+    }]
 })
 
 export default {

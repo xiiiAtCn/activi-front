@@ -37,7 +37,7 @@ const yAxisDirection = {
 export default {
     mixins: [mixin],
     props: {
-        chartData: {
+        define: {
             type: Object,
             default () {
                 return {}
@@ -83,7 +83,10 @@ export default {
     computed: {
         // 标题
         title () {
-            return this.chartData.title
+            return this.define.title
+        },
+        tooltipConfig () {
+            return this.define.tooltip
         },
         percentLegendWidth() {
             return this.computedLength(this.legendWidth, ComputedType.width);
@@ -99,22 +102,22 @@ export default {
         },
         // 图例
         legend () {
-            return this.chartData.legend
+            return this.define.legend
         },
         // 每种分类对应设置及数据
         series () {
-            return this.chartData.series
+            return this.define.series
         },
         filterSeries () {
           return this.series.filter(item => !this.seriesFilterCondition.includes(item.name))  
         },
         // x轴设置
         xAxisOption () {
-            return this.chartData.xAxis
+            return this.define.xAxis
         },
         // y轴设置
         yAxisOption () {
-            return this.chartData.yAxis
+            return this.define.yAxis
         },
         // x轴长度
         xAxisLength() {
@@ -506,7 +509,6 @@ export default {
                     legend.splice(index, 1)
                 }
             })
-            
             let vue = this
             // 先绘制group确定每个group的transition
             this.addBarGroup(categoryData, categoryScale, type)
@@ -708,6 +710,15 @@ export default {
         },
         drawToolTip (title, content) {
             let contentHtml = `<span>${title}</span>`
+
+            for (let item of this.tooltipConfig) {
+                contentHtml +=`
+                    <div class="common-text">
+                        <span>${item.label}:</span>
+                        <span>${item.value}</span>
+                    </div>
+                ` 
+            }
             for (let item of content) {
                 contentHtml += `
                 <div class="data-item">
@@ -767,7 +778,7 @@ export default {
         }
     },
     watch: {
-        chartData (newVal, oldVal) {
+        define (newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
                 if (Object.keys(oldVal).length > 0) {
                     this.removeLine(oldVal.legend.data)
@@ -812,6 +823,9 @@ export default {
     background-color:#06B800;
 }
 .tooltip .data-item {
+    text-align: left;
+}
+.tooltip .common-text {
     text-align: left;
 }
 </style>
