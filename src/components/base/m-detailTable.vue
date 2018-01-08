@@ -21,8 +21,6 @@
                     <Row v-for="(column, index) in mixColumns" :key="index">
                         <component
                             v-if="column['ui_define']"
-                            :ui_form="ui_form"
-                            :form="formName"
                             :statusKey="name"
                             :is="column['ui_define']['ui_type']"
                             :define="column['ui_define']['ui_define']"
@@ -41,6 +39,7 @@
     import _ from 'lodash'
     import { dispatch} from 'utils/actionUtils'
     export default {
+        inject: ['baseForm', 'tmpForm'],
         props: {
             alias: {
                 type: String
@@ -77,14 +76,6 @@
                 type: Boolean,
                 default: true
             },
-            ui_form: {
-                type: [String, Number],
-                required: true
-            },
-            formName:{
-                type: [String],
-                default: 'form'
-            }
         },
         computed: {
             addable() {
@@ -121,7 +112,7 @@
                                             }
                                             console.log(this.action)
                                             this.dataIndex = mixture.index
-                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, formName: this.formName, dataKey: this.name, index: mixture.index})
+                                            this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form, baseForm: this.baseForm, dataKey: this.name, index: mixture.index})
                                         }
                                     }
                                 }, actions.indexOf('del') !== -1 ?'编辑':'查看'),
@@ -135,7 +126,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, formName: this.formName, index: mixture.index})
+                                            this.$store.dispatch(DELETE_TABLE_DATA, {dataKey: this.name, baseForm: this.baseForm, index: mixture.index})
                                         }
                                     }
                                 }, '删除'): ''
@@ -181,7 +172,7 @@
                 action = _.cloneDeep(action)
                 if(action.type === 'add') {
                     this.action = action
-                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.ui_form})
+                    this.$store.commit(OPEN_TABLE_LAYER, {form: this.tmpForm})
                 } else if (action.type !== 'link') {
                     let ids = this.rowSelected.map(element => element['id']['value'])
                     action['url']['body'] = ids
@@ -198,12 +189,12 @@
                 }
                 action.value = this.name
                 action.index = this.dataIndex
-                action.form = this.formName
-                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.ui_form, action: action})
+                action.form = this.baseForm
+                this.$store.dispatch(SUBMIT_FORM_DATA, {form: this.tmpForm, action: action})
             },
             cancel() {
-                this.$store.commit(CLEAR_FORM_DATA, {form: this.ui_form})
-                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.ui_form})
+                this.$store.commit(CLEAR_FORM_DATA, {form: this.tmpForm})
+                this.$store.commit(CLOSE_TABLE_LAYER, {form: this.tmpForm})
             },
             selectRow(selection ) {
                 console.log('selection ' ,selection)
@@ -211,7 +202,7 @@
             }
         },
         destroyed() {
-            let formFix = this.ui_form ? this.ui_form : this.form
+            let formFix = this.tmpForm
             this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         }
     }

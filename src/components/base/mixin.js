@@ -2,6 +2,14 @@ import _ from 'lodash'
 import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA, CLEAR_FORM_DATA} from 'store/Mutation'
 
 const mixin = {
+    inject: {
+        baseForm: {
+            default: ''
+        }, 
+        tmpForm: {
+            default: ''
+        }
+    },
     props: {
         define: {
             type: Object,
@@ -13,17 +21,13 @@ const mixin = {
             type: String,
             default: ''
         },
-        ui_form: {
+        statusKey: {
             type: [String, Number],
             default: ''
         },
         form: {
-            type: [String, Number],
+            type: String,
             default: 'form'
-        },
-        statusKey: {
-            type: [String, Number],
-            default: ''
         }
     },
     computed: {
@@ -31,7 +35,7 @@ const mixin = {
             let editable
             let flag
             if (this.statusKey) {
-                editable = _.get(this.$store.state.pageStatus, ['status', this.form, this.statusKey + '_detail', this.name])
+                editable = _.get(this.$store.state.pageStatus, ['status', this.baseForm, this.statusKey + '_detail', this.name])
             } else {
                 editable = _.get(this.$store.state.pageStatus, ['status', this.form, this.name])
             }
@@ -55,13 +59,16 @@ const mixin = {
             return _.get(this.define, 'dataType', 'String')
         },
         reset () {
+            if(this.tmpForm) {
+                return _.get(this.$store.state.formData[this.tmpForm], '_reset', false)
+            }
             return _.get(this.$store.state.formData[this.form], '_reset', false)
         },
         hasError: {
             get () {
                 let key
-                if (this.ui_form) {
-                    key = this.ui_form + 'checkResult'
+                if (this.tmpForm) {
+                    key = this.tmpForm + 'checkResult'
                 } else {
                     key = this.form + 'checkResult'
                 }
@@ -77,14 +84,14 @@ const mixin = {
             }
         },
         validate () {
-            if (this.ui_form) {
-                return _.get(this.$store.state.formData[this.ui_form], '_validate', false)
+            if (this.tmpForm) {
+                return _.get(this.$store.state.formData[this.tmpForm], '_validate', false)
             }
             return _.get(this.$store.state.formData[this.form], '_validate', false)
         },
         objectModel: {
             get () {
-                let formFix = this.ui_form ? this.ui_form : this.form
+                let formFix = this.tmpForm ? this.tmpForm : this.form
                 let form = _.get(this.$store.state.formData, formFix)
                 if (form === undefined) {
                     this.$store.commit(ADD_NEW_OBJECT,
@@ -180,7 +187,7 @@ const mixin = {
                 return tmp
             },
             set (value) {
-                let formFix = this.ui_form ? this.ui_form : this.form
+                let formFix = this.tmpForm ? this.tmpForm : this.form
                 this.$store.commit(FORM_ELEMENT_VALUE,
                     {
                         [this.name]: {
@@ -224,7 +231,7 @@ const mixin = {
         }
     },
     destroyed() {
-        let formFix = this.ui_form ? this.ui_form : this.form
+        let formFix = this.tmpForm ? this.tmpForm : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
     }

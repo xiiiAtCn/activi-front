@@ -13,14 +13,18 @@ Vue.component('mDetailTable', {
                 dataSource: this.dataSource,
                 visible: this.visible,
                 loading: this.loading,
-                ui_form: this.temporary_form,
                 name: this.name,
                 editable: this.readonly,
-                formName:this.ui_form
             }
         })
     },
     name: 'm-detail-table',
+    provide() {
+        return {
+            baseForm: this.ui_form,
+            tmpForm: this.temporary_form
+        }
+    },
     props: {
         define: {
             type: Object,
