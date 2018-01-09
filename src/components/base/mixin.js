@@ -216,7 +216,6 @@ const mixin = {
     watch: {
         validate (newVal) {
             if (newVal) {
-                debugger
                 this.valid()
             }
         },

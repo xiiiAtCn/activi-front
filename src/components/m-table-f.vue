@@ -194,7 +194,6 @@
             }
         },
         mounted () {
-            debugger
             console.log('mTableF run')
         },
         methods: {
