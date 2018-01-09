@@ -2,7 +2,7 @@
     <div>
         <div class="test-chart-container">
             <barLineComposeChart
-                :chartData="stackChartData"
+                :define="stackChartData"
                 :barClick="searchData"
             />
         </div>
@@ -21,14 +21,14 @@ xAxisType = ["value", "category"],
 seriesType = ["bar", "line"],
 category = ['category1', 'category2']
 
-let lengend = []
+let legend = []
 let seriesData = []
 for (let i = 0; i < 6; i++) {
     let province = Random.province()
-    while (lengend.includes(province)) {
+    while (legend.includes(province)) {
         province = Random.province()
     }
-    lengend.push(province)
+    legend.push(province)
     seriesData.push({
         "type|1": seriesType,
         "data|12": ["@string('number', 3)"],
@@ -42,8 +42,8 @@ for (let i = 0; i < 6; i++) {
 }
 
 mock.mock(urlObj.stackChartData, {
-    "lengend": {
-        "data": lengend
+    "legend": {
+        "data": legend
     },
     "xAxis": [{
         "type": xAxisType[1],
@@ -58,10 +58,28 @@ mock.mock(urlObj.stackChartData, {
     "title": {
         text: '@title(3, 5)',
         subtext: '@title(3, 5)'
-    }
+    },
+    'tooltip|3': [{
+        label: '@cword(1, 5)',
+        value: '@sentence(3)'
+    }]
 })
 
 export default {
+    props: {
+        chartData: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        searchAction: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
     data () {
         return {
             stackChartData: {}

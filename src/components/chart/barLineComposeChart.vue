@@ -37,7 +37,7 @@ const yAxisDirection = {
 export default {
     mixins: [mixin],
     props: {
-        chartData: {
+        define: {
             type: Object,
             default () {
                 return {}
@@ -51,19 +51,19 @@ export default {
             type: String,
             default: '20%'
         },
-        lengendStep: {
+        legendStep: {
             type: String,
             default: '20px'
         },
-        lengendHeight: {
+        legendHeight: {
             type: String,
             default: '10px'
         },
-        lengendWidth: {
+        legendWidth: {
             type: String,
             default: '30px'
         },
-        lengendInnterStep: {
+        legendInnterStep: {
             type: String,
             default: '5px'
         }
@@ -83,38 +83,41 @@ export default {
     computed: {
         // 标题
         title () {
-            return this.chartData.title
+            return this.define.title
         },
-        percentLengendWidth() {
-            return this.computedLength(this.lengendWidth, ComputedType.width);
+        tooltipConfig () {
+            return this.define.tooltip
         },
-        percentLengendHeight() {
-            return this.computedLength(this.lengendHeight, ComputedType.height);
+        percentLegendWidth() {
+            return this.computedLength(this.legendWidth, ComputedType.width);
         },
-        percentLengendStep () {
-            return this.computedLength(this.lengendStep, ComputedType.width)
+        percentLegendHeight() {
+            return this.computedLength(this.legendHeight, ComputedType.height);
         },
-        percentLengendInnterStep () {
-            return this.computedLength(this.lengendInnterStep, ComputedType.width )
+        percentLegendStep () {
+            return this.computedLength(this.legendStep, ComputedType.width)
+        },
+        percentLegendInnterStep () {
+            return this.computedLength(this.legendInnterStep, ComputedType.width )
         },
         // 图例
-        lengend () {
-            return this.chartData.lengend
+        legend () {
+            return this.define.legend
         },
         // 每种分类对应设置及数据
         series () {
-            return this.chartData.series
+            return this.define.series
         },
         filterSeries () {
           return this.series.filter(item => !this.seriesFilterCondition.includes(item.name))  
         },
         // x轴设置
         xAxisOption () {
-            return this.chartData.xAxis
+            return this.define.xAxis
         },
         // y轴设置
         yAxisOption () {
-            return this.chartData.yAxis
+            return this.define.yAxis
         },
         // x轴长度
         xAxisLength() {
@@ -173,7 +176,7 @@ export default {
             if (this.xAxisOption && this.xAxisOption.length > 0) {
                 this.drawAxis()
                 this.drawSeries()
-                this.drawLengend()
+                this.drawLegend()
                 this.drawTitle()
             }
         },
@@ -242,7 +245,7 @@ export default {
                     result.push([
                         x0,
                         d3.scaleBand()
-                            .domain(vue.lengend.data.filter(d => {
+                            .domain(vue.legend.data.filter(d => {
                                 let serie  = vue.filterSeries.filter(item => item.name === d)
                                 return serie && serie.length > 0 && serie[0].type === 'bar'
                             }))
@@ -391,11 +394,11 @@ export default {
                         lineQueue[key] = {
                             data: [],
                             params: [x, y],
-                            lengend: []
+                            legend: []
                         }
                     }
                     lineQueue[key].data.push(item.data)
-                    lineQueue[key].lengend.push(item.name)
+                    lineQueue[key].legend.push(item.name)
                 } else if (item.type === 'bar') {
                     let xyAxisParams = barQueue[key]
                     // 相同xy轴的参数不存在初始化
@@ -403,30 +406,30 @@ export default {
                         barQueue[key] = {
                             data: [],
                             params: [categoryData, categoryScale, valueScale, type],
-                            lengend: []
+                            legend: []
                         }
                     }
                     barQueue[key].data.push(item.data)
-                    barQueue[key].lengend.push(item.name)
+                    barQueue[key].legend.push(item.name)
                 }
             })
 
             while (Object.keys(barQueue).length > 0) {
                 let key = Object.keys(barQueue)[0],
                     param = barQueue[key]
-                this.drawBar(param.data, ...param.params, param.lengend)
+                this.drawBar(param.data, ...param.params, param.legend)
                 delete barQueue[key]
             }
             while (Object.keys(lineQueue).length > 0) {
                 let key = Object.keys(lineQueue)[0],
                     param = lineQueue[key]
-                this.drawLine(param.data, ...param.params, param.lengend)
+                this.drawLine(param.data, ...param.params, param.legend)
                 delete lineQueue[key]
             }
             
         },
-        removeLine (lengend) {
-            lengend.forEach((item, index) => {
+        removeLine (legend) {
+            legend.forEach((item, index) => {
                 this.svg
                     .selectAll(`g.line-container.${item}`)
                     .attr('opacity', 1)
@@ -435,7 +438,7 @@ export default {
             })
         },
         // 绘制折线
-        drawLine (data, x, y, lengend) {
+        drawLine (data, x, y, legend) {
             let vue = this,
                 line = d3.line()
                     .x(x)
@@ -445,17 +448,17 @@ export default {
 
             // 过滤数据
             this.seriesFilterCondition.forEach(item => {
-                let index = lengend.indexOf(item)
+                let index = legend.indexOf(item)
                 if (index !== -1) {
                     data.splice(index, 1)
-                    lengend.splice(index, 1)
+                    legend.splice(index, 1)
                     removeArr.push(item)
                 }
             })
             // remove
             this.removeLine(removeArr)
             // update or enter
-            lengend.forEach((item, index) => {
+            legend.forEach((item, index) => {
                 let lineUpdate = this.svg.selectAll(`g.line-container.${item}`).data([data[index]]),
                     lineEnter = lineUpdate.enter(),
                     lineExit = lineUpdate.exit()
@@ -465,7 +468,7 @@ export default {
                     .append('path')
                     .attr('stroke-width', 1.5)
                     .style('fill', 'none')
-                    .style('stroke', (d, i) => this.colors[this.lengend.data.indexOf(item)])
+                    .style('stroke', (d, i) => this.colors[this.legend.data.indexOf(item)])
                     .attr('d', line)
                     .attr("stroke-dasharray", function () {
                         return this.getTotalLength()
@@ -479,7 +482,7 @@ export default {
                 
                 lineUpdate.attr('class', `line-container ${item}`)
                     .select('path')
-                    .style('stroke', (d, i) => this.colors[this.lengend.data.indexOf(item)])
+                    .style('stroke', (d, i) => this.colors[this.legend.data.indexOf(item)])
                     .interrupt()
                     .attr('d', line)
                     .transition(this.transition)
@@ -496,14 +499,14 @@ export default {
          * @argument valueScale 数值轴对应比例尺
          * @argument type 分类轴类型（x||y）
          */
-        drawBar (data, categoryData, categoryScale, valueScale, type, lengend) {
+        drawBar (data, categoryData, categoryScale, valueScale, type, legend) {
             // 过滤数据
             this.seriesFilterCondition.forEach((item) => {
-                let index = lengend.indexOf(item)
+                let index = legend.indexOf(item)
                 if (index !== -1) {
                     // todo 过滤数据
                     data.splice(index, 1)
-                    lengend.splice(index, 1)
+                    legend.splice(index, 1)
                 }
             })
             let vue = this
@@ -522,13 +525,13 @@ export default {
                 })
 
                 if (type === axisType.x) {
-                    x = (d, i) => categoryScale[1](lengend[i])
+                    x = (d, i) => categoryScale[1](legend[i])
                     y = (d, i) => vue.height - vue.percentPaddingBottom - valueScale(d)
                     width = categoryScale[1].bandwidth()
                     height = (d, i) => valueScale(d)
                 } else if (tyep === axisType.y) {
                     x= (d, i) => vue.percentPaddingLeft + valueScale(d) 
-                    y = (d, i) => vue.height - vue.percentPaddingBottom - categoryScale[1](lengend[i])
+                    y = (d, i) => vue.height - vue.percentPaddingBottom - categoryScale[1](legend[i])
                     width = (d, i) => valueScale(d)
                     height = categoryScale[1].bandwidth()
                 }
@@ -546,7 +549,7 @@ export default {
                     .attr('y', y)
                     .attr('width', width)
                     .attr('height', height)
-                    .attr('fill', (d, i) => vue.colors[vue.lengend.data.indexOf(lengend[i])])
+                    .attr('fill', (d, i) => vue.colors[vue.legend.data.indexOf(legend[i])])
                 
                 rectEnter.append('rect')
                     .attr('class', 'bar')
@@ -557,7 +560,7 @@ export default {
                     .transition(vue.transition)
                     .attr('y', y)
                     .attr('height', height)
-                    .attr('fill', (d, i) => vue.colors[vue.lengend.data.indexOf(lengend[i])])
+                    .attr('fill', (d, i) => vue.colors[vue.legend.data.indexOf(legend[i])])
 
                 rectExit.interrupt()
                     .transition(vue.transition)
@@ -615,7 +618,7 @@ export default {
                     vue.series.forEach((item, i) => {
                         categoryData.push(item.data[index])
                     })
-                    vue.lengend.data.forEach((item, i) => {
+                    vue.legend.data.forEach((item, i) => {
                         if (!vue.seriesFilterCondition.includes(item)) {
                             content.push({
                                 label: item,
@@ -653,40 +656,40 @@ export default {
 
             groupExit.remove()
         },
-        drawLengend () {
+        drawLegend () {
             let vue = this
-            // 清除之前的lengend
-            this.svg.selectAll('g.lengend').remove()
+            // 清除之前的legend
+            this.svg.selectAll('g.legend').remove()
 
-            let lengendGroup = this.svg.append('g')
-                    .attr('class', 'lengend')
+            let legendGroup = this.svg.append('g')
+                    .attr('class', 'legend')
                     .attr('fill', 'white')
 
-            this.lengend.data.forEach((item, index) => {
+            this.legend.data.forEach((item, index) => {
                 let color = this.seriesFilterCondition.includes(item) ? 'black' : this.colors[index]
-                let itemGroup = lengendGroup.append('g')
-                    .attr('class', 'lengend-item-container')
+                let itemGroup = legendGroup.append('g')
+                    .attr('class', 'legend-item-container')
                     .attr('fill', color)
                     .on('click', function () {
-                        vue._lengendClick(item, this)
+                        vue._legendClick(item, this)
                     })
 
-                let bBox = lengendGroup.node().getBBox(),
+                let bBox = legendGroup.node().getBBox(),
                     x = index === 0 ? 
                         this.percentPaddingLeft : 
-                        this.percentPaddingLeft + bBox.width + this.percentLengendStep,
+                        this.percentPaddingLeft + bBox.width + this.percentLegendStep,
                     y = this.percentPaddingTop / 2
 
                 itemGroup.append('rect')
-                    .attr('class', 'lengend-item-pic')
+                    .attr('class', 'legend-item-pic')
                     .attr('x', x)
                     .attr('y', y)
-                    .attr('width', this.percentLengendWidth)
-                    .attr('height', this.percentLengendHeight)
+                    .attr('width', this.percentLegendWidth)
+                    .attr('height', this.percentLegendHeight)
                 
                 itemGroup.append('text')
-                    .attr('class', 'lengend-item-text')
-                    .attr('x', x + this.percentLengendWidth + this.percentLengendInnterStep)
+                    .attr('class', 'legend-item-text')
+                    .attr('x', x + this.percentLegendWidth + this.percentLegendInnterStep)
                     .attr('y', y)
                     .text(item)
                     .style("text-anchor", "start")
@@ -694,7 +697,7 @@ export default {
                     .style('font-size', '5px')
             })  
         },
-        _lengendClick (d, self) {
+        _legendClick (d, self) {
             if (this.seriesFilterCondition.includes(d)) {
                 this.seriesFilterCondition.splice(this.seriesFilterCondition.indexOf(d), 1)
             } else {
@@ -702,11 +705,20 @@ export default {
             }
             this.draw()
         },
-        _getLengendType (lengend) {
-            return this.series.filter(item => item.name === lengend)[0].type
+        _getLegendType (legend) {
+            return this.series.filter(item => item.name === legend)[0].type
         },
         drawToolTip (title, content) {
             let contentHtml = `<span>${title}</span>`
+
+            for (let item of this.tooltipConfig) {
+                contentHtml +=`
+                    <div class="common-text">
+                        <span>${item.label}:</span>
+                        <span>${item.value}</span>
+                    </div>
+                ` 
+            }
             for (let item of content) {
                 contentHtml += `
                 <div class="data-item">
@@ -766,10 +778,10 @@ export default {
         }
     },
     watch: {
-        chartData (newVal, oldVal) {
+        define (newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
                 if (Object.keys(oldVal).length > 0) {
-                    this.removeLine(oldVal.lengend.data)
+                    this.removeLine(oldVal.legend.data)
                 }
                 this.seriesFilterCondition = []
                 this.draw(newVal, oldVal)
@@ -811,6 +823,9 @@ export default {
     background-color:#06B800;
 }
 .tooltip .data-item {
+    text-align: left;
+}
+.tooltip .common-text {
     text-align: left;
 }
 </style>
