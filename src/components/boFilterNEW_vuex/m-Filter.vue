@@ -146,7 +146,8 @@ export default{
     mixins: [mixin],
     props: {
         addComponent: {
-            type: Function
+            type: Function,
+            default: () => {}
         }
     },
     data () {
@@ -262,14 +263,6 @@ export default{
             return result
         },
         getFilterData () {
-            // this.getData('bodyData', (data, err) => {
-            //     if (data) {
-            //         this.bodyData = data.rows
-            //     } else {
-            //         this.bodyData = []
-            //     }
-            //     this.queryData = []
-            // })
             getData(this.getDataUrlObj('bodyData'), (data, err) => {
                 if (data) {
                     this.bodyData = data.rows

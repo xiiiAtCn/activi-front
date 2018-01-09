@@ -1,22 +1,18 @@
 <template>
     <div class="chart-conatiner">
-        <svg />
+        <svg v-show="!noDataFlag" />
+        <div v-show="noDataFlag" class="no-data">
+            暂无数据
+        </div>
     </div>
 </template>
 <script>
 import * as d3 from "d3"
 import _ from 'lodash'
-import { mixin, ComputedType } from "./mixin"
+import { mixin as chartMixin, ComputedType } from "./mixin"
+import compMixin from '../mixin'
+import { getData } from 'utils/actionUtils'
 
-function createObj (obj) {
-    let result = {...obj}
-    let index = 0
-    for (let i in obj) {
-        result[index++] = obj[i]
-    }
-    result.length = index
-    return result
-}
 const axisType = {
     x: 'x',
     y: 'y',
@@ -35,7 +31,7 @@ const yAxisDirection = {
 }
 
 export default {
-    mixins: [mixin],
+    mixins: [chartMixin, compMixin],
     props: {
         define: {
             type: Object,
@@ -77,16 +73,25 @@ export default {
                 .duration(3000)
                 .ease(d3.easeCircleInOut),
             seriesFilterCondition: [],
-            tooltip: null
+            tooltip: null,
+            // 组件自己取得的数据
+            selfData: {}
         };
     },
     computed: {
+        chartData () {
+            if (Object.keys(this.selfData).length > 0) {
+                return this.selfData
+            } else {
+                return this.define
+            }
+        },
         // 标题
         title () {
-            return this.define.title
+            return this.chartData.title
         },
         tooltipConfig () {
-            return this.define.tooltip
+            return this.chartData.tooltip
         },
         percentLegendWidth() {
             return this.computedLength(this.legendWidth, ComputedType.width);
@@ -102,22 +107,22 @@ export default {
         },
         // 图例
         legend () {
-            return this.define.legend
+            return this.chartData.legend
         },
         // 每种分类对应设置及数据
         series () {
-            return this.define.series
+            return this.chartData.series
         },
         filterSeries () {
           return this.series.filter(item => !this.seriesFilterCondition.includes(item.name))  
         },
         // x轴设置
         xAxisOption () {
-            return this.define.xAxis
+            return this.chartData.xAxis
         },
         // y轴设置
         yAxisOption () {
-            return this.define.yAxis
+            return this.chartData.yAxis
         },
         // x轴长度
         xAxisLength() {
@@ -152,9 +157,13 @@ export default {
         },
         colors () {
             return this.series.length > 10 ? d3.schemeCategory20c : d3.schemeCategory20c
+        },
+        noDataFlag () {
+            return Object.keys(this.chartData).length === 0
         }
     },
     mounted() {
+        // 绘制tooltip
         let tooltip = d3.select('body').select('.tooltip')
         if (!tooltip.empty()) {
             this.tooltip = tooltip.attr("class","tooltip")  
@@ -166,6 +175,10 @@ export default {
                 .attr("class","tooltip")  
                 .style("opacity",0.0)
                 .style('display', 'none')
+        }
+
+        if (Object.keys(this.define).length === 0) {
+            this.watchValuesChanged()
         }
     },
     destroyed () {
@@ -242,6 +255,7 @@ export default {
                         .rangeRound(range)
                         .paddingOuter(0.5)
                         .paddingInner(0.2)
+
                     result.push([
                         x0,
                         d3.scaleBand()
@@ -346,7 +360,9 @@ export default {
         // 遍历serises绘制图形
         drawSeries () {
             let lineQueue = {},
-                barQueue = {}
+                barQueue = {},
+                barStackData = {}
+
             this.series.forEach((item, index) => {
                 let xAxisOption = this.xAxisOption[item.xAxisIndex],
                     yAxisOption = this.yAxisOption[item.yAxisIndex],
@@ -400,6 +416,13 @@ export default {
                     lineQueue[key].data.push(item.data)
                     lineQueue[key].legend.push(item.name)
                 } else if (item.type === 'bar') {
+                    let stackName = item.stack
+                    // 判断是否为堆积图
+                    if (stackName) {
+                        barStackData[stackName] ? 
+                            barStackData[stackName][item.name] = item.data : 
+                            barStackData[stackName] = {[item.name]: item.data}
+                    }
                     let xyAxisParams = barQueue[key]
                     // 相同xy轴的参数不存在初始化
                     if (!xyAxisParams) {
@@ -775,10 +798,19 @@ export default {
                     .style("dominant-baseline", "text-before-edge")
                     .style('font-size', '5px')
             }
+        },
+        watchValuesChanged () {
+            getData(this.getDataUrlObj('chartData'), (data, err) => {
+                if (data) {
+                    this.selfData = data
+                } else {
+                    this.selfData = {}
+                }
+            })
         }
     },
     watch: {
-        define (newVal, oldVal) {
+        chartData (newVal, oldVal) {
             if (!_.isEqual(newVal, oldVal)) {
                 if (Object.keys(oldVal).length > 0) {
                     this.removeLine(oldVal.legend.data)
@@ -799,6 +831,11 @@ export default {
     width: 100%;
     padding-bottom: 60%;
     height: 0;
+}
+.chart-conatiner .no-data{
+    font-size: 18px;
+    font-weight: bold; 
+    border: 1px solid black;
 }
 </style>
 
