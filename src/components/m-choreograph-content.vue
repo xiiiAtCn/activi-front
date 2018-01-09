@@ -16,7 +16,7 @@
         <div class="button-cantainer">
             <Button type="ghost" @click="jobEdit">任务编排</Button>
         </div>
-        <div class="cardTable" v-if="define.taskTrack.ui_define && define.taskTrack.ui_define.datas.length !== 0">
+        <div class="cardTable" v-if="showCardTable">
             <h3>已编排任务</h3>
             <component
                 :is="taskTrack.ui_type"
@@ -55,7 +55,8 @@
         data () {
             return {
                 tableModel:{},
-                taskTrack:{}
+                taskTrack:{},
+                showCardTable:false
             }
         },
         computed:{
@@ -68,6 +69,10 @@
                 this.tableModel = this.define.table
                 let name = this.define.tableName
                 this.taskTrack = this.define.taskTrack
+
+                if(this.taskTrack.ui_define && this.taskTrack.ui_define.datas && this.taskTrack.ui_define.datas.length !== 0){
+                    this.showCardTable = true
+                }
                 //表格内容提交
                 let keyList = Object.keys(this.define.tableData[0])
 

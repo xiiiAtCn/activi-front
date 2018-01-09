@@ -27,7 +27,6 @@ export default {
                 checkList = checkList.concat(checkKey)
             state[form]['_' + form + 'waitCheck'] = checkList
         },
-
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
             state[form + 'checkResult'] = {}
@@ -37,7 +36,7 @@ export default {
                 if (typeof item === 'boolean') {
                     form[i] = false
                 } else if ( item instanceof Array) {
-                    continue
+                    form[i] = []
                 } else if (typeof item === 'object') {
                     form[i] = {}
                 }
