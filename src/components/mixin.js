@@ -164,10 +164,15 @@ const mixin = {
     },
     watch: {
         relationData (newVal, oldVal) {
-            
             if (!_.isEqual(newVal, oldVal)) {
                 this.watchValuesChanged(newVal, oldVal)
             }
+        }
+    },
+    mounted () {
+        // 如果组件与其他组件无关 直接取数据
+        if (!this.isRelated) {
+            this.watchValuesChanged()
         }
     },
     destroyed () {
