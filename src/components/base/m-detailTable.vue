@@ -264,6 +264,9 @@
                     }
                     return true
                 })
+                if(source.length > 0) {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
+                }
                 return source
             },
         },
