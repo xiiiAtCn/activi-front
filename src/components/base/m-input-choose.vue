@@ -84,7 +84,7 @@
                     }
                 }
                 getData(action,(data)=>{
-                    let formFix = this.ui_form?this.ui_form: this.form
+                    let formFix = this.tmpForm?this.tmpForm: this.form
                     if (data) {
                         for(let key of Object.keys(data)){
                             this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
@@ -98,7 +98,7 @@
                 })
             },
             valid(){
-                let formFix = this.ui_form?this.ui_form: this.form
+                let formFix = this.tmpForm?this.tmpForm: this.form
                 let hasError =false
                 if (!this.readonly) {
                     if (this.required) {

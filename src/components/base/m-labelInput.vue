@@ -3,8 +3,7 @@
         <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" >{{label}}</label>
         <div class="ivu-form-item-content m-input">
             <component 
-                :ui_form="ui_form" 
-                :form="form"
+                :form="form" 
                 :statusKey="statusKey" 
                 :is="itemType" 
                 :define="childContent" 
@@ -17,8 +16,15 @@
 import _ from 'lodash'
 
 export default {
-    props: ['define', 'ui_form', 'content', 'statusKey', 'form'],
+    props: ['define', 'content', 'statusKey'],
     computed: {
+        form() {
+            if(this.content instanceof Array) {
+                return _.get(this.content[0], 'ui_form', 'form')
+            } else {
+                return _.get(this.content, 'ui_form', 'form')
+            }
+        },
         name() {
             return _.get(this.define, 'name', '')
         },

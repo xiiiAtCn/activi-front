@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import './m-addTable-shim'
 
 const mBarrier = resolve =>
     require(['./m-barrier.vue'], resolve)
@@ -12,7 +11,7 @@ const mDecimal = resolve =>
 const mDetailChoose = resolve =>
     require(['./m-detail-choose.vue'], resolve)
 
-const mTable2 = resolve =>
+const mDetailTable = resolve =>
     require(['./m-detailTable.vue'], resolve)
 
 const mFileUpload = resolve =>
@@ -83,7 +82,7 @@ Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
 Vue.component('mDetailChoose', mDetailChoose)
 Vue.component('mFileUpload', mFileUpload)
-Vue.component('mTable2', mTable2)
+Vue.component('mDetailTable', mDetailTable)
 Vue.component('mInput', mInput)
 Vue.component('mLabel', mLabel)
 Vue.component('mLabelInput', mLabelInput)
