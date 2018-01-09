@@ -70,7 +70,8 @@
                 let name = this.define.tableName
                 this.taskTrack = this.define.taskTrack
 
-                if(this.taskTrack.ui_define && this.taskTrack.ui_define.datas && this.taskTrack.ui_define.datas.length !== 0){
+                let datas = _.get(this.define, ['taskTrack','ui_define', 'datas'])
+                if(datas &&  datas.length !== 0){
                     this.showCardTable = true
                 }
                 //表格内容提交

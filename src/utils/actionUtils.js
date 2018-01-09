@@ -26,6 +26,7 @@ export function dispatch () {
 
     let arg0 = arguments[0]
     console.group('dispatch start', arguments[0])
+
     if (util.isString(arg0)) {
         let urlObject = url.parse(arg0, true)
         asLink({
@@ -143,6 +144,8 @@ function asLink(action) {
             //144-145 change by f in 12.1
             action.url = urlToString(action)
 
+            action.url = action.url.replace(/([^\u0000-\u00FF])/g, function ($) { return encodeURI($)})
+
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
             } else {
@@ -179,8 +182,8 @@ function asLink(action) {
 }
 
 /**
- * 
- * @param {*} action  
+ *
+ * @param {*} action
  *  提交表单时需要将type类型从后台返回的类型中取出，指定form值，并将action放在request属性中
  *  形如{type: ,form: 'form', request: btn.action}
  */
@@ -257,7 +260,7 @@ function asMessage(action) {
     }
 }
 /**
- * 
+ *
  * @param {*} action 操作描述对象
  * @add 2017-12-21 09:50:29
  */

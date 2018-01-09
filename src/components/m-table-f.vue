@@ -349,7 +349,7 @@
             judgeExistence(key,text){
                 let i = 0
                 let existence =false
-                while (this.columnsData.length !== 0){
+                while (this.columnsData && this.columnsData.length !== 0){
                     if(this.columnsData[i][key] === text){
                         existence = true
                         break
@@ -418,7 +418,7 @@
             removeColButton(){
                 if(!this.showModalBtn){
                     let i=0
-                    while (this.columnsData.length !== 0){
+                    while (this.columnsData && this.columnsData.length !== 0){
                         if(this.columnsData[i].key === 'action'){
                             this.columnsData.splice(i,1)
                             break
@@ -561,7 +561,7 @@
 
             //行单选存数据
             handleRowClick(data){
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data, form: this.form || 'form'})
+                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data.id, form: '_' + this.form || 'form'})
                 this.idList.push(data.id)
             },
 
@@ -572,7 +572,7 @@
                     list.push(val.id)
                 })
                 this.idList = list
-                this.$store.commit(FORM_ELEMENT_VALUE, {list, form: this.form || 'form'})
+                this.$store.commit(FORM_ELEMENT_VALUE, {'_list':list, form: this.form || 'form'})
             },
 
             //行多选加列

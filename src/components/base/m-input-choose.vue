@@ -80,7 +80,7 @@
                     url:this.backUrl,
                     type: 'GET',
                     queryParams:{
-                        id:_.get(this.$store.state.formData[this.dataDomain],[this.tableName,'id'], '')
+                        id:_.get(this.$store.state.formData['_' + this.dataDomain],[this.tableName], '')
                     }
                 }
                 getData(action,(data)=>{
