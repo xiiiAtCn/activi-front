@@ -130,7 +130,8 @@
     import fetch from '../utils/DefineFetcher'
     import router from '../router'
     import {dispatch} from '../utils/actionUtils'
-    import { FETCH_FORM_DATA} from 'store/Action'
+    import { FETCH_FORM_DATA } from 'store/Action'
+    import { CLEAR_ALL_DATA, CLEAR_FORM_STATUS } from 'store/Mutation'
     import _ from 'lodash'
 
     export default {
@@ -156,6 +157,8 @@
         },
         watch: {
             $route () {
+                this.$store.commit(CLEAR_ALL_DATA)
+                this.$store.commit(CLEAR_FORM_STATUS)
                 this.meta = null
                 console.log('this.$route.query', this.$route.query)
                 let query = this.$route.query.url
@@ -235,6 +238,8 @@
                     next(false)
                 } else {
                     next(vm => {
+                        vm.$store.commit(CLEAR_ALL_DATA)
+                        vm.$store.commit(CLEAR_FORM_STATUS)
                         vm.meta = post
                         vm.define = _.get(post, 'ui_define', {})
                         vm.content = _.get(post, 'ui_content', [])
