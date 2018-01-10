@@ -61,6 +61,7 @@
     import {SUBMIT_FORM_DATA, DELETE_TABLE_DATA} from 'store/Action'
     import _ from 'lodash'
     import { dispatch} from 'utils/actionUtils'
+    import { VALIDATION } from 'utils/consts'
     export default {
         provide() {
             return {
@@ -95,7 +96,7 @@
                 return this.define['name']
             },
             temporary_form() {
-                return this.name + this.form
+                return '_' + this.name + this.form
             },
             required() {
                 return _.get(this.define, 'required', true)
@@ -264,7 +265,7 @@
                     }
                     return true
                 })
-                if(source.length > 0) {
+                if(source.length > 0 || !this.addable) {
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
                 }
                 return source
@@ -299,7 +300,7 @@
                 }
             },
             valid() {
-                if(this.dataSource.length == 0) {
+                if(this.dataSource.length == 0 && this.addable) {
                     this.$Modal.error({
                         title:'警告',
                         content: `请至少在${this.alias}中填入一条数据`
@@ -354,7 +355,7 @@
         },
         destroyed() {
             let formFix = this.temporary_form
-            this.$store.commit(ERASURE_DATA, { form: formFix + 'checkResult', name : this.name})
+            this.$store.commit(ERASURE_DATA, { form: formFix + VALIDATION, name : this.name})
             this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
             this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         }

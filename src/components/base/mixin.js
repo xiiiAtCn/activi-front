@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA, CLEAR_FORM_DATA} from 'store/Mutation'
-
+import { VALIDATION } from 'utils/consts'
 const mixin = {
     inject: {
         baseForm: {
@@ -68,9 +68,9 @@ const mixin = {
             get () {
                 let key
                 if (this.tmpForm) {
-                    key = this.tmpForm + 'checkResult'
+                    key = this.tmpForm + VALIDATION
                 } else {
-                    key = this.form + 'checkResult'
+                    key ='_' + this.form + VALIDATION
                 }
                 if (this.$store.state.formData[key] === undefined) {
                     this.$store.commit(ADD_NEW_OBJECT,

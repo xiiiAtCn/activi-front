@@ -3,7 +3,7 @@
     <Row type="flex" v-if="details">
       <div class="container">
         <div class="at-grid" data-column="4" style="margin-left: -100px">
-          <div class="at-column" v-for="item in details" :key="item.code" @click="dispatchAction(item.url)">
+          <div class="at-column" v-for="(item, index) in details" :key="index" @click="dispatchAction(item.url)">
             <div class="at-user">
               <div class="at-user__avatar">
                 <Icon :type="item.icon" style="color: #2d8cf0"></Icon>
@@ -24,58 +24,50 @@
   </div>
 </template>
 <script>
-  //  import Vue from 'vue'
-  //  import VueResource from 'vue-resource'
-  import { dispatch } from '../utils/actionUtils'
-  import axios from 'axios'
+import { dispatch } from '../utils/actionUtils'
 
-  //  Vue.use(VueResource)
+//  Vue.use(VueResource)
 
-  export default {
-      data () {
-          return {
-              details: []
-          }
-      },
-      methods: {
-          getMenu: function () {
-              let params = {
-                  'id': this.$route.params.id
-              }
-              axios.get('/api/module/leftMenu', {'params': params})
-          .then(response => {
-//          let computedAry = data.body
-              let computedAry = response.data
-              if (computedAry.length % 4 !== 0) {
-                  if (computedAry.length > 4) {
-                      let pushTimes = 4 - computedAry.length % 4
-                      for (let i = 0; i < pushTimes; i++) {
-                          computedAry.push({})
-                      }
-                  }
-              }
-              this.details = computedAry
-          }).catch(error =>
-          console.log(error)
-        )
-          },
-          dispatchAction: function (url) {
-//                if (this.$route.params.id === '00'){
-//                    this.$router.push({ path: '/layoutContent/' + url })
-//                } else {
-              dispatch(url)
-//                }
-          }
-      },
-      mounted: function () {
-          this.getMenu()
-      },
-      watch: {
-          '$route': function () {
-              this.getMenu()
-          }
-      }
-  }
+export default {
+    data () {
+        return {
+            details: []
+        }
+    },
+    methods: {
+        getMenu: function () {
+            let systemKey = localStorage.getItem('systemKey')
+            let params = {
+                'id': this.$route.params.id,
+                systemKey
+            }
+            this.setUrl('/api/module/leftMenu')
+                .setQuery(params)
+                .forGet(computedAry => {
+                    if (computedAry.length % 4 !== 0) {
+                        if (computedAry.length > 4) {
+                            let pushTimes = 4 - computedAry.length % 4
+                            for (let i = 0; i < pushTimes; i++) {
+                                computedAry.push({})
+                            }
+                        }
+                    }
+                    this.details = computedAry
+                })
+        },
+        dispatchAction (url) {
+            dispatch(url)
+        }
+    },
+    mounted () {
+        this.getMenu()
+    },
+    watch: {
+        '$route': function () {
+            this.getMenu()
+        }
+    }
+}
 </script>
 <style scoped>
 

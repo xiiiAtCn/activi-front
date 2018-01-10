@@ -3,7 +3,7 @@
         <Menu active-name="" theme="light" class="themeLight" style="width:auto;">
             <li class="layout-logo">
                 <div class="posRea">
-                    <a href="http://www.sohu.com/" target="_blank"><img src="../assets/img/yushi-logo.png" alt=""></a>
+                    <a href="/" ><img src="../assets/img/yushi-logo.png" alt=""></a>
                     <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
                     <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
                 </div>
@@ -34,7 +34,17 @@
         },
         methods: {
             getLeftMenu () {
-                this.setUrl('/api/module/topMenu').forGet(res => {
+                let systemKey = localStorage.getItem('systemKey')
+                let queries = {}
+                if(systemKey !== '') {
+                    queries = {
+                        ...queries,
+                        systemKey
+                    }
+                }
+                this.setUrl('/api/module/topMenu')
+                .setQuery(queries)
+                .forGet(res => {
                     this.items = res
                 })
             },
