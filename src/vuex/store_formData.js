@@ -3,6 +3,7 @@ import Actions from './Action'
 import Request, {addQuery, replace} from 'utils/request-addon'
 import Vue from 'vue'
 import { getData, dispatch } from 'utils/actionUtils'
+import { VALIDATION } from 'utils/consts'
 import iView from 'iview'
 import _ from 'lodash'
 let request = new Request()
@@ -29,7 +30,11 @@ export default {
         },
         [Mutations.CLEAR_FORM_DATA] (state, payload) {
             let { form } = payload
-            state[form + 'checkResult'] = {}
+            if(form.startsWith('_')) {
+                state[form + VALIDATION] = {}
+            } else {
+                state['_' + form + VALIDATION] = {}
+            }
             form = state[form]
             for (let i in form) {
                 let item = form[i]
@@ -117,10 +122,18 @@ export default {
         },
         [Mutations.ELEMENT_VALIDATE_RESULT] (state, payload) {
             let {form, ...rest} = payload
-            state[form + 'checkResult'] = {
-                ...state[form + 'checkResult'],
-                ...rest
+            if(form.startsWith('_')) {
+                state[form + VALIDATION] = {
+                    ...state[form + VALIDATION],
+                    ...rest
+                }
+            } else {
+                state['_' + form + VALIDATION] = {
+                    ...state['_' + form + VALIDATION],
+                    ...rest
+                }
             }
+            
         },
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
             let keys = Object.keys(state)
@@ -155,19 +168,19 @@ export default {
             let {form} = payload
             let waitCheck = state[form]['_' + form + 'waitCheck']
             let finish = true
-            let checkResult = Object.keys(state[form + 'checkResult'])
+            let validatedResult = Object.keys(state[ (form.startsWith('_')?'':'_') + form + VALIDATION])
             console.group('start check count')
             console.log(form + 'waitCheck is ', waitCheck)
-            console.log(form + 'checkResult key is ', checkResult)
-            console.log(form + 'checkResult is ', state[form + 'checkResult'])
+            console.log(form + 'validatedResult key is ', validatedResult)
+            console.log(form + 'validatedResult is ', state[ form.startsWith('_')?'':'_' + form + VALIDATION])
             console.groupEnd()
             for(let i = 0; i < waitCheck.length; i++) {
-                if(checkResult.indexOf(waitCheck[i]) === -1) {
+                if(validatedResult.indexOf(waitCheck[i]) === -1) {
                     finish = false
                 }
             }
             if (finish) {
-                let flag = checkResult.every(element => state[form + 'checkResult'][element] === false)
+                let flag = validatedResult.every(element => state[ (form.startsWith('_')?'':'_') + form + VALIDATION][element] === false)
                 commit(Mutations.CLOSE_DATA_VALIDATE, {form: form})
                 if (flag) {
                 // 数据提交逻辑
@@ -273,10 +286,18 @@ export default {
         },
         [Actions.ELEMENT_VALIDATE_RESULT] ({state, commit, dispatch}, payload) {
             let {form, ...rest} = payload
-            state[form + 'checkResult'] = {
-                ...state[form + 'checkResult'],
-                ...rest
+            if(form.startsWith('_')) {
+                state[form + VALIDATION] = {
+                    ...state[form + VALIDATION],
+                    ...rest
+                }
+            } else {
+                state['_' + form + VALIDATION] = {
+                    ...state[ '_' + form + VALIDATION],
+                    ...rest
+                }
             }
+            
             if (state[form]['_validate'] === true) {
                 dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
