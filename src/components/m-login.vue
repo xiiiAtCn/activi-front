@@ -8,13 +8,28 @@
         <main>
             <img src="../assets/img/login.png" class="pic">
             <div class="message">
-                <form id="login-form">
+                <Form id="login-form" :labelWidth="labelWidth">
                     <div class="opt">
                         <span class="login">登录</span>
                         <span class="regiet">注册</span>
                     </div>
-                    <input type="text" placeholder="请输入您的账号" class="account">
-                    <input type="password" placeholder="请输入您的密码" class="pwd">
+                    <Form-item class="form-element" label="用户名" >
+                        <Input type="text" placeholder="请输入您的账号" />
+                    </Form-item>
+                    <Form-item class="form-element" label="密码" >
+                        <Input type="password" placeholder="请输入您的密码" />
+                    </Form-item>
+                    <Form-item class="form-element" label="选择系统">
+                        <Select v-model="system">
+                            <Option 
+                                v-for="( value,key, index) in systems" 
+                                :key="index" 
+                                :value="key"
+                            >
+                                {{value}}
+                            </Option>
+                        </Select>
+                    </Form-item>
                     <div class="optration">
                         <div class="check">
                             <input type="checkbox" value="1" class="checkbox">
@@ -52,14 +67,21 @@
     export default{
         data () {
             return {
-                msg: 'hello vue'
+                msg: 'hello vue',
+                systems: {},
+                system: '',
+                labelWidth:60
             }
+        },
+        mounted() {
+            this.setUrl('/api/module/systems').forGet(data => this.systems = data)
         },
         methods: {
             trlToWorkbench () {
-            	this.$router.push({
-                path: '/layoutContent/04/workbench'
-            })
+                localStorage.setItem('systemKey', this.system)
+                this.$router.push({
+                    path: '/layoutContent/04/workbench'
+                })
             }
         }
     }
@@ -133,21 +155,9 @@
     form{
         height:70%;
     }
-    input.pwd{
-        width:80%;
-        height:30px;
-        margin-bottom:21px;
-        font-size:12px;
-        border-radius: 4px;
-        border:1px solid #ccc
-    }
-    input.account{
-        width:80%;
-        height:30px;
-        margin-bottom:21px;
-        font-size:12px;
-        border-radius: 4px;
-        border:1px solid #ccc;
+    .form-element {
+        width: 80%;
+        margin-left: 10%;
     }
     .opt{
         height:70px;
