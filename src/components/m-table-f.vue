@@ -66,16 +66,20 @@
     export default {
         props: {
             showModalBtn: {
-                type: null
+                type: null,
+                default: false
             },
             operation: {
-                type: null
+                type: null,
+                default: []
             },
             cols: {
-                type: null
+                type: null,
+                default: []
             },
             rowsContent: {
-                type: null
+                type: null,
+                default: []
             },
             search: {
                 type: Boolean,

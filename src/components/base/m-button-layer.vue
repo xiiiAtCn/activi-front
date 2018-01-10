@@ -37,7 +37,7 @@
             },
             handleOk(){
                 let action=this.define.saveDataAction.url
-                action.body=_.get(this.$store.state.formData['form'],'list', '')
+                action.body=_.get(this.$store.state.formData['form'],'_list', '')
                 if(action.type === 'serverAction'  || action.type === 'link') {
                     dispatch(action)
                 }
