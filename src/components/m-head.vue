@@ -35,8 +35,15 @@
         methods: {
             getLeftMenu () {
                 let systemKey = localStorage.getItem('systemKey')
+                let queries = {}
+                if(systemKey !== '') {
+                    queries = {
+                        ...queries,
+                        systemKey
+                    }
+                }
                 this.setUrl('/api/module/topMenu')
-                .setQuery({ systemKey })
+                .setQuery(queries)
                 .forGet(res => {
                     this.items = res
                 })
