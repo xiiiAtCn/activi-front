@@ -98,7 +98,6 @@
                 })
             },
             valid(){
-                let formFix = this.tmpForm?this.tmpForm: this.form
                 let hasError =false
                 if (!this.readonly) {
                     if (this.required) {
@@ -108,7 +107,7 @@
                         }
                     }
                 }
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
+                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.fixForm})
             }
         }
     }

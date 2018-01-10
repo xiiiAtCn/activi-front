@@ -211,6 +211,9 @@ const mixin = {
             } else {
                 return ''
             }
+        },
+        fixForm() {
+            return this.tmpForm ? this.tmpForm : this.form
         }
     },
     watch: {

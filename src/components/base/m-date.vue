@@ -38,7 +38,6 @@
         },
         methods: {
             valid () {
-                let formFix = this.tmpForm? this.tmpForm: this.form
                 if (!this.readonly) {
                     let value = this.objectModel
                     let hasError = false
@@ -46,9 +45,9 @@
                         this.errorMessage = '请输入必填项'
                         hasError = true
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.fixForm})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.fixForm})
                 }
             },
             handleChange (value) {

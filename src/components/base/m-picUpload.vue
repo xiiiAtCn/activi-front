@@ -107,7 +107,6 @@
         
         methods: {
             valid() {
-                let formFix = this.tmpForm?this.tmpForm: this.form
                 if (!this.readonly) {
                     let hasError = false
                     let value = this.objectModel == undefined ? [] : this.objectModel
@@ -117,9 +116,9 @@
                             this.errorMessage = '请上传图片'
                         }
                     }
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.fixForm})
                 } else {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.fixForm})
                 }
             },
             handleView (name, url) {
