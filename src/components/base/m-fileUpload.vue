@@ -107,12 +107,13 @@
                     if (this.required) {
                         if (value === '' || value.length === 0) {
                             hasError = true
-                            this.errorMessage = '请上传图片'
+                            this.errorMessage = '请上传文件'
                         }
                     }
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: formFix})
+                } else {
+                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
                 }
-                this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: formFix})
             },
             handleBeforeUpload (file) {
                 const check = this.objectModel.length < this.picMaxNumber

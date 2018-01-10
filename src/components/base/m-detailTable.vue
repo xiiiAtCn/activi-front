@@ -265,9 +265,6 @@
                     }
                     return true
                 })
-                if(source.length > 0 || !this.addable) {
-                    this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})
-                }
                 return source
             },
         },
@@ -301,10 +298,7 @@
             },
             valid() {
                 if(this.dataSource.length == 0 && this.addable) {
-                    this.$Modal.error({
-                        title:'警告',
-                        content: `请至少在${this.alias}中填入一条数据`
-                    })
+                    this.$Message.error(`请至少在${this.alias}中填入一条数据`)
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: true, form: this.form})
                 } else {
                     this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: false, form: this.form})

@@ -97,7 +97,14 @@ export default {
                 ...state[form],
                 _validate: true,
             }
-
+            if(form.startsWith('_')) {
+                state[form + VALIDATION] = {
+                }
+            } else {
+                state['_' + form + VALIDATION] = {
+                    
+                }
+            }
             if(payload.request !== undefined) {
                 state[form] = {
                     ...state[form],
@@ -133,7 +140,6 @@ export default {
                     ...rest
                 }
             }
-            
         },
         [Mutations.DESTROY_FORM_DATA] (state, payload) {
             let keys = Object.keys(state)
@@ -172,7 +178,7 @@ export default {
             console.group('start check count')
             console.log(form + 'waitCheck is ', waitCheck)
             console.log(form + 'validatedResult key is ', validatedResult)
-            console.log(form + 'validatedResult is ', state[ form.startsWith('_')?'':'_' + form + VALIDATION])
+            console.log(form + 'validatedResult is ', state[ (form.startsWith('_')?'':'_') + form + VALIDATION])
             console.groupEnd()
             for(let i = 0; i < waitCheck.length; i++) {
                 if(validatedResult.indexOf(waitCheck[i]) === -1) {
