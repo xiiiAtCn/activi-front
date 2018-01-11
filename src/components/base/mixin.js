@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA, CLEAR_FORM_DATA} from 'store/Mutation'
+import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA } from 'store/Mutation'
 import { VALIDATION } from 'utils/consts'
 const mixin = {
     inject: {
@@ -185,10 +185,13 @@ const mixin = {
                 return tmp
             },
             set (value) {
+                debugger
                 let formFix = this.tmpForm ? this.tmpForm : this.form
+                let valueObject = _.get(this.$store.state.formData[formFix], this.name)
                 this.$store.commit(FORM_ELEMENT_VALUE,
                     {
                         [this.name]: {
+                            ...valueObject,
                             value,
                             type: this.$options._componentTag
                         },
@@ -237,7 +240,6 @@ const mixin = {
     destroyed() {
         let formFix = this.tmpForm ? this.tmpForm : this.form
         this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
-        this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
     }
 }
 

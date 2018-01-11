@@ -350,7 +350,6 @@
         destroyed() {
             let formFix = this.temporary_form
             this.$store.commit(ERASURE_DATA, { form: formFix + VALIDATION, name : this.name})
-            this.$store.commit(CLEAR_FORM_DATA, {form: formFix})
             this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
         }
     }
