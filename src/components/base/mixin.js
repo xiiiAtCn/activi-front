@@ -169,10 +169,12 @@ const mixin = {
                 }
                 let tmp = _.get(this.$store.state.formData[formFix], [this.name, 'value'], '')
                 let type = _.get(this.$store.state.formData[formFix], [this.name, 'type'])
+                let valueObject = _.get(this.$store.state.formData[formFix], this.name)
                 if (type === undefined)
                     this.$store.commit(FORM_ELEMENT_VALUE,
                         {
                             [this.name]: {
+                                ...valueObject,
                                 value: tmp,
                                 type: this.$options._componentTag
                             },

@@ -319,7 +319,7 @@ export default {
                     return
                 }
                 data.forEach(element => {
-                    let form = element['_form_'] || 'form'
+                    let form = element['_FORM_'] || 'form'
                     let stateData = state[form]
                     if(!stateData) {
                         commit(Mutations.ADD_NEW_OBJECT,
@@ -335,13 +335,15 @@ export default {
                             }
                         )
                     }
-                    let value = {}
+                    let tmp = {}
                     if(element['key']) {
-                        value[element['key']] = {
-                            value: element['value']
+                        let {  key, value, ...rest } = element
+                        tmp[key] = {
+                            value,
+                            ...rest
                         }
-                        value['form'] = form
-                        commit(Mutations.FORM_ELEMENT_VALUE, value)
+                        tmp['form'] = form
+                        commit(Mutations.FORM_ELEMENT_VALUE, tmp)
                     } else {
                         let array = element['value']
                         let list = []
