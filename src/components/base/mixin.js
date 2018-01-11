@@ -25,10 +25,6 @@ const mixin = {
             type: [String, Number],
             default: ''
         },
-        form: {
-            type: String,
-            default: 'form'
-        }
     },
     computed: {
         readonly () {
@@ -214,6 +210,9 @@ const mixin = {
         },
         fixForm() {
             return this.tmpForm ? this.tmpForm : this.form
+        },
+        form() {
+            return _.get(this.define, 'ui_form', 'form')
         }
     },
     watch: {
