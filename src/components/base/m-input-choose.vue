@@ -86,8 +86,8 @@
                 getData(action,(data)=>{
                     let formFix = this.tmpForm?this.tmpForm: this.form
                     if (data) {
-                        for(let key of Object.keys(data)){
-                            this.$store.commit(FORM_ELEMENT_VALUE, {[key]: {value: data[key],type: (this.define.name === key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
+                        for(let i=0;i<data.length;i++){
+                            this.$store.commit(FORM_ELEMENT_VALUE, { [ data[i].key ]: { value: data[i].value, type: ( this.define.name === data[i].key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
                         }
                     }
 
