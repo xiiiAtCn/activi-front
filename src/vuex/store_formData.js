@@ -313,35 +313,56 @@ export default {
             getData(url, data => {
                 commit(Mutations.CLEAR_FORM_STATUS)
                 commit(Mutations.CLEAR_ALL_DATA)
-                let keyList = Object.keys(data)
-                //此处的form为后台返回的值
-                if(state.form === undefined)
-                    commit(Mutations.ADD_NEW_OBJECT, {
-                        attribute: 'form',
-                        value: {
-                            _loading: true,
-                            _reset: false,
-                            _validate: false,
-                            _visible: false,
-                            ['_' + 'form' + 'waitCheck']: []
-                        }
-                    })
-                let value = {
-                    form: 'form'
+                console.log(data)
+                if(!Array.isArray(data)) {
+                    iView.Message.error('数据结构错误，请联系管理员解决!')
+                    return
                 }
-                keyList.forEach(element => {
-                    let attribute
-                    try {
-                        attribute = JSON.parse(data[element]['value'])
-                    } catch(e) {
-                        attribute = data[element]['value']
-                    } finally {
-                        value[element] = {
-                            value: attribute
+                data.forEach(element => {
+                    let form = element['_form_']
+                    let stateData = state[form]
+                    if(!stateData) {
+                        commit(Mutations.ADD_NEW_OBJECT,
+                            {
+                                attribute: form,
+                                value: {
+                                    _loading: true,
+                                    _reset: false,
+                                    _validate: false,
+                                    _visible: false,
+                                    ['_' + form + 'waitCheck']: []
+                                }
+                            }
+                        )
+                    }
+                    let value = {}
+                    if(element['key']) {
+                        value[element['key']] = {
+                            value: element['value']
+                        }
+                        value['form'] = form
+                        commit(Mutations.FORM_ELEMENT_VALUE, value)
+                    } else {
+                        let array = element['value']
+                        let list = []
+                        debugger
+                        if(Array.isArray(array)) {
+                            array.forEach(ele => {
+                                if(Array.isArray(ele)) {
+                                    let tmpElement = {}
+                                    ele.forEach(e => tmpElement = { ...tmpElement, [e.key]: { value: e.value}})
+                                    list.push(tmpElement)
+                                } else {
+                                    console.warn(`unexpected data type in table element value, expected array, but got ${typeof ele}`)
+                                }
+                            })
+                            commit(Mutations.FORM_ELEMENT_VALUE, {form, value: list})
+                        } else {
+                            console.warn(`unexpected data type in table data,expected array, but got ${typeof array}`)
                         }
                     }
                 })
-                commit(Mutations.FORM_ELEMENT_VALUE, value)
+                // commit(Mutations.FORM_ELEMENT_VALUE, value)
             })
         },
         [Actions.DELETE_TABLE_DATA]({state, commit}, payload) {
