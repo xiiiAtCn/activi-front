@@ -311,7 +311,6 @@ export default {
         [Actions.FETCH_FORM_DATA]({commit, state}, payload) {
             let { url } = payload
             getData(url, data => {
-                commit(Mutations.CLEAR_FORM_STATUS)
                 commit(Mutations.CLEAR_ALL_DATA)
                 console.log(data)
                 if(!Array.isArray(data)) {

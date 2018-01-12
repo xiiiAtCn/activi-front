@@ -158,7 +158,6 @@
         watch: {
             $route () {
                 this.$store.commit(CLEAR_ALL_DATA)
-                this.$store.commit(CLEAR_FORM_STATUS)
                 this.meta = null
                 console.log('this.$route.query', this.$route.query)
                 let query = this.$route.query.url
@@ -178,11 +177,13 @@
                 })
             },
             dataUrl(newUrl) {
+                this.$store.commit(CLEAR_ALL_DATA)
                 this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
 
             },
             'define.status_url'() {
                 if (this.define.status_url) {
+                    this.$store.commit(CLEAR_FORM_STATUS)
                     this.$store.dispatch('putStatus',  this.define.status_url)
                 }
             }
@@ -238,8 +239,6 @@
                     next(false)
                 } else {
                     next(vm => {
-                        vm.$store.commit(CLEAR_ALL_DATA)
-                        vm.$store.commit(CLEAR_FORM_STATUS)
                         vm.meta = post
                         vm.define = _.get(post, 'ui_define', {})
                         vm.content = _.get(post, 'ui_content', [])
@@ -251,7 +250,7 @@
                     })
                 }
             })
-        },
+        }
     }
 </script>
 
