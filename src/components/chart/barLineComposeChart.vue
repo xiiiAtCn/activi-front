@@ -332,14 +332,13 @@ export default {
                 .append('g')
                 .attr("class", className)
                 .attr("transform", `translate(${translateX}, ${translateY})`)
-                .call(axisScale),
-                bBox = axis.node().getBBox()
-
+                .call(axisScale)
+        
             if (type === axisType.x) {
                 this.svg
                     .append('text')
                     .attr('class', className)
-                    .attr("x", translateX + bBox.width + 5)
+                    .attr("x", translateX + this.width - this.percentPaddingLeft - this.percentPaddingRight + 5)
                     .attr('y', translateY)
                     .text(unit)
                     .style("text-anchor", "start")
@@ -687,38 +686,39 @@ export default {
             let legendGroup = this.svg.append('g')
                     .attr('class', 'legend')
                     .attr('fill', 'white')
+            // 确保legendGroup已经添加到svg中
+            this.$nextTick(() => {
+                this.legend.data.forEach((item, index) => {
+                    let color = this.seriesFilterCondition.includes(item) ? 'black' : this.colors[index]
+                    let itemGroup = legendGroup.append('g')
+                        .attr('class', 'legend-item-container')
+                        .attr('fill', color)
+                        .on('click', function () {
+                            vue._legendClick(item, this)
+                        })
+                    let bBox = legendGroup.node().getBBox(),
+                        x = index === 0 ? 
+                            this.percentPaddingLeft : 
+                            this.percentPaddingLeft + bBox.width + this.percentLegendStep,
+                        y = this.percentPaddingTop / 2
 
-            this.legend.data.forEach((item, index) => {
-                let color = this.seriesFilterCondition.includes(item) ? 'black' : this.colors[index]
-                let itemGroup = legendGroup.append('g')
-                    .attr('class', 'legend-item-container')
-                    .attr('fill', color)
-                    .on('click', function () {
-                        vue._legendClick(item, this)
-                    })
-
-                let bBox = legendGroup.node().getBBox(),
-                    x = index === 0 ? 
-                        this.percentPaddingLeft : 
-                        this.percentPaddingLeft + bBox.width + this.percentLegendStep,
-                    y = this.percentPaddingTop / 2
-
-                itemGroup.append('rect')
-                    .attr('class', 'legend-item-pic')
-                    .attr('x', x)
-                    .attr('y', y)
-                    .attr('width', this.percentLegendWidth)
-                    .attr('height', this.percentLegendHeight)
-                
-                itemGroup.append('text')
-                    .attr('class', 'legend-item-text')
-                    .attr('x', x + this.percentLegendWidth + this.percentLegendInnterStep)
-                    .attr('y', y)
-                    .text(item)
-                    .style("text-anchor", "start")
-                    .style("dominant-baseline", "central")
-                    .style('font-size', '5px')
-            })  
+                    itemGroup.append('rect')
+                        .attr('class', 'legend-item-pic')
+                        .attr('x', x)
+                        .attr('y', y)
+                        .attr('width', this.percentLegendWidth)
+                        .attr('height', this.percentLegendHeight)
+                    
+                    itemGroup.append('text')
+                        .attr('class', 'legend-item-text')
+                        .attr('x', x + this.percentLegendWidth + this.percentLegendInnterStep)
+                        .attr('y', y)
+                        .text(item)
+                        .style("text-anchor", "start")
+                        .style("dominant-baseline", "central")
+                        .style('font-size', '5px')
+                })  
+            })
         },
         _legendClick (d, self) {
             if (this.seriesFilterCondition.includes(d)) {
@@ -778,28 +778,34 @@ export default {
             } else {
                 let container = this.svg.append('g')
                     .attr('class', 'title-container')
-                container.append('g')
-                    .attr('class', 'title')
-                    .append('text')
-                    .text(this.title.text)
-                    .attr('x', this.width / 2)
-                    .attr('y', 0)
-                    .style("text-anchor", "middle")
-                    .style("dominant-baseline", "text-before-edge")
-                    .style('font-size', '10px')
-                    
-                container.append('g')
-                    .attr('class', 'subtitle')
-                    .append('text')
-                    .attr('x', this.width / 2)
-                    .attr('y', container.node().getBBox().height)
-                    .text(this.title.subtext)
-                    .style("text-anchor", "middle")
-                    .style("dominant-baseline", "text-before-edge")
-                    .style('font-size', '5px')
+                this.$nextTick(() => {
+                    container.append('g')
+                        .attr('class', 'title')
+                        .append('text')
+                        .text(this.title.text)
+                        .attr('x', this.width / 2)
+                        .attr('y', 0)
+                        .style("text-anchor", "middle")
+                        .style("dominant-baseline", "text-before-edge")
+                        .style('font-size', '10px')
+                        
+                    container.append('g')
+                        .attr('class', 'subtitle')
+                        .append('text')
+                        .attr('x', this.width / 2)
+                        .attr('y', container.node().getBBox().height)
+                        .text(this.title.subtext)
+                        .style("text-anchor", "middle")
+                        .style("dominant-baseline", "text-before-edge")
+                        .style('font-size', '5px')
+                })
             }
         },
         watchValuesChanged () {
+            // 没有define需要自己取数据
+            if (Object.keys(this.define).length !== 0) {
+                return
+            }
             getData(this.getDataUrlObj('chartData'), (data, err) => {
                 if (data) {
                     this.selfData = data
