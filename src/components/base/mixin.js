@@ -111,6 +111,7 @@ const mixin = {
                             {
                                 [this.name]: {
                                     value: '',
+                                    _META_: this._META_,
                                     type: this.$options._componentTag
                                 },
                                 form: formFix,
@@ -123,6 +124,7 @@ const mixin = {
                             {
                                 [this.name]: {
                                     value: [],
+                                    _META_: this._META_,
                                     type: this.$options._componentTag
                                 },
                                 form: formFix,
@@ -135,6 +137,7 @@ const mixin = {
                             {
                                 [this.name]: {
                                     value: '',
+                                    _META_: this._META_,
                                     type: this.$options._componentTag
                                 },
                                 form: formFix,
@@ -147,6 +150,7 @@ const mixin = {
                             {
                                 [this.name]: {
                                     value: {},
+                                    _META_: this._META_,
                                     type: this.$options._componentTag
                                 },
                                 form: formFix,
@@ -159,6 +163,7 @@ const mixin = {
                             {
                                 [this.name]: {
                                     value: {},
+                                    _META_: this._META_,
                                     type: this.$options._componentTag
                                 },
                                 form: formFix,
@@ -175,7 +180,9 @@ const mixin = {
                         {
                             [this.name]: {
                                 ...valueObject,
+                                _META_: this._META_,
                                 value: tmp,
+
                                 type: this.$options._componentTag
                             },
                             form: formFix,
@@ -185,7 +192,6 @@ const mixin = {
                 return tmp
             },
             set (value) {
-                debugger
                 let formFix = this.tmpForm ? this.tmpForm : this.form
                 let valueObject = _.get(this.$store.state.formData[formFix], this.name)
                 this.$store.commit(FORM_ELEMENT_VALUE,
@@ -193,6 +199,7 @@ const mixin = {
                         [this.name]: {
                             ...valueObject,
                             value,
+                            _META_: this._META_,
                             type: this.$options._componentTag
                         },
                         form: formFix,
@@ -218,6 +225,9 @@ const mixin = {
         },
         form() {
             return _.get(this.define, 'ui_form', 'form')
+        },
+        _META_() {
+            return _.get(this.define, '_META_', {})
         }
     },
     watch: {
