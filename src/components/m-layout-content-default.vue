@@ -71,7 +71,7 @@
                   at: item.url.split('&')[0].split('=')[1],
                   url: `/api/menu/getPage/${Id}/${item.code}`
               }
-              dispatch(urlObj)
+              dispatch(item.url)
 //            }
           }
       },
