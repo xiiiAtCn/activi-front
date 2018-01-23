@@ -163,8 +163,12 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableGetData(url,'data')
         },
         watchValuesChanged (newval, oldval) {
-            if (newval[0] === oldval[0] && Object.keys(newval[1]).length === 0 && !oldval[1]) {
-                return
+            if (!newval || !oldval) {
+                
+            } else {
+                if (newval[0] === oldval[0] && Object.keys(newval[1]).length === 0 && !oldval[1]) {
+                    return
+                }
             }
             this.getTableDefine()
             this.getTableData()

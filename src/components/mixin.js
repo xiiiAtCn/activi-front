@@ -170,6 +170,12 @@ const mixin = {
             }
         }
     },
+    mounted () {
+        // 如果组件与其他组件无关 直接取数据
+        if (!this.isRelated) {
+            this.watchValuesChanged()
+        }
+    },
     destroyed () {
         this.$store.commit(Mutations.CLEAR_COMPONENT_DATA, {...this.idObj})
     }
