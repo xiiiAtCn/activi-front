@@ -75,7 +75,7 @@ const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneC
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
 
 //urlSection
-const mHandleUrl = resolve => require(['../components/m-handle-url.vue'], resolve)
+const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -92,7 +92,7 @@ const router = new VueRouter({
                 },
                 {
                     path: 'page',
-                    component: mHandleUrl,
+                    component: mUrlSection,
                     props: (route) => ({ query: route.query })
                 },
                 {

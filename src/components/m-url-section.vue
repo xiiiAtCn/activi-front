@@ -16,11 +16,9 @@
 
     export default {
         props:{
-            define:{
+            query:{
                 type:null,
-                default () {
-                    return {}
-                }
+                default:''
             },
             form:{
                 type:String,
@@ -30,8 +28,8 @@
         data() {
             return {
                 downData: {},
-                dataUrl: null,
-                statusUrl: null,
+                dataUrl: '',
+                statusUrl: '',
                 defineUrl:''
             }
         },
@@ -39,11 +37,8 @@
             form: 'form'
         },
         watch: {
-            // $route () {
-            //     this.handleMainUrl(this.$route.query.url)
-            // },
-            define () {
-                this.handleDefine(this.define)
+            $route () {
+                this.handleQueryUrl(this.$route.query)
             },
             dataUrl(newUrl) {
                 if(newUrl){
@@ -57,23 +52,26 @@
             }
         },
         mounted() {
-            if(this.define && Object.keys(this.define).length !== 0){
-                this.handleDefine(this.define)
-            }else{
-                console.log('url-section 输入错误')
-            }
+            this.query.url && this.handleQueryUrl(this.query)
         },
         methods:{
-            handleDefine(data){
-                if(!data.defineUrl){
-                    return
-                }
-                this.dataUrl = _.get(data,'dataUrl','')
-                this.statusUrl = _.get(data,'statusUrl','')
-                this.defineUrl = _.get(data,'defineUrl','')
-                this.handleUrl(this.defineUrl)
+            //处理路由的url
+            handleQueryUrl(query){
+                let url = _.cloneDeep(query.url)
+                console.log('handle query is ',url)
+                getData(url,(data,err)=>{
+                    if(err){
+                        console.log('handle query error')
+                    }else if (data) {
+                        this.dataUrl = _.get(data,'dataUrl','')
+                        this.statusUrl = _.get(data,'statusUrl','')
+                        this.defineUrl = _.get(data,'defineUrl','')
+                        this.handleDefineUrl(this.defineUrl)
+                    }
+                })
             },
-            handleUrl(defineUrl){
+            //处理defineUrl
+            handleDefineUrl(defineUrl){
                 let url = _.cloneDeep(defineUrl)
                 if(url === '' || Object.keys(url).length === 0){return}
                 getData(url,(data,err)=>{
@@ -84,6 +82,7 @@
                     }
                 })
             },
+            //重载数据
             reloadData(dataUrl){
                 if(!dataUrl){return}
                 let url = _.cloneDeep(dataUrl)
@@ -96,6 +95,3 @@
         }
     }
 </script>
-
-<style scoped>
-</style>
