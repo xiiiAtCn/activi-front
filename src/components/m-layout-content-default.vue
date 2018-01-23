@@ -63,14 +63,15 @@
           dispatchAction: function (item) {
 //             if (this.$route.params.id === '00'){
 //                this.$router.push({ path:  + url })
+    //               console.log(item)
+    //               let Id = this.$route.params.id
+    //               let urlObj={
+    //                   type:'link',
+    //                   at: item.url.split('&')[0].split('=')[1],
+    //                   url: `/api/menu/getPage/${Id}/${item.code}`
+    //               }
 //            } else {
-              console.log(item)
-              let Id = this.$route.params.id
-              let urlObj={
-                  type:'link',
-                  at: item.url.split('&')[0].split('=')[1],
-                  url: `/api/menu/getPage/${Id}/${item.code}`
-              }
+//
               dispatch(item.url)
 //            }
           }

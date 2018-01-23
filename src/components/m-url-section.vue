@@ -32,6 +32,7 @@
                 downData: {},
                 dataUrl: null,
                 statusUrl: null,
+                defineUrl:''
             }
         },
         provide: {
@@ -59,14 +60,18 @@
             if(this.define && Object.keys(this.define).length !== 0){
                 this.handleDefine(this.define)
             }else{
-                console.log('URL输入错误')
+                console.log('url-section 输入错误')
             }
         },
         methods:{
             handleDefine(data){
-                this.dataUrl = data.dataUrl
-                this.statusUrl = data.statusUrl
-                this.handleUrl(data.defineUrl)
+                if(!data.defineUrl){
+                    return
+                }
+                this.dataUrl = _.get(data,'dataUrl','')
+                this.statusUrl = _.get(data,'statusUrl','')
+                this.defineUrl = _.get(data,'defineUrl','')
+                this.handleUrl(this.defineUrl)
             },
             handleUrl(defineUrl){
                 let url = _.cloneDeep(defineUrl)
@@ -80,6 +85,7 @@
                 })
             },
             reloadData(dataUrl){
+                if(!dataUrl){return}
                 let url = _.cloneDeep(dataUrl)
                 getData(url,(data)=>{
                     if (data) {
