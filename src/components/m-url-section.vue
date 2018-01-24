@@ -18,11 +18,15 @@
         props:{
             query:{
                 type:null,
-                default:''
+                default:null
             },
             form:{
                 type:String,
                 default:'form'
+            },
+            define:{
+                type:null,
+                default:''
             }
         },
         data() {
@@ -52,17 +56,25 @@
             }
         },
         mounted() {
+            if(this.define){
+                this.handleDefineUrl( _.get(this.define,'defineUrl',''))
+                return
+            }
             this.query.url && this.handleQueryUrl(this.query)
         },
         methods:{
             //处理路由的url
             handleQueryUrl(query){
                 let url = _.cloneDeep(query.url)
-                console.log('handle query is ',url)
+                console.log('urlSection handle is ',url)
                 getData(url,(data,err)=>{
                     if(err){
-                        console.log('handle query error')
+                        console.log('urlSection handle error')
                     }else if (data) {
+                        if(data.ui_define){
+                            this.downData = data
+                            return
+                        }
                         this.dataUrl = _.get(data,'dataUrl','')
                         this.statusUrl = _.get(data,'statusUrl','')
                         this.defineUrl = _.get(data,'defineUrl','')

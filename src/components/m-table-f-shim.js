@@ -96,7 +96,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                 return
             }
             this.operation = _.get(def,'operation', [])
-            this.showModalBtn = _.get(def,'showModalBtn','')
+            this.showModalBtn = _.get(def,'showModalBtn',false)
             this.cols = _.get(def,'cols', [])
             this.url = _.get(def,'data_url', {})
             this.showSearch = _.get(def,'showSearch', false)
@@ -144,7 +144,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                         this.initialize(data)
                     }else{
                         if(data.total){
-                            this.rowsContent = data.datas
+                            this.rowsContent = data.data
                             this.serverPage = true
                             this.pageTotal = data.total
                             this.wordList = data.wordList || []
@@ -164,7 +164,7 @@ let tableFShim = Vue.component('tableF-Shim', {
         },
         watchValuesChanged (newval, oldval) {
             if (!newval || !oldval) {
-                
+
             } else {
                 if (newval[0] === oldval[0] && Object.keys(newval[1]).length === 0 && !oldval[1]) {
                     return

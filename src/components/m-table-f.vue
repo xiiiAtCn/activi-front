@@ -66,16 +66,26 @@
     export default {
         props: {
             showModalBtn: {
-                type: null
+                type: null,
+                default: false
             },
             operation: {
-                type: null
+                type: null,
+                default () {
+                    return []
+                }
             },
             cols: {
-                type: null
+                type: null,
+                default () {
+                    return []
+                }
             },
             rowsContent: {
-                type: null
+                type: null,
+                default () {
+                    return []
+                }
             },
             search: {
                 type: Boolean,
@@ -107,11 +117,15 @@
             },
             wordList: {
                 type: [Array],
-                default: []
+                default () {
+                    return []
+                }
             },
             suggestUrl: {
                 type: [Object],
-                default: {}
+                default () {
+                    return {}
+                }
             },
             name:{
                 type: null,
@@ -400,6 +414,7 @@
             },
             //tableData存入行数据
             handleContent(){
+                console.log(this.rowsContent)
                 if(this.rowsContent.length === undefined || this.rowsContent.length === 0){
                     this.dataTable = []
                     return
@@ -600,7 +615,7 @@
                 })
                 if(width < this.$refs.tableCt.clientWidth){
                     let val={}
-                    for(let i=this.columnsData.length-1; i>0 ; i--){
+                    for(let i=this.columnsData.length-1; i>=0 ; i--){
                         // for(let j=0;j<arr.length;j++){
                         //     if(arr[j] === i){
                         //         return
