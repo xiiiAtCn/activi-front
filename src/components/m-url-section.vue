@@ -34,7 +34,8 @@
                 downData: {},
                 dataUrl: '',
                 statusUrl: '',
-                defineUrl:''
+                defineUrl:'',
+                watchRoute:false // 是否监听路由
             }
         },
         provide: {
@@ -42,7 +43,9 @@
         },
         watch: {
             $route () {
-                this.handleQueryUrl(this.$route.query)
+                if(this.watchRoute){
+                    this.handleQueryUrl(this.$route.query)
+                }
             },
             dataUrl(newUrl) {
                 if(newUrl){
@@ -79,6 +82,7 @@
                         this.statusUrl = _.get(data,'statusUrl','')
                         this.defineUrl = _.get(data,'defineUrl','')
                         this.handleDefineUrl(this.defineUrl)
+                        this.watchRoute = true
                     }
                 })
             },
