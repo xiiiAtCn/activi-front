@@ -56,6 +56,11 @@
                 if (newUrl) {
                     this.$store.dispatch('putStatus',newUrl)
                 }
+            },
+            define(newDefine){
+                if(newDefine){
+                    this.handleDefineUrl( _.get(newDefine,'defineUrl',''))
+                }
             }
         },
         mounted() {
@@ -74,6 +79,7 @@
                     if(err){
                         console.log('urlSection handle error')
                     }else if (data) {
+                        this.watchRoute = true
                         if(data.ui_define){
                             this.downData = data
                             return
@@ -82,7 +88,6 @@
                         this.statusUrl = _.get(data,'statusUrl','')
                         this.defineUrl = _.get(data,'defineUrl','')
                         this.handleDefineUrl(this.defineUrl)
-                        this.watchRoute = true
                     }
                 })
             },
