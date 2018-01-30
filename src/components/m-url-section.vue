@@ -59,13 +59,13 @@
             },
             define(newDefine){
                 if(newDefine){
-                    this.handleDefineUrl( _.get(newDefine,'defineUrl',''))
+                    this.parsesUrl(newDefine)
                 }
             }
         },
         mounted() {
             if(this.define){
-                this.handleDefineUrl( _.get(this.define,'defineUrl',''))
+                this.parsesUrl(this.define)
                 return
             }
             this.query.url && this.handleQueryUrl(this.query)
@@ -84,10 +84,7 @@
                             this.downData = data
                             return
                         }
-                        this.dataUrl = _.get(data,'dataUrl','')
-                        this.statusUrl = _.get(data,'statusUrl','')
-                        this.defineUrl = _.get(data,'defineUrl','')
-                        this.handleDefineUrl(this.defineUrl)
+                        this.parsesUrl(data)
                     }
                 })
             },
@@ -102,6 +99,13 @@
                         this.downData = data
                     }
                 })
+            },
+            //handle url
+            parsesUrl(data){
+                this.dataUrl = _.get(data,'dataUrl','')
+                this.statusUrl = _.get(data,'statusUrl','')
+                this.defineUrl = _.get(data,'defineUrl','')
+                this.handleDefineUrl(this.defineUrl)
             },
             //重载数据
             reloadData(dataUrl){
