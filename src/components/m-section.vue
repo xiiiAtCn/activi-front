@@ -20,6 +20,6 @@
     .title-container{
         border-bottom: 1px solid #dddee1;
         padding-bottom: 8px;
-        margin-bottom: 15px;
+        margin-bottom: 22px;
     }
 </style>

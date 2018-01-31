@@ -76,7 +76,7 @@ const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBo
 const stackChart = resolve => require(['../components/chart/chartContainer.vue'], resolve)
 
 //urlSection
-const urlSection = resolve => require(['../components/m-url-section.vue'], resolve)
+const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -93,7 +93,8 @@ const router = new VueRouter({
                 },
                 {
                     path: 'page',
-                    component: mMain
+                    component: mUrlSection,
+                    props: (route) => ({ query: route.query })
                 },
                 {
                     path: '/layoutContent/:id/workbench',
