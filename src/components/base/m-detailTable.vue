@@ -80,7 +80,7 @@
                 return this.editable.split('_').indexOf('add') !== -1
             },
             editable() {
-                return _.get(this.$store.state.pageStatus, ['status', this.form, this.name], '')
+                return _.get(this.define, 'status', '')
             },
             visible() {
                 return _.get(this.$store.state.formData, [this.temporary_form, '_visible'], false)
@@ -350,7 +350,7 @@
         destroyed() {
             let formFix = this.temporary_form
             this.$store.commit(ERASURE_DATA, { form: formFix + VALIDATION, name : this.name})
-            this.$store.commit(ERASURE_DATA, { form: formFix, name : this.name})
+            this.$store.commit(ERASURE_DATA, { form: formFix + VALIDATION, name : this.name})
         }
     }
 
