@@ -335,7 +335,7 @@ export default {
                         )
                     }
                     let tmp = {}
-                    if(element['key']) {
+                    if(element['key'] && element.type !== 'table') {
                         let {  key, value, ...rest } = element
                         tmp[key] = {
                             value,
@@ -343,10 +343,11 @@ export default {
                         }
                         tmp['form'] = form
                         commit(Mutations.FORM_ELEMENT_VALUE, tmp)
-                    } else {
+                    }
+                    if(element.type === 'table') {
                         let array = element['value']
+                        let key = element['key']
                         let list = []
-                        debugger
                         if(Array.isArray(array)) {
                             array.forEach(ele => {
                                 if(Array.isArray(ele)) {
@@ -357,7 +358,7 @@ export default {
                                     console.warn(`unexpected data type in table element value, expected array, but got ${typeof ele}`)
                                 }
                             })
-                            commit(Mutations.FORM_ELEMENT_VALUE, {form, value: list})
+                            commit(Mutations.FORM_ELEMENT_VALUE, { form, [key]:{value: list}})
                         } else {
                             console.warn(`unexpected data type in table data,expected array, but got ${typeof array}`)
                         }
