@@ -239,7 +239,7 @@ export default {
                                         let url
                                         action = _.cloneDeep(action)
                                         let urlObject = action.url
-                                        if (urlObject.method !== 'POST' || urlObject.method !== 'PUT') {
+                                        if (urlObject.method !== 'POST' && urlObject.method !== 'PUT') {
                                             throw new Error('action\'s method must be post or put')
                                         }
                                         url = urlObject.url
