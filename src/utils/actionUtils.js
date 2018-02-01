@@ -68,8 +68,7 @@ export const getData = (action, callback) => {
         } else if(action.method === 'DELETE') {
             method = action.method
         } else {
-            console.warn('unsupported method type')
-            return
+            method = 'GET'
         }
     } else {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
