@@ -62,9 +62,14 @@ export const getData = (action, callback) => {
         url = action.url
         url = replace(url, action.pathParams || {})
         url = addQuery(url, action.queryParams || {})
-        if (action.method === 'POST') {
+        if (action.method === 'POST' || action.method === 'PUT' ) {
             body = action.body
-            method = 'POST'
+            method = action.method
+        } else if(action.method === 'DELETE') {
+            method = action.method
+        } else {
+            console.warn('unsupported method type')
+            return
         }
     } else {
         throw new Error(`unexpected argument action, required string, object , but got ${typeof action}`)
@@ -81,7 +86,8 @@ export const getData = (action, callback) => {
             console.warn('network seems slow. overlay is forced to close even though request is not back')
         }
     }, 10000)
-    if (method === 'POST') {
+    switch (method) {
+    case 'POST':
         request.setUrl(url).setBody(body).forPost((result, err) => {
             stack--
             setTimeout(() => {
@@ -93,7 +99,21 @@ export const getData = (action, callback) => {
                 action.callback()
             }
         })
-    } else {
+        break
+    case 'PUT':
+        request.setUrl(url).setBody(body).forPut((result, err) => {
+            stack--
+            setTimeout(() => {
+                if (stack === 0) { bus.$emit('hide-my-full-loading') }
+            }, 1000)
+
+            callback(result, err)
+            if(!err && action.callback) {
+                action.callback()
+            }
+        })
+        break
+    case 'GET':
         request.setUrl(url).forGet((result, err) => {
             stack--
             setTimeout(() => {
@@ -105,7 +125,23 @@ export const getData = (action, callback) => {
                 action.callback()
             }
         })
+        break
+    case 'DELETE':
+        request.setUrl(url).forDelete((result, err) => {
+            stack--
+            setTimeout(() => {
+                if (stack === 0)
+                    bus.$emit('hide-my-full-loading')
+            }, 1000)
+            callback(result, err)
+            if(!err && action.callback) {
+                action.callback()
+            }
+        })
+        break
+    default:
     }
+
 }
 
 /**

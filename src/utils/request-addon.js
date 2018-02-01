@@ -21,10 +21,15 @@ function Request () {
  */
 Request.prototype.forGet = function (callback) {
     let url = this._buildPath()
+    let config = {}
+    if (this.$config !== undefined) {
+        config = { ...this.$config}
+        delete this.$config
+    }
     console.group(`get method from ${this._checkEnvironment()} start`)
     console.info('path: ===> ' + location.origin + url)
     console.groupEnd()
-    return axios.get(url)
+    return axios.get(url, config)
         .then(res => {
             console.group(`${this._checkEnvironment()} get request success`)
             console.info(`data from get method %c${location.origin + url} \n`,
@@ -41,6 +46,35 @@ Request.prototype.forGet = function (callback) {
             callback(null, err)
         })
 }
+
+Request.prototype.forDelete = function (callback) {
+    let url = this._buildPath()
+    let config = {}
+    if (this.$config !== undefined) {
+        config = { ...this.$config}
+        delete this.$config
+    }
+    console.group(`delete method from ${this._checkEnvironment()} start`)
+    console.info('path: ===> ' + location.origin + url)
+    console.groupEnd()
+    return axios.delete(url, config)
+        .then(res => {
+            console.group(`${this._checkEnvironment()} delete request success`)
+            console.info(`data from delete method %c${location.origin + url} \n`,
+                'color: #008B00;', res.data)
+            console.groupEnd()
+            callback(res.data, null)
+        })
+        .catch(err => {
+            console.group(`${this._checkEnvironment()} delete request fail`)
+            console.error(`err from delete method %c${location.origin + url} \n`,
+                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
+            console.groupEnd()
+            iView.Message.error('服务器出错了，请联系管理员解决')
+            callback(null, err)
+        })
+}
+
 
 /**
  * 发起post请求
@@ -88,6 +122,50 @@ Request.prototype.forPost = function (callback) {
 }
 
 /**
+ * 发起put请求
+ *
+ * @param callback  请求返回之后的回调
+ */
+Request.prototype.forPut = function (callback) {
+    let url = this._buildPath()
+    let body = {}, config = {}
+    if (this.$body !== undefined) {
+        if(_.isArray(this.$body)){
+            body = this.$body
+            delete this.$body
+        }else{
+            body = { ...this.$body}
+            delete this.$body
+        }
+    }
+    if (this.$config !== undefined) {
+        config = { ...this.$config}
+        delete this.$config
+    }
+    console.group(`put method from ${this._checkEnvironment()} start`)
+    console.info('path: ===> ' + location.origin + url)
+    console.info('body :', body)
+    console.groupEnd()
+    return axios.put(url, body, config)
+        .then(res => {
+            console.group(`${this._checkEnvironment()} put request success`)
+            console.info(`data from %c${location.origin + url} \n`,
+                'color: #008B00;', res.data)
+            console.info('method body :', body)
+            console.groupEnd()
+            callback(res.data, null)
+        })
+        .catch(err => {
+            console.group(`${this._checkEnvironment()} put request fail`)
+            console.error(`err from %c${location.origin + url} \n`,
+                'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
+            console.info('method body :', body)
+            console.groupEnd()
+            iView.Message.error('服务器出错了，请联系管理员解决')
+            callback(null, err)
+        })
+}
+/**
  * 设置请求地址
  */
 Request.prototype.setUrl = function (url) {
@@ -131,7 +209,7 @@ Request.prototype.setQuery = function (query) {
 /**
  * 设置post请求的配置参数
  */
-Request.prototype.setPostConfig = function (config) {
+Request.prototype.setConfig = function (config) {
     this._checkUrl()
     pureObjectCheck(config)
     this.$config = config
