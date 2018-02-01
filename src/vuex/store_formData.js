@@ -239,8 +239,8 @@ export default {
                                         let url
                                         action = _.cloneDeep(action)
                                         let urlObject = action.url
-                                        if (urlObject.method !== 'POST') {
-                                            throw new Error('action\'s method must be post')
+                                        if (urlObject.method !== 'POST' || urlObject.method !== 'PUT') {
+                                            throw new Error('action\'s method must be post or put')
                                         }
                                         url = urlObject.url
                                         url = replace(url, urlObject.pathParams || {})
@@ -261,15 +261,27 @@ export default {
                                             }
                                         }
                                         delete body[ form + 'request']
-                                        request.setUrl(url).setBody(body).forPost((data, err) => {
-                                            if(err) {
-                                                console.log(err)
-                                                iView.Message.error('服务器出错了!')
-                                                commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
-                                                return
-                                            }
-                                            dispatch(data)
-                                        })
+                                        if(urlObject.method === 'POST') {
+                                            request.setUrl(url).setBody(body).forPost((data, err) => {
+                                                if(err) {
+                                                    console.log(err)
+                                                    iView.Message.error('服务器出错了!')
+                                                    commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
+                                                    return
+                                                }
+                                                dispatch(data)
+                                            })
+                                        } else {
+                                            request.setUrl(url).setBody(body).forPut((data, err) => {
+                                                if(err) {
+                                                    console.log(err)
+                                                    iView.Message.error('服务器出错了!')
+                                                    commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
+                                                    return
+                                                }
+                                                dispatch(data)
+                                            })
+                                        }
                                     } catch (e) {
                                         commit(Mutations.FORM_ELEMENT_VALUE, {form, _validate: false})
                                         console.error(e)
