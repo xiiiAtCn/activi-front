@@ -78,6 +78,8 @@ const stackChart = resolve => require(['../components/chart/chartContainer.vue']
 //urlSection
 const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
+const tokenConfig = resolve => require(['../components/tokenConfig/tokenConfig.vue'], resolve)
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -219,6 +221,10 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/:id/saleDashBoard',
                     component: saleDashboard,
+                },
+                {
+                    path: '/layoutContent/:id/test3',
+                    component: tokenConfig
                 }
             ]
         },
