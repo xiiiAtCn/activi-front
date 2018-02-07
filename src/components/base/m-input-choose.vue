@@ -8,11 +8,9 @@
             </div>
             <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
-                    v-if="item"
-                    v-for="item in downData.ui_content"
-                    :is="item.ui_type"
-                    :define="item.ui_define"
-                    :form="item.ui_form"
+                    :is="downData.ui_type"
+                    :define="downData.ui_define"
+                    :form="downData.ui_form"
                 ></component>
             </mLayer>
         </Row>
@@ -28,6 +26,7 @@
     import { FORM_ELEMENT_VALUE } from 'store/Mutation'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
+    import bus from '../../router/bus'
 
     export default {
         name: 'm-input-choose',
@@ -53,6 +52,9 @@
             },
             backUrl(){
                 return _.get(this.define, 'backUrl', '')
+            },
+            eventId(){
+                return _.get(this.define, 'event', '')
             }
         },
         mounted(){
@@ -90,7 +92,7 @@
                             this.$store.commit(FORM_ELEMENT_VALUE, { [ data[i].key ]: { value: data[i].value, type: ( this.define.name === data[i].key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
                         }
                     }
-
+                    //bus.$emit()
                     this.valid()
                     if (this.objectModel !== '') {
                         this.errorMessage = ''
