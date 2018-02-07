@@ -6,7 +6,7 @@
                     <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
-            <mLayer :value="showLayer" :titleText="placeholder" @on-cancel="handleCancel" @on-ok="handleOk">
+            <mLayer :value="showLayer" :titleText="layerTitle" @on-cancel="handleCancel" @on-ok="handleOk">
                 <component
                     :is="downData.ui_type"
                     :define="downData.ui_define"
@@ -52,6 +52,9 @@
             },
             backUrl(){
                 return _.get(this.define, 'backUrl', '')
+            },
+            layerTitle(){
+                return  '请选择'+_.get(this.define, 'title', '相关信息')
             },
             eventId(){
                 return _.get(this.define, 'event', '')
