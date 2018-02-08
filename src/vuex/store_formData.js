@@ -326,7 +326,7 @@ export default {
                 commit(Mutations.CLEAR_ALL_DATA)
                 console.log(data)
                 if(!Array.isArray(data)) {
-                    iView.Message.error('数据结构错误，请联系管理员解决!')
+                    console.error('数据结构错误，请联系管理员解决!')
                     return
                 }
                 data.forEach(element => {
