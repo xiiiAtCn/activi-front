@@ -3,6 +3,7 @@
         <Row>
             <div class="search">
                 <Input v-model="objectModel" :placeholder="placeholder" readonly :disabled="readonly">
+                    <Button slot="append" @click="handleDeleteChoose" v-show="showClose" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
                     <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
@@ -34,7 +35,8 @@
         data () {
             return {
                 showLayer:false,
-                downData:[]
+                downData:[],
+                showClose:false
             }
         },
         computed: {
@@ -61,6 +63,7 @@
             }
         },
         mounted(){
+            if(this.objectModel){this.showClose = true}
         },
         methods: {
             handleChooseClick(){
@@ -96,13 +99,12 @@
                 })
             },
             handleData(data){
-                bus.$emit(this.dataDomain,data)
+                bus.$emit(this.dataDomain + 'add',data)
 
-                Object.keys(data).forEach( key =>{
-                    if(key === this.key){
-                        this.objectModel = data[key]
-                    }
-                })
+                this.objectModel = data[this.key]
+
+                this.showClose = true
+
                 this.valid()
                 if (this.objectModel !== '') {
                     this.errorMessage = ''
@@ -119,6 +121,12 @@
                     }
                 }
                 this.$store.dispatch(ELEMENT_VALIDATE_RESULT, {[this.name]: hasError, form: this.fixForm})
+            },
+            //处理删除事件
+            handleDeleteChoose(){
+                bus.$emit(this.dataDomain + 'delete')
+                this.objectModel = ''
+                this.showClose = false
             }
         }
     }

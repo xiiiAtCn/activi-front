@@ -29,12 +29,11 @@
             }
         },
         mounted(){
-            bus.$on(this.dataDomain,data=>{
-                Object.keys(data).forEach( key =>{
-                    if(key === this.key){
-                        this.objectModel = data[key]
-                    }
-                })
+            bus.$on(this.dataDomain + 'add',data=>{
+                this.objectModel = data[this.key]
+            })
+            bus.$on(this.dataDomain + 'delete',()=>{
+                this.objectModel = ''
             })
         },
         methods: {
