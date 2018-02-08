@@ -54,10 +54,10 @@
                 return _.get(this.define, 'backUrl', '')
             },
             layerTitle(){
-                return  '请选择'+_.get(this.define, 'title', '相关信息')
+                return  '请选择' + _.get(this.define, 'title', '相关信息')
             },
-            eventId(){
-                return _.get(this.define, 'event', '')
+            key(){
+                return _.get(this.define, 'key', '')
             }
         },
         mounted(){
@@ -85,22 +85,28 @@
                     url:this.backUrl,
                     type: 'GET',
                     queryParams:{
-                        id:_.get(this.$store.state.formData['_' + this.dataDomain],[this.tableName], '')
+                        id:_.get(this.$store.state.formData['_' + this.dataDomain],['id'], '')
                     }
                 }
                 getData(action,(data)=>{
-                    let formFix = this.tmpForm?this.tmpForm: this.form
                     if (data) {
-                        for(let i=0;i<data.length;i++){
-                            this.$store.commit(FORM_ELEMENT_VALUE, { [ data[i].key ]: { value: data[i].value, type: ( this.define.name === data[i].key ? 'mInputChoose' : 'mDisplay')}, form: formFix})
-                        }
+                        this.handleData(data)
                     }
-                    //bus.$emit()
-                    this.valid()
-                    if (this.objectModel !== '') {
-                        this.errorMessage = ''
+
+                })
+            },
+            handleData(data){
+                bus.$emit(this.dataDomain,data)
+
+                Object.keys(data).forEach( key =>{
+                    if(key === this.key){
+                        this.objectModel = data[key]
                     }
                 })
+                this.valid()
+                if (this.objectModel !== '') {
+                    this.errorMessage = ''
+                }
             },
             valid(){
                 let hasError =false

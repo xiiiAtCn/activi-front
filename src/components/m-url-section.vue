@@ -4,7 +4,7 @@
         :is="downData.ui_type"
         :define="downData.ui_define"
         :content="downData.ui_content"
-        :form="form"
+        :form="downData.ui_form"
     ></component>
 </template>
 

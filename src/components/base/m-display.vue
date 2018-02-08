@@ -15,10 +15,27 @@
 <script>
     import mixin from './mixin'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
+    import bus from '../../router/bus'
+
     export default {
         name: 'm-display',
         mixins: [mixin],
         computed: {
+            dataDomain () {
+                return _.get(this.define, 'dataDomain', '')
+            },
+            key(){
+                return _.get(this.define, 'key', '')
+            }
+        },
+        mounted(){
+            bus.$on(this.dataDomain,data=>{
+                Object.keys(data).forEach( key =>{
+                    if(key === this.key){
+                        this.objectModel = data[key]
+                    }
+                })
+            })
         },
         methods: {
             valid() {
