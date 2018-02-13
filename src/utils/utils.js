@@ -38,5 +38,4 @@ export function arrMax (arr, getFunc) {
     } else {
         return arr.reduce((preValue, curValue) => preValue > curValue ? preValue : curValue)
     }
-    
 }
