@@ -69,9 +69,9 @@ export default {
                     on: {
                         click: (event) => { 
                             event.stopPropagation()
-                            root.forEach(treeNode => {
-                                this.$set(treeNode.node, 'selected', false)
-                            })
+                            // root.forEach(treeNode => {
+                            //     this.$set(treeNode.node, 'selected', false)
+                            // })
                             this.nodeAdd(root, node, data) 
                         }
                     }
@@ -123,10 +123,10 @@ export default {
                     on: {
                         click: () => {
                             this.selectedNode = node
-                            root.forEach(treeNode => {
-                                this.$set(treeNode.node, 'selected', false)
-                            })
-                            this.$set(data, 'selected', true)
+                            // root.forEach(treeNode => {
+                            //     this.$set(treeNode.node, 'selected', false)
+                            // })
+                            // this.$set(data, 'selected', true)
                             this.nodeClick(root, node, data)
                         }
                     }
@@ -156,6 +156,9 @@ export default {
         },
         getSelectedNodes () {
             return this.$refs['tree'].$data.flatState.filter(obj => obj.node.selected)
+        },
+        getRoot () {
+            return this.$refs['tree'].$data.flatState
         }
     },
     watch: {

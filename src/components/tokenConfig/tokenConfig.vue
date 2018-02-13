@@ -165,12 +165,12 @@ const EventType = {
     hideLoading: 'token-config-hide'
 }
 // 当前编辑状态(新建节点、删除节点、编辑节点)
-const EditStatus = {
-    newNode: 'new',
+const ModalStatus = {
+    addNode: 'add',
     delNode: 'del',
-    editNode: 'edit'
+    editNode: 'edit',
+    none: 'none'
 }
-
 // table添加行的行id
 let generateId = 0
 
@@ -216,11 +216,11 @@ export default {
             },
             currentRow: null,
             selectedNode: null,
+            // 是添加改变了node还是点击改变了node
+            nodeChangeByAdd: false,
             bus: bus,
             // 当前请求总数
             requestNum: 0,
-            // 当前编辑状态
-            editStatus: null,
             // 模态ok回调
             modalOkCB: null,
             // 模态cancel回调
@@ -230,7 +230,11 @@ export default {
             // 模态标题
             modalTitle: '',
             // 模态显示信息
-            modalMessage: ''
+            modalMessage: '',
+            // 当前模态状态
+            currentModalStatus: '',
+            // 下一模态状态
+            nextModalStatus: ''
         }
     },
     computed: {
@@ -259,12 +263,12 @@ export default {
             if (!!newVal && !!oldVal && newVal.nodeKey == oldVal.nodeKey) {
                 return 
             }
-            // 当前为编辑状态
-            if (this.editStatus === EditStatus.editNode) {
-                this.modal = true
-            }
-            // 获取节点相关数据
-            this.getFormData()
+            if (!this.nodeChangeByAdd) {
+                this.nextModalStatus = ModalStatus.editNode
+                this.modalStatusTransition()
+            } else {
+                this.nodeChangeByAdd = false
+            } 
         }
     },
     methods: {
@@ -272,19 +276,78 @@ export default {
             this.getTreeData()
             this.tableDefine = _.cloneDeep(tableDefine)
             this.metaTypeList = _.cloneDeep(metaTypeList)
+
+            this.currentModalStatus = ModalStatus.none
         },
         // 重置modal相关数据
         resetModalData () {
             // 模态ok回调
             this.modalOkCB = null
             // 模态cancel回调
-            this.modalCancelCB = null,
+            this.modalCancelCB = null
             // 需要保存的模态中间变量
-            this.modalData = null,
+            this.modalData = null
             // 模态标题
-            this.modalTitle = '',
+            this.modalTitle = ''
             // 模态显示信息
             this.modalMessage = ''
+        },
+        // modal状态转换
+        modalStatusTransition () {
+            switch (this.nextModalStatus) {
+                case ModalStatus.addNode:
+                    this.modalTitle = '添加新节点'
+                    this.modalMessage = '当前未保存的节点信息会被清除，请确认是否添加节点'
+                    this.modalOkCB = () => {
+                        this.realAppend()
+                        this.currentModalStatus = ModalStatus.addNode
+                        this.nextModalStatus = ModalStatus.none
+                    }
+                    this.modalCancelCB = () => {
+                        this.nextModalStatus = ModalStatus.none
+                    } 
+                    if (this.currentModalStatus === ModalStatus.none) {
+                        this.modalOK()
+                        return 
+                    }
+                    break
+                case ModalStatus.delNode:
+                    this.modalTitle = '删除节点'
+                    if (this.currentModalStatus === ModalStatus.none) {
+                        this.modalMessage = '请确认是否删除节点'
+                    } else {
+                        this.modalMessage = '当前未保存的节点信息会被清除，请确认是否删除节点'
+                    }
+                    this.modalOkCB = () => {
+                        this.realRemove()
+                        this.currentModalStatus = ModalStatus.none
+                        this.nextModalStatus = ModalStatus.none
+                    }
+                    this.modalCancelCB = () => {
+                        this.nextModalStatus = ModalStatus.none
+                    }
+                    break
+                case ModalStatus.editNode: 
+                    this.modalTitle = '编辑节点'
+                    this.modalMessage = '当前未保存的节点信息会被清除，请确认是否编辑节点'
+                    this.modalOkCB = () => {
+                        this.removeFakeNode(this.selectedNode)
+                        this.addSelectedToNode(this.modalData.data)
+                        this.getFormData()
+                        this.currentModalStatus = ModalStatus.editNode
+                        this.nextModalStatus = ModalStatus.none
+                    }
+                    this.modalCancelCB = () => {
+                        this.nextModalStatus = ModalStatus.none
+                    }
+                    if (this.currentModalStatus === ModalStatus.none) {
+                        this.modalOK()
+                    }
+                    break
+                default: 
+                    throw new Error(`错误的nextModalStatus：${this.nextModalStatus}`)
+            }
+            this.modal = true
         },
         //------树相关方法------
         // 调用后台接口查询树的数据
@@ -368,17 +431,68 @@ export default {
         },
         // 添加节点 如果当前有未保存数据提示后再添加 清除未保存节点
         append (root, node, data) {
-            this.modal = true
-            this.editStatus = EditStatus.newNode
             this.modalData = {
                 root, node, data
             }
+            this.nextModalStatus = ModalStatus.addNode
+            this.modalStatusTransition()
+        },
+        realAppend () {
+            let {root, node, data} = this.modalData
+            this.removeFakeNode(node, root)
+            const children = data.children || []
+            children.push({
+                title: '新增节点',
+                expand: true,
+                selected: true,
+                add: false,
+                del: true
+            })
+            this.$set(data, 'children', children)
+
+            this.resetFormData()
+            this.resetConfigTableData()
+            this.$nextTick(() => {
+                this.nodeChangeByAdd = true                
+                this.selectedNode = this.$refs['configTree'].getSelectedNodes()[0]
+            })
+        },
+        // 移除没有被保存的节点
+        removeFakeNode (node, root) {
+            if (!root) {
+                root = this.$refs['configTree'].getRoot()
+            }
+            let delNode = root.find(el => !el.node.id)
+            if (delNode) {
+                let parent = root[delNode.parent].node
+                let index = parent.children.indexOf(delNode)
+                parent.children.splice(index, 1)
+            }
+        },
+        addSelectedToNode (data) {
+            let root = this.$refs['configTree'].getRoot()
+            root.forEach(treeNode => {
+                this.$set(treeNode.node, 'selected', false)
+            })
+            this.$set(data, 'selected', true)
         },
         // 删除节点
         remove (root, node, data) {
-            this.modal = true
-            this.editStatus = EditStatus.delNode
-            this.modalOkCB = () => {
+            this.modalData = {
+                root, node, data
+            }
+            this.nextModalStatus = ModalStatus.delNode
+            this.modalStatusTransition()
+        },
+        realRemove () {
+            let {root, node, data} = this.modalData
+            // 没有id直接从树中移除
+            if (!node.node.id) {
+                const parentKey = root.find(el => el === node).parent;
+                const parent = root.find(el => el.nodeKey === parentKey).node;
+                const index = parent.children.indexOf(data);
+                parent.children.splice(index, 1);
+            } else {
                 this.setUrl(fetchDir.delData)
                     .setPathVariables({
                         templateId: this.treeId,
@@ -397,37 +511,16 @@ export default {
         modalOK () {
             this.modalOkCB()
             this.resetModalData()
-            let {root, node, data} = this.modalData
-            let delNode = root.find(el => !el.node.id)
-            if (delNode) {
-                let parent = root[delNode.parent].node
-                let index = parent.children.indexOf(delNode)
-                parent.children.splice(index, 1)
-            }
-            const children = data.children || []
-            children.push({
-                title: '新增节点',
-                expand: true,
-                selected: true,
-                add: false,
-                del: true
-            })
-            this.$set(data, 'children', children)
-
-            this.resetFormData()
-            this.resetConfigTableData()
-            this.modalOK = null
-            this.$nextTick(() => {
-                this.selectedNode = this.$refs['configTree'].getSelectedNodes()[0]
-            })
         },
         // 取消添加节点
         modalCancel () {
-            this.modalData = null
+            this.modalCancelCB()
+            this.resetModalData()
         },
         // 点击节点
         nodeClick (root, node, data) {
             this.selectedNode = node
+            this.modalData = {root, node, data}
         },
         // 遍历树节点
         traverseTree(root, callback) {
