@@ -3,7 +3,7 @@
         <Menu active-name="" theme="light" class="themeLight" style="width:auto;">
             <li class="layout-logo">
                 <div class="posRea">
-                    <a href="/" ><img src="../assets/img/yushi-logo.png" alt=""></a>
+                    <a @click="logout" ><img src="../assets/img/yushi-logo.png" alt=""></a>
                     <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
                     <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
                 </div>
@@ -33,6 +33,14 @@
             this.getLeftMenu()
         },
         methods: {
+            logout(e) {
+                e.preventDefault()
+                let form = document.createElement('form')
+                form.method = 'POST'
+                form.action = '/api/logout'
+                document.body.appendChild(form)
+                form.submit()
+            },
             getLeftMenu () {
                 let systemKey = localStorage.getItem('systemKey')
                 let queries = {}

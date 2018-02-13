@@ -71,7 +71,8 @@ const emailDetail = resolve => require(['../components/businessModule/email/emai
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDashboard.vue'], resolve)
 
-const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
+// const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
+const fishBoneChart = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
 const stackChart = resolve => require(['../components/chart/chartContainer.vue'], resolve)
 
@@ -86,7 +87,10 @@ const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
-        {path: '/', component: mLogin},
+        {
+            path: '/index.html',
+            redirect: '/layoutContent/04/workbench'
+        },
         {
             path: '/layoutContent/:id',
             component: mLayoutContent,

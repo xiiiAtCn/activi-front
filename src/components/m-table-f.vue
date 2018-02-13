@@ -414,7 +414,6 @@
             },
             //tableData存入行数据
             handleContent(){
-                console.log(this.rowsContent)
                 if(this.rowsContent.length === undefined || this.rowsContent.length === 0){
                     this.dataTable = []
                     return
@@ -576,7 +575,7 @@
 
             //行单选存数据
             handleRowClick(data){
-                this.$store.commit(FORM_ELEMENT_VALUE, {[this.name]:data.id, form: '_' + this.form || 'form'})
+                this.$store.commit(FORM_ELEMENT_VALUE, {['id']:data.id, form: '_' + this.form || 'form'})
                 this.idList.push(data.id)
             },
 

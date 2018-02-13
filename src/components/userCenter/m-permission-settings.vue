@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <div class="container">
+        <h3 class="title-container">角色权限</h3>
         <Row>
             <Col span="12" class="tree-container">
-                <h3 class="title-container">选择用户</h3>
+                <div class="head-container" @click="addRole" >角色列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
                 <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"  @on-select-change="handleTreeClick"></Tree>
             </Col>
             <Col span="12" class="tree-container">
-                <h3 class="title-container">选择菜单</h3>
+                <div class="head-container">菜单列表</div>
                 <Tree class="tree" :data="menuTree" show-checkbox  @on-select-change="handleTreeClick" @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
@@ -41,6 +42,23 @@
                             </Select>
                         </FormItem>
                     </Form>
+                    </Col>
+                </Row>
+            </div>
+        </mLayer>
+
+        <mLayer :value="showRoleLayer" titleText="添加菜单" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
+            <div>
+                <Row>
+                    <Col span="24">
+                        <Form ref="roleForm" :label-width="120" :model="roleForm" :rules="roleRules">
+                            <FormItem label="角色名称" prop="roleName">
+                                <Input v-model="roleForm.roleName" placeholder="请输入角色名称"></Input>
+                            </FormItem>
+                            <FormItem label="角色英文名称" prop="roleType">
+                                <Input v-model="roleForm.roleType" placeholder="请输入角色英文名称"></Input>
+                            </FormItem>
+                        </Form>
                     </Col>
                 </Row>
             </div>
@@ -107,13 +125,19 @@
                 checkList:[],
 
                 showLayer:false,
+                showRoleLayer:false,
                 layerLoading:false,
+                layerRoleLoading:false,
                 formItem: {
                     labelName: '',
                     currentKey: '',
                     description: '',
                     icon:'',
                     parentKey:''
+                },
+                roleForm: {
+                    roleName: '',
+                    roleType: ''
                 },
                 cKey:'',
                 rules: {
@@ -122,6 +146,14 @@
                     ],
                     currentKey: [
                         { required: true, validator:keyValid , trigger: 'blur' }
+                    ]
+                },
+                roleRules: {
+                    roleName: [
+                        { required: true, message:'请输入角色名称', trigger: 'blur' }
+                    ],
+                    roleType: [
+                        { required: true, message:'请输入角色英文名称', trigger: 'blur' }
                     ]
                 },
             }
@@ -360,7 +392,9 @@
                 getData(url, (result) => {
                     if(result){
                         if(result.code === 200 ){
+                            this.layerLoading = false
                             iView.Message.success(result.description)
+                            this.showLayer = false
                         }else{
                             iView.Message.info(result.description)
                         }
@@ -372,20 +406,27 @@
             showAddMenu(data){
                 this.formItem.parentKey = data.currentKey
                 this.showLayer = true
+                this.layerLoading = true
             },
             handleCancel(){
                 this.showLayer = false
+                this.$refs['menuForm'].resetFields()
             },
             handleOk(){
+                this.layerLoading = false
                 this.$refs['menuForm'].validate((valid) => {
                     if (valid) {
-                        this.layerLoading = false
                         this.HandleAddMenu()
+                        this.showLayer = false
+                        this.getDefaultMenu()
+                        if(this.currentRole){
+                            this.getMenuData()
+                        }
                     } else {
                         this.$Message.error('验证失败!')
                     }
                 })
-                this.showLayer = false
+                setTimeout(()=>{this.layerLoading = true},500)
             },
             HandleAddMenu(){
                 let body = this.formItem
@@ -399,12 +440,54 @@
                     if(result){
                         if(result.code === 200 ){
                             iView.Message.success(result.description)
+                            this.$refs['menuForm'].resetFields()
                         }else{
                             iView.Message.info(result.description)
                         }
                     }
                 })
             },
+
+            //打开添加角色
+            addRole(){
+                this.showRoleLayer = true
+                this.layerRoleLoading = true
+            },
+            handleRoleCancel(){
+                this.showRoleLayer = false
+                this.$refs['roleForm'].resetFields()
+            },
+            handleRoleOk(){
+                this.layerRoleLoading = false
+                this.$refs['roleForm'].validate((valid) => {
+                    if (valid) {
+                        this.handleAddRole()
+                        this.showRoleLayer = false
+                        this.$refs['roleForm'].resetFields()
+                        this.getRoleData()
+                    } else {
+                        this.$Message.error('验证失败!')
+                    }
+                })
+                setTimeout(()=>{this.layerRoleLoading = true},500)
+            },
+            handleAddRole(){
+                let url ={
+                    method:'POST',
+                    body:this.roleForm,
+                    url:'/api/role/add'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                        }else{
+                            iView.Message.info(result.description)
+                        }
+                    }
+                })
+            },
+
             //编辑信息
             showEditMenu(){
                 getData('', (result) => {
@@ -420,10 +503,21 @@
     }
 </script>
 <style scoped>
+    .container{
+        padding: 0 8px;
+    }
+
     .title-container{
-        padding-bottom: 8px;
+        padding-bottom: 5px;
         margin-bottom: 5px;
-        font-size: 17px;
+        font-size: 18px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .head-container{
+        padding-bottom: 6px;
+        margin-bottom: 3px;
+        font-size: 14px;
     }
     .tree-container{
         padding: 5px 10px;

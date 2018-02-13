@@ -14,18 +14,18 @@
 
         <mLayer :value="showLayer" titleText="新建用户" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
             <div>
-                <Form ref="userForm" :model="formItem" :label-width="80" :rules="rules" :show-message="!changeRole">
-                    <FormItem label="用户名" prop="userName">
-                        <Input v-model="formItem.userName" placeholder="请输入用户名" :readonly="changeRole"></Input>
+                <Form ref="formItem" :model="formItem" :label-width="80" :rules="rules">
+                    <FormItem label="用户名" prop="userName" :show-message="!changeRole">
+                        <Input v-model="formItem.userName" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
                     </FormItem>
-                    <FormItem label="昵称" prop="nickName">
-                        <Input v-model="formItem.nickName" placeholder="请输入昵称" :readonly="changeRole"></Input>
+                    <FormItem label="昵称" prop="nickName" :show-message="!changeRole">
+                        <Input v-model="formItem.nickName" placeholder="请输入昵称" :readonly="changeRole" :disabled="changeRole"></Input>
                     </FormItem>
                     <FormItem label="密码" prop="password" v-if="!changeRole">
                         <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
                     </FormItem>
-                    <FormItem label="选择用户角色" v-if="changeRole">
-                        <Select v-model="roleList" multiple>
+                    <FormItem label="选择用户角色" prop="role" v-if="changeRole">
+                        <Select v-model="formItem.role" multiple>
                             <Option v-for="item in defaultRole" :value="item.id">{{ item.roleName }}</Option>
                         </Select>
                     </FormItem>
@@ -92,7 +92,22 @@
                     },
                     {
                         "title": "角色",
-                        "key": "roles"
+                        "key": "roles",
+                        render: (h, params) =>{
+                            let roleList = params.row.roles
+                            let roleContainer = []
+                            for(let i=0;i<roleList.length;i++){
+                                roleContainer.push(h('span',
+                                    {
+                                        style:{
+                                            marginLeft: '5px'
+                                        }
+                                    },
+                                    roleList[i].roleName
+                                ))
+                            }
+                            return h('div', roleContainer)
+                        }
                     }
                 ],
                 tableData:[],
@@ -101,12 +116,14 @@
                 formItem: {
                     userName: '',
                     nickName: '',
-                    password: ''
+                    password: '',
+                    role:[]
                 },
                 defaultForm:{
                     userName: '',
                     nickName: '',
-                    password: ''
+                    password: '',
+                    role:[]
                 },
                 rules: {
                     userName: [
@@ -128,11 +145,7 @@
                 changeRole:false
             }
         },
-        watch:{
-            formItem(){
-                this.layerLoading = false
-            }
-        },
+        watch:{},
         mounted() {
             this.init()
         },
@@ -147,6 +160,7 @@
                     }
                 })
             },
+            //新建用户
             openLayer(){
                 this.changeRole = false
                 this.formItem = _.cloneDeep(this.defaultForm)
@@ -155,27 +169,34 @@
             },
             //点击ok
             handleOk(){
+                this.layerLoading = false
                 if(this.changeRole){
                     this.HandleChangeRole()
                 }else{
-                    this.handleSubmit('userForm')
+                    this.handleSubmit('formItem')
                 }
-
+                setTimeout(()=>{this.layerLoading = true},500)
             },
             //点击取消
             handleCancel(){
                 this.showLayer = false
+                this.$refs['formItem'].resetFields()
             },
             //提交用户信息
             submitMessage(){
-                this.setUrl('/api/user/add').setBody(this.formItem).forPost((result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                            this.getUserData()
-                        }else{
-                            iView.Message.info(result.description)
-                        }
+                delete this.formItem.role
+                let url ={
+                    method:'POST',
+                    body:this.formItem,
+                    url:'/api/user/add'
+                }
+                getData(url, (result) => {
+                    if(result.code === 200 ){
+                        iView.Message.success(result.description)
+                        this.showLayer = false
+                        this.getUserData()
+                    }else{
+                        iView.Message.info(result.description)
                     }
                 })
             },
@@ -183,8 +204,9 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.layerLoading = false
                         this.submitMessage()
+                        this.showLayer = false
+                        this.$refs['formItem'].resetFields()
                     } else {
                         this.$Message.error('验证失败!')
                     }
@@ -217,11 +239,14 @@
                     iView.Message.error('请选择一条数据！')
                     return
                 }
-                //this.formItem = _.cloneDeep(this.defaultForm)
-                this.$refs['userForm'].resetFields();
                 this.formItem.userName = _.get(this.currentData,'userName')
                 this.formItem.nickName = _.get(this.currentData,'nickName')
-                this.roleList = _.get(this.currentData,'roles')
+                let List = _.get(this.currentData,'roles',[])
+
+                this.formItem.role = []
+                for(let i = 0;i<List.length;i++){
+                    this.formItem.role.push(List[i].id)
+                }
                 this.changeRole = true
                 this.getDefaultRole()
             },
@@ -242,15 +267,15 @@
                     pathParams:{
                         userId :this.currentData.id
                     },
-                    body:this.roleList,
+                    body: this.formItem.role,
                     url:'/api/user/changeRole/{userId}'
                 }
                 getData(url, (result) => {
                     if(result){
                         if(result.code === 200 ){
-                            this.layerLoading = false
                             iView.Message.success(result.description)
                             this.showLayer = false
+                            this.$refs['formItem'].resetFields()
                             this.getUserData()
                         }else{
                             iView.Message.info(result.description)
