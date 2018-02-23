@@ -27,11 +27,11 @@
                         <img class="daJieStyle2" src="../assets/img/head-portrait.jpg"/>
                         <div class="daJieStyle3" style="">
                             <div class="daJieStyle4">
-                                <span class="daJieStyle5">developer</span>
+                                <span class="daJieStyle5">{{nickName}}</span>
                             </div>
                             <div class="daJieStyle6">
                                 <a @click="myDesk" class="exit">桌面</a>
-                                <a href="javascript:;" class="exit">退出</a>
+                                <a @click="logout" class="exit">退出</a>
 
                                 <a href="javascript:;" class="designStyle daJieStyle7" @click="showDesign"
                                    v-if="designFlag">
@@ -119,14 +119,23 @@
                         url: ''
                     }
                 ],
-                ids: []
+                ids: [],
+                nickName: ''
             }
         },
         methods: {
             myDesk () {
                 this.$router.push({
                     path: '/layoutContent/04/workbench'
-                });
+                })
+            },
+            logout(e) {
+                e.preventDefault()
+                let form = document.createElement('form')
+                form.method = 'POST'
+                form.action = '/api/logout'
+                document.body.appendChild(form)
+                form.submit()
             },
             getLeftMenu () {
                 let currentId = this.$route.params.id
@@ -182,11 +191,15 @@
             },
             secondMenu () {
                 this.secondMenuFlag = !this.secondMenuFlag
+            },
+            getNickName() {
+                this.setUrl('/api/module/nickName').forGet(data => this.nickName = data)
             }
 
         },
         mounted: function () {
             this.getLeftMenu()
+            this.getNickName()
         },
         watch: {
             '$route' () {

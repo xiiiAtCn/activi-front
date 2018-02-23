@@ -3,7 +3,7 @@ import Vue from 'vue'
 
 Vue.use(VueRouter)
 
-const mMain = resolve => require(['../components/m-main.vue'], resolve)
+// const mMain = resolve => require(['../components/m-main.vue'], resolve)
 const mContent = resolve => require(['../components/m-main-content.vue'], resolve)
 const mLayoutContent = resolve => require(['../components/m-layout-content.vue'], resolve)
 const mLayoutContentDefault = resolve => require(['../components/m-layout-content-default.vue'], resolve)
@@ -71,20 +71,26 @@ const emailDetail = resolve => require(['../components/businessModule/email/emai
 const emailDirectory = resolve => require(['../components/businessModule/email/emailDirectory.vue'], resolve)
 const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDashboard.vue'], resolve)
 
-const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
+// const fishBoneChart = resolve => require(['../components/saleDashboard/fishBoneChart.vue'], resolve)
+const fishBoneChart = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
 const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
 const stackChart = resolve => require(['../components/chart/chartContainer.vue'], resolve)
 
 //urlSection
 const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
+const tokenOverview = resolve => require(['../components/tokenConfig/tokenOverview.vue'], resolve)
 const tokenConfig = resolve => require(['../components/tokenConfig/tokenConfig.vue'], resolve)
+const tokenView = resolve => require(['../components/tokenConfig/tokenView.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
-        {path: '/', component: mLogin},
+        {
+            path: '/index.html',
+            redirect: '/layoutContent/04/workbench'
+        },
         {
             path: '/layoutContent/:id',
             component: mLayoutContent,
@@ -222,9 +228,20 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/saleDashBoard',
                     component: saleDashboard,
                 },
+                // 库所一览
                 {
-                    path: '/layoutContent/:id/test3',
+                    path: '/layoutContent/:id/tokenOverview',
+                    component: tokenOverview
+                },
+                // 库所配置
+                {
+                    path: '/layoutContent/:id/tokenConfig',
                     component: tokenConfig
+                },
+                // 库所浏览
+                {
+                    path: '/layoutContent/:id/tokenView/:tokenId',
+                    component: tokenView
                 }
             ]
         },

@@ -5,6 +5,7 @@ import './boFilterNEW_vuex'
 import './taskPlan'
 import './saleDashboard'
 import './chart'
+import './tokenConfig'
 
 const mBoTemplate = resolve => {
     require(['./m-boTemplate.vue'], resolve)
