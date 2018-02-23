@@ -77,6 +77,9 @@ const mButtonIframe = resolve =>
 const mBoolean = resolve =>
     require(['./m-boolean.vue'], resolve)
 
+const mIconList = resolve =>
+    require(['./m-icon-list.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -103,3 +106,4 @@ Vue.component('mButtonLayer', mButtonLayer)
 Vue.component('mSpan', mSpan)
 Vue.component('mButtonIframe', mButtonIframe)
 Vue.component('mBoolean', mBoolean)
+Vue.component('mIconList', mIconList)

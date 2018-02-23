@@ -48,7 +48,7 @@
             </Col>
         </Row>
         <div>
-            <Table :highlight-row="checkRow === 'S' ? true : false" border @on-current-change="handleRowClick" @on-selection-change="handleRowsClick"
+            <Table :highlight-row="checkRow === 'S' ? true : false" border @on-current-change="handleRowClick" @on-selection-change="handleRowsClick"  @on-row-dblclick="handledblclick"
                    :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
@@ -62,6 +62,7 @@
     import { dispatch, getData} from 'utils/actionUtils'
     import _ from 'lodash'
     import { FORM_ELEMENT_VALUE} from 'store/Mutation'
+    import  bus from '../router/bus'
 
     export default {
         props: {
@@ -572,6 +573,12 @@
                     this.$emit('rowsPageChange', {from:1, size:this.rowCount,lastDataId:this.lastId})
                 }
             },
+            //用户双击一行时 广播事件
+            handledblclick(data){
+                if(this.checkRow === 'S'){
+                    bus.$emit(this.form + '_dbclick', data.id);
+                }
+            },
 
             //行单选存数据
             handleRowClick(data){
@@ -628,6 +635,9 @@
                         if(val.type && val.type === 'selection'){
                             this.columnsData.splice(i,1)
                         }
+
+
+
                     }
                 }
                 this.showButton()
