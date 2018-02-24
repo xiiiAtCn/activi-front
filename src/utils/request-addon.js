@@ -13,7 +13,7 @@ const types = ['$requestUrl', '$path', '$query']
 
 axios.interceptors.response.use(res => {
     if(res.data.code == '403') {
-        location.href = '/system-login.html'
+        location.href = '/'
         return Promise.reject('redirect')
     } else if(res.data.code == '401') {
         iView.Message.error('用户名或密码错误')
