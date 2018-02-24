@@ -11,6 +11,16 @@ import iView from 'iview'
 
 const types = ['$requestUrl', '$path', '$query']
 
+axios.interceptors.response.use(res => {
+    if(res.data.code == '401') {
+        location.href = '/system-login.html'
+        return Promise.reject('redirect')
+    }
+    return res
+}, error => {
+    return Promise.reject(error)
+})
+
 function Request () {
 
 }
