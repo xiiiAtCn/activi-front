@@ -8,13 +8,13 @@
                 <Button type="error" @click="delData">禁用</Button>
             </Col>
             <Col span="24">
-                <Table @on-current-change="addId" highlight-row  :columns="colData" :data="tableData" size="small" ref="table"></Table>
+                <Table @on-current-change="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
             </Col>
         </Row>
 
-        <mLayer :value="showLayer" titleText="新建用户" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
+        <mLayer :value="showLayer" :titleText="titleText" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
             <div>
-                <Form ref="formItem" :model="formItem" :label-width="80" :rules="rules">
+                <Form ref="formItem" :model="formItem" :label-width="120" :rules="rules">
                     <FormItem label="用户名" prop="userName" :show-message="!changeRole">
                         <Input v-model="formItem.userName" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
                     </FormItem>
@@ -113,6 +113,7 @@
                 tableData:[],
                 showLayer:false,
                 layerLoading:false,
+                titleText:'新建用户',
                 formItem: {
                     userName: '',
                     nickName: '',
@@ -162,6 +163,7 @@
             },
             //新建用户
             openLayer(){
+                this.titleText = '新建用户'
                 this.changeRole = false
                 this.formItem = _.cloneDeep(this.defaultForm)
                 this.showLayer = true
@@ -216,8 +218,12 @@
             addId(arg){
                 this.currentData = arg
             },
-            //按id删用户
+            //按id禁用用户
             delData(){
+                if(!this.currentData){
+                    iView.Message.error('请选择一条数据！')
+                    return
+                }
                 let url ={
                     method:'DELETE',
                     pathParams:{
@@ -256,6 +262,7 @@
                     if(result){
                         this.defaultRole = result
                         this.showLayer = true
+                        this.titleText = '编辑用户信息'
                         this.layerLoading = true
                     }
                 })

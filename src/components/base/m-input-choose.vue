@@ -64,11 +64,19 @@
         },
         mounted(){
             if(this.objectModel){this.showClose = true}
+
+            //bus接收双击确定事件
+            bus.$on(this.dataDomain + '_dbclick', id =>{
+                if(id && _.isString(id)){
+                    this.showLayer = false
+                    this.getChooseData(id)
+                }
+            })
         },
         methods: {
             handleChooseClick(){
                 if(this.readonly){return}
-                getData(this.url,(data,err)=>{
+                getData(this.url,(data)=>{
                     if (data) {
                         this.downData = data
                     }
@@ -81,14 +89,15 @@
             },
             handleOk(){
                 this.showLayer = false
-                this.getChooseData()
+                let id = _.get(this.$store.state.formData['_' + this.dataDomain],['id'], '')
+                this.getChooseData(id)
             },
-            getChooseData(){
+            getChooseData(id){
                 let action={
                     url:this.backUrl,
                     type: 'GET',
                     queryParams:{
-                        id:_.get(this.$store.state.formData['_' + this.dataDomain],['id'], '')
+                        id:id
                     }
                 }
                 getData(action,(data)=>{

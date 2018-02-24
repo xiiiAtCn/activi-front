@@ -22,7 +22,7 @@
             <div>
                 <Row>
                     <Col span="24">
-                    <Form ref="menuForm" :label-width="80" :model="formItem" :rules="rules">
+                    <Form ref="menuForm" :label-width="120" :model="formItem" :rules="rules">
                         <FormItem label="菜单名称" prop="labelName">
                             <Input v-model="formItem.labelName" placeholder="请输入菜单名称"></Input>
                         </FormItem>
@@ -35,10 +35,8 @@
                             <Input v-model="formItem.description" placeholder="请输入描述信息"></Input>
                         </FormItem>
                         <FormItem label="图标">
-                            <Select v-model="formItem.icon" placeholder="请选择图标">
-                                <Option value="beijing">New York</Option>
-                                <Option value="shanghai">London</Option>
-                                <Option value="shenzhen">Sydney</Option>
+                            <Select v-model="formItem.icon" placeholder="请选择图标" filterable>
+                                <mIconList></mIconList>
                             </Select>
                         </FormItem>
                     </Form>
@@ -47,7 +45,33 @@
             </div>
         </mLayer>
 
-        <mLayer :value="showRoleLayer" titleText="添加菜单" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
+        <mLayer :value="showEditLayer" titleText="编辑菜单" @on-cancel="handleEditCancel" @on-ok="handleEditOk" :loading="layerEditLoading">
+            <div>
+                <Row>
+                    <Col span="24">
+                    <Form ref="editForm" :label-width="120" :model="editForm" :rules="editRules">
+                        <FormItem label="菜单名称" prop="labelName">
+                            <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
+                        </FormItem>
+                        <FormItem label="key值">
+                            <Input v-model="editForm.currentKey" placeholder="key值为父节点key值+自定义数字">
+                            </Input>
+                        </FormItem>
+                        <FormItem label="描述" prop="description">
+                            <Input v-model="editForm.description" placeholder="请输入描述信息"></Input>
+                        </FormItem>
+                        <FormItem label="图标">
+                            <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
+                                <mIconList></mIconList>
+                            </Select>
+                        </FormItem>
+                    </Form>
+                    </Col>
+                </Row>
+            </div>
+        </mLayer>
+
+        <mLayer :value="showRoleLayer" titleText="添加角色" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
             <div>
                 <Row>
                     <Col span="24">
@@ -101,6 +125,7 @@
                     callback('输入的字符数太多了！')
                     return
                 }
+
                 let url ={
                     pathParams:{
                         currentKey : this.formItem.parentKey + val
@@ -128,11 +153,24 @@
                 showRoleLayer:false,
                 layerLoading:false,
                 layerRoleLoading:false,
+                showEditLayer:false,
+                layerEditLoading:false,
+
+                currentKey:'',
+
                 formItem: {
                     labelName: '',
                     currentKey: '',
                     description: '',
                     icon:'',
+                    parentKey:''
+                },
+                editForm:{
+                    labelName: '',
+                    currentKey: '',
+                    description: '',
+                    icon:'',
+                    id:'',
                     parentKey:''
                 },
                 roleForm: {
@@ -146,6 +184,11 @@
                     ],
                     currentKey: [
                         { required: true, validator:keyValid , trigger: 'blur' }
+                    ]
+                },
+                editRules: {
+                    labelName: [
+                        { required: true, message:'请输入用户名', trigger: 'blur' }
                     ]
                 },
                 roleRules: {
@@ -201,6 +244,8 @@
                             children.push({
                                 currentKey:val.menu.currentKey,
                                 title:val.menu.labelName,
+                                labelName : val.menu.labelName,
+                                id : val.menu.id,
                                 render: (h, { root, node, data }) => {
                                     return h('span', {
                                         style: {
@@ -217,7 +262,16 @@
                                                     marginRight: '6px'
                                                 }
                                             }),
-                                            h('span', data.title)
+                                            h('span',{
+                                                style: {
+                                                    cursor : 'pointer'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.showEditMenu(data)
+                                                    }
+                                                }
+                                            }, data.title)
                                         ]),
                                         h('span', {
                                             style: {
@@ -243,6 +297,8 @@
                                         ])
                                     ]);
                                 },
+                                description : val.menu.description,
+                                icon : val.menu.icon,
                                 parentKey:val.menu.parentKey
                             })
                         })
@@ -250,6 +306,8 @@
                     menuTree.push({
                         currentKey:val.menu.currentKey,
                         title:val.menu.labelName,
+                        labelName : val.menu.labelName,
+                        id : val.menu.id,
                         render: (h, { root, node, data }) => {
                             return h('span', {
                                 style: {
@@ -266,7 +324,16 @@
                                             marginRight: '6px'
                                         }
                                     }),
-                                    h('span', data.title)
+                                    h('span',{
+                                        style: {
+                                            cursor : 'pointer'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showEditMenu(data)
+                                            }
+                                        }
+                                    }, data.title)
                                 ]),
                                 h('span', {
                                     style: {
@@ -287,31 +354,13 @@
                                             width: '26px',
                                             marginLeft: '6px',
                                             cursor:'pointer'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                console.log(1)
-                                            }
                                         }
-                                    }),
-                                    // h('Icon', {
-                                    //     props: {
-                                    //         type: 'edit'
-                                    //     },
-                                    //     style: {
-                                    //         width: '26px',
-                                    //         marginLeft: '6px',
-                                    //         cursor:'pointer'
-                                    //     },
-                                    //     on: {
-                                    //         click: () => {
-                                    //             console.log(2)
-                                    //         }
-                                    //     }
-                                    // })
+                                    })
                                 ])
                             ]);
                         },
+                        description : val.menu.description,
+                        icon : val.menu.icon,
                         children:children
                     })
                 })
@@ -488,17 +537,50 @@
                 })
             },
 
-            //编辑信息
-            showEditMenu(){
-                getData('', (result) => {
+            //编辑菜单信息
+            showEditMenu(data){
+                Object.keys(this.editForm).forEach(v=>{
+                    this.editForm[v] = _.get(data,v,'')
+                })
+                this.showEditLayer = true
+                this.layerEditLoading = true
+            },
+            handleEditOk(){
+                this.layerEditLoading = false
+                this.$refs['editForm'].validate((valid) => {
+                    if (valid) {
+                        this.showEditLayer = false
+                        this.HandleEditMenu()
+                        this.$refs['editForm'].resetFields()
+
+                        this.getDefaultMenu()
+                    } else {
+                        this.$Message.error('验证失败!')
+                    }
+                })
+                setTimeout(()=>{this.layerEditLoading = true},500)
+            },
+            handleEditCancel(){
+                this.showEditLayer = false
+                this.$refs['editForm'].resetFields()
+            },
+            HandleEditMenu(){
+                let url ={
+                    method:'POST',
+                    body:this.editForm,
+                    url:'/api/menu/update'
+                }
+                getData(url, (result) => {
                     if(result){
-                        this.formItem = result
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                        }else{
+                            iView.Message.info(result.description)
+                        }
                     }
                 })
             },
-            HandleEditMenu(){
 
-            }
         }
     }
 </script>

@@ -1,41 +1,25 @@
 <template>
-    <div>
-        <slot></slot>
+    <div :class="classes">
+        <slot @on-blur="test"></slot>
         <transition name="fade">
-            <div v-if="validateState === 'error'"></div>
+            <div
+                :class="[prefixCls + '-error-tip']" 
+                v-if="validateState === 'error'">
+                {{ validateMessage }}
+            </div>
         </transition>
     </div>
 </template>
 <script>
 import AsyncValidator from 'async-validator'
 import * as constant from './constant'
+import bus from 'routers/bus'
 
-function getPropByPath(obj, path) {
-    let tempObj = obj;
-    path = path.replace(/\[(\w+)\]/g, '.$1');
-    path = path.replace(/^\./, '');
-
-    let keyArr = path.split('.');
-    let i = 0;
-
-    for (let len = keyArr.length; i < len - 1; ++i) {
-        let key = keyArr[i];
-        if (key in tempObj) {
-            tempObj = tempObj[key];
-        } else {
-            throw new Error('[iView warn]: please transfer a valid prop path to form item!');
-        }
-    }
-    return {
-        o: tempObj,
-        k: keyArr[i],
-        v: tempObj[keyArr[i]]
-    };
-}
+const prefixCls = 'config-table-item'
 
 export default {
     props: {
-        // 
+        // 验证规则
         rules: {
             type: Array,
             default () {
@@ -45,82 +29,105 @@ export default {
         // 取值路径
         prop: {
             type: String
+        },
+        testId: {
+            type: String
+        },
+        validateState: {
+            type: String
+        },
+        validateMessage: {
+            type: String
+        },
+        setValidateState: {
+            type: Function
+        },
+        setValidateMessage: {
+            type: Function
+        },
+        model: {
+            type: Object
         }
     },
     data () {
         return {
-            // 验证状态 
-            validateState: '',
-            // 验证信息
-            validateMessage: ''
+            prefixCls
         }
     },
     computed: {
         table () {
-            return this.$parent
+            return this.$parent.$parent.$parent.$parent.$parent.$parent
+        },
+        classes () {
+            return [
+                `${prefixCls}`,
+                {
+                    [`${prefixCls}-error`]: this.validateState === 'error'
+                }    
+            ]
         }
     },
     methods: {
-        onFieldBlur () {
-            this.validate('blur')
-        },
-        onFieldChange () {
-            this.validate('change')
-        },
         // 校验
-        validate (trigger, callback = function () {}) {
+        validate (callback = function () {}) {
             // 获取当前trigger对应的rules 
-            const rules = this.getFilteredRule(trigger)
+            const rules = this.rules
 
             if (!rules || rules.length === 0) {
                 callback()
                 return true
             }
 
-            this.validateState = 'validating'
+            this.setValidateState('validating', this.testId)
 
             let descriptor = {}
             descriptor[this.prop] = rules
-
             const validator = new AsyncValidator(descriptor)
             let model = {}
 
-            model[this.prop] = this.fieldValue
-
+            model[this.prop] = this.getFieldValue()
             validator.validate(model, { firstFields: true }, errors => {
-                this.validateState = !errors ? 'success' : 'error'
-                this.validateMessage = errors ? errors[0].message : ''
+                this.$nextTick(() => {
+                    let validateMessage = errors ? errors[0].message : ''
+                    this.setValidateState(!!errors ? 'error' : 'success', this.testId)
+                    this.setValidateMessage(validateMessage, this.testId)
 
-                callback(this.validateMessage)
+                    callback(validateMessage)
+                })
             })
-        },
-        // 不指定trigger两种情况都校验
-        getFilteredRule (trigger) {
-            return this.rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1)
         },
         // 获取表单元素的值
         getFieldValue () {
-            const model = this.table.model
-            if (!model || !this.prop) return 
-
-            let path = this.prop
-            
-            return getPropByPath(model, path).v
+            return this.model[this.prop]
         }
     },
     mounted () {
         if (this.prop) {
             // 触发添加事件
-            this.$emit(constant.addItem, this)
-
-            // 表单元素blur || change 进行对应的校验
-            this.$on('on-form-blur', this.onFieldBlur)
-            this.$on('on-form-change', this.onFieldChange)
+            bus.$emit(constant.addItem, this)
         }
-    },
-    beforeDestory () {
-        // 触发删除事件
-        this.$emit(constant.delItem, this)
     }
 }
 </script>
+<style>
+.config-table-item {
+    height: 80px;
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+    justify-content: center;
+}
+.config-table-item-error 
+.ivu-input,
+.config-table-item-error 
+.ivu-select-selection {
+    border: 1px solid #ed3f14 !important;
+}
+.config-table-item
+.config-table-item-error-tip {
+    line-height: 1;
+    color: #ed3f14;
+    margin-top: 6px;
+}
+</style>
+
