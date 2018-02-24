@@ -11,6 +11,7 @@ import iView from 'iview'
 
 const types = ['$requestUrl', '$path', '$query']
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.interceptors.response.use(res => {
     if(res.data.code == '403') {
         location.href = '/'
