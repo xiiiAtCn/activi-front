@@ -18,8 +18,6 @@ axios.interceptors.response.use(res => {
     if(error.response) {
         if(error.response.status === 403) {
             location.href = '/'
-        } else if(error.response.status === 401) {
-            iView.Message.error('用户名或密码错误')
         }
     }
     return Promise.reject(error)
