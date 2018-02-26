@@ -7,7 +7,7 @@
                 <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"  @on-select-change="handleTreeClick"></Tree>
             </Col>
             <Col span="12" class="tree-container">
-                <div class="head-container">菜单列表</div>
+                <div class="head-container" @click="showAddMenu">菜单列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
                 <Tree class="tree" :data="menuTree" show-checkbox  @on-select-change="handleTreeClick" @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
@@ -21,25 +21,43 @@
         <mLayer :value="showLayer" titleText="添加菜单" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
             <div>
                 <Row>
-                    <Col span="24">
-                    <Form ref="menuForm" :label-width="120" :model="formItem" :rules="rules">
-                        <FormItem label="菜单名称" prop="labelName">
-                            <Input v-model="formItem.labelName" placeholder="请输入菜单名称"></Input>
-                        </FormItem>
-                        <FormItem label="key值" prop="currentKey">
-                            <Input v-model="formItem.currentKey" placeholder="key值为父节点key值+自定义数字">
-                                <Button slot="prepend">{{formItem.parentKey}}</Button>
-                            </Input>
-                        </FormItem>
-                        <FormItem label="描述">
-                            <Input v-model="formItem.description" placeholder="请输入描述信息"></Input>
-                        </FormItem>
-                        <FormItem label="图标">
-                            <Select v-model="formItem.icon" placeholder="请选择图标" filterable>
-                                <mIconList></mIconList>
-                            </Select>
-                        </FormItem>
-                    </Form>
+                    <Col span="24" class="layerSection">
+                        <h4>菜单信息</h4>
+                        <Form ref="menuForm" :label-width="120" :model="formItem" :rules="rules">
+                            <FormItem label="菜单名称" prop="labelName">
+                                <Input v-model="formItem.labelName" placeholder="请输入菜单名称"></Input>
+                            </FormItem>
+                            <FormItem label="key值" prop="currentKey">
+                                <Input v-model="formItem.currentKey" placeholder="key值为父节点key值+自定义数字">
+                                    <Button slot="prepend" v-if="formItem.parentKey">{{formItem.parentKey}}</Button>
+                                </Input>
+                            </FormItem>
+                            <FormItem label="描述">
+                                <Input v-model="formItem.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                            <FormItem label="图标">
+                                <Select v-model="formItem.icon" placeholder="请选择图标" filterable>
+                                    <mIconList></mIconList>
+                                </Select>
+                            </FormItem>
+                        </Form>
+                    </Col>
+                    <Col span="24" class="layerSection">
+                        <h4>权限信息</h4>
+                        <Form ref="powerForm" :label-width="120" :model="powerForm" :rules="powerRules">
+                            <FormItem label="权限名称" prop="authorityName">
+                                <Input v-model="powerForm.authorityName" placeholder="请输入权限名称"></Input>
+                            </FormItem>
+                            <FormItem label="权限英文名称" prop="alphaName">
+                                <Input v-model="powerForm.alphaName" placeholder="请输入权限英文名称"></Input>
+                            </FormItem>
+                            <FormItem label="id" prop="authorityExpression">
+                                <Input v-model="powerForm.authorityExpression" placeholder="请输入id"></Input>
+                            </FormItem>
+                            <FormItem label="描述">
+                                <Input v-model="powerForm.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                        </Form>
                     </Col>
                 </Row>
             </div>
@@ -48,24 +66,42 @@
         <mLayer :value="showEditLayer" titleText="编辑菜单" @on-cancel="handleEditCancel" @on-ok="handleEditOk" :loading="layerEditLoading">
             <div>
                 <Row>
-                    <Col span="24">
-                    <Form ref="editForm" :label-width="120" :model="editForm" :rules="editRules">
-                        <FormItem label="菜单名称" prop="labelName">
-                            <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
-                        </FormItem>
-                        <FormItem label="key值">
-                            <Input v-model="editForm.currentKey" placeholder="key值为父节点key值+自定义数字">
-                            </Input>
-                        </FormItem>
-                        <FormItem label="描述" prop="description">
-                            <Input v-model="editForm.description" placeholder="请输入描述信息"></Input>
-                        </FormItem>
-                        <FormItem label="图标">
-                            <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
-                                <mIconList></mIconList>
-                            </Select>
-                        </FormItem>
-                    </Form>
+                    <Col span="24" class="layerSection">
+                        <h4>菜单信息</h4>
+                        <Form ref="editForm" :label-width="120" :model="editForm" :rules="editRules">
+                            <FormItem label="菜单名称" prop="labelName">
+                                <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
+                            </FormItem>
+                            <FormItem label="key值">
+                                <Input v-model="editForm.currentKey" placeholder="key值为父节点key值+自定义数字">
+                                </Input>
+                            </FormItem>
+                            <FormItem label="描述" prop="description">
+                                <Input v-model="editForm.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                            <FormItem label="图标">
+                                <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
+                                    <mIconList></mIconList>
+                                </Select>
+                            </FormItem>
+                        </Form>
+                    </Col>
+                    <Col span="24" class="layerSection">
+                        <h4>权限信息</h4>
+                        <Form ref="powerForm" :label-width="120" :model="powerForm" :rules="powerRules">
+                            <FormItem label="权限名称" prop="authorityName">
+                                <Input v-model="powerForm.authorityName" placeholder="请输入权限名称"></Input>
+                            </FormItem>
+                            <FormItem label="权限英文名称" prop="alphaName">
+                                <Input v-model="powerForm.alphaName" placeholder="请输入权限英文名称"></Input>
+                            </FormItem>
+                            <FormItem label="id" prop="authorityExpression">
+                                <Input v-model="powerForm.authorityExpression" placeholder="请输入id"></Input>
+                            </FormItem>
+                            <FormItem label="描述">
+                                <Input v-model="powerForm.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                        </Form>
                     </Col>
                 </Row>
             </div>
@@ -128,7 +164,7 @@
 
                 let url ={
                     pathParams:{
-                        currentKey : this.formItem.parentKey + val
+                        currentKey : this.formItem.parentKey?this.formItem.parentKey:'' + val
                     },
                     url:'/api/menu/usable/{currentKey}'
                 }
@@ -165,6 +201,12 @@
                     icon:'',
                     parentKey:''
                 },
+                powerForm:{
+                    authorityName:'',
+                    description:'',
+                    authorityExpression:'',
+                    alphaName:''
+                },
                 editForm:{
                     labelName: '',
                     currentKey: '',
@@ -184,6 +226,17 @@
                     ],
                     currentKey: [
                         { required: true, validator:keyValid , trigger: 'blur' }
+                    ]
+                },
+                powerRules: {
+                    authorityName: [
+                        { required: true, message:'请输入权限名', trigger: 'blur' }
+                    ],
+                    authorityExpression: [
+                        { required: true, message:'请输入id', trigger: 'blur' }
+                    ],
+                    alphaName: [
+                        { required: true, message:'请输入权限英文名', trigger: 'blur' }
                     ]
                 },
                 editRules: {
@@ -237,71 +290,16 @@
             },
             handleMenuData(data){
                 let menuTree = []
+                menuTree = this.handleTreeData(data)
+                this.defaultMenu = _.cloneDeep(menuTree)
+                this.menuTree = menuTree
+            },
+            handleTreeData(data){
+                let menuTree = []
                 data.forEach((val)=>{
                     let children = []
                     if(val.children){
-                        val.children.forEach((val)=>{
-                            children.push({
-                                currentKey:val.menu.currentKey,
-                                title:val.menu.labelName,
-                                labelName : val.menu.labelName,
-                                id : val.menu.id,
-                                render: (h, { root, node, data }) => {
-                                    return h('span', {
-                                        style: {
-                                            display: 'inline-block',
-                                            width: '100%'
-                                        }
-                                    }, [
-                                        h('span', [
-                                            h('Icon', {
-                                                props: {
-                                                    type: 'ios-folder-outline'
-                                                },
-                                                style: {
-                                                    marginRight: '6px'
-                                                }
-                                            }),
-                                            h('span',{
-                                                style: {
-                                                    cursor : 'pointer'
-                                                },
-                                                on: {
-                                                    click: () => {
-                                                        this.showEditMenu(data)
-                                                    }
-                                                }
-                                            }, data.title)
-                                        ]),
-                                        h('span', {
-                                            style: {
-                                                display: 'inline-block',
-                                                marginRight: '16px'
-                                            },
-                                            on: {
-                                                click: () => {
-                                                    this.showAddMenu(data)
-                                                }
-                                            }
-                                        }, [
-                                            h('Icon', {
-                                                props: Object.assign({}, this.buttonProps, {
-                                                    type: 'plus-round'
-                                                }),
-                                                style: {
-                                                    width: '26px',
-                                                    marginLeft: '6px',
-                                                    cursor:'pointer'
-                                                }
-                                            })
-                                        ])
-                                    ]);
-                                },
-                                description : val.menu.description,
-                                icon : val.menu.icon,
-                                parentKey:val.menu.parentKey
-                            })
-                        })
+                        children = this.handleTreeData(val.children)
                     }
                     menuTree.push({
                         currentKey:val.menu.currentKey,
@@ -361,11 +359,11 @@
                         },
                         description : val.menu.description,
                         icon : val.menu.icon,
-                        children:children
+                        parentKey:val.menu.parentKey?val.menu.parentKey:'',
+                        children:children,
                     })
                 })
-                this.defaultMenu = _.cloneDeep(menuTree)
-                this.menuTree = menuTree
+                return menuTree
             },
 
             //根据选中的角色展示显示的菜单
@@ -453,7 +451,7 @@
 
             //添加菜单
             showAddMenu(data){
-                this.formItem.parentKey = data.currentKey
+                if(data.currentKey){this.formItem.parentKey = data.currentKey}
                 this.showLayer = true
                 this.layerLoading = true
             },
@@ -463,23 +461,22 @@
             },
             handleOk(){
                 this.layerLoading = false
-                this.$refs['menuForm'].validate((valid) => {
-                    if (valid) {
+                this.HandleValid('menuForm',()=>{
+                    this.HandleValid('powerForm',()=>{
                         this.HandleAddMenu()
                         this.showLayer = false
                         this.getDefaultMenu()
                         if(this.currentRole){
                             this.getMenuData()
                         }
-                    } else {
-                        this.$Message.error('验证失败!')
-                    }
+                    })
                 })
                 setTimeout(()=>{this.layerLoading = true},500)
             },
             HandleAddMenu(){
                 let body = this.formItem
-                body.currentKey = body.parentKey + body.currentKey
+                body.currentKey = body.parentKey?body.parentKey:'' + body.currentKey
+                body.authority = _.cloneDeep(this.powerForm)
                 let url ={
                     method:'POST',
                     body:body,
@@ -489,7 +486,6 @@
                     if(result){
                         if(result.code === 200 ){
                             iView.Message.success(result.description)
-                            this.$refs['menuForm'].resetFields()
                         }else{
                             iView.Message.info(result.description)
                         }
@@ -508,15 +504,10 @@
             },
             handleRoleOk(){
                 this.layerRoleLoading = false
-                this.$refs['roleForm'].validate((valid) => {
-                    if (valid) {
-                        this.handleAddRole()
-                        this.showRoleLayer = false
-                        this.$refs['roleForm'].resetFields()
-                        this.getRoleData()
-                    } else {
-                        this.$Message.error('验证失败!')
-                    }
+                this.HandleValid('roleForm',()=>{
+                    this.handleAddRole()
+                    this.showRoleLayer = false
+                    this.getRoleData()
                 })
                 setTimeout(()=>{this.layerRoleLoading = true},500)
             },
@@ -542,21 +533,17 @@
                 Object.keys(this.editForm).forEach(v=>{
                     this.editForm[v] = _.get(data,v,'')
                 })
+                if(data.id){this.getPowerData(data.id)}
+
                 this.showEditLayer = true
                 this.layerEditLoading = true
             },
             handleEditOk(){
                 this.layerEditLoading = false
-                this.$refs['editForm'].validate((valid) => {
-                    if (valid) {
-                        this.showEditLayer = false
-                        this.HandleEditMenu()
-                        this.$refs['editForm'].resetFields()
-
-                        this.getDefaultMenu()
-                    } else {
-                        this.$Message.error('验证失败!')
-                    }
+                this.HandleValid('editForm',()=>{
+                    this.showEditLayer = false
+                    this.HandleEditMenu()
+                    this.getDefaultMenu()
                 })
                 setTimeout(()=>{this.layerEditLoading = true},500)
             },
@@ -565,9 +552,12 @@
                 this.$refs['editForm'].resetFields()
             },
             HandleEditMenu(){
+                let body = this.editForm
+                body.currentKey = body.parentKey?body.parentKey:'' + body.currentKey
+                body.authority = _.cloneDeep(this.powerForm)
                 let url ={
                     method:'POST',
-                    body:this.editForm,
+                    body: body,
                     url:'/api/menu/update'
                 }
                 getData(url, (result) => {
@@ -580,7 +570,35 @@
                     }
                 })
             },
+            //编辑时请求权限数据
+            getPowerData(id){
+                let url ={
+                    method:'GET',
+                    pathParams:{
+                        id : id
+                    },
+                    url:'/api/authority/one/{id}'
+                }
+                getData(url, (result) => {
+                    if(result && Object.keys(result)){
+                        Object.keys(this.powerForm).forEach(v=>{
+                            this.editForm[v] = _.get(result,v,'')
+                        })
+                    }
+                })
+            },
 
+            //验证信息
+            HandleValid(name,callback){
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        callback()
+                        this.$refs[name].resetFields()
+                    } else {
+                        this.$Message.error('验证失败!')
+                    }
+                })
+            }
         }
     }
 </script>
@@ -625,5 +643,15 @@
     }
     .tree ul.ivu-tree-children li li li{
         font-size: 14px;
+    }
+
+    .layerSection{
+        padding: 0 7px;
+    }
+    .layerSection h4{
+        font-weight: normal;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 18px;
+        padding-bottom: 8px;
     }
 </style>
