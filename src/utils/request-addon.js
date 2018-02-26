@@ -13,16 +13,15 @@ const types = ['$requestUrl', '$path', '$query']
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.interceptors.response.use(res => {
-    if(res.data.code == '403') {
-        location.href = '/'
-        return Promise.reject('redirect')
-    } else if(res.data.code == '401') {
-        debugger
-        iView.Message.error('用户名或密码错误')
-        return Promise.reject('unauthorized')
-    }
     return res
 }, error => {
+    if(error.response) {
+        if(error.response.status === 403) {
+            location.href = '/'
+        } else if(error.response.status === 401) {
+            iView.Message.error('用户名或密码错误')
+        }
+    }
     return Promise.reject(error)
 })
 
@@ -126,7 +125,8 @@ Request.prototype.forPost = function (callback) {
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
-            iView.Message.error('服务器出错了，请联系管理员解决')
+            if(err.response.status !== 401)
+                iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
