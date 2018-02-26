@@ -83,6 +83,10 @@ const tokenOverview = resolve => require(['../components/tokenConfig/tokenOvervi
 const tokenConfig = resolve => require(['../components/tokenConfig/tokenConfig.vue'], resolve)
 const tokenView = resolve => require(['../components/tokenConfig/tokenView.vue'], resolve)
 
+//用户中心
+const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
+const power = resolve => require(['../components/userCenter/m-permission-settings.vue'], resolve)
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -121,6 +125,9 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/taskPlan',
                     component: taskPlan
                 },
+                // 用户中心路由
+                { path: '/layoutContent/:id/userCenter/power', component: power },
+                { path: '/layoutContent/:id/userCenter/user', component: userCenter },
                 // bo 树
                 {
                     path: '/layoutContent/:id/boTree/:nodeId/:nodeMetaId',
@@ -276,7 +283,7 @@ const router = new VueRouter({
         {
             path: '/test4',
             component: stackChart
-        }
+        },
     ]
 })
 
