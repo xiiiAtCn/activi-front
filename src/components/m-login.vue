@@ -8,18 +8,18 @@
         <main>
             <img src="../assets/img/login.png" class="pic">
             <div class="message">
-                <Form id="login-form" :labelWidth="labelWidth">
+                <Form id="login-form" :labelWidth="labelWidth" :model="form" :rules="rules" ref="login-form">
                     <div class="opt">
                         <span class="login">登录</span>
                         <span class="regiet">注册</span>
                     </div>
-                    <Form-item class="form-element" label="用户名" >
-                        <Input type="text" placeholder="请输入您的账号" />
+                    <Form-item class="form-element" label="用户名" prop="loginName">
+                        <Input type="text" placeholder="请输入您的账号" v-model="form.loginName" />
                     </Form-item>
-                    <Form-item class="form-element" label="密码" >
-                        <Input type="password" placeholder="请输入您的密码" />
+                    <Form-item class="form-element" label="密码" prop="password" >
+                        <Input type="password" placeholder="请输入您的密码" v-model="form.password" />
                     </Form-item>
-                    <Form-item class="form-element" label="选择系统">
+                    <!-- <Form-item class="form-element" label="选择系统">
                         <Select v-model="system">
                             <Option 
                                 v-for="( value,key, index) in systems" 
@@ -29,7 +29,7 @@
                                 {{value}}
                             </Option>
                         </Select>
-                    </Form-item>
+                    </Form-item> -->
                     <div class="optration">
                         <div class="check">
                             <input type="checkbox" value="1" class="checkbox">
@@ -37,8 +37,8 @@
                         </div>
                         <a href="javascript:;" class="remember"><span>忘记密码？</span></a>
                     </div>
-                </form>
-                <button type="submit" @click="trlToWorkbench" class="tab">登录</button>
+                </Form>
+                <button type="submit" @click="login" class="tab">登录</button>
             </div>
             <div class="clearStyle"></div>
         </main>
@@ -70,17 +70,51 @@
                 msg: 'hello vue',
                 systems: {},
                 system: '',
-                labelWidth:60
+                labelWidth:60,
+                form: {
+                    loginName: '',
+                    password: '',
+                },
+                rules:{
+                    loginName: [
+                        {
+                            required: true,
+                            message: '请输入登录名',
+                            trigger: 'blur'
+                        }
+                    ],
+                    password: [
+                        {
+                            required: true,
+                            message: '请输入密码',
+                            trigger: 'blur'
+                        }
+                    ]
+                }
             }
         },
         mounted() {
-            this.setUrl('/api/module/systems').forGet(data => this.systems = data)
+            // this.setUrl('/api/module/systems').forGet(data => this.systems = data)
         },
         methods: {
             trlToWorkbench () {
-                localStorage.setItem('systemKey', this.system)
                 this.$router.push({
                     path: '/layoutContent/04/workbench'
+                })
+            },
+            login() {
+                this.$refs['login-form'].validate(valid => {
+                    if(valid) {
+                        let body = new URLSearchParams()
+                        body.append('loginName', this.form.loginName)
+                        body.append('password', this.form.password)
+                        this.setUrl('/api/login').setBody(body).forPost((data, error) => {
+                            if(error) {
+                                return
+                            }
+                            this.trlToWorkbench()
+                        })
+                    } 
                 })
             }
         }

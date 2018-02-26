@@ -11,6 +11,21 @@ import iView from 'iview'
 
 const types = ['$requestUrl', '$path', '$query']
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+axios.interceptors.response.use(res => {
+    if(res.data.code == '403') {
+        location.href = '/'
+        return Promise.reject('redirect')
+    } else if(res.data.code == '401') {
+        debugger
+        iView.Message.error('用户名或密码错误')
+        return Promise.reject('unauthorized')
+    }
+    return res
+}, error => {
+    return Promise.reject(error)
+})
+
 function Request () {
 
 }
@@ -85,13 +100,8 @@ Request.prototype.forPost = function (callback) {
     let url = this._buildPath()
     let body = {}, config = {}
     if (this.$body !== undefined) {
-        if(_.isArray(this.$body)){
-            body = this.$body
-            delete this.$body
-        }else{
-            body = { ...this.$body}
-            delete this.$body
-        }
+        body = this.$body
+        delete this.$body
     }
     if (this.$config !== undefined) {
         config = { ...this.$config}

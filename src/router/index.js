@@ -96,6 +96,10 @@ const router = new VueRouter({
             redirect: '/layoutContent/04/workbench'
         },
         {
+            path: '/',
+            component: mLogin
+        },
+        {
             path: '/layoutContent/:id',
             component: mLayoutContent,
             children: [
