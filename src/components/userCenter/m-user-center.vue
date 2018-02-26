@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <h3 class="title-container">用户列表</h3>
         <Row>
             <Col span="24" class="btn">
@@ -88,7 +88,10 @@
                     },
                     {
                         "title": "状态",
-                        "key": "flag"
+                        "key": "flag",
+                        render: (h, params) =>{
+                            return h('span', params.row.flag === 0?'可用':'禁用')
+                        }
                     },
                     {
                         "title": "角色",
@@ -294,10 +297,15 @@
     }
 </script>
 <style scoped>
+    .container{
+        margin: 15px 30px auto;
+    }
+
     .title-container{
-        padding-bottom: 8px;
-        margin-bottom: 5px;
-        font-size: 17px;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        font-size: 18px;
+        border-bottom: 1px solid #ccc;
     }
     .btn{
         margin: 5px 0;
