@@ -11,8 +11,11 @@
                 <Form id="login-form" :labelWidth="labelWidth" :model="form" :rules="rules" ref="login-form">
                     <div class="opt">
                         <span class="login">登录</span>
-                        <span class="regiet">注册</span>
+                        <!-- <span class="regiet">注册</span> -->
                     </div>
+                    <Form-item style="text-align: left;margin-bottom: 5px; padding-left: 45px;color: #ed3f14;">
+                        <span>{{errorMessage}}</span>
+                    </Form-item>
                     <Form-item class="form-element" label="用户名" prop="loginName">
                         <Input type="text" placeholder="请输入您的账号" v-model="form.loginName" />
                     </Form-item>
@@ -67,7 +70,7 @@
     export default{
         data () {
             return {
-                msg: 'hello vue',
+                errorMessage: '',
                 systems: {},
                 system: '',
                 labelWidth:60,
@@ -110,6 +113,13 @@
                         body.append('password', this.form.password)
                         this.setUrl('/api/login').setBody(body).forPost((data, error) => {
                             if(error) {
+                                console.log(error)
+                                if(error.response) {
+                                    let { response } = error
+                                    if(response.status === 401) {
+                                        this.errorMessage = response.data.message
+                                    }
+                                }
                                 return
                             }
                             this.trlToWorkbench()
