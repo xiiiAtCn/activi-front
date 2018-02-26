@@ -3,9 +3,9 @@
         <h3 class="title-container">用户列表</h3>
         <Row>
             <Col span="24" class="btn">
-                <Button type="primary" @click="openLayer">新建</Button>
-                <Button type="default" @click="editLayer">查看</Button>
-                <Button type="error" @click="delData">禁用</Button>
+                <Button class="button" type="primary" @click="openLayer">新建</Button>
+                <Button class="button" type="default" @click="editLayer">查看</Button>
+                <!--<Button type="error" @click="delData">禁用</Button>-->
             </Col>
             <Col span="24">
                 <Table @on-current-change="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
@@ -80,22 +80,26 @@
                 colData: [
                     {
                         "title": "用户名",
-                        "key": "userName"
+                        "key": "userName",
+                        'align':'center'
                     },
                     {
                         "title": "昵称",
-                        "key": "nickName"
+                        "key": "nickName",
+                        'align':'center'
                     },
-                    {
-                        "title": "状态",
-                        "key": "flag",
-                        render: (h, params) =>{
-                            return h('span', params.row.flag === 0?'可用':'禁用')
-                        }
-                    },
+                    // {
+                    //     "title": "状态",
+                    //     'align':'center',
+                    //     "key": "flag",
+                    //     render: (h, params) =>{
+                    //         return h('span', params.row.flag === 0?'可用':'禁用')
+                    //     }
+                    // },
                     {
                         "title": "角色",
                         "key": "roles",
+                        'align':'center',
                         render: (h, params) =>{
                             let roleList = params.row.roles
                             let roleContainer = []
@@ -311,5 +315,8 @@
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
+    }
+    .button{
+        margin-left: 8px;
     }
 </style>
