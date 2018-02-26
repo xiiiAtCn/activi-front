@@ -164,7 +164,7 @@
 
                 let url ={
                     pathParams:{
-                        currentKey : this.formItem.parentKey?this.formItem.parentKey:'' + val
+                        currentKey : this.formItem.parentKey||'' + val
                     },
                     url:'/api/menu/usable/{currentKey}'
                 }
@@ -359,7 +359,7 @@
                         },
                         description : val.menu.description,
                         icon : val.menu.icon,
-                        parentKey:val.menu.parentKey?val.menu.parentKey:'',
+                        parentKey:val.menu.parentKey||'',
                         children:children,
                     })
                 })
@@ -475,22 +475,10 @@
             },
             HandleAddMenu(){
                 let body = this.formItem
-                body.currentKey = body.parentKey?body.parentKey:'' + body.currentKey
+                body.currentKey = body.parentKey||'' + body.currentKey
                 body.authority = _.cloneDeep(this.powerForm)
-                let url ={
-                    method:'POST',
-                    body:body,
-                    url:'/api/menu/add'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                        }else{
-                            iView.Message.info(result.description)
-                        }
-                    }
-                })
+
+                this.handlePost(body,'/api/menu/add')
             },
 
             //打开添加角色
@@ -512,20 +500,7 @@
                 setTimeout(()=>{this.layerRoleLoading = true},500)
             },
             handleAddRole(){
-                let url ={
-                    method:'POST',
-                    body:this.roleForm,
-                    url:'/api/role/add'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                        }else{
-                            iView.Message.info(result.description)
-                        }
-                    }
-                })
+                this.handlePost(this.roleForm,'/api/role/add')
             },
 
             //编辑菜单信息
@@ -553,22 +528,10 @@
             },
             HandleEditMenu(){
                 let body = this.editForm
-                body.currentKey = body.parentKey?body.parentKey:'' + body.currentKey
+                body.currentKey = body.parentKey||'' + body.currentKey
                 body.authority = _.cloneDeep(this.powerForm)
-                let url ={
-                    method:'POST',
-                    body: body,
-                    url:'/api/menu/update'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                        }else{
-                            iView.Message.info(result.description)
-                        }
-                    }
-                })
+
+                this.handlePost(body,'/api/menu/update')
             },
             //编辑时请求权限数据
             getPowerData(id){
@@ -588,6 +551,7 @@
                 })
             },
 
+            /*工具类*/
             //验证信息
             HandleValid(name,callback){
                 this.$refs[name].validate((valid) => {
@@ -598,18 +562,35 @@
                         this.$Message.error('验证失败!')
                     }
                 })
+            },
+            //纯提交操作
+            handlePost(body,link){
+                let url ={
+                    method:'POST',
+                    body:body,
+                    url:link
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                        }else{
+                            iView.Message.info(result.description)
+                        }
+                    }
+                })
             }
         }
     }
 </script>
 <style scoped>
     .container{
-        padding: 0 8px;
+        margin: 15px 30px auto;
     }
 
     .title-container{
-        padding-bottom: 5px;
-        margin-bottom: 5px;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
         font-size: 18px;
         border-bottom: 1px solid #ccc;
     }
