@@ -35,11 +35,7 @@
         methods: {
             logout(e) {
                 e.preventDefault()
-                let form = document.createElement('form')
-                form.method = 'POST'
-                form.action = '/api/logout'
-                document.body.appendChild(form)
-                form.submit()
+                this.setUrl('/api/logout').forPost(() => location.href = '/')
             },
             getLeftMenu () {
                 let systemKey = localStorage.getItem('systemKey')
