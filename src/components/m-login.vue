@@ -105,8 +105,13 @@
             login() {
                 this.$refs['login-form'].validate(valid => {
                     if(valid) {
-                        this.setUrl('/api/login').setBody(this.form).forPost(data => {
-                            console.log(data)
+                        let body = new URLSearchParams()
+                        body.append('loginName', this.form.loginName)
+                        body.append('password', this.form.password)
+                        this.setUrl('/api/login').setBody(body).forPost((data, error) => {
+                            if(error) {
+                                return
+                            }
                             this.trlToWorkbench()
                         })
                     } 
