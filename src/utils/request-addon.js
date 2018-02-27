@@ -11,6 +11,18 @@ import iView from 'iview'
 
 const types = ['$requestUrl', '$path', '$query']
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+axios.interceptors.response.use(res => {
+    return res
+}, error => {
+    if(error.response) {
+        if(error.response.status === 403) {
+            location.href = '/'
+        }
+    }
+    return Promise.reject(error)
+})
+
 function Request () {
 
 }
@@ -85,13 +97,8 @@ Request.prototype.forPost = function (callback) {
     let url = this._buildPath()
     let body = {}, config = {}
     if (this.$body !== undefined) {
-        if(_.isArray(this.$body)){
-            body = this.$body
-            delete this.$body
-        }else{
-            body = { ...this.$body}
-            delete this.$body
-        }
+        body = this.$body
+        delete this.$body
     }
     if (this.$config !== undefined) {
         config = { ...this.$config}
@@ -116,7 +123,8 @@ Request.prototype.forPost = function (callback) {
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
-            iView.Message.error('服务器出错了，请联系管理员解决')
+            if(err.response.status !== 401)
+                iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
