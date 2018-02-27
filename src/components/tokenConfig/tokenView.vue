@@ -7,16 +7,18 @@
             <Col span="12" class="button-area">
                 <ButtonGroup>
                     <Button @click="configToken">编辑meta</Button>
+                    <Button @click="active">生效</Button>
+                    <Button @click="extractConfig">抽取一览配置</Button>
+                    <Button @click="exit">退出</Button>
                 </ButtonGroup>
             </Col>
         </Row>
         <Row class="content-container">
             <Col span="8" class="tree-container">
-                <ConfigTree 
-                    :data="treeData"
-                    :editable="false"
-                    :nodeClick="nodeClick"
-                />
+                <Tree 
+                    @on-select-change="nodeClick"
+                    :data="treeData">
+                </Tree>
             </Col>
             <Col span="16" class="table-container">
                 <ConfigTable
@@ -29,135 +31,47 @@
         </Row>
         <Row>
             <Col span="24" class="footer-container">
+                <Table 
+                    :border="true"
+                    :columns="relTableColumns" 
+                    :data="relTableData" 
+                />
             </Col>
         </Row>
+        <mLoading
+            :event-bus="bus"
+            event-show="token-config-show"
+            event-hide="token-config-hide"
+            >
+        </mLoading>
     </div>
 </template>
 <script>
 import ConfigTree from './configTree'
 import ConfigTable from './configTable'
-
-const treeData = {
-    1: [
-        {
-            title: 'parent1',
-            id: '1',
-            selected: true,
-            children: [
-                {
-                    title: 'child 1-1',
-                    id: '1-1',
-                    children: [
-                        {
-                            title: 'leaf 1-1-1',
-                            id: '1-1-1'
-                        },
-                        {
-                            title: 'leaf 1-1-2',
-                            id: '1-1-2'
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    2: [
-        {
-            title: 'parent2',
-            id: '2',
-            children: [
-                {
-                    title: 'child 2-1',
-                    id: '2-1',
-                    children: [
-                        {
-                            title: 'leaf 2-1-1',
-                            id: '2-1-1'
-                        },
-                        {
-                            title: 'leaf 2-1-2',
-                            id: '2-1-2'
-                        }
-                    ]
-                },
-                {
-                    title: 'child 2-2',
-                    id: '2-2',
-                    children: [
-                        {
-                            title: 'leaf 2-2-1',
-                            id: '2-2-1'
-                        },
-                        {
-                            title: 'leaf 2-2-2',
-                            id: '2-2-2'
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+import { fetchDir, traverseTree, relTableColumns, EventType } from './constant'
+import bus from 'routers/bus'
+import _ from 'lodash'
 
 const tableDefine = [
     {
-        key: 'fields',
-        title: '启用字段',
-        type: 'checkbox'
-    },
-    {
-        key: 'fkey',
+        key: 'key',
         title: 'fkey',
         type: 'text'
     },
     {
         key: 'fieldName',
         title: 'fieldName',
-        type: 'input',
-        width: 100,
-        rules: [
-            {
-                required: true,
-                message: '不能为空'
-            }
-        ]
+        type: 'text'
     },
     {
         key: 'caption',
         title: 'caption',
-        type: 'input',
-        rules: [
-            {
-                min: 10,
-                type: 'string',
-                message: '应大于10个字符'
-            }
-        ]
+        type: 'text'
     },
     {
-        key: 'type',
-        title: 'type',
-        type: 'select',
-        option: [
-            {
-                value: '1',
-                label: '类型1'
-            },
-            {
-                value: '2',
-                label: '类型2'
-            }
-        ],
-        rules: [
-            {
-                required: true,
-                message: '不能为空'
-            }
-        ]
-    },
-    {
-        key: 'visiable',
-        title: 'visiable',
+        key: 'visible',
+        title: 'visible',
         type: 'checkbox'
     },
     {
@@ -172,57 +86,6 @@ const tableDefine = [
     }
 ]
 
-const tableData = {
-    1: [
-        {
-            id: '1',
-            fields: false,
-            fkey: 'Field1',
-            fieldName: '111',
-            caption: '',
-            type: '',
-            visiable: false,
-            required: true,
-            readonly: false
-        },
-        {
-            id: '2',
-            fields: true,
-            fkey: 'Field2',
-            fieldName: '',
-            caption: '',
-            type: '',
-            visiable: false,
-            required: false,
-            readonly: false
-        }
-    ],
-    2: [
-        {
-            id: '1',
-            fields: false,
-            fkey: 'Field3',
-            fieldName: '',
-            caption: '',
-            type: '',
-            visiable: false,
-            required: true,
-            readonly: false
-        },
-        {
-            id: '2',
-            fields: true,
-            fkey: 'Field4',
-            fieldName: '',
-            caption: '',
-            type: '',
-            visiable: false,
-            required: false,
-            readonly: false
-        }
-    ]
-}
-
 export default {
     components: {
         ConfigTree,
@@ -230,26 +93,104 @@ export default {
     },
     data () {
         return {
+            treeId: '',
             treeData: [],
             tableDefine: [],
-            tableData: []
+            tableData: [],
+            relTableData: [],
+            relTableColumns: [],
+            requestNum: 0,
+            bus: bus
         }
     },
     mounted () {
-        let id = this.$router.currentRoute.params.tokenId
-        this.treeData = treeData[id] ? treeData[id] : []
-        this.tableDefine = tableDefine
-        this.tableData = tableData[id] ? tableData[id] : []
+        this.treeId = this.$router.currentRoute.params.tokenId
+        this.init()
+    },
+    watch: {
+        requestNum (val) {
+            if (val == 0) {
+                this.bus.$emit(EventType.hideLoading)
+            } else {
+                this.bus.$emit(EventType.showLoading)
+            }
+        }
     },
     methods: {
+        init () {
+            this.getRelData()
+            this.getTreeData()
+            this.tableDefine = _.cloneDeep(tableDefine)
+            this.relTableColumns = _.cloneDeep(relTableColumns)
+        },
+        getTreeData () {
+            this.requestNum++
+            this.setUrl(fetchDir.treeData)
+                .setPathVariables({templateId: this.treeId})
+                .forGet((result, err) => {
+                    this.requestNum--
+                    if (err) {
+                        this.$Message.error('获取treeData失败')
+                    } else {
+                        traverseTree(result['root'], node => {
+                            node.expand = true
+                        })
+                        this.treeData = [result.root]
+                    }
+                })
+        },
+        getTableData (nodeId) {
+            this.requestNum++
+            this.setUrl(fetchDir.viewTableData)
+                .setPathVariables({
+                    templateId: this.treeId,
+                    nodeId
+                })
+                .forGet((result, err) => {
+                    this.requestNum--
+                    if (err) {
+                        this.$Message.error("获取tableData失败")
+                    } else {
+                        this.tableData = result
+                    }
+                })
+        },
+        getRelData () {
+            this.requestNum++
+            this.setUrl(fetchDir.relData)
+                .setPathVariables({templateId: this.treeId})
+                .forGet((result, err) => {
+                        this.requestNum--
+                        if (err) {
+                            this.$Message.error('获取rel数据失败')
+                        } else {
+                            this.relTableData = result
+                        }
+                    })
+        },
         nodeClick (data) {
-            console.log(`node data: ${data}`)
+            this.getTableData(data[0].id)
         },
         configToken () {
             let params = this.$router.currentRoute.params
             this.$router.push({
                 path: `/layoutContent/${params.id}/tokenConfig?tokenId=${params.tokenId}`
             })
+        },
+        extractConfig () {
+            let params = this.$router.currentRoute.params
+            this.$router.push({
+                path: `/layoutContent/${params.id}/extractConfig/${params.tokenId}`
+            })
+        },
+        exit () {
+            let params = this.$router.currentRoute.params
+            this.$router.push({
+                path: `/layoutContent/${params.id}/tokenOverview`
+            })
+        },
+        active () {
+
         }
     }
 }
@@ -269,6 +210,9 @@ export default {
 .table-container {
     overflow-x: auto;
     direction: rtl;
+}
+.footer-container {
+    margin-top: 30px;
 }
 </style>
 <style>
