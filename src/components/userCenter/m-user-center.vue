@@ -5,7 +5,7 @@
             <Col span="24" class="btn">
                 <Button class="button" type="primary" @click="openLayer">新建</Button>
                 <Button class="button" type="default" @click="editLayer">查看</Button>
-                <!--<Button type="error" @click="delData">禁用</Button>-->
+                <Button class="button" type="error" @click="delData">禁用</Button>
             </Col>
             <Col span="24">
                 <Table @on-current-change="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
@@ -15,8 +15,8 @@
         <mLayer :value="showLayer" :titleText="titleText" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
             <div>
                 <Form ref="formItem" :model="formItem" :label-width="120" :rules="rules">
-                    <FormItem label="用户名" prop="userName" :show-message="!changeRole">
-                        <Input v-model="formItem.userName" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
+                    <FormItem label="用户名" prop="username" :show-message="!changeRole">
+                        <Input v-model="formItem.username" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
                     </FormItem>
                     <FormItem label="昵称" prop="nickName" :show-message="!changeRole">
                         <Input v-model="formItem.nickName" placeholder="请输入昵称" :readonly="changeRole" :disabled="changeRole"></Input>
@@ -24,7 +24,7 @@
                     <FormItem label="密码" prop="password" v-if="!changeRole">
                         <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
                     </FormItem>
-                    <FormItem label="选择用户角色" prop="role" v-if="changeRole">
+                    <FormItem label="选择用户角色" prop="role">
                         <Select v-model="formItem.role" multiple>
                             <Option v-for="item in defaultRole" :value="item.id">{{ item.roleName }}</Option>
                         </Select>
@@ -80,7 +80,7 @@
                 colData: [
                     {
                         "title": "用户名",
-                        "key": "userName",
+                        "key": "username",
                         'align':'center'
                     },
                     {
@@ -98,10 +98,13 @@
                     // },
                     {
                         "title": "角色",
-                        "key": "roles",
+                        "key": "authorities",
                         'align':'center',
                         render: (h, params) =>{
-                            let roleList = params.row.roles
+                            if(!params.row.authorities){
+                                return h('div', '')
+                            }
+                            let roleList = params.row.authorities
                             let roleContainer = []
                             for(let i=0;i<roleList.length;i++){
                                 roleContainer.push(h('span',
@@ -122,19 +125,21 @@
                 layerLoading:false,
                 titleText:'新建用户',
                 formItem: {
-                    userName: '',
+                    username: '',
                     nickName: '',
                     password: '',
+                    enabled: true,
                     role:[]
                 },
                 defaultForm:{
-                    userName: '',
+                    username: '',
                     nickName: '',
                     password: '',
+                    enabled: true,
                     role:[]
                 },
                 rules: {
-                    userName: [
+                    username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' },
                         { validator:nameValid , trigger: 'blur' }
                     ],
@@ -162,7 +167,7 @@
                 this.getUserData()
             },
             getUserData(){
-                getData('/api/user/findLike', (result) => {
+                getData('/api/users', (result) => {
                     if(result){
                         this.tableData =result
                     }
@@ -170,11 +175,17 @@
             },
             //新建用户
             openLayer(){
-                this.titleText = '新建用户'
-                this.changeRole = false
-                this.formItem = _.cloneDeep(this.defaultForm)
-                this.showLayer = true
-                this.layerLoading = true
+                getData('/api/role/roles', (result) => {
+                    if(result){
+                        this.defaultRole = result
+                        this.titleText = '新建用户'
+                        this.changeRole = false
+                        this.formItem = _.cloneDeep(this.defaultForm)
+                        this.showLayer = true
+                        this.layerLoading = true
+                    }
+                })
+
             },
             //点击ok
             handleOk(){
@@ -189,11 +200,11 @@
             //点击取消
             handleCancel(){
                 this.showLayer = false
-                this.$refs['formItem'].resetFields()
+                this.clearForm('formItem')
             },
             //提交用户信息
             submitMessage(){
-                delete this.formItem.role
+                this.formItem.role = this.getRoleList(this.formItem.role)
                 let url ={
                     method:'POST',
                     body:this.formItem,
@@ -204,6 +215,7 @@
                         iView.Message.success(result.description)
                         this.showLayer = false
                         this.getUserData()
+                        this.clearForm('formItem')
                     }else{
                         iView.Message.info(result.description)
                     }
@@ -215,7 +227,6 @@
                     if (valid) {
                         this.submitMessage()
                         this.showLayer = false
-                        this.$refs['formItem'].resetFields()
                     } else {
                         this.$Message.error('验证失败!')
                     }
@@ -252,9 +263,9 @@
                     iView.Message.error('请选择一条数据！')
                     return
                 }
-                this.formItem.userName = _.get(this.currentData,'userName')
+                this.formItem.username = _.get(this.currentData,'username')
                 this.formItem.nickName = _.get(this.currentData,'nickName')
-                let List = _.get(this.currentData,'roles',[])
+                let List = _.get(this.currentData,'authorities',[])
 
                 this.formItem.role = []
                 for(let i = 0;i<List.length;i++){
@@ -276,12 +287,14 @@
             },
             //提交角色更改
             HandleChangeRole(){
+                let body = this.getRoleList(this.formItem.role)
+
                 let url ={
                     method:'POST',
                     pathParams:{
                         userId :this.currentData.id
                     },
-                    body: this.formItem.role,
+                    body: body,
                     url:'/api/user/changeRole/{userId}'
                 }
                 getData(url, (result) => {
@@ -289,12 +302,35 @@
                         if(result.code === 200 ){
                             iView.Message.success(result.description)
                             this.showLayer = false
-                            this.$refs['formItem'].resetFields()
+                            this.clearForm('formItem')
                             this.getUserData()
                         }else{
                             iView.Message.info(result.description)
                         }
                     }
+                })
+            },
+
+            //角色列表
+            getRoleList(role){
+                let list = []
+                role.forEach(v=>{
+                    this.defaultRole.forEach(value => {
+                        if(v === value.id){
+                            list.push(value)
+                            return
+                        }
+                    })
+                })
+                return list
+            },
+
+            /*工具类*/
+            //表格验证清空+对象清空
+            clearForm(name){
+                this.$refs[name].resetFields()
+                Object.keys(this.name).forEach(v=>{
+                    this.name[v] = ''
                 })
             }
         }

@@ -23,20 +23,20 @@
                 <Row>
                     <Col span="24" class="layerSection">
                         <h4>菜单信息</h4>
-                        <Form ref="menuForm" :label-width="120" :model="formItem" :rules="rules">
+                        <Form ref="menuForm" :label-width="120" :model="menuForm" :rules="rules">
                             <FormItem label="菜单名称" prop="labelName">
-                                <Input v-model="formItem.labelName" placeholder="请输入菜单名称"></Input>
+                                <Input v-model="menuForm.labelName" placeholder="请输入菜单名称"></Input>
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
-                                <Input v-model="formItem.currentKey" placeholder="key值为父节点key值+自定义数字">
-                                    <Button slot="prepend" v-if="formItem.parentKey">{{formItem.parentKey}}</Button>
+                                <Input v-model="menuForm.currentKey" placeholder="key值为父节点key值+自定义数字">
+                                    <Button slot="prepend" v-if="menuForm.parentKey">{{menuForm.parentKey}}</Button>
                                 </Input>
                             </FormItem>
                             <FormItem label="描述">
-                                <Input v-model="formItem.description" placeholder="请输入描述信息"></Input>
+                                <Input v-model="menuForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
                             <FormItem label="图标">
-                                <Select v-model="formItem.icon" placeholder="请选择图标" filterable>
+                                <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
                                     <mIconList></mIconList>
                                 </Select>
                             </FormItem>
@@ -45,16 +45,13 @@
                     <Col span="24" class="layerSection">
                         <h4>权限信息</h4>
                         <Form ref="powerForm" :label-width="120" :model="powerForm" :rules="powerRules">
-                            <FormItem label="权限名称" prop="authorityName">
-                                <Input v-model="powerForm.authorityName" placeholder="请输入权限名称"></Input>
+                            <FormItem label="权限名称" prop="title">
+                                <Input v-model="powerForm.title" placeholder="请输入权限名称"></Input>
                             </FormItem>
-                            <FormItem label="权限英文名称" prop="alphaName">
-                                <Input v-model="powerForm.alphaName" placeholder="请输入权限英文名称"></Input>
+                            <FormItem label="权限表达式" prop="authority">
+                                <Input v-model="powerForm.authority" placeholder="请输入权限表达式"></Input>
                             </FormItem>
-                            <FormItem label="id" prop="authorityExpression">
-                                <Input v-model="powerForm.authorityExpression" placeholder="请输入id"></Input>
-                            </FormItem>
-                            <FormItem label="描述">
+                            <FormItem label="描述" prop="description">
                                 <Input v-model="powerForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
                         </Form>
@@ -89,16 +86,13 @@
                     <Col span="24" class="layerSection">
                         <h4>权限信息</h4>
                         <Form ref="powerForm" :label-width="120" :model="powerForm" :rules="powerRules">
-                            <FormItem label="权限名称" prop="authorityName">
-                                <Input v-model="powerForm.authorityName" placeholder="请输入权限名称"></Input>
+                            <FormItem label="权限名称" prop="title">
+                                <Input v-model="powerForm.title" placeholder="请输入权限名称"></Input>
                             </FormItem>
-                            <FormItem label="权限英文名称" prop="alphaName">
-                                <Input v-model="powerForm.alphaName" placeholder="请输入权限英文名称"></Input>
+                            <FormItem label="权限表达式" prop="authority">
+                                <Input v-model="powerForm.authority" placeholder="请输入权限表达式"></Input>
                             </FormItem>
-                            <FormItem label="id" prop="authorityExpression">
-                                <Input v-model="powerForm.authorityExpression" placeholder="请输入id"></Input>
-                            </FormItem>
-                            <FormItem label="描述">
+                            <FormItem label="描述" prop="description">
                                 <Input v-model="powerForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
                         </Form>
@@ -138,7 +132,7 @@
                 let url ={
                     pathParams:{
                         menuName : val,
-                        parentKey : this.formItem.parentKey
+                        parentKey : this.menuForm.parentKey
                     },
                     url:'/api/user/check/{username}'
                 }
@@ -164,7 +158,7 @@
 
                 let url ={
                     pathParams:{
-                        currentKey : this.formItem.parentKey||'' + val
+                        currentKey : this.menuForm.parentKey||'' + val
                     },
                     url:'/api/menu/usable/{currentKey}'
                 }
@@ -194,18 +188,19 @@
 
                 currentKey:'',
 
-                formItem: {
+                menuForm: {
                     labelName: '',
                     currentKey: '',
                     description: '',
                     icon:'',
+                    id:'',
                     parentKey:''
                 },
                 powerForm:{
-                    authorityName:'',
+                    title:'',
                     description:'',
-                    authorityExpression:'',
-                    alphaName:''
+                    authority:'',
+                    id:''
                 },
                 editForm:{
                     labelName: '',
@@ -229,14 +224,11 @@
                     ]
                 },
                 powerRules: {
-                    authorityName: [
+                    title: [
                         { required: true, message:'请输入权限名', trigger: 'blur' }
                     ],
-                    authorityExpression: [
-                        { required: true, message:'请输入id', trigger: 'blur' }
-                    ],
-                    alphaName: [
-                        { required: true, message:'请输入权限英文名', trigger: 'blur' }
+                    authority: [
+                        { required: true, message:'请输入权限表达式', trigger: 'blur' }
                     ]
                 },
                 editRules: {
@@ -388,7 +380,7 @@
             },
             handleMenu(data,list){
                 for(let i = 0;i<data.length;i++){
-                    if(data[i].children){
+                    if(data[i].children.length !== 0){
                         data[i].children = this.handleMenu(data[i].children,list)
                     }else{
                         for(let j = list.length-1;j>=0;j--){
@@ -407,7 +399,7 @@
             handleTreeCheck(arg){
                 let checkList = []
                 arg.forEach((v)=>{
-                    if(!v.children){
+                    if(v.children.length === 0){
                         checkList.push(v.currentKey)
                     }
                 })
@@ -451,13 +443,14 @@
 
             //添加菜单
             showAddMenu(data){
-                if(data.currentKey){this.formItem.parentKey = data.currentKey}
+                if(data.currentKey){this.menuForm.parentKey = data.currentKey}
                 this.showLayer = true
                 this.layerLoading = true
             },
             handleCancel(){
                 this.showLayer = false
-                this.$refs['menuForm'].resetFields()
+                this.clearForm('menuForm')
+                this.clearForm('powerForm')
             },
             handleOk(){
                 this.layerLoading = false
@@ -474,7 +467,7 @@
                 setTimeout(()=>{this.layerLoading = true},500)
             },
             HandleAddMenu(){
-                let body = this.formItem
+                let body = this.menuForm
                 body.currentKey = body.parentKey||'' + body.currentKey
                 body.authority = _.cloneDeep(this.powerForm)
 
@@ -488,19 +481,20 @@
             },
             handleRoleCancel(){
                 this.showRoleLayer = false
-                this.$refs['roleForm'].resetFields()
+                this.clearForm('roleForm')
             },
             handleRoleOk(){
                 this.layerRoleLoading = false
                 this.HandleValid('roleForm',()=>{
                     this.handleAddRole()
-                    this.showRoleLayer = false
-                    this.getRoleData()
                 })
                 setTimeout(()=>{this.layerRoleLoading = true},500)
             },
             handleAddRole(){
-                this.handlePost(this.roleForm,'/api/role/add')
+                this.handlePost(this.roleForm,'/api/role/add',()=>{
+                    this.showRoleLayer = false
+                    this.getRoleData()
+                })
             },
 
             //编辑菜单信息
@@ -516,20 +510,23 @@
             handleEditOk(){
                 this.layerEditLoading = false
                 this.HandleValid('editForm',()=>{
-                    this.showEditLayer = false
-                    this.HandleEditMenu()
-                    this.getDefaultMenu()
+                    this.HandleValid('powerForm',()=>{
+                        this.showEditLayer = false
+                        this.HandleEditMenu()
+                        this.getDefaultMenu()
+                    })
                 })
                 setTimeout(()=>{this.layerEditLoading = true},500)
             },
             handleEditCancel(){
                 this.showEditLayer = false
-                this.$refs['editForm'].resetFields()
+                this.clearForm('editForm')
+                this.clearForm('powerForm')
             },
             HandleEditMenu(){
                 let body = this.editForm
                 body.currentKey = body.parentKey||'' + body.currentKey
-                body.authority = _.cloneDeep(this.powerForm)
+                body.authorityEntity = _.cloneDeep(this.powerForm)
 
                 this.handlePost(body,'/api/menu/update')
             },
@@ -545,7 +542,7 @@
                 getData(url, (result) => {
                     if(result && Object.keys(result)){
                         Object.keys(this.powerForm).forEach(v=>{
-                            this.editForm[v] = _.get(result,v,'')
+                            this.powerForm[v] = _.get(result,v,'')
                         })
                     }
                 })
@@ -557,27 +554,36 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         callback()
-                        this.$refs[name].resetFields()
+                        this.clearForm(name)
                     } else {
                         this.$Message.error('验证失败!')
                     }
                 })
             },
             //纯提交操作
-            handlePost(body,link){
+            handlePost(body,link,callback){
+                let data = _.cloneDeep(body)
                 let url ={
                     method:'POST',
-                    body:body,
+                    body:data,
                     url:link
                 }
                 getData(url, (result) => {
                     if(result){
                         if(result.code === 200 ){
                             iView.Message.success(result.description)
+                            callback()
                         }else{
                             iView.Message.info(result.description)
                         }
                     }
+                })
+            },
+            //表格验证清空+对象清空
+            clearForm(name){
+                this.$refs[name].resetFields()
+                Object.keys(this.name).forEach(v=>{
+                    this.name[v] = ''
                 })
             }
         }
