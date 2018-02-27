@@ -81,7 +81,10 @@ export default {
                         icon: 'ios-minus-empty'
                     }),
                     on: {
-                        click: () => { this.nodeDel(root, node, data) }
+                        click: (event) => { 
+                            event.stopPropagation()
+                            this.nodeDel(root, node, data) 
+                        }
                     }
                 })
 
@@ -123,10 +126,6 @@ export default {
                     on: {
                         click: () => {
                             this.selectedNode = node
-                            // root.forEach(treeNode => {
-                            //     this.$set(treeNode.node, 'selected', false)
-                            // })
-                            // this.$set(data, 'selected', true)
                             this.nodeClick(root, node, data)
                         }
                     }

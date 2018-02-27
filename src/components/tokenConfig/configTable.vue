@@ -3,7 +3,6 @@
         <Table
             border
             highlight-row
-            width="1000"
             :columns="columns"
             :data="data"
             @on-current-change="changeCurrentRow"
@@ -14,6 +13,19 @@
 import _ from 'lodash'
 import * as constant from './constant'
 import bus from 'routers/bus'
+
+var class2type = {} ;
+"Boolean Number String Function Array Date RegExp Object Error".split(" ").forEach(function(e,i){
+    class2type[ "[object " + e + "]" ] = e.toLowerCase();
+}) ;
+function _typeof(obj){
+    if ( obj == null ){
+        return String( obj );
+    }
+    return typeof obj === "object" || typeof obj === "function" ?
+        class2type[ class2type.toString.call(obj) ] || "object" :
+        typeof obj;
+}
 
 const TableFieldType = {
     checkbox: 'checkbox',
@@ -43,6 +55,13 @@ export default {
         changeModel: {
             type: Function,
             default: () => {}
+        },
+        // todo 编辑顺序 未实现
+        editOrder: {
+            type: Array,
+            default () {
+                return [[]]
+            }
         }
     },
     data() {
@@ -110,25 +129,33 @@ export default {
                         render = (h, {row, column, index}) => {
                             let key = column.key
                             let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
-                            let options = this.define.filter(item => {
-                                if (item.key === column.key) {
-                                    return true
-                                } else {
-                                    return false
+                            let options = []
+                            if (row[key].options && row[key].options.length >= 0) {
+                                options = row[key].options
+                            } else {
+                                options = this.define.filter(item => {
+                                    if (item.key === column.key) {
+                                        return true
+                                    } else {
+                                        return false
+                                    }
+                                })
+                                if (!options || options.length === 0 
+                                             || !options[0].option 
+                                             || options[0].option.length === 0) {
+                                    throw new Error(`configTable中select组件的define没有设置option数据`)
                                 }
-                            })
-                            if (!options || options.length === 0 
-                                         || !options[0].option 
-                                         || options[0].option.length === 0) {
-                                throw new Error(`configTable中select组件的define没有设置option数据`)
+                                options = options[0].option
                             }
-                            options = options[0].option
+                            
                             return h('tableItem', {
                                 props: this.getTableItemProp(index, key, testId)
                             }, [
                                 h('Select', {
                                     props: {
-                                        value: row[column.key],
+                                        value: _typeof(row[column.key]) === 'object' ? 
+                                            row[column.key].value : 
+                                            row[column.key],
                                         transfer: true,
                                         disabled: this.disabled
                                     },

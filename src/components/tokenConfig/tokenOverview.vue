@@ -17,18 +17,8 @@
     </div>
 </template>
 <script>
-const data = [
-    {
-        id: 1,
-        type: '库所类型1',
-        desc: '描述1'
-    },
-    {
-        id: 2,
-        type: '库所类型2',
-        desc: '描述2'
-    }
-]
+import { fetchDir } from './constant'
+
 export default {
     data () {
         return {
@@ -50,13 +40,13 @@ export default {
                     }
                 },
                 {
-                    title: '库所类型',
-                    key: 'type',
+                    title: '库所Id',
+                    key: 'id',
                     align: 'center'
                 },
                 {
-                    title: '描述',
-                    key: 'desc',
+                    title: '库所名称',
+                    key: 'name',
                     align: 'center'
                 } 
             ]
@@ -75,7 +65,15 @@ export default {
         }
     },
     mounted () {
-        this.tableData = data
+        this.setUrl(fetchDir.overviewData)
+            .forGet((result, err) => {
+                if (err) {
+                    this.$Message("获取table数据失败")
+                } else {
+                    this.tableData = result
+                }
+            })
+        
     }
 }
 </script>

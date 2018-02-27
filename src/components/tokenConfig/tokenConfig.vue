@@ -53,9 +53,9 @@
                             </Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="选择meta" prop="tokenMetaId">
+                    <FormItem label="选择meta" prop="metaId">
                         <Select 
-                            v-model="formData.tokenMetaId"
+                            v-model="formData.metaId"
                             :disabled="formDisabled || metaDisabled"
                             @on-change="changeMeta"
                             :loading="metaListLoading"
@@ -83,6 +83,11 @@
         </Row>
         <Row>
             <Col span="24" class="footer-container">
+                <Table 
+                    :border="true"
+                    :columns="relTableColumns" 
+                    :data="relTableData" 
+                />
             </Col>
         </Row>
         <Modal
@@ -105,6 +110,7 @@ import ConfigTree from './configTree'
 import ConfigTable from './configTable'
 import _ from 'lodash'
 import bus from 'routers/bus'
+import { fetchDir, traverseTree, relTableColumns, EventType } from './constant'
 
 const tableDefine = [
     {
@@ -159,11 +165,7 @@ const metaTypeList = [
         value: 'bo'
     }
 ]
-// 事件类型
-const EventType = {
-    showLoading: 'token-config-show',
-    hideLoading: 'token-config-hide'
-}
+
 // 当前编辑状态(新建节点、删除节点、编辑节点)
 const ModalStatus = {
     addNode: 'add',
@@ -173,16 +175,6 @@ const ModalStatus = {
 }
 // table添加行的行id
 let generateId = 0
-
-// 与后台交互接口地址
-let fetchDir = {
-    metaList: "/api/placeConfig/getFormMetaList/{type}",
-    treeData: "/api/placeConfig/getTreeData/{templateId}",
-    formData: "/api/placeConfig/getFormData/{templateId}",
-    tableData: "/api/placeConfig/getTableData/{metaId}",
-    saveData: "/api/placeConfig/saveNode",
-    delData: "/api/placeConfig/delNode/{templateId}/{nodeId}"
-}
 
 export default {
     components: {
@@ -203,7 +195,7 @@ export default {
             formData: {
                 title: '',
                 metaType: '',
-                tokenMetaId: ''
+                metaId: ''
             },
             modal: false,
             formRules: {
@@ -234,7 +226,10 @@ export default {
             // 当前模态状态
             currentModalStatus: '',
             // 下一模态状态
-            nextModalStatus: ''
+            nextModalStatus: '',
+
+            relTableColumns: [],
+            relTableData: []
         }
     },
     computed: {
@@ -260,6 +255,9 @@ export default {
             }
         },
         selectedNode (newVal, oldVal) {
+            if (newVal === null) {
+                return 
+            }
             if (!!newVal && !!oldVal && newVal.nodeKey == oldVal.nodeKey) {
                 return 
             }
@@ -273,9 +271,13 @@ export default {
     },
     methods: {
         init () {
+            this.resetFormData()
+            this.resetConfigTableData()
             this.getTreeData()
             this.tableDefine = _.cloneDeep(tableDefine)
             this.metaTypeList = _.cloneDeep(metaTypeList)
+            this.relTableColumns = _.cloneDeep(relTableColumns)
+            this.selectedNode = null
 
             this.currentModalStatus = ModalStatus.none
         },
@@ -299,6 +301,8 @@ export default {
                     this.modalTitle = '添加新节点'
                     this.modalMessage = '当前未保存的节点信息会被清除，请确认是否添加节点'
                     this.modalOkCB = () => {
+                        this.resetFormData()
+                        this.resetConfigTableData()
                         this.realAppend()
                         this.currentModalStatus = ModalStatus.addNode
                         this.nextModalStatus = ModalStatus.none
@@ -319,6 +323,8 @@ export default {
                         this.modalMessage = '当前未保存的节点信息会被清除，请确认是否删除节点'
                     }
                     this.modalOkCB = () => {
+                        this.resetFormData()
+                        this.resetConfigTableData()
                         this.realRemove()
                         this.currentModalStatus = ModalStatus.none
                         this.nextModalStatus = ModalStatus.none
@@ -331,7 +337,9 @@ export default {
                     this.modalTitle = '编辑节点'
                     this.modalMessage = '当前未保存的节点信息会被清除，请确认是否编辑节点'
                     this.modalOkCB = () => {
-                        this.removeFakeNode(this.selectedNode)
+                        this.resetFormData()
+                        this.resetConfigTableData()
+                        this.removeFakeNode()
                         this.addSelectedToNode(this.modalData.data)
                         this.getFormData()
                         this.currentModalStatus = ModalStatus.editNode
@@ -342,6 +350,7 @@ export default {
                     }
                     if (this.currentModalStatus === ModalStatus.none) {
                         this.modalOK()
+                        return 
                     }
                     break
                 default: 
@@ -368,6 +377,7 @@ export default {
                             this.$Message.error('获取treeData失败')
                         } else {
                             this.setTreeData(result)
+                            this.getRelData()
                         }
                     })
             }
@@ -377,7 +387,7 @@ export default {
             this.treeId = resData.treeId
             this.treeTitle = resData.treeTitle
             // 为每个节点设置初始值
-            this.traverseTree(resData['root'], (node) => {
+            traverseTree(resData['root'], (node) => {
                 node.expand = true
                 node.add = true
                 node.del = true
@@ -439,7 +449,11 @@ export default {
         },
         realAppend () {
             let {root, node, data} = this.modalData
-            this.removeFakeNode(node, root)
+            this.removeFakeNode(root)
+            // 移除选中状态
+            root.forEach(treeNode => {
+                this.$set(treeNode.node, 'selected', false)
+            })
             const children = data.children || []
             children.push({
                 title: '新增节点',
@@ -458,7 +472,7 @@ export default {
             })
         },
         // 移除没有被保存的节点
-        removeFakeNode (node, root) {
+        removeFakeNode (root) {
             if (!root) {
                 root = this.$refs['configTree'].getRoot()
             }
@@ -499,7 +513,7 @@ export default {
                         nodeId: node.node.id
                     })
                     .forGet((res, err) => {
-                        if (err || !res.result) {
+                        if (err || !res.success) {
                             this.$Message.error(`删除失败： ${res.message ? res.message : ''}`)
                         } else {
                             this.init()
@@ -522,17 +536,6 @@ export default {
             this.selectedNode = node
             this.modalData = {root, node, data}
         },
-        // 遍历树节点
-        traverseTree(root, callback) {
-            if (root) {
-                callback(root)
-                if (root.children) {
-                    for (let child of root.children) {
-                        this.traverseTree(child, callback)
-                    }
-                }
-            }
-        },
         //------表单相关方法------
         // 获取表单数据
         getFormData () {
@@ -554,6 +557,10 @@ export default {
                             this.$Message.error('获取formData失败')
                         } else {
                             this.formData = result
+                            // 如果有metaId取tabledata
+                            if (this.formData.metaId) {
+                                this.getTableData()
+                            }
                         }
                     })
             }
@@ -595,7 +602,7 @@ export default {
             this.formData = {
                 title: '',
                 metaType: '',
-                tokenMetaId: ''
+                metaId: ''
             }
         },
         //------表格相关方法------
@@ -607,7 +614,7 @@ export default {
             this.requestNum++
             this.setUrl(fetchDir.tableData)
                 .setPathVariables({
-                    metaId: this.formData.tokenMetaId
+                    metaId: this.formData.metaId
                 })
                 .setQuery({
                     templateId: this.treeId,
@@ -655,6 +662,25 @@ export default {
         // 重置表格数据
         resetConfigTableData () {
             this.tableData = []   
+        },
+        getRelData () {
+            if (!this.treeId) {
+                this.relTableData = []
+                return
+            }
+            this.requestNum++
+            this.setUrl(fetchDir.relData)
+                .setPathVariables({
+                    templateId: this.treeId
+                })
+                .forGet((result, err) => {
+                    this.requestNum--
+                    if (err) {
+                        this.$Message.error("获取关系失败")
+                    } else {
+                        this.relTableData = result
+                    }
+                })
         },
         //------按钮操作相关方法------
         // 退出 页面跳转
@@ -717,6 +743,9 @@ export default {
 .table-container {
     overflow-x: auto;
     direction: rtl;
+}
+.footer-container {
+    margin-top: 30px;
 }
 </style>
 <style>

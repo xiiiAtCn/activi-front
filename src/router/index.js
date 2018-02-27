@@ -82,6 +82,7 @@ const mUrlSection = resolve => require(['../components/m-url-section.vue'], reso
 const tokenOverview = resolve => require(['../components/tokenConfig/tokenOverview.vue'], resolve)
 const tokenConfig = resolve => require(['../components/tokenConfig/tokenConfig.vue'], resolve)
 const tokenView = resolve => require(['../components/tokenConfig/tokenView.vue'], resolve)
+const extractConfig = resolve => require(['../components/tokenConfig/extractConfig.vue'], resolve)
 
 //用户中心
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
@@ -253,6 +254,11 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/:id/tokenView/:tokenId',
                     component: tokenView
+                },
+                // 抽取一览配置
+                {
+                    path: '/layoutContent/:id/extractConfig/:tokenId',
+                    component: extractConfig
                 }
             ]
         },
