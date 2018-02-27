@@ -11,11 +11,9 @@
                 <Tree class="tree" :data="menuTree" show-checkbox  @on-select-change="handleTreeClick" @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
-        <Row>
-            <Col span="24" class="btn">
-                <Button type="primary" @click="handleSubmit">保存</Button>
-            </Col>
-        </Row>
+
+        <Button class="btn" type="primary" @click="handleSubmit">保存</Button>
+
 
 
         <mLayer :value="showLayer" titleText="添加菜单" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
@@ -266,7 +264,7 @@
                 let roleTree = []
                 data.forEach((val)=>{
                     roleTree.push({
-                        roleType:val.roleType,
+                        authority:val.authority,
                         title:val.roleName
                     })
                 })
@@ -399,16 +397,14 @@
             handleTreeCheck(arg){
                 let checkList = []
                 arg.forEach((v)=>{
-                    if(v.children.length === 0){
-                        checkList.push(v.currentKey)
-                    }
+                    checkList.push(v.currentKey)
                 })
                 this.checkList = checkList
             },
             //点击左侧人员获得权限信息
             handleTreeClick(arg){
                 if(arg.length !== 0){
-                    this.currentRole = arg[0].roleType
+                    this.currentRole = arg[0].authority
                 }else{
                     this.currentRole = ''
                 }
@@ -592,6 +588,7 @@
 <style scoped>
     .container{
         margin: 15px 30px auto;
+        height: 100%;
     }
 
     .title-container{
@@ -617,6 +614,9 @@
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
+        position: absolute;
+        right: 40px;
+        bottom: 150px;
     }
     .tree-container .ivu-tree-title{
         color: #00ff00;

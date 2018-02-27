@@ -98,13 +98,13 @@
                     // },
                     {
                         "title": "角色",
-                        "key": "authorities",
+                        "key": "roles",
                         'align':'center',
                         render: (h, params) =>{
-                            if(!params.row.authorities){
+                            if(!params.row.roles){
                                 return h('div', '')
                             }
-                            let roleList = params.row.authorities
+                            let roleList = params.row.roles
                             let roleContainer = []
                             for(let i=0;i<roleList.length;i++){
                                 roleContainer.push(h('span',
