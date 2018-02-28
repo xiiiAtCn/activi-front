@@ -7,7 +7,7 @@
             <Col span="12" class="button-area">
                 <ButtonGroup>
                     <Button @click="configToken">编辑meta</Button>
-                    <Button @click="active">生效</Button>
+                    <!-- <Button @click="active">生效</Button> -->
                     <Button @click="extractConfig">抽取一览配置</Button>
                     <Button @click="exit">退出</Button>
                 </ButtonGroup>
