@@ -14,8 +14,8 @@
                         保存
                     </Button>
                     <Button @click="exit">退出</Button>
-                    <Button @click="addRow">添加行</Button>
-                    <Button @click="delRow">删除选中行</Button>
+                    <!-- <Button @click="addRow">添加行</Button>
+                    <Button @click="delRow">删除选中行</Button> -->
                 </ButtonGroup>
             </Col>
         </Row>
