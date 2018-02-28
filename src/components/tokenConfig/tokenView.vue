@@ -118,7 +118,6 @@ export default {
     },
     methods: {
         init () {
-            this.getRelData()
             this.getTreeData()
             this.tableDefine = _.cloneDeep(tableDefine)
             this.relTableColumns = _.cloneDeep(relTableColumns)
@@ -136,6 +135,7 @@ export default {
                             node.expand = true
                         })
                         this.treeData = [result.root]
+                        this.getRelData()
                     }
                 })
         },
