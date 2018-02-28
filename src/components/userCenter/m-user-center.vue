@@ -24,8 +24,8 @@
                     <FormItem label="密码" prop="password" v-if="!changeRole">
                         <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
                     </FormItem>
-                    <FormItem label="选择用户角色" prop="role">
-                        <Select v-model="formItem.role" multiple>
+                    <FormItem label="选择用户角色" prop="roles">
+                        <Select v-model="formItem.roles" multiple>
                             <Option v-for="item in defaultRole" :value="item.id">{{ item.roleName }}</Option>
                         </Select>
                     </FormItem>
@@ -129,14 +129,14 @@
                     nickName: '',
                     password: '',
                     enabled: true,
-                    role:[]
+                    roles:[]
                 },
                 defaultForm:{
                     username: '',
                     nickName: '',
                     password: '',
                     enabled: true,
-                    role:[]
+                    roles:[]
                 },
                 rules: {
                     username: [
@@ -204,7 +204,7 @@
             },
             //提交用户信息
             submitMessage(){
-                this.formItem.role = this.getRoleList(this.formItem.role)
+                this.formItem.roles = this.getRoleList(this.formItem.roles)
                 let url ={
                     method:'POST',
                     body:this.formItem,
@@ -265,11 +265,11 @@
                 }
                 this.formItem.username = _.get(this.currentData,'username')
                 this.formItem.nickName = _.get(this.currentData,'nickName')
-                let List = _.get(this.currentData,'authorities',[])
+                let List = _.get(this.currentData,'roles',[])
 
-                this.formItem.role = []
+                this.formItem.roles = []
                 for(let i = 0;i<List.length;i++){
-                    this.formItem.role.push(List[i].id)
+                    this.formItem.roles.push(List[i].id)
                 }
                 this.changeRole = true
                 this.getDefaultRole()
@@ -287,7 +287,7 @@
             },
             //提交角色更改
             HandleChangeRole(){
-                let body = this.getRoleList(this.formItem.role)
+                let body = this.getRoleList(this.formItem.roles)
 
                 let url ={
                     method:'POST',
@@ -329,8 +329,8 @@
             //表格验证清空+对象清空
             clearForm(name){
                 this.$refs[name].resetFields()
-                Object.keys(this.name).forEach(v=>{
-                    this.name[v] = ''
+                Object.keys(this[name]).forEach(v=>{
+                    this[name][v] = ''
                 })
             }
         }

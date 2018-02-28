@@ -27,7 +27,7 @@
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
                                 <Input v-model="menuForm.currentKey" placeholder="key值为父节点key值+自定义数字">
-                                    <Button slot="prepend" v-if="menuForm.parentKey">{{menuForm.parentKey}}</Button>
+                                    <span slot="prepend" v-show="menuForm.parentKey">{{menuForm.parentKey}}</span>
                                 </Input>
                             </FormItem>
                             <FormItem label="描述">
@@ -107,8 +107,8 @@
                             <FormItem label="角色名称" prop="roleName">
                                 <Input v-model="roleForm.roleName" placeholder="请输入角色名称"></Input>
                             </FormItem>
-                            <FormItem label="角色英文名称" prop="roleType">
-                                <Input v-model="roleForm.roleType" placeholder="请输入角色英文名称"></Input>
+                            <FormItem label="角色英文名称" prop="authority">
+                                <Input v-model="roleForm.authority" placeholder="请输入角色英文名称"></Input>
                             </FormItem>
                         </Form>
                     </Col>
@@ -210,7 +210,7 @@
                 },
                 roleForm: {
                     roleName: '',
-                    roleType: ''
+                    authority: ''
                 },
                 cKey:'',
                 rules: {
@@ -238,7 +238,7 @@
                     roleName: [
                         { required: true, message:'请输入角色名称', trigger: 'blur' }
                     ],
-                    roleType: [
+                    authority: [
                         { required: true, message:'请输入角色英文名称', trigger: 'blur' }
                     ]
                 },
@@ -467,7 +467,7 @@
                 body.currentKey = body.parentKey||'' + body.currentKey
                 body.authority = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/add')
+                this.handlePost(body,'/api/menu/add',()=>{})
             },
 
             //打开添加角色
@@ -521,10 +521,9 @@
             },
             HandleEditMenu(){
                 let body = this.editForm
-                body.currentKey = body.parentKey||'' + body.currentKey
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/update')
+                this.handlePost(body,'/api/menu/update',()=>{})
             },
             //编辑时请求权限数据
             getPowerData(id){
@@ -578,8 +577,8 @@
             //表格验证清空+对象清空
             clearForm(name){
                 this.$refs[name].resetFields()
-                Object.keys(this.name).forEach(v=>{
-                    this.name[v] = ''
+                Object.keys(this[name]).forEach(v=>{
+                    this[name][v] = ''
                 })
             }
         }
