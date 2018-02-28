@@ -11,11 +11,9 @@
                 <Tree class="tree" :data="menuTree" show-checkbox  @on-select-change="handleTreeClick" @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
-        <Row>
-            <Col span="24" class="btn">
-                <Button type="primary" @click="handleSubmit">保存</Button>
-            </Col>
-        </Row>
+
+        <Button class="btn" type="primary" @click="handleSubmit">保存</Button>
+
 
 
         <mLayer :value="showLayer" titleText="添加菜单" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
@@ -29,7 +27,7 @@
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
                                 <Input v-model="menuForm.currentKey" placeholder="key值为父节点key值+自定义数字">
-                                    <Button slot="prepend" v-if="menuForm.parentKey">{{menuForm.parentKey}}</Button>
+                                    <span slot="prepend" v-show="menuForm.parentKey">{{menuForm.parentKey}}</span>
                                 </Input>
                             </FormItem>
                             <FormItem label="描述">
@@ -109,8 +107,8 @@
                             <FormItem label="角色名称" prop="roleName">
                                 <Input v-model="roleForm.roleName" placeholder="请输入角色名称"></Input>
                             </FormItem>
-                            <FormItem label="角色英文名称" prop="roleType">
-                                <Input v-model="roleForm.roleType" placeholder="请输入角色英文名称"></Input>
+                            <FormItem label="角色英文名称" prop="authority">
+                                <Input v-model="roleForm.authority" placeholder="请输入角色英文名称"></Input>
                             </FormItem>
                         </Form>
                     </Col>
@@ -212,7 +210,7 @@
                 },
                 roleForm: {
                     roleName: '',
-                    roleType: ''
+                    authority: ''
                 },
                 cKey:'',
                 rules: {
@@ -240,7 +238,7 @@
                     roleName: [
                         { required: true, message:'请输入角色名称', trigger: 'blur' }
                     ],
-                    roleType: [
+                    authority: [
                         { required: true, message:'请输入角色英文名称', trigger: 'blur' }
                     ]
                 },
@@ -266,7 +264,7 @@
                 let roleTree = []
                 data.forEach((val)=>{
                     roleTree.push({
-                        roleType:val.roleType,
+                        authority:val.authority,
                         title:val.roleName
                     })
                 })
@@ -399,16 +397,14 @@
             handleTreeCheck(arg){
                 let checkList = []
                 arg.forEach((v)=>{
-                    if(v.children.length === 0){
-                        checkList.push(v.currentKey)
-                    }
+                    checkList.push(v.currentKey)
                 })
                 this.checkList = checkList
             },
             //点击左侧人员获得权限信息
             handleTreeClick(arg){
                 if(arg.length !== 0){
-                    this.currentRole = arg[0].roleType
+                    this.currentRole = arg[0].authority
                 }else{
                     this.currentRole = ''
                 }
@@ -471,7 +467,7 @@
                 body.currentKey = body.parentKey||'' + body.currentKey
                 body.authority = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/add')
+                this.handlePost(body,'/api/menu/add',()=>{})
             },
 
             //打开添加角色
@@ -525,10 +521,9 @@
             },
             HandleEditMenu(){
                 let body = this.editForm
-                body.currentKey = body.parentKey||'' + body.currentKey
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/update')
+                this.handlePost(body,'/api/menu/update',()=>{})
             },
             //编辑时请求权限数据
             getPowerData(id){
@@ -582,8 +577,8 @@
             //表格验证清空+对象清空
             clearForm(name){
                 this.$refs[name].resetFields()
-                Object.keys(this.name).forEach(v=>{
-                    this.name[v] = ''
+                Object.keys(this[name]).forEach(v=>{
+                    this[name][v] = ''
                 })
             }
         }
@@ -592,6 +587,7 @@
 <style scoped>
     .container{
         margin: 15px 30px auto;
+        height: 100%;
     }
 
     .title-container{
@@ -617,6 +613,9 @@
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
+        position: absolute;
+        right: 40px;
+        bottom: 150px;
     }
     .tree-container .ivu-tree-title{
         color: #00ff00;
