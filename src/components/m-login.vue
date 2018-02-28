@@ -8,11 +8,11 @@
         <main>
             <img src="../assets/img/login.png" class="pic">
             <div class="message">
-                <Form id="login-form" :labelWidth="labelWidth" :model="form" :rules="rules" ref="login-form">
-                    <div class="opt">
-                        <span class="login">登录</span>
-                        <!-- <span class="regiet">注册</span> -->
-                    </div>
+                <div class="opt">
+                    <span :class="switchForm&&'current'" @click="switchForm=true">登 录</span>
+                    <span :class="!switchForm&&'current'" @click="switchForm=false">注 册</span>
+                </div>
+                <Form id="login-form" v-show="switchForm" :labelWidth="labelWidth" :model="form" :rules="rules" ref="login-form">
                     <Form-item style="text-align: left;margin-bottom: 5px; padding-left: 45px;color: #ed3f14;">
                         <span>{{errorMessage}}</span>
                     </Form-item>
@@ -20,13 +20,13 @@
                         <Input type="text" placeholder="请输入您的账号" v-model="form.loginName" />
                     </Form-item>
                     <Form-item class="form-element" label="密码" prop="password" >
-                        <Input type="password" placeholder="请输入您的密码" v-model="form.password" />
+                        <Input type="password" placeholder="请输入您的密码" v-model="form.password" @on-enter="login"/>
                     </Form-item>
                     <!-- <Form-item class="form-element" label="选择系统">
                         <Select v-model="system">
-                            <Option 
-                                v-for="( value,key, index) in systems" 
-                                :key="index" 
+                            <Option
+                                v-for="( value,key, index) in systems"
+                                :key="index"
                                 :value="key"
                             >
                                 {{value}}
@@ -40,8 +40,20 @@
                         </div>
                         <a href="javascript:;" class="remember"><span>忘记密码？</span></a>
                     </div>
+                    <Button type="primary" @click="login" class="tab">登录</Button>
                 </Form>
-                <button type="submit" @click="login" class="tab">登录</button>
+                <Form id="registerForm"  v-show="!switchForm" :labelWidth="labelWidth" :model="registerForm" :rules="registerRules" ref="registerForm">
+                    <FormItem class="form-element" label="用户名" prop="username">
+                        <Input v-model="registerForm.username" placeholder="请输入用户名" ></Input>
+                    </FormItem>
+                    <FormItem class="form-element" label="昵称" prop="nickName">
+                        <Input v-model="registerForm.nickName" placeholder="请输入昵称"></Input>
+                    </FormItem>
+                    <FormItem class="form-element" label="密码" prop="password">
+                        <Input type="password" v-model="registerForm.password" placeholder="请输入密码"></Input>
+                    </FormItem>
+                    <Button type="primary" @click="register" class="tab">注册</Button>
+                </Form>
             </div>
             <div class="clearStyle"></div>
         </main>
@@ -67,13 +79,49 @@
 </template>
 
 <script>
+
+    import { getData } from 'utils/actionUtils'
+    import iView from 'iview'
+
     export default{
         data () {
+            const nameValid =(rule, val, callback)=>{
+                let url ={
+                    pathParams:{
+                        username : val
+                    },
+                    url:'/api/user/check/{username}'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(!result.data){
+                            callback(result.description)
+                        }else{
+                            callback()
+                        }
+                    }
+                })
+            }
+            const passValid = (rule, val, callback)=>{
+                if(/^[A-Za-z0-9]{6,}$/.test(val)){
+                    callback()
+                }else{
+                    callback('请输入6位以上数字字母密码')
+                }
+            }
+            const nickValid =(rule, val, callback)=>{
+                if(/^.{1,}$/.test(val)){
+                    callback()
+                }else{
+                    callback('请输入昵称')
+                }
+            }
             return {
                 errorMessage: '',
                 systems: {},
                 system: '',
                 labelWidth:60,
+                switchForm:true,
                 form: {
                     loginName: '',
                     password: '',
@@ -92,6 +140,24 @@
                             message: '请输入密码',
                             trigger: 'blur'
                         }
+                    ]
+                },
+                registerForm:{
+                    username: '',
+                    nickName: '',
+                    password: ''
+                },
+                registerRules:{
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { validator:nameValid , trigger: 'blur' }
+                    ],
+                    nickName: [
+                        { required: true, validator:nickValid,trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { validator:passValid,trigger: 'blur' }
                     ]
                 }
             }
@@ -124,7 +190,22 @@
                             }
                             this.trlToWorkbench()
                         })
-                    } 
+                    }
+                })
+            },
+            register(){
+                this.$refs['registerForm'].validate(valid => {
+                    if(valid) {
+                        let body = this.registerForm
+                        this.setUrl('/api/user/add').setBody(body).forPost((data, error) => {
+                            if(data.code === 200 ){
+                                iView.Message.success(data.description)
+                                this.switchForm = true
+                            }else{
+                                iView.Message.info(result.description)
+                            }
+                        })
+                    }
                 })
             }
         }
@@ -196,6 +277,12 @@
         border:1px solid #ccc;
         text-align:center
     }
+    .form-container{
+        display: none;
+    }
+    .form-container.current{
+        display: block;
+    }
     form{
         height:70%;
     }
@@ -207,20 +294,16 @@
         height:70px;
         line-height:70px;
     }
-    .login{
-        margin:20px;
-        color:#569bda;
-        padding-bottom:3px;
-        font-size:16px;
-        border-bottom:2px solid #569bda;
-        cursor:pointer
-    }
-    .regiet{
+    .opt span{
         margin:20px;
         color:#ababab;
         padding-bottom:3px;
         font-size:16px;
         cursor:pointer
+    }
+    .opt span.current{
+        color:#569bda;
+        border-bottom:2px solid #569bda;
     }
     footer{
         height:50px;
@@ -269,4 +352,8 @@
     .clearStyle{
         clear:both;
     }
+    .ivu-form{
+         /*width: 80%;*/
+         /*margin-left: 10%;*/
+     }
 </style>
