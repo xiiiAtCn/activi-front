@@ -600,7 +600,7 @@
     .head-container{
         padding-bottom: 6px;
         margin-bottom: 3px;
-        font-size: 14px;
+        font-size: 17px;
     }
     .tree-container{
         padding: 5px 10px;
@@ -639,5 +639,10 @@
         border-bottom: 1px solid #ccc;
         margin-bottom: 18px;
         padding-bottom: 8px;
+    }
+</style>
+<style>
+    .ivu-tree ul {
+        font-size: 16px;
     }
 </style>
