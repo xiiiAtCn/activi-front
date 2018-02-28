@@ -72,7 +72,7 @@
                 default: false
             },
             overlay: {
-                default: false
+                default: true
             },
             // central event bus
             eventBus: {
@@ -120,7 +120,7 @@
 </script>
 <style >
     .white-overlay {
-        background-color: rgba(255, 255, 255, 0.75);
+        background-color: rgba(255, 255, 255, 0.01);
         z-index: 9999;
         top: 0;
         left: 0;
