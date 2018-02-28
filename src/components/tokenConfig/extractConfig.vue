@@ -6,9 +6,24 @@
             </Col>
             <Col span="12" class="button-area">
                 <ButtonGroup>
-                    <Button @click="save">保存</Button>
-                    <Button @click="addRule">添加规则</Button>
-                    <Button @click="delRule">删除选中规则</Button>
+                    <Button 
+                        @click="save"
+                        :disabled="!tableDataFinish"
+                    >
+                        保存
+                    </Button>
+                    <Button 
+                        @click="addRule"
+                        :disabled="!tableDataFinish"
+                    >
+                        添加规则
+                    </Button>
+                    <Button 
+                        @click="delRule"
+                        :disabled="!tableDataFinish"
+                    >
+                        删除选中规则
+                    </Button>
                     <Button @click="exit">退出</Button>
                 </ButtonGroup>
             </Col>
@@ -23,12 +38,19 @@
                 class="config-table"
             />
         </div>
+        <mLoading
+            :event-bus="bus"
+            event-show="token-config-show"
+            event-hide="token-config-hide"
+            >
+        </mLoading>
     </div>
 </template>
 <script>
 import ConfigTable from './configTable'
-import { fetchDir } from './constant'
+import { fetchDir, EventType } from './constant'
 import _ from 'lodash'
+import bus from 'routers/bus'
 
 const tableDefine = [
     {
@@ -82,11 +104,23 @@ export default {
             currentRow: null,
             templateId: '',
             metaList: [],
-            showMetaList: [],
+            ist: [],
             // 缓存的keyList key: metaid, value: 下拉选项
             cacheKeyList: {},
             // 显示的keyList key：metaid, value: 下拉选项
-            showKeyList: {}
+            showKeyList: {},
+            bus: bus,
+            requestNum: 0,
+            tableDataFinish: false
+        }
+    },
+    watch: {
+        requestNum (val) {
+            if (val == 0) {
+                this.bus.$emit(EventType.hideLoading)
+            } else {
+                this.bus.$emit(EventType.showLoading)
+            }
         }
     },
     mounted () {
@@ -137,24 +171,30 @@ export default {
             this.getTableData().then(this.getMetaList())
         },
         getTableData () {
+            this.requestNum++
+            this.tableDataFinish = false
             return new Promise((resolve, reject) => {
                 this.setUrl(fetchDir.ruleTableData)
                     .setPathVariables({templateId: this.templateId})
                     .forGet((result, err) => {
+                        this.requestNum--
                         if (err) {
                             this.$Message.error('获取table数据失败')
                             reject()
                         } else {
                             this.tableData = result
+                            this.tableDataFinish = true
                             resolve()
                         }
                     })
             })
         },
         getMetaList () {
+            this.requestNum++
             this.setUrl(fetchDir.ruleMetaList)
                 .setPathVariables({templateId: this.templateId})
                 .forGet((result, err) => {
+                    this.requestNum--
                     if (err) {
                         this.$Message.error('获取MetaList数据失败')
                     } else {
@@ -163,6 +203,7 @@ export default {
                 })
         },
         getKeyList (id) {
+            this.requestNum++
             return new Promise((resolve, reject) => {
                 this.setUrl(fetchDir.ruleKeyList)
                     .setPathVariables({
@@ -170,6 +211,7 @@ export default {
                         tokenMetaId: id
                     })
                     .forGet((result, err) => {
+                        this.requestNum--
                         if (err) {
                             this.$Message.error('获取keyList数据失败')
                             reject
@@ -185,7 +227,7 @@ export default {
             let metaList = _.cloneDeep(this.metaList)
             // table中所有行的metaId
             let tableMataList = []
-            // key值为 metaId value为metaId对应的key数组
+            // 当前table中选中的key，key值为 metaId value为metaId对应的key数组
             let tableKeyList = {}
             let metaTable = {}
             let keyTable = {}
@@ -193,10 +235,12 @@ export default {
                 let metaId = row.metaId
                 tableMataList.push(metaId)
 
-                if (tableKeyList[metaId]) {
-                    tableKeyList[metaId].push(row.key)
-                } else {
-                    tableKeyList[metaId] = [row.key]
+                if (row.key) {
+                    if (tableKeyList[metaId]) {
+                        tableKeyList[metaId].push(row.key)
+                    } else {
+                        tableKeyList[metaId] = [row.key]
+                    }
                 }
             }
             // 生成没有选中的metaList
@@ -211,15 +255,15 @@ export default {
             this.showKeyList = {}
             let func = (rowKeyList, metaId) => {
                 for (let key of rowKeyList) {
-                    if (!tableKeyList[metaId].includes(key.value)) {
+                    if (!tableKeyList[metaId] || !tableKeyList[metaId].includes(key.value)) {
                         if (!this.showKeyList[metaId]) {
                             this.$set(this.showKeyList, metaId, [key])
                         } else {
-                            let old = this.showKeyList[metaId].find(item => {
-                                item.value === key.value
-                            })
+                            console.log(JSON.stringify(this.showKeyList[metaId]))
+                            console.log(`key: ${key.value}`)
+                            let old = this.showKeyList[metaId].find(item => item.value === key.value)
+                           
                             if (!old) {
-                                debugger
                                 this.showKeyList[metaId].push(key)
                             }
                         }
@@ -237,7 +281,7 @@ export default {
                     if (!rowKeyList) {
                         idList.push(metaId)
                     } else {
-                        func(rowKeyList, metaId)
+                        func(rowKeyList, metaId, this)
                     } 
                 }
             }
@@ -281,7 +325,6 @@ export default {
                 }
                 row.rule = row.rule || ''
             }
-            debugger
             this.tableDataWidthOption = tableData
         },
 
