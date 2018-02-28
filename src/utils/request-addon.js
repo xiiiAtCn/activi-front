@@ -10,14 +10,27 @@ import iView from 'iview'
  */
 
 const types = ['$requestUrl', '$path', '$query']
-
+let isAuthenticated = true
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+
 axios.interceptors.response.use(res => {
     return res
 }, error => {
     if(error.response) {
         if(error.response.status === 403) {
-            location.href = '/'
+            if(isAuthenticated) {
+                isAuthenticated = false
+                iView.Modal.confirm({
+                    title: '提示',
+                    content: '用户未登录, 是否登录?',
+                    onOk(){
+                        isAuthenticated = true
+                        location.href = '/'
+                    }
+                })
+            }
+        } else {
+            iView.Message.error('服务器出错了，请联系管理员解决')
         }
     }
     return Promise.reject(error)
@@ -54,7 +67,6 @@ Request.prototype.forGet = function (callback) {
             console.error(`err from get method %c${location.origin + url} \n`,
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.groupEnd()
-            iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
@@ -82,7 +94,6 @@ Request.prototype.forDelete = function (callback) {
             console.error(`err from delete method %c${location.origin + url} \n`,
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.groupEnd()
-            iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
@@ -123,8 +134,6 @@ Request.prototype.forPost = function (callback) {
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
-            if(err.response.status !== 401)
-                iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
@@ -169,7 +178,6 @@ Request.prototype.forPut = function (callback) {
                 'color: #EE2C2C; background: rgba(255, 215, 0, 0.9)', err)
             console.info('method body :', body)
             console.groupEnd()
-            iView.Message.error('服务器出错了，请联系管理员解决')
             callback(null, err)
         })
 }
