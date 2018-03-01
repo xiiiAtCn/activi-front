@@ -4,7 +4,7 @@
         <Row>
             <Col span="12" class="tree-container">
                 <div class="head-container" @click="addRole" >角色列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
-                <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false" ></Tree>
+                <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"></Tree>
             </Col>
             <Col span="12" class="tree-container">
                 <div class="head-container" @click="showAddMenu">菜单列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
@@ -111,7 +111,7 @@
             </div>
         </mLayer>
 
-        <mLayer :value="showRoleLayer" titleText="添加角色" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
+        <mLayer :value="showRoleLayer" :titleText="roleTitle" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
             <div>
                 <Row>
                     <Col span="24">
@@ -199,6 +199,7 @@
                 layerEditLoading:false,
 
                 currentKey:'',
+                roleTitle:'添加角色',
 
                 menuForm: {
                     labelName: '',
@@ -294,6 +295,7 @@
                         roleName:val.roleName,
                         id:val.id,
                         flag:val.flag,
+                        renderSelect:false,
                         render: (h, { root, node, data }) => {
                             return h('span', {
                                 style: {
@@ -307,13 +309,13 @@
                                             cursor : 'pointer'
                                         },
                                         class:{
-                                            'ivu-tree-title':true
+                                            'ivu-tree-title':true,
+                                            'ivu-tree-title-selected':data.renderSelect
                                         },
                                         on: {
                                             click: () => {
                                                 //点击左侧人员获得权限信息
-                                                this.currentRole = data.authority
-                                                this.getMenuData()
+                                                this.roleTreeClick(root,data)
                                             }
                                         }
                                     }, data.title)
@@ -500,6 +502,7 @@
 
             //打开添加角色
             addRole(){
+                this.roleTitle = '添加角色'
                 this.showRoleLayer = true
                 this.layerRoleLoading = true
                 this.roleForm = _.cloneDeep(this.roleDefault)
@@ -528,9 +531,11 @@
 
             //编辑角色信息
             showEditRole(data){
+                this.roleTitle = '编辑角色信息'
                 this.showRoleLayer = true
                 this.layerRoleLoading = true
                 this.roleForm = _.cloneDeep(data)
+                delete this.roleForm.renderSelect
             },
 
             //添加菜单
@@ -601,6 +606,9 @@
 
                 this.handlePost(body,'/api/menu/update',()=>{
                     this.getDefaultMenu()
+                    if(this.currentRole){
+                        this.getMenuData()
+                    }
                 })
             },
             //编辑时请求权限数据
@@ -619,6 +627,16 @@
                         })
                     }
                 })
+            },
+
+            //角色树点击事件
+            roleTreeClick(root,data){
+                root.forEach(v=>{
+                    v.node.renderSelect = false
+                })
+                data.renderSelect = true
+                this.currentRole = data.authority
+                this.getMenuData()
             },
 
             /*工具类*/
