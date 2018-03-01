@@ -4,11 +4,11 @@
         <Row>
             <Col span="12" class="tree-container">
                 <div class="head-container" @click="addRole" >角色列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
-                <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"  @on-select-change="handleTreeClick"></Tree>
+                <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false" ></Tree>
             </Col>
             <Col span="12" class="tree-container">
                 <div class="head-container" @click="showAddMenu">菜单列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
-                <Tree class="tree" :data="menuTree" show-checkbox  @on-select-change="handleTreeClick" @on-check-change="handleTreeCheck"></Tree>
+                <Tree class="tree" :data="menuTree" show-checkbox @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
 
@@ -211,6 +211,10 @@
                     roleName: '',
                     authority: ''
                 },
+                roleDefault: {
+                    roleName: '',
+                    authority: ''
+                },
                 cKey:'',
                 rules: {
                     labelName: [
@@ -264,7 +268,59 @@
                 data.forEach((val)=>{
                     roleTree.push({
                         authority:val.authority,
-                        title:val.roleName
+                        title:val.roleName,
+                        roleName:val.roleName,
+                        id:val.id,
+                        flag:val.flag,
+                        render: (h, { root, node, data }) => {
+                            return h('span', {
+                                style: {
+                                    display: 'inline-block',
+                                    width: '100%'
+                                }
+                            }, [
+                                h('span', [
+                                    h('span',{
+                                        style: {
+                                            cursor : 'pointer'
+                                        },
+                                        class:{
+                                            'ivu-tree-title':true
+                                        },
+                                        on: {
+                                            click: () => {
+                                                //点击左侧人员获得权限信息
+                                                this.currentRole = data.authority
+                                                this.getMenuData()
+                                            }
+                                        }
+                                    }, data.title)
+                                ]),
+                                h('span', {
+                                    style: {
+                                        display: 'inline-block',
+                                        marginRight: '16px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.showEditRole(data)
+                                        }
+                                    }
+                                }, [
+                                    h('Icon', {
+                                        props: {
+                                            type: 'edit'
+                                        },
+                                        style: {
+                                            width: '26px',
+                                            marginLeft: '6px',
+                                            cursor:'pointer',
+                                            fontSize:'15px'
+                                        }
+                                    })
+                                ])
+                            ])
+                        },
                     })
                 })
                 this.roleTree = roleTree
@@ -303,14 +359,6 @@
                                 }
                             }, [
                                 h('span', [
-                                    h('Icon', {
-                                        props: {
-                                            type: 'ios-folder-outline'
-                                        },
-                                        style: {
-                                            marginRight: '6px'
-                                        }
-                                    }),
                                     h('span',{
                                         style: {
                                             cursor : 'pointer'
@@ -398,15 +446,7 @@
                 })
                 this.checkList = checkList
             },
-            //点击左侧人员获得权限信息
-            handleTreeClick(arg){
-                if(arg.length !== 0){
-                    this.currentRole = arg[0].authority
-                }else{
-                    this.currentRole = ''
-                }
-                this.getMenuData()
-            },
+
             //提交权限信息
             handleSubmit(){
                 if(!this.currentRole){
@@ -432,6 +472,41 @@
                         }
                     }
                 })
+            },
+
+            //打开添加角色
+            addRole(){
+                this.showRoleLayer = true
+                this.layerRoleLoading = true
+                this.roleForm = _.cloneDeep(this.roleDefault)
+            },
+            handleRoleCancel(){
+                this.showRoleLayer = false
+                this.clearForm('roleForm')
+            },
+            handleRoleOk(){
+                this.layerRoleLoading = false
+                this.HandleValid('roleForm',()=>{
+                    this.handleAddRole()
+                })
+                setTimeout(()=>{this.layerRoleLoading = true},500)
+            },
+            handleAddRole(){
+                let url='/api/role/add'
+                if(this.roleForm.id){
+                    url='/api/role/update'
+                }
+                this.handlePost(this.roleForm,url,()=>{
+                    this.showRoleLayer = false
+                    this.getRoleData()
+                })
+            },
+
+            //编辑角色信息
+            showEditRole(data){
+                this.showRoleLayer = true
+                this.layerRoleLoading = true
+                this.roleForm = _.cloneDeep(data)
             },
 
             //添加菜单
@@ -465,29 +540,6 @@
                     if(this.currentRole){
                         this.getMenuData()
                     }
-                })
-            },
-
-            //打开添加角色
-            addRole(){
-                this.showRoleLayer = true
-                this.layerRoleLoading = true
-            },
-            handleRoleCancel(){
-                this.showRoleLayer = false
-                this.clearForm('roleForm')
-            },
-            handleRoleOk(){
-                this.layerRoleLoading = false
-                this.HandleValid('roleForm',()=>{
-                    this.handleAddRole()
-                })
-                setTimeout(()=>{this.layerRoleLoading = true},500)
-            },
-            handleAddRole(){
-                this.handlePost(this.roleForm,'/api/role/add',()=>{
-                    this.showRoleLayer = false
-                    this.getRoleData()
                 })
             },
 
@@ -612,9 +664,9 @@
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
-        position: absolute;
+        position: fixed;
         right: 40px;
-        bottom: 150px;
+        bottom: 50px;
     }
     .tree-container .ivu-tree-title{
         color: #00ff00;

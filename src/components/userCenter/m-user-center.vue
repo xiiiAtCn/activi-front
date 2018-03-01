@@ -4,11 +4,12 @@
         <Row>
             <Col span="24" class="btn">
                 <Button class="button" type="primary" @click="openLayer">新建</Button>
-                <Button class="button" type="default" @click="editLayer">查看</Button>
+                <Button class="button" type="default" @click="showChangeRole">分配角色</Button>
+                <Button class="button" type="default" @click="editLayer">重置用户</Button>
                 <Button class="button" type="error" @click="delData">禁用</Button>
             </Col>
             <Col span="24">
-                <Table @on-current-change="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
+                <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
             </Col>
         </Row>
 
@@ -28,6 +29,22 @@
                         <Select v-model="formItem.roles" multiple>
                             <Option v-for="item in defaultRole" :value="item.id">{{ item.roleName }}</Option>
                         </Select>
+                    </FormItem>
+                </Form>
+            </div>
+        </mLayer>
+
+        <mLayer :value="showEditLayer" titleText="重置用户信息" @on-cancel="handleEditCancel" @on-ok="handleEditOk" :loading="layerEditLoading">
+            <div>
+                <Form ref="editForm" :model="editForm" :label-width="120" :rules="editRules">
+                    <FormItem label="用户名" prop="username" :show-message="!changeRole">
+                        <Input v-model="editForm.username" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
+                    </FormItem>
+                    <FormItem label="昵称" prop="nickName" :show-message="!changeRole">
+                        <Input v-model="editForm.nickName" placeholder="请输入昵称"></Input>
+                    </FormItem>
+                    <FormItem label="密码" prop="password">
+                        <Input type="password" v-model="editForm.password" placeholder="请输入密码"></Input>
                     </FormItem>
                 </Form>
             </div>
@@ -121,6 +138,9 @@
                 showLayer:false,
                 layerLoading:false,
                 titleText:'新建用户',
+
+                showEditLayer:false,
+                layerEditLoading:false,
                 formItem: {
                     username: '',
                     nickName: '',
@@ -133,6 +153,12 @@
                     password: '',
                     roles:[]
                 },
+                editForm:{
+                    username: '',
+                    nickName: '',
+                    password: '',
+                    id:'',
+                },
                 rules: {
                     username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -143,6 +169,19 @@
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' },
+                        { validator:passValid,trigger: 'blur' }
+                    ]
+                },
+                editRules: {
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { validator:nameValid , trigger: 'blur' }
+                    ],
+                    nickName: [
+                        { required: true, validator:nickValid,trigger: 'blur' }
+                    ],
+                    password: [
+                        {  message: '请输入密码', trigger: 'blur' },
                         { validator:passValid,trigger: 'blur' }
                     ]
                 },
@@ -195,6 +234,7 @@
             handleCancel(){
                 this.showLayer = false
                 this.clearForm('formItem')
+                this.currentData = ''
             },
             //提交用户信息
             submitMessage(){
@@ -251,8 +291,51 @@
                 })
             },
 
-            //查看编辑用户信息
+
+            //重置用户信息
             editLayer(){
+                if(!this.currentData){
+                    iView.Message.error('请选择一条数据！')
+                    return
+                }
+                this.editForm.username = _.get(this.currentData,'username')
+                this.editForm.nickName = _.get(this.currentData,'nickName')
+                this.editForm.id = _.get(this.currentData,'id')
+                this.changeRole=true
+
+                this.showEditLayer=true
+            },
+            handleEditOk(){
+                this.layerEditLoading = false
+                this.handleReset()
+                setTimeout(()=>{this.layerEditLoading = true},500)
+            },
+            handleEditCancel(){
+                this.currentData = ''
+                this.showEditLayer = false
+            },
+            handleReset(){
+                let url ={
+                    method:'POST',
+                    body: this.editForm,
+                    url:'/api/user/reset'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                            this.showEditLayer = false
+                            this.clearForm('editForm')
+                            this.getUserData()
+                        }else{
+                            iView.Message.info(result.description)
+                        }
+                    }
+                })
+            },
+
+            //更改角色
+            showChangeRole(){
                 if(!this.currentData){
                     iView.Message.error('请选择一条数据！')
                     return
@@ -282,13 +365,12 @@
             //提交角色更改
             HandleChangeRole(){
                 let body = this.getRoleList(this.formItem.roles)
-
                 let url ={
                     method:'POST',
+                    body: body,
                     pathParams:{
                         userId :this.currentData.id
                     },
-                    body: body,
                     url:'/api/user/changeRole/{userId}'
                 }
                 getData(url, (result) => {
@@ -308,13 +390,12 @@
             //角色列表
             getRoleList(role){
                 let list = []
-                role.forEach(v=>{
-                    this.defaultRole.forEach(value => {
-                        if(v === value.id){
-                            list.push(value)
-                            return
-                        }
-                    })
+                let roles = new Set(role)
+                this.defaultRole.forEach(value => {
+                    if(roles.has(value.id)){
+                        list.push(value)
+                        return
+                    }
                 })
                 return list
             },
