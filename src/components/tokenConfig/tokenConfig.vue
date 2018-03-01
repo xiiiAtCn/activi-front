@@ -14,8 +14,6 @@
                         保存
                     </Button>
                     <Button @click="exit">退出</Button>
-                    <!-- <Button @click="addRow">添加行</Button>
-                    <Button @click="delRow">删除选中行</Button> -->
                 </ButtonGroup>
             </Col>
         </Row>
@@ -31,6 +29,14 @@
                 />
             </Col>
             <Col span="16" class="table-container">
+                <Form :label-width="120" :model="titleForm" :rules="titleRules" ref="titleForm">
+                    <FormItem label="库所名称" prop="title">
+                        <Input 
+                            :disabled="formDisabled"
+                            v-model="titleForm.title"
+                        />
+                    </FormItem>
+                </Form>
                 <Form :label-width="120" :model="formData" :rules="formRules" ref="form">
                     <FormItem label="节点名称" prop="title">
                         <Input 
@@ -71,6 +77,16 @@
                         </Select>
                     </FormItem>
                 </Form>
+                <div class="table-btn-area">
+                    <ButtonGroup>
+                        <Button 
+                            @click="selectAll" 
+                            :disabled="selectAllBtnDisabled"
+                        >
+                            {{btnText}}
+                        </Button>
+                    </ButtonGroup>
+                </div>
                 <ConfigTable
                     :define="tableDefine"
                     :data="tableData"
@@ -166,6 +182,11 @@ const metaTypeList = [
     }
 ]
 
+const btnText = {
+    selectAll: '全选',
+    cancel: '取消全选'
+}
+
 // 当前编辑状态(新建节点、删除节点、编辑节点)
 const ModalStatus = {
     addNode: 'add',
@@ -173,8 +194,6 @@ const ModalStatus = {
     editNode: 'edit',
     none: 'none'
 }
-// table添加行的行id
-let generateId = 0
 
 export default {
     components: {
@@ -184,7 +203,6 @@ export default {
     data () {
         return {
             treeData: [],
-            treeTitle: '',
             treeId: '',
             tableDefine: [],
             tableData: [],
@@ -195,7 +213,11 @@ export default {
             formData: {
                 title: '',
                 metaType: '',
-                metaId: ''
+                metaId: '',
+                treeName: ''
+            },
+            titleForm: {
+                title: ''
             },
             modal: false,
             formRules: {
@@ -203,6 +225,14 @@ export default {
                     {
                         required: true,
                         message: '请输入节点名称'
+                    }
+                ]
+            },
+            titleRules: {
+                title: [
+                    {
+                        required: true,
+                        message: '请输入库所名称'
                     }
                 ]
             },
@@ -229,7 +259,9 @@ export default {
             nextModalStatus: '',
 
             relTableColumns: [],
-            relTableData: []
+            relTableData: [],
+            // 全选按钮显示text
+            btnText: btnText.selectAll
         }
     },
     computed: {
@@ -239,6 +271,9 @@ export default {
         },
         metaDisabled () {
             return !this.formData.metaType
+        },
+        selectAllBtnDisabled () {
+            return this.tableData.length === 0
         }
     },
     mounted () {
@@ -385,7 +420,7 @@ export default {
         // 将后台数据转为组件数据
         setTreeData (resData) {
             this.treeId = resData.treeId
-            this.treeTitle = resData.treeTitle
+            this.$set(this.titleForm, 'title', resData.treeTitle)
             // 为每个节点设置初始值
             traverseTree(resData['root'], (node) => {
                 node.expand = true
@@ -612,6 +647,7 @@ export default {
                 nodeId = this.selectedNode.node.id
             }
             this.requestNum++
+            this.tableData = []
             this.setUrl(fetchDir.tableData)
                 .setPathVariables({
                     metaId: this.formData.metaId
@@ -625,31 +661,32 @@ export default {
                     if (err) {
                         this.$Message.error("获取tableData失败")
                     } else {
-                        this.tableData = result
+                        this.tableDataAddStatus(result)
+                        // const enabledRow = result.filter(row => row.enabled === true)
+                        // if (enabledRow && enabledRow.length === result.length) {
+                        //     this.btnText = btnText.cancel
+                        // } else {
+                        //     this.btnText = btnText.selectAll
+                        // }
                     }
                 })
         },
-        // 添加行
-        addRow() {
-            this.tableData.push({
-                'generateId': ++generateId
-            })
-        },
-        // 删除行
-        delRow () {
-            for (let i = 0, len = this.tableData.length; i < len; i++) {
-                if (!!this.tableData[i].id) {
-                    if (this.tableData[i].id === this.currentRow.id) {
-                        this.tableData.splice(i, 1)
-                        break
-                    }
+        tableDataAddStatus (data) {            
+            let enabledRow = []
+            for (let row of data) {
+                if (row.enabled === true) {
+                    enabledRow.push(row)
+                    row._compRowDisabled = false
                 } else {
-                    if (this.tableData[i].generateId === this.currentRow.generateId) {
-                        this.tableData.splice(i, 1)
-                        break
-                    }
+                    row._compRowDisabled = true
                 }
             }
+            if (enabledRow && enabledRow.length === data.length) {
+                this.btnText = btnText.cancel
+            } else {
+                this.btnText = btnText.selectAll
+            }
+            this.tableData = data
         },
         // 切换当前选中行
         currentChange (newRow, oldRow) {
@@ -657,6 +694,9 @@ export default {
         },
         // 改变model
         changeModel (index, key, value) {
+            if (key === 'enabled' && value === true) {
+                this.$set(this.tableData[index], 'visible', true)
+            }
             this.$set(this.tableData[index], key, value)
         },
         // 重置表格数据
@@ -693,20 +733,49 @@ export default {
         // 保存
         save () {
             let result = true
-            this.$refs['configTable'].validate((valid) => {
+            // 先校验title
+            this.$refs['titleForm'].validate((valid) => {
                 if (!valid) {
                     result = false
-                    this.$Message.error('表格数据填写有误，请核对后再保存')
+                    this.$Message.error('库所名称有误，请核对后再保存')
                 }
-            }).then(() => {
-                this.$refs['form'].validate((valid) => {
-                    if (!valid) {
-                        this.$Message.error('表单数据填写有误，请核对后再保存')
-                    } else {
-                        this.requestNum++
+            })
+            .then(() => {
+                // 当前没有选中节点不校验
+                if (!this.selectedNode) {
+                    return new Promise((resolved => {
+                        resolved()
+                    }))
+                } else {
+                    return this.$refs['form'].validate((valid) => {
+                        if (!valid) {
+                            result = false
+                            this.$Message.error('表单数据填写有误，请核对后再保存')
+                        }
+                    })
+                }
+            })
+            .then(() => {
+                // 当前没有选中节点不校验
+                if (!this.selectedNode) {
+                    return new Promise((resolved => {
+                        resolved()
+                    }))
+                } else {
+                    return this.$refs['configTable'].validate((valid) => {
+                        if (!valid) {
+                            result = false
+                            this.$Message.error('表格数据填写有误，请核对后再保存')
+                        }
+                    })
+                }
+            })
+            .then(() => {
+                if (result === true) {
+                    this.requestNum++
                         this.setUrl(fetchDir.saveData).setBody({
                             treeId: this.treeId,
-                            treeTitle: this.treeTitle,
+                            treeTitle: this.titleForm.title,
                             nodeId: this.selectedNode.node.id ? this.selectedNode.node.id : '',
                             selfId: this.selectedNode.nodeKey,
                             parentId: this.selectedNode.parent,
@@ -722,10 +791,23 @@ export default {
                                 this.init()
                             }
                         })
-                    }
-                })
+                }
             })
         },
+        // 全选
+        selectAll () {
+            let value = true
+            if (this.btnText === btnText.selectAll) {
+                this.btnText = btnText.cancel
+            } else {
+                value = false
+                this.btnText = btnText.selectAll
+            }
+            this.tableData.forEach(row => {
+                this.$set(row, 'enabled', value)
+                this.$set(row, 'visible', value)
+            })
+        }
     }
 }
 </script>
@@ -739,6 +821,9 @@ export default {
 .tree-container {
     overflow-x: auto;
     border-right: 1px solid #707B7C;
+}
+.table-btn-area {
+    direction: ltr;
 }
 .table-container {
     overflow-x: auto;

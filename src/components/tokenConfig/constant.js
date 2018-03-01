@@ -10,7 +10,7 @@ export const fetchDir = {
     // 查看页面
     viewTableData: "/api/placeConfig/cache/getTableData/{templateId}/{nodeId}",
     // 编辑页面
-    metaList: "/api/placeConfig/getFormMetaList/{type}",
+    metaList: "/api/placeConfig/cache/getFormMetaList/{type}",
     formData: "/api/placeConfig/cache/getFormData/{templateId}",
     tableData: "/api/placeConfig/cache/getTableData/{metaId}",
     saveData: "/api/placeConfig/cache/saveNode",

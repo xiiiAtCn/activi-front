@@ -55,13 +55,6 @@ export default {
         changeModel: {
             type: Function,
             default: () => {}
-        },
-        // todo 编辑顺序 未实现
-        editOrder: {
-            type: Array,
-            default () {
-                return [[]]
-            }
         }
     },
     data() {
@@ -79,10 +72,17 @@ export default {
                 switch (column.type) {
                     case TableFieldType.checkbox:
                         render = (h, {row, column, index}) => {
+                            let disabled = false
+                            if (this.disabled === true || this.disabled === false) {
+                                disabled = this.disabled
+                            }
+                            // if (row._compRowDisabled === false || row._compRowDisabled === true) {
+                            //     disabled = row._compRowDisabled
+                            // }
                             return h('Checkbox', {
                                     props: {
                                         value: row[column.key],
-                                        disabled: this.disabled
+                                        disabled: disabled
                                     },
                                     on: {
                                         input: (value) => {
