@@ -380,7 +380,6 @@ export default {
                 default: 
                     throw new Error(`错误的nextModalStatus：${this.nextModalStatus}`)
             }
-            debugger
             this.modal = true
         },
         //------树相关方法------
