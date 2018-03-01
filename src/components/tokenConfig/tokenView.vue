@@ -21,6 +21,14 @@
                 </Tree>
             </Col>
             <Col span="16" class="table-container">
+                <Form class="title-form" :label-width="120" :model="titleForm">
+                    <FormItem label="库所名称" prop="title">
+                        <Input 
+                            :disabled="true"
+                            v-model="titleForm.title"
+                        />
+                    </FormItem>
+                </Form>
                 <ConfigTable
                     :define="tableDefine"
                     :data="tableData"
@@ -100,7 +108,10 @@ export default {
             relTableData: [],
             relTableColumns: [],
             requestNum: 0,
-            bus: bus
+            bus: bus,
+            titleForm: {
+                title: ''
+            }
         }
     },
     mounted () {
@@ -135,6 +146,7 @@ export default {
                             node.expand = true
                         })
                         this.treeData = [result.root]
+                        this.$set(this.titleForm, 'title', result.treeTitle)
                         this.getRelData()
                     }
                 })
@@ -210,6 +222,9 @@ export default {
 .table-container {
     overflow-x: auto;
     direction: rtl;
+}
+.title-form {
+    direction: ltr;
 }
 .footer-container {
     margin-top: 30px;

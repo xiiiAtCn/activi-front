@@ -110,7 +110,8 @@
             v-model="modal"
             :title="modalTitle"
             @on-ok="modalOK"
-            @on-cancel="modalCancel">
+            @on-cancel="modalCancel"
+        >
             <p>{{modalMessage}}</p>
         </Modal>
         <mLoading
@@ -238,8 +239,7 @@ export default {
             },
             currentRow: null,
             selectedNode: null,
-            // 是添加改变了node还是点击改变了node
-            nodeChangeByAdd: false,
+            nextNode: null,
             bus: bus,
             // 当前请求总数
             requestNum: 0,
@@ -288,20 +288,6 @@ export default {
             } else {
                 this.bus.$emit(EventType.showLoading)
             }
-        },
-        selectedNode (newVal, oldVal) {
-            if (newVal === null) {
-                return 
-            }
-            if (!!newVal && !!oldVal && newVal.nodeKey == oldVal.nodeKey) {
-                return 
-            }
-            if (!this.nodeChangeByAdd) {
-                this.nextModalStatus = ModalStatus.editNode
-                this.modalStatusTransition()
-            } else {
-                this.nodeChangeByAdd = false
-            } 
         }
     },
     methods: {
@@ -372,6 +358,8 @@ export default {
                     this.modalTitle = '编辑节点'
                     this.modalMessage = '当前未保存的节点信息会被清除，请确认是否编辑节点'
                     this.modalOkCB = () => {
+                        this.selectedNode = this.nextNode
+                        this.nextNode = null
                         this.resetFormData()
                         this.resetConfigTableData()
                         this.removeFakeNode()
@@ -382,6 +370,7 @@ export default {
                     }
                     this.modalCancelCB = () => {
                         this.nextModalStatus = ModalStatus.none
+                        this.nextNode = null
                     }
                     if (this.currentModalStatus === ModalStatus.none) {
                         this.modalOK()
@@ -391,6 +380,7 @@ export default {
                 default: 
                     throw new Error(`错误的nextModalStatus：${this.nextModalStatus}`)
             }
+            debugger
             this.modal = true
         },
         //------树相关方法------
@@ -502,7 +492,6 @@ export default {
             this.resetFormData()
             this.resetConfigTableData()
             this.$nextTick(() => {
-                this.nodeChangeByAdd = true                
                 this.selectedNode = this.$refs['configTree'].getSelectedNodes()[0]
             })
         },
@@ -568,8 +557,17 @@ export default {
         },
         // 点击节点
         nodeClick (root, node, data) {
-            this.selectedNode = node
+            this.nextNode = node
             this.modalData = {root, node, data}
+
+            if (node === null) {
+                return 
+            }
+            if (!!node && !!this.selectedNode && node.nodeKey == this.selectedNode.nodeKey) {
+                return 
+            }
+            this.nextModalStatus = ModalStatus.editNode
+            this.modalStatusTransition()
         },
         //------表单相关方法------
         // 获取表单数据
