@@ -33,6 +33,12 @@
                             <FormItem label="描述">
                                 <Input v-model="menuForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
+                            <FormItem label="URL">
+                                <Input v-model="menuForm.url" placeholder="请输入URL"></Input>
+                            </FormItem>
+                            <FormItem label="背景图" v-if="!menuForm.parentKey">
+                                <Input v-model="menuForm.picUrl" placeholder="请输入背景图URL"></Input>
+                            </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
                                     <mIconList></mIconList>
@@ -67,12 +73,18 @@
                             <FormItem label="菜单名称" prop="labelName">
                                 <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
                             </FormItem>
-                            <FormItem label="key值">
+                            <FormItem label="key值" prop="currentKey">
                                 <Input v-model="editForm.currentKey" placeholder="key值为父节点key值+自定义数字">
                                 </Input>
                             </FormItem>
                             <FormItem label="描述" prop="description">
                                 <Input v-model="editForm.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                            <FormItem label="URL" v-if="editForm.parentKey">
+                                <Input v-model="editForm.url" placeholder="请输入URL"></Input>
+                            </FormItem>
+                            <FormItem label="背景图" v-if="!editForm.parentKey">
+                                <Input v-model="editForm.picUrl" placeholder="请输入背景图URL"></Input>
                             </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
@@ -152,6 +164,9 @@
                 }else if(!/^.{1,254}$/.test(val)){
                     callback('输入的字符数太多了！')
                     return
+                }else if(this.cKey === val){
+                    callback()
+                    return
                 }
                 let url ={
                     pathParams:{
@@ -189,7 +204,9 @@
                     labelName: '',
                     currentKey: '',
                     description: '',
+                    url:'',
                     icon:'',
+                    picUrl:'',
                     id:'',
                     parentKey:''
                 },
@@ -203,6 +220,8 @@
                     labelName: '',
                     currentKey: '',
                     description: '',
+                    url:'',
+                    picUrl:'',
                     icon:'',
                     id:'',
                     parentKey:''
@@ -235,6 +254,9 @@
                 editRules: {
                     labelName: [
                         { required: true, message:'请输入用户名', trigger: 'blur' }
+                    ],
+                    currentKey: [
+                        { required: true, validator:keyValid.bind(this) , trigger: 'blur' }
                     ]
                 },
                 roleRules: {
@@ -351,6 +373,8 @@
                         title:val.menu.labelName,
                         labelName : val.menu.labelName,
                         id : val.menu.id,
+                        url : val.menu.url,
+                        picUrl:val.menu.picUrl,
                         render: (h, { root, node, data }) => {
                             return h('span', {
                                 style: {
@@ -549,6 +573,9 @@
                     this.editForm[v] = _.get(data,v,'')
                 })
                 if(data.id){this.getPowerData(data.id)}
+
+                this.cKey = data.currentKey
+
 
                 this.showEditLayer = true
                 this.layerEditLoading = true
