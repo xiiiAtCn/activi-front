@@ -52,9 +52,6 @@
                 getData(url, (result) => {
                     if(result){
                         if(!result.data){
-                            if(this.validResult === true){
-                                this.validResult = false
-                            }
                             callback(result.description)
                         }else{
                             callback()
@@ -128,14 +125,12 @@
                     username: '',
                     nickName: '',
                     password: '',
-                    enabled: true,
                     roles:[]
                 },
                 defaultForm:{
                     username: '',
                     nickName: '',
                     password: '',
-                    enabled: true,
                     roles:[]
                 },
                 rules: {
@@ -151,7 +146,6 @@
                         { validator:passValid,trigger: 'blur' }
                     ]
                 },
-                validResult:true,
                 currentData:null,
                 roleList:[],
                 defaultRole:[],

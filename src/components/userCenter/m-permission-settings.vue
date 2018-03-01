@@ -153,10 +153,9 @@
                     callback('输入的字符数太多了！')
                     return
                 }
-
                 let url ={
                     pathParams:{
-                        currentKey : this.menuForm.parentKey||'' + val
+                        currentKey : (this.menuForm.parentKey||'') + val
                     },
                     url:'/api/menu/usable/{currentKey}'
                 }
@@ -218,7 +217,7 @@
                         { required: true, message:'请输入用户名', trigger: 'blur' }
                     ],
                     currentKey: [
-                        { required: true, validator:keyValid , trigger: 'blur' }
+                        { required: true, validator:keyValid.bind(this) , trigger: 'blur' }
                     ]
                 },
                 powerRules: {
@@ -372,7 +371,8 @@
                 getData(url, (result) => {
                     if(result){
                         let tree = _.cloneDeep(this.defaultMenu)
-                        this.menuTree = this.handleMenu(tree,result)
+                        let list = new Set(result)
+                        this.menuTree = this.handleMenu(tree,list)
                     }
                 })
             },
@@ -381,12 +381,9 @@
                     if(data[i].children.length !== 0){
                         data[i].children = this.handleMenu(data[i].children,list)
                     }else{
-                        for(let j = list.length-1;j>=0;j--){
-                            if(list[j] === data[i].currentKey){
-                                data[i].checked = true
-                                list.splice(j,1)
-                                break
-                            }
+                        if(list.has(data[i].currentKey)){
+                            data[i].checked = true
+                            list.delete(data[i].currentKey)
                         }
                     }
                 }
@@ -453,21 +450,22 @@
                 this.HandleValid('menuForm',()=>{
                     this.HandleValid('powerForm',()=>{
                         this.HandleAddMenu()
-                        this.showLayer = false
-                        this.getDefaultMenu()
-                        if(this.currentRole){
-                            this.getMenuData()
-                        }
                     })
                 })
                 setTimeout(()=>{this.layerLoading = true},500)
             },
             HandleAddMenu(){
                 let body = this.menuForm
-                body.currentKey = body.parentKey||'' + body.currentKey
-                body.authority = _.cloneDeep(this.powerForm)
+                body.currentKey = (body.parentKey||'') + body.currentKey
+                body.authorityEntity = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/add',()=>{})
+                this.handlePost(body,'/api/menu/add',()=>{
+                    this.showLayer = false
+                    this.getDefaultMenu()
+                    if(this.currentRole){
+                        this.getMenuData()
+                    }
+                })
             },
 
             //打开添加角色
@@ -509,7 +507,6 @@
                     this.HandleValid('powerForm',()=>{
                         this.showEditLayer = false
                         this.HandleEditMenu()
-                        this.getDefaultMenu()
                     })
                 })
                 setTimeout(()=>{this.layerEditLoading = true},500)
@@ -523,7 +520,9 @@
                 let body = this.editForm
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
-                this.handlePost(body,'/api/menu/update',()=>{})
+                this.handlePost(body,'/api/menu/update',()=>{
+                    this.getDefaultMenu()
+                })
             },
             //编辑时请求权限数据
             getPowerData(id){
