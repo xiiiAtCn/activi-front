@@ -23,7 +23,11 @@ export const fetchDir = {
 }
 export const relTableColumns = [
     {
-        title: 'TokenMeta',
+        title: 'tokenMetaId',
+        key: 'tokenMetaId'
+    },
+    {
+        title: '节点名称',
         key: 'nodeName'
     },
     {
