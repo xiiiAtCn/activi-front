@@ -36,7 +36,7 @@ export default {
                                     this.linkToViewPage(row.id)
                                 }
                             }
-                        }, index)
+                        }, index + 1)
                     }
                 },
                 {
@@ -48,7 +48,7 @@ export default {
                     title: '库所名称',
                     key: 'name',
                     align: 'center'
-                } 
+                }
             ]
         }
     },
@@ -73,7 +73,7 @@ export default {
                     this.tableData = result
                 }
             })
-        
+
     }
 }
 </script>
