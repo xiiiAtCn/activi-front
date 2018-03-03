@@ -38,6 +38,14 @@
                 class="config-table"
             />
         </div>
+        <Modal
+            v-model="modal"
+            :title="modalTitle"
+            @on-ok="modalOK"
+            @on-cancel="modalCancel"
+        >
+            <p>{{modalMessage}}</p>
+        </Modal>
         <mLoading
             :event-bus="bus"
             event-show="token-config-show"
@@ -48,7 +56,17 @@
 </template>
 <script>
 import ConfigTable from './configTable'
-import { fetchDir, EventType } from './constant'
+import mixin from './mixin'
+import { 
+    fetchDir, 
+    EventType, 
+    EditUrl, 
+    TempTemplateId, 
+    ErrMsg, 
+    ViewUrl, 
+    CacheStatus,
+    PageNames
+} from './constant'
 import _ from 'lodash'
 import bus from 'routers/bus'
 
@@ -93,52 +111,34 @@ const ruleTypeList = [
 let generateId = 0
 
 export default {
+    mixins: [mixin],
     components: {
         ConfigTable
     },
     data () {
         return {
+            pageName: PageNames.RulePage,
             tableDefine: [],
             tableData: [],
             tableDataWidthOption: [],
             currentRow: null,
-            templateId: '',
             metaList: [],
-            ist: [],
             // 缓存的keyList key: metaid, value: 下拉选项
             cacheKeyList: {},
             // 显示的keyList key：metaid, value: 下拉选项
             showKeyList: {},
-            bus: bus,
-            requestNum: 0,
             tableDataFinish: false
         }
     },
     watch: {
-        requestNum (val) {
-            if (val == 0) {
-                this.bus.$emit(EventType.hideLoading)
-            } else {
-                this.bus.$emit(EventType.showLoading)
+       tableData: {
+            deep: true,
+            handler () {
+                this.addOptionToTableData()
             }
-        }
-    },
-    mounted () {
-        this.templateId = this.$router.currentRoute.params.tokenId
-        this.$watch('tableData', () => {
-            this.addOptionToTableData()
-        }, {
-            deep: true
-        })
-        this.init()
+       }
     },
     methods: {
-        exit () {
-            let params = this.$router.currentRoute.params
-            this.$router.push({
-                path: `/layoutContent/${params.id}/tokenOverview`
-            })
-        },
         // 添加行
         addRule () {
             this.tableData.push({
@@ -166,16 +166,20 @@ export default {
             this.tableDefine = tableDefine
         },
         init () {
+            this.validatePageStatus(() => {
+                this.getTableData().then(this.getMetaList())
+            })
             this.addOptionToTableDefine()
-
-            this.getTableData().then(this.getMetaList())
         },
         getTableData () {
             this.requestNum++
             this.tableDataFinish = false
             return new Promise((resolve, reject) => {
                 this.setUrl(fetchDir.ruleTableData)
-                    .setPathVariables({templateId: this.templateId})
+                    .setPathVariables({
+                        templateId: this.templateId,
+                        cache: this.cache
+                    })
                     .forGet((result, err) => {
                         this.requestNum--
                         if (err) {
@@ -259,8 +263,6 @@ export default {
                         if (!this.showKeyList[metaId]) {
                             this.$set(this.showKeyList, metaId, [key])
                         } else {
-                            console.log(JSON.stringify(this.showKeyList[metaId]))
-                            console.log(`key: ${key.value}`)
                             let old = this.showKeyList[metaId].find(item => item.value === key.value)
                            
                             if (!old) {
@@ -345,6 +347,8 @@ export default {
                         this.$Message.err(res.message ? res.message : '保存失败')
                     } else {
                         this.$Message.success("保存成功")
+                        this.store.setItem(TempTemplateId, res.data.id)
+                        this.activeId = res.data.id
                         this.init()
                     }
                 })
