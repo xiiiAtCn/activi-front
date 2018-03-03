@@ -71,7 +71,7 @@ export default {
                     title: '库所名称',
                     key: 'name',
                     align: 'center'
-                } 
+                }
             ]
         }
     },
