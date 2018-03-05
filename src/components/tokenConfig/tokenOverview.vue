@@ -4,7 +4,7 @@
         <Card class="content-container">
             <ButtonGroup>
                 <Button
-                    @click="linkToEditPage()"
+                    @click="linkToEditPage"
                     type="primary"
                 >
                     创建库所
@@ -14,14 +14,39 @@
                 :data="tableData"
                 :columns="columns" />
         </Card>
+        <Modal
+            v-model="modal"
+            :title="modalTitle"
+            @on-cancel="modalCancel"
+        >
+            <p class="modal-message">{{modalMessage}}</p>
+            <div slot="footer">
+                <Button 
+                    type="primary" 
+                    long 
+                    size="large" 
+                    @click="modalOK"
+                >
+                    {{okMsg}}
+                </Button>
+            </div>
+        </Modal> 
     </div>
 </template>
 <script>
-import { fetchDir } from './constant'
+import mixin from './mixin'
+import { 
+    fetchDir, 
+    PageNames,
+    TempTemplateId, 
+    ErrMsg 
+} from './constant'
 
 export default {
+    mixins: [mixin],
     data () {
         return {
+            pageName: PageNames.listPage,
             tableData: [],
             columns: [
                 {
@@ -53,27 +78,31 @@ export default {
         }
     },
     methods: {
-        linkToViewPage(id) {
-            this.$router.push({
-                path: `/layoutContent/${this.$router.currentRoute.params.id}/tokenView/${id}`
-            })
-        },
-        linkToEditPage() {
-            this.$router.push({
-                path: `/layoutContent/${this.$router.currentRoute.params.id}/tokenConfig?tokenId=`
-            })
-        }
-    },
-    mounted () {
-        this.setUrl(fetchDir.overviewData)
-            .forGet((result, err) => {
-                if (err) {
-                    this.$Message("获取table数据失败")
-                } else {
-                    this.tableData = result
+        init() {
+            this.validatePageStatus(() => {
+                this.getTableData()
+                this.modalCancel = () => {
+                    this.modal = false
                 }
             })
-
+        },
+        getTableData() {
+            this.setUrl(fetchDir.overviewData)
+                .forGet((result, err) => {
+                    if (err) {
+                        this.$Message("获取table数据失败")
+                    } else {
+                        this.tableData = result
+                    }
+                })
+        },
+        // 如果store中的id与要查看的id不相同，提示信息
+        linkToViewPage(id) {
+            this._goToViewPage(id)
+        },
+        linkToEditPage() {
+            this._goToEditPage()
+        }
     }
 }
 </script>
@@ -84,6 +113,10 @@ export default {
 .config-overview
 .content-container{
     text-align: right;
+}
+.modal-message {
+    font-size: 15px;
+    text-align: center;
 }
 </style>
 

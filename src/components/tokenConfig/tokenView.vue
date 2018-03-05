@@ -7,7 +7,7 @@
             <Col span="12" class="button-area">
                 <ButtonGroup>
                     <Button @click="configToken">编辑meta</Button>
-                    <!-- <Button @click="active">生效</Button> -->
+                    <Button @click="active" :disabled="activeBtnDis">生效</Button>
                     <Button @click="extractConfig">抽取一览配置</Button>
                     <Button @click="exit">退出</Button>
                 </ButtonGroup>
@@ -46,6 +46,30 @@
                 />
             </Col>
         </Row>
+        <Modal
+            v-model="modal"
+            :title="modalTitle"
+            @on-cancel=""
+        >
+            <p class="modal-message">{{modalMessage}}</p>
+            <div slot="footer">
+                <Button
+                    @click="modalCancel"
+                    v-show="!!cancelMsg"
+                    type="error"
+                >
+                    {{cancelMsg}}
+                </Button>
+                <Button 
+                    type="primary" 
+                    :long="!cancelMsg" 
+                    :size="!cancelMsg ? 'large' : null" 
+                    @click="modalOK"
+                >
+                    {{okMsg}}
+                </Button>
+            </div>
+        </Modal> 
         <mLoading
             :event-bus="bus"
             event-show="token-config-show"
@@ -57,7 +81,15 @@
 <script>
 import ConfigTree from './configTree'
 import ConfigTable from './configTable'
-import { fetchDir, traverseTree, relTableColumns, EventType } from './constant'
+import mixin from './mixin'
+import { 
+    fetchDir, 
+    traverseTree, 
+    relTableColumns, 
+    TempTemplateId,
+    CacheStatus,
+    PageNames,
+} from './constant'
 import bus from 'routers/bus'
 import _ from 'lodash'
 
@@ -91,86 +123,89 @@ const tableDefine = [
         key: 'readonly',
         title: 'readonly',
         type: 'checkbox'
+    },
+    {
+        key: 'type',
+        title: 'type',
+        type: 'text'
     }
 ]
 
 export default {
+    mixins: [mixin],
     components: {
         ConfigTree,
         ConfigTable
     },
     data () {
         return {
-            treeId: '',
+            pageName: PageNames.viewPage,
             treeData: [],
             tableDefine: [],
             tableData: [],
             relTableData: [],
             relTableColumns: [],
-            requestNum: 0,
-            bus: bus,
             titleForm: {
                 title: ''
             }
         }
     },
-    mounted () {
-        this.treeId = this.$router.currentRoute.params.tokenId
-        this.init()
-    },
-    watch: {
-        requestNum (val) {
-            if (val == 0) {
-                this.bus.$emit(EventType.hideLoading)
-            } else {
-                this.bus.$emit(EventType.showLoading)
-            }
+    computed: {
+        // 生效按钮disabled状态
+        activeBtnDis () {
+            return !this.activeId
         }
     },
     methods: {
         init () {
-            this.getTreeData()
+            this.validatePageStatus(() => {
+                this.getTreeData()
+            })
             this.tableDefine = _.cloneDeep(tableDefine)
             this.relTableColumns = _.cloneDeep(relTableColumns)
         },
         getTreeData () {
             this.requestNum++
             this.setUrl(fetchDir.treeData)
-                .setPathVariables({templateId: this.treeId})
-                .forGet((result, err) => {
+                .setPathVariables({
+                    templateId: this.templateId,
+                    cache: this.cache
+                })
+                .forGet((res, err) => {
                     this.requestNum--
-                    if (err) {
-                        this.$Message.error('获取treeData失败')
+                    if (err || !res.success) {
+                        this.$Message.error(res.message ? res.message : '获取treeData失败')
                     } else {
-                        traverseTree(result['root'], node => {
+                        traverseTree(res.data['root'], node => {
                             node.expand = true
                         })
-                        this.treeData = [result.root]
-                        this.$set(this.titleForm, 'title', result.treeTitle)
+                        this.treeData = [res.data.root]
+                        this.$set(this.titleForm, 'title', res.data.treeTitle)
                         this.getRelData()
                     }
                 })
+            
         },
         getTableData (nodeId) {
             this.requestNum++
             this.setUrl(fetchDir.viewTableData)
                 .setPathVariables({
-                    templateId: this.treeId,
+                    templateId: this.templateId,
                     nodeId
                 })
-                .forGet((result, err) => {
+                .forGet((res, err) => {
                     this.requestNum--
-                    if (err) {
-                        this.$Message.error("获取tableData失败")
+                    if (err || !res.success) {
+                        this.$Message.error(res.message ? res.message : "获取tableData失败")
                     } else {
-                        this.tableData = result
+                        this.tableData = res.data
                     }
                 })
         },
         getRelData () {
             this.requestNum++
             this.setUrl(fetchDir.relData)
-                .setPathVariables({templateId: this.treeId})
+                .setPathVariables({templateId: this.templateId})
                 .forGet((result, err) => {
                         this.requestNum--
                         if (err) {
@@ -184,25 +219,30 @@ export default {
             this.getTableData(data[0].id)
         },
         configToken () {
-            let params = this.$router.currentRoute.params
-            this.$router.push({
-                path: `/layoutContent/${params.id}/tokenConfig?tokenId=${params.tokenId}`
-            })
+            this._goToEditPage()
         },
         extractConfig () {
-            let params = this.$router.currentRoute.params
-            this.$router.push({
-                path: `/layoutContent/${params.id}/extractConfig/${params.tokenId}`
-            })
-        },
-        exit () {
-            let params = this.$router.currentRoute.params
-            this.$router.push({
-                path: `/layoutContent/${params.id}/tokenOverview`
-            })
+            this._goToRulePage()
         },
         active () {
-
+            if (this.cache === CacheStatus.error) {
+                this.$Message.error('无法生效')
+                console.error(`当前树id: ${this.templateId} 与redis中树id: ${this.activeId}不同`)
+            } else {
+                this.requestNum++
+                this.setUrl(fetchDir.active)
+                    .setPathVariables({templateId: this.activeId})
+                    .forGet((res, err) => {
+                        this.requestNum--
+                        if (err || !res.success) {
+                            this.$Message.error(`${res.message ? res.message : '生效失败'}`)
+                        } else {
+                            this.$Message.success('生效成功')
+                            this.store.setItem(TempTemplateId, '')
+                            this.activeId = ''
+                        }
+                    })
+            }
         }
     }
 }
@@ -228,6 +268,10 @@ export default {
 }
 .footer-container {
     margin-top: 30px;
+}
+.modal-message {
+    font-size: 15px;
+    text-align: center;
 }
 </style>
 <style>

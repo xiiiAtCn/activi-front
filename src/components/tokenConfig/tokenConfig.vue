@@ -125,9 +125,21 @@
 <script>
 import ConfigTree from './configTree'
 import ConfigTable from './configTable'
+import mixin from './mixin'
 import _ from 'lodash'
 import bus from 'routers/bus'
-import { fetchDir, traverseTree, relTableColumns, EventType } from './constant'
+import { 
+    fetchDir, 
+    traverseTree, 
+    relTableColumns, 
+    EventType, 
+    TempTemplateId, 
+    ViewUrl,
+    EditUrl,
+    CacheStatus,
+    ErrMsg,
+    PageNames
+} from './constant'
 
 const tableDefine = [
     {
@@ -164,6 +176,11 @@ const tableDefine = [
         key: 'readonly',
         title: 'readonly',
         type: 'checkbox'
+    },
+    {
+        key: 'type',
+        title: 'type',
+        type: 'text'
     }
 ]
 
@@ -197,14 +214,15 @@ const ModalStatus = {
 }
 
 export default {
+    mixins: [mixin],
     components: {
         ConfigTree,
         ConfigTable
     },
     data () {
         return {
+            pageName: PageNames.editPage, 
             treeData: [],
-            treeId: '',
             tableDefine: [],
             tableData: [],
             metaTypeList: [],
@@ -220,7 +238,6 @@ export default {
             titleForm: {
                 title: ''
             },
-            modal: false,
             formRules: {
                 title: [
                     {
@@ -240,9 +257,6 @@ export default {
             currentRow: null,
             selectedNode: null,
             nextNode: null,
-            bus: bus,
-            // 当前请求总数
-            requestNum: 0,
             // 模态ok回调
             modalOkCB: null,
             // 模态cancel回调
@@ -261,7 +275,7 @@ export default {
             relTableColumns: [],
             relTableData: [],
             // 全选按钮显示text
-            btnText: btnText.selectAll
+            btnText: btnText.selectAll,
         }
     },
     computed: {
@@ -276,31 +290,19 @@ export default {
             return this.tableData.length === 0
         }
     },
-    mounted () {
-        // templateId
-        this.treeId = this.$router.currentRoute.query.tokenId
-        this.init()
-    },
-    watch: {
-        requestNum (val) {
-            if (val == 0) {
-                this.bus.$emit(EventType.hideLoading)
-            } else {
-                this.bus.$emit(EventType.showLoading)
-            }
-        }
-    },
     methods: {
         init () {
             this.resetFormData()
             this.resetConfigTableData()
-            this.getTreeData()
             this.tableDefine = _.cloneDeep(tableDefine)
             this.metaTypeList = _.cloneDeep(metaTypeList)
             this.relTableColumns = _.cloneDeep(relTableColumns)
             this.selectedNode = null
-
             this.currentModalStatus = ModalStatus.none
+
+            this.validatePageStatus(() => {
+                this.getTreeData()
+            })
         },
         // 重置modal相关数据
         resetModalData () {
@@ -317,6 +319,7 @@ export default {
         },
         // modal状态转换
         modalStatusTransition () {
+            this.addMethodToModal()
             switch (this.nextModalStatus) {
                 case ModalStatus.addNode:
                     this.modalTitle = '添加新节点'
@@ -382,11 +385,23 @@ export default {
             }
             this.modal = true
         },
+        addMethodToModal () {
+            // 确认添加节点
+            this.modalOK = () => {
+                this.modalOkCB()
+                this.resetModalData()
+            },
+            // 取消添加节点
+            this.modalCancel = () => {
+                this.modalCancelCB()
+                this.resetModalData()
+            }
+        },
         //------树相关方法------
         // 调用后台接口查询树的数据
         getTreeData () {
             // 没有id直接设为空值
-            if (!this.treeId) {
+            if (!this.templateId) {
                 this.setTreeData({
                     treeId: '',
                     treeTitle: '',
@@ -394,21 +409,31 @@ export default {
             } else {
                 this.requestNum++
                 this.setUrl(fetchDir.treeData)
-                    .setPathVariables({templateId: this.treeId})
-                    .forGet((result, err) => {
+                    .setPathVariables({
+                        templateId: this.templateId,
+                        cache: this.cache    
+                    })
+                    .forGet((res, err) => {
                         this.requestNum--
-                        if (err) {
-                            this.$Message.error('获取treeData失败')
+                        if (err || !res.success) {
+                            this.$Message.error(res.message ? res.message : '获取treeData失败')
                         } else {
-                            this.setTreeData(result)
+                            this.setTreeData(res.data)
                             this.getRelData()
                         }
                     })
             }
         },  
+        // 改变当前url中的templaId
+        changeUrl (templateId) {
+            if (this.templateId !== templateId) {
+                this._goToEditPage(templateId)
+                this.$router.go(0)
+            }
+        },
         // 将后台数据转为组件数据
         setTreeData (resData) {
-            this.treeId = resData.treeId
+            this.changeUrl(resData.treeId)
             this.$set(this.titleForm, 'title', resData.treeTitle)
             // 为每个节点设置初始值
             traverseTree(resData['root'], (node) => {
@@ -532,7 +557,7 @@ export default {
             } else {
                 this.setUrl(fetchDir.delData)
                     .setPathVariables({
-                        templateId: this.treeId,
+                        templateId: this.templateId,
                         nodeId: node.node.id
                     })
                     .forGet((res, err) => {
@@ -543,16 +568,6 @@ export default {
                         }
                     })
             }
-        },
-        // 确认添加节点
-        modalOK () {
-            this.modalOkCB()
-            this.resetModalData()
-        },
-        // 取消添加节点
-        modalCancel () {
-            this.modalCancelCB()
-            this.resetModalData()
         },
         // 点击节点
         nodeClick (root, node, data) {
@@ -572,13 +587,13 @@ export default {
         // 获取表单数据
         getFormData () {
             // 没有id各项为空
-            if (!this.treeId) {
+            if (!this.templateId) {
                 this.resetFormData()
             } else {
                 this.requestNum++
                 this.setUrl(fetchDir.formData)
                     .setPathVariables({
-                        templateId: this.treeId
+                        templateId: this.templateId
                     })
                     .setQuery({
                         nodeId: this.selectedNode.node.id ? this.selectedNode.node.id : ''
@@ -650,21 +665,15 @@ export default {
                     metaId: this.formData.metaId
                 })
                 .setQuery({
-                    templateId: this.treeId,
+                    templateId: this.templateId,
                     nodeId
                 })
-                .forGet((result, err) => {
+                .forGet((res, err) => {
                     this.requestNum--
-                    if (err) {
-                        this.$Message.error("获取tableData失败")
+                    if (err || !res.success) {
+                        this.$Message.error(res.message ? res.message : "获取tableData失败")
                     } else {
-                        this.tableDataAddStatus(result)
-                        // const enabledRow = result.filter(row => row.enabled === true)
-                        // if (enabledRow && enabledRow.length === result.length) {
-                        //     this.btnText = btnText.cancel
-                        // } else {
-                        //     this.btnText = btnText.selectAll
-                        // }
+                        this.tableDataAddStatus(res.data)
                     }
                 })
         },
@@ -701,14 +710,14 @@ export default {
             this.tableData = []   
         },
         getRelData () {
-            if (!this.treeId) {
+            if (!this.templateId) {
                 this.relTableData = []
                 return
             }
             this.requestNum++
             this.setUrl(fetchDir.relData)
                 .setPathVariables({
-                    templateId: this.treeId
+                    templateId: this.templateId
                 })
                 .forGet((result, err) => {
                     this.requestNum--
@@ -720,13 +729,6 @@ export default {
                 })
         },
         //------按钮操作相关方法------
-        // 退出 页面跳转
-        exit () {
-            let params = this.$router.currentRoute.params
-            this.$router.push({
-                path: `/layoutContent/${params.id}/tokenOverview`
-            })
-        },
         // 保存
         save () {
             let result = true
@@ -771,7 +773,7 @@ export default {
                 if (result === true) {
                     this.requestNum++
                         this.setUrl(fetchDir.saveData).setBody({
-                            treeId: this.treeId,
+                            treeId: this.templateId,
                             treeTitle: this.titleForm.title,
                             nodeId: this.selectedNode.node.id ? this.selectedNode.node.id : '',
                             selfId: this.selectedNode.nodeKey,
@@ -784,7 +786,9 @@ export default {
                                 this.$Message.err(res.message ? res.message : '保存失败')
                             } else {
                                 this.$Message.success("保存成功")
-                                this.treeId = res.data.id
+                                this.store.setItem(TempTemplateId, res.data.id)
+                                this.activeId = res.data.id
+                                this.changeUrl(res.data.id)
                                 this.init()
                             }
                         })
