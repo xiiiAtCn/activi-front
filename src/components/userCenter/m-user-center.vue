@@ -212,17 +212,13 @@
             },
             //新建用户
             openLayer(){
-                getData('/api/role/roles', (result) => {
-                    if(result){
-                        this.defaultRole = result
-                        this.titleText = '新建用户'
-                        this.changeRole = false
-                        this.formItem = _.cloneDeep(this.defaultForm)
-                        this.showLayer = true
-                        this.layerLoading = true
-                    }
+                this.getDefaultRole(()=>{
+                    this.titleText = '新建用户'
+                    this.changeRole = false
+                    this.formItem = _.cloneDeep(this.defaultForm)
+                    this.showLayer = true
+                    this.layerLoading = true
                 })
-
             },
             handleOk(){
                 this.layerLoading = false
@@ -284,22 +280,28 @@
                     this.formItem.roles.push(List[i].id)
                 }
                 this.changeRole = true
-                this.getDefaultRole()
+                this.getDefaultRole(()=>{
+                    this.showLayer = true
+                    this.titleText = '分配用户权限'
+                    this.layerLoading = true
+                })
             },
             //获取所有可分配的角色
-            getDefaultRole(){
+            getDefaultRole(callback){
                 getData('/api/role/roles', (result) => {
                     if(result){
+                        result.forEach((v,i)=>{
+                            result[i] = this.filterObj(v)
+                        })
                         this.defaultRole = result
-                        this.showLayer = true
-                        this.titleText = '分配用户权限'
-                        this.layerLoading = true
+                        callback()
                     }
                 })
             },
             //提交角色更改
             HandleChangeRole(){
                 let body = this.getRoleList(this.formItem.roles)
+
                 let url ={
                     method:'POST',
                     body: body,
@@ -409,6 +411,15 @@
                 Object.keys(this[name]).forEach(v=>{
                     this[name][v] = ''
                 })
+            },
+            //过滤对象属性null
+            filterObj(obj){
+                Object.keys(obj).forEach(value => {
+                    if(obj[value] === null ){
+                        delete obj[value]
+                    }
+                })
+                return obj
             }
         }
     }

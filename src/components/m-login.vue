@@ -17,7 +17,7 @@
                         <span>{{errorMessage}}</span>
                     </Form-item>
                     <Form-item class="form-element" label="用户名" prop="loginName">
-                        <Input type="text" placeholder="请输入您的账号" v-model="form.loginName" />
+                        <Input type="text" placeholder="请输入您的账号" v-model="form.loginName" autofocus/>
                     </Form-item>
                     <Form-item class="form-element" label="密码" prop="password" >
                         <Input type="password" placeholder="请输入您的密码" v-model="form.password" @on-enter="login"/>
@@ -40,11 +40,11 @@
                         </div>
                         <a href="javascript:;" class="remember"><span>忘记密码？</span></a>
                     </div>
-                    <Button type="primary" @click="login" class="tab">登录</Button>
+                    <Button style="margin-top: 40px" type="primary" @click="login" class="tab">登录</Button>
                 </Form>
                 <Form id="registerForm"  v-show="!switchForm" :labelWidth="labelWidth" :model="registerForm" :rules="registerRules" ref="registerForm">
                     <FormItem class="form-element" label="用户名" prop="username">
-                        <Input v-model="registerForm.username" placeholder="请输入用户名" ></Input>
+                        <Input v-model="registerForm.username" placeholder="请输入用户名"></Input>
                     </FormItem>
                     <FormItem class="form-element" label="昵称" prop="nickName">
                         <Input v-model="registerForm.nickName" placeholder="请输入昵称"></Input>
@@ -86,6 +86,10 @@
     export default{
         data () {
             const nameValid =(rule, val, callback)=>{
+                if(!/^[A-Za-z0-9-_]{1,}$/.test(val)){
+                    callback('用户名必须为字母，数字，“-”或“_”组成')
+                }
+
                 let url ={
                     pathParams:{
                         username : val
@@ -221,7 +225,8 @@
     * Style Declarations
     **/
     html, body {
-        height:100%
+        height:100%;
+        min-height: 500px;
     }
     body {
         background:#fff;
@@ -234,6 +239,7 @@
         width:60%;
         height:100%;
         margin:0 auto;
+        min-height: 500px;
     }
     header{
         width:80%;
@@ -259,20 +265,19 @@
         float:left
     }
     main{
-        width:80%;
-        height:70%;
+        width:900px;
+        min-height:520px;
         margin:0 auto;
-        margin-top:70px;
+        margin-top:90px;
     }
     img.pic{
         float:left;
-        width:43%;
-        height:55%;
+        width:400px;
     }
     .message{
         float:right;
-        width:50%;
-        height:55%;
+        width:450px;
+        min-height:350px;
         border-radius:3px;
         border:1px solid #ccc;
         text-align:center
@@ -307,7 +312,7 @@
     }
     footer{
         height:50px;
-        width:60%;
+        width:600px;
         margin:0 auto;
         text-align:center
     }

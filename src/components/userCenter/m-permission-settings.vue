@@ -165,7 +165,7 @@
                 }else if(!/^.{1,254}$/.test(val)){
                     callback('输入的字符数太多了！')
                     return
-                }else if(!/^[0-9]$/.test(val)){
+                }else if(!/^[0-9]*$/.test(val)){
                     callback('key值必须为数字！')
                     return
                 }else if(this.cKey === val){
@@ -584,8 +584,8 @@
                 })
                 if(data.id){this.getPowerData(data.id)}
 
-                this.cKey = data.currentKey
                 this.editForm.currentKey = this.editForm.currentKey.replace(this.editForm.parentKey,'')
+                this.cKey = this.editForm.currentKey
 
                 this.showEditLayer = true
                 this.layerEditLoading = true
