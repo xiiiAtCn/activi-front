@@ -69,126 +69,139 @@ export default {
             let result = []
             this.define.forEach((column, index) => {
                 let render = null
-                switch (column.type) {
-                    case TableFieldType.checkbox:
-                        render = (h, {row, column, index}) => {
-                            let disabled = false
-                            if (this.disabled === true || this.disabled === false) {
-                                disabled = this.disabled
-                            }
-                            // if (row._compRowDisabled === false || row._compRowDisabled === true) {
-                            //     disabled = row._compRowDisabled
-                            // }
-                            return h('Checkbox', {
-                                    props: {
-                                        value: row[column.key],
-                                        disabled: disabled
-                                    },
-                                    on: {
-                                        input: (value) => {
-                                            this.changeModel(index, column.key, value)
-                                        }
-                                    }
-                                })
-                        }
-                        break
-                    case TableFieldType.text:
-                        render = (h, {row, column, index}) => {
-                            return h('span', row[column.key])
-                        }
-                        break
-                    case TableFieldType.input:
-                        render = (h, {row, column, index}) => {
-                            let key = column.key
-                            let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
-
-                            return h('tableItem', {
-                                props: this.getTableItemProp(index, key, testId)
-                            }, [
-                                h('Input', {
-                                    props: {
-                                        value: row[key],
-                                        disabled: this.disabled
-                                    },
-                                    on: {
-                                        'on-blur': (event) => {
-                                            this.changeModel(index, key, event.target.value)
-                                            this.$nextTick(() => {
-                                                let comp = this.getFieldsById(testId)
-                                                if (comp) {
-                                                    comp.validate()
-                                                }
-                                            })
-                                        }
-                                    }
-                                })
-                            ])
-                        }
-                        break
-                    case TableFieldType.select:
-                        render = (h, {row, column, index}) => {
-                            let key = column.key
-                            let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
-                            let options = []
-                            if (row[key].options && row[key].options.length >= 0) {
-                                options = row[key].options
-                            } else {
-                                options = this.define.filter(item => {
-                                    if (item.key === column.key) {
-                                        return true
-                                    } else {
-                                        return false
-                                    }
-                                })
-                                if (!options || options.length === 0 
-                                             || !options[0].option 
-                                             || options[0].option.length === 0) {
-                                    throw new Error(`configTable中select组件的define没有设置option数据`)
+                if (!!column.render) {
+                    render = column.render
+                } else {
+                    switch (column.type) {
+                        case TableFieldType.checkbox:
+                            render = (h, {row, column, index}) => {
+                                let disabled = false
+                                if (this.disabled === true || this.disabled === false) {
+                                    disabled = this.disabled
                                 }
-                                options = options[0].option
-                            }
-                            
-                            return h('tableItem', {
-                                props: this.getTableItemProp(index, key, testId)
-                            }, [
-                                h('Select', {
-                                    props: {
-                                        value: _typeof(row[column.key]) === 'object' ? 
-                                            row[column.key].value : 
-                                            row[column.key],
-                                        transfer: true,
-                                        disabled: this.disabled
-                                    },
-                                    on: {
-                                        'on-change': (value) => {
-                                            this.changeModel(index, column.key, value)
-                                            this.$nextTick(() => {
-                                                let comp = this.getFieldsById(testId)
-                                                if (comp) {
-                                                    comp.validate()
-                                                }
-                                            })
-                                        }
-                                    }
-                                }, options.map(option => {
-                                    return h('Option', {
+                                // if (row._compRowDisabled === false || row._compRowDisabled === true) {
+                                //     disabled = row._compRowDisabled
+                                // }
+                                return h('Checkbox', {
                                         props: {
-                                            value: option.value
+                                            value: row[column.key],
+                                            disabled: disabled
+                                        },
+                                        on: {
+                                            input: (value) => {
+                                                this.changeModel(index, column.key, value)
+                                            }
                                         }
-                                    }, option.label)
-                                }))
-                            ])
-                        }
-                        break
-                    default:
-                        throw new Error(`configTable不支持类型: ${column.type}`)
+                                    })
+                            }
+                            break
+                        case TableFieldType.text:
+                            render = (h, {row, column, index}) => {
+                                return h('span', row[column.key])
+                            }
+                            break
+                        case TableFieldType.input:
+                            render = (h, {row, column, index}) => {
+                                let key = column.key
+                                let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
+    
+                                return h('tableItem', {
+                                    props: this.getTableItemProp(index, key, testId)
+                                }, [
+                                    h('Input', {
+                                        props: {
+                                            value: row[key],
+                                            disabled: this.disabled
+                                        },
+                                        on: {
+                                            'on-blur': (event) => {
+                                                this.changeModel(index, key, event.target.value)
+                                                this.$nextTick(() => {
+                                                    let comp = this.getFieldsById(testId)
+                                                    if (comp) {
+                                                        comp.validate()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                ])
+                            }
+                            break
+                        case TableFieldType.select:
+                            render = (h, {row, column, index}) => {
+                                let key = column.key
+                                let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
+                                let options = []
+                                if (row[key].options && row[key].options.length >= 0) {
+                                    options = row[key].options
+                                } else {
+                                    options = this.define.filter(item => {
+                                        if (item.key === column.key) {
+                                            return true
+                                        } else {
+                                            return false
+                                        }
+                                    })
+                                    if (!options || options.length === 0 
+                                                 || !options[0].option 
+                                                 || options[0].option.length === 0) {
+                                        throw new Error(`configTable中select组件的define没有设置option数据`)
+                                    }
+                                    options = options[0].option
+                                }
+                                
+                                return h('tableItem', {
+                                    props: this.getTableItemProp(index, key, testId)
+                                }, [
+                                    h('Select', {
+                                        props: {
+                                            value: _typeof(row[column.key]) === 'object' ? 
+                                                row[column.key].value : 
+                                                row[column.key],
+                                            transfer: true,
+                                            disabled: this.disabled
+                                        },
+                                        on: {
+                                            'on-change': (value) => {
+                                                this.changeModel(index, column.key, value)
+                                                this.$nextTick(() => {
+                                                    let comp = this.getFieldsById(testId)
+                                                    if (comp) {
+                                                        comp.validate()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }, options.map(option => {
+                                        return h('Option', {
+                                            props: {
+                                                value: option.value
+                                            }
+                                        }, option.label)
+                                    }))
+                                ])
+                            }
+                            break
+                        default:
+                            throw new Error(`configTable不支持类型: ${column.type}`)
+                    }
                 }
 
-                result.push({
-                    title: column.title,
-                    key: column.key,
-                    render
-                })
+                if (!column.width) {
+                    result.push({
+                        title: column.title,
+                        key: column.key,
+                        render
+                    })
+                } else {
+                    result.push({
+                        title: column.title,
+                        key: column.key,
+                        render,
+                        width: column.width
+                    })
+                }
             })
 
             return result
