@@ -10,6 +10,7 @@ export const fetchDir = {
     // 查看页面
     viewTableData: "/api/placeConfig/cache/getTableData/{templateId}/{nodeId}",
     active: "/api/placeConfig/cache/active/{templateId}",
+    delCache: "/api/placeConfig/cache/delCache",
     // 编辑页面
     metaList: "/api/placeConfig/cache/getFormMetaList/{type}",
     formData: "/api/placeConfig/cache/getFormData/{templateId}",
@@ -20,7 +21,12 @@ export const fetchDir = {
     ruleTableData: "/api/placeConfig/cache/getRule/{templateId}/{cache}",
     ruleMetaList: "/api/placeConfig/cache/getMetaList/{templateId}",   
     ruleKeyList: "/api/placeConfig/cache/getKeyList/{templateId}/{tokenMetaId}",
-    saveRule: "/api/placeConfig/cache/saveRule"
+    saveRule: "/api/placeConfig/cache/saveRule",
+    // 资源选择
+    resourceList: "/api/placeConfig/cache/getResourceList",
+    saveResource: "/api/placeConfig/cache/saveResource",
+    // 变迁配置
+    configList: "/api/placeConfig/getConfigList"
 }
 export const relTableColumns = [
     {
@@ -40,7 +46,9 @@ export const PageNames = {
     listPage: 'listPage',
     viewPage: 'viewPage',
     editPage: 'editPage',
-    RulePage: 'rulePage'
+    RulePage: 'rulePage',
+    transitionPage: 'transitionPage',
+    resourcePage: 'resourcePage'
 }
 // 缓存状态
 export const CacheStatus = {
@@ -83,5 +91,10 @@ export function EditUrl (id, templateId) {
 export function RuleUrl (id, templateId) {
     return `/layoutContent/${id}/extractConfig/${templateId}`
 }
-
+export function TransitionUrl (id) {
+    return `/layoutContent/${id}/transitionConfig` 
+}
+export function ResourceUrl (id, templateId) {
+    return `/layoutContent/${id}/resourceSelect/${templateId}`
+}
 

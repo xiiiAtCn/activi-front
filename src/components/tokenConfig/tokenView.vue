@@ -9,6 +9,7 @@
                     <Button @click="configToken">编辑meta</Button>
                     <Button @click="active" :disabled="activeBtnDis">生效</Button>
                     <Button @click="extractConfig">抽取一览配置</Button>
+                    <Button @click="selectResource">资源选择</Button>
                     <Button @click="exit">退出</Button>
                 </ButtonGroup>
             </Col>
@@ -223,6 +224,9 @@ export default {
         },
         extractConfig () {
             this._goToRulePage()
+        },
+        selectResource () {
+            this._goToResourcePage()
         },
         active () {
             if (this.cache === CacheStatus.error) {

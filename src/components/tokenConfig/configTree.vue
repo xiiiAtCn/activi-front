@@ -4,7 +4,6 @@
             ref="tree"
             :data="data"
             :render="renderTree"
-            @on-select-change="test"
         />
     </div>
 </template>
@@ -55,9 +54,6 @@ export default {
         }
     },
     methods: {
-        test () {
-            debugger
-        },
         renderTree (h, {root, node, data}) {
             let plusButton = h('Button', {
                     props: Object.assign({}, this.buttonProps, {
@@ -69,9 +65,6 @@ export default {
                     on: {
                         click: (event) => { 
                             event.stopPropagation()
-                            // root.forEach(treeNode => {
-                            //     this.$set(treeNode.node, 'selected', false)
-                            // })
                             this.nodeAdd(root, node, data) 
                         }
                     }

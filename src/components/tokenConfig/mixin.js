@@ -3,13 +3,17 @@ import {
     ViewUrl,
     EditUrl,
     RuleUrl,
+    ResourceUrl,
+    TransitionUrl,
     CacheStatus,
+    fetchDir,
     PageNames,
     TempTemplateId,
     EventType,
     ErrMsg
 } from './constant'
 import bus from 'routers/bus'
+import { resolve } from 'url';
 
 const mixin = {
     data () {
@@ -93,9 +97,12 @@ const mixin = {
                             this.active()
                         }
                         this.modalCancel = () => {
-                            this.store.setItem(TempTemplateId, '')
-                            this.activeId = ''
-                            this._goToListPage()
+                            this.delCache()
+                                .then(() => {
+                                    this.store.setItem(TempTemplateId, '')
+                                    this.activeId = ''
+                                    this._goToListPage()
+                                })
                         }
                         this.modal = true
                     } else {
@@ -112,17 +119,41 @@ const mixin = {
                 case PageNames.RulePage:
                     this._goToViewPage()
                     break
+                case PageNames.transitionPage:
+                    // todo 添加判断
+                    this._goToListPage()
+                    break
+                case PageNames.resourcePage:
+                    this._goToViewPage()
+                    break
                 default:
                     const errMsg = `当前页面名称有误, pageName: ${this.pageName}`
                     throw new Error(errMsg)
             }
+        },
+        // 删除redis中的缓存dto
+        delCache () {
+            return new Promise((resolve, reject) => {
+                this.requestNum++
+                this.setUrl(fetchDir.delCache)
+                    .forGet((res, err) => {
+                        this.requestNum--
+                        if (err || res.result === false) {
+                            this.$Message.err(res.message ? res.message : '清空失败')
+                            reject()
+                        } else {
+                            resolve()
+                            this.$Message.success("清除成功")
+                        }
+                    })
+            })  
         },
         // 检查页面状态，如果状态不对提示信息
         validatePageStatus (callback) {
             this.modalTitle = ErrMsg.activeTitle
             this.modalOK = () => {
                 this._goToViewPage(this.activeId)
-                this.$router.go(0)
+                // this.$router.go(0)
             }
             this.modalCancel = () => {
                 this.modal = false
@@ -164,6 +195,18 @@ const mixin = {
         _goToRulePage() {
             this.$router.push({
                 path: RuleUrl(this.routerParam.id, this.templateId)
+            })
+        },
+        // 变迁配置页
+        _goToTransitionPage() {
+            this.$router.push({
+                path: TransitionUrl(this.routerParam.id)
+            })
+        },
+        // 资源选择页
+        _goToResourcePage() {
+            this.$router.push({
+                path: ResourceUrl(this.routerParam.id, this.templateId)
             })
         }
     },

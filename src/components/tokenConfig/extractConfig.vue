@@ -8,6 +8,7 @@
                 <ButtonGroup>
                     <Button 
                         @click="save"
+                        type="primary"
                         :disabled="!tableDataFinish"
                     >
                         保存
@@ -81,7 +82,6 @@ import {
     PageNames
 } from './constant'
 import _ from 'lodash'
-import bus from 'routers/bus'
 
 const tableDefine = [
     {
@@ -350,12 +350,14 @@ export default {
             this.currentRow = newRow
         },
         save () {
+            this.requestNum++
             this.setUrl(fetchDir.saveRule)
                 .setBody({
                     templateId: this.templateId,
                     rules: this.tableData
                 })
                 .forPost((res, err) => {
+                    this.requestNum--
                     if (err || res.result === false) {
                         this.$Message.err(res.message ? res.message : '保存失败')
                     } else {

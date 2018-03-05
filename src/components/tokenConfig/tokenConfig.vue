@@ -127,7 +127,6 @@ import ConfigTree from './configTree'
 import ConfigTable from './configTable'
 import mixin from './mixin'
 import _ from 'lodash'
-import bus from 'routers/bus'
 import { 
     fetchDir, 
     traverseTree, 

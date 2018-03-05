@@ -79,10 +79,13 @@ const stackChart = resolve => require(['../components/chart/chartContainer.vue']
 //urlSection
 const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
+// 库所配置
 const tokenOverview = resolve => require(['../components/tokenConfig/tokenOverview.vue'], resolve)
 const tokenConfig = resolve => require(['../components/tokenConfig/tokenConfig.vue'], resolve)
 const tokenView = resolve => require(['../components/tokenConfig/tokenView.vue'], resolve)
 const extractConfig = resolve => require(['../components/tokenConfig/extractConfig.vue'], resolve)
+const transitionConfig = resolve => require(['../components/tokenConfig/transitionConfig.vue'], resolve)
+const resourceSelect = resolve => require(['../components/tokenConfig/resourceSelect.vue'], resolve)
 
 //用户中心
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
@@ -259,6 +262,16 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/:id/extractConfig/:tokenId',
                     component: extractConfig
+                },
+                // 变迁配置
+                {
+                    path: '/layoutContent/:id/transitionConfig',
+                    component: transitionConfig
+                },
+                // 资源选择
+                {
+                    path: '/layoutContent/:id/resourceSelect/:tokenId',
+                    component: resourceSelect
                 }
             ]
         },

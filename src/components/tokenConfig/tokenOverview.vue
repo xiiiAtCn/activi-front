@@ -9,6 +9,11 @@
                 >
                     创建库所
                 </Button>
+                <Button
+                    @click="linkTotransitionPage"
+                >
+                    变迁配置
+                </Button>
             </ButtonGroup>
             <Table
                 :data="tableData"
@@ -102,6 +107,9 @@ export default {
         },
         linkToEditPage() {
             this._goToEditPage()
+        },
+        linkTotransitionPage () {
+            this._goToTransitionPage()
         }
     }
 }
