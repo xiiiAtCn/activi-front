@@ -44,7 +44,20 @@
             @on-ok="modalOK"
             @on-cancel="modalCancel"
         >
-            <p>{{modalMessage}}</p>
+            <p class="modal-message">{{modalMessage}}</p>
+            <div slot="footer">
+                <!-- <Button @click="modalCancel">
+                    {{cancelMsg}}
+                </Button> -->
+                <Button 
+                    type="primary" 
+                    long 
+                    size="large" 
+                    @click="modalOK"
+                >
+                    {{okMsg}}
+                </Button>
+            </div>
         </Modal>
         <mLoading
             :event-bus="bus"
@@ -362,6 +375,10 @@ export default {
 }
 .button-area {
     text-align: right;
+}
+.modal-message {
+    font-size: 15px;
+    text-align: center;
 }
 </style>
 

@@ -51,12 +51,21 @@
             :title="modalTitle"
             @on-cancel=""
         >
-            <p>{{modalMessage}}</p>
+            <p class="modal-message">{{modalMessage}}</p>
             <div slot="footer">
-                <Button @click="modalCancel">
+                <Button
+                    @click="modalCancel"
+                    v-show="!!cancelMsg"
+                    type="error"
+                >
                     {{cancelMsg}}
                 </Button>
-                <Button @click="modalOK">
+                <Button 
+                    type="primary" 
+                    :long="!cancelMsg" 
+                    :size="!cancelMsg ? 'large' : null" 
+                    @click="modalOK"
+                >
                     {{okMsg}}
                 </Button>
             </div>
@@ -259,6 +268,10 @@ export default {
 }
 .footer-container {
     margin-top: 30px;
+}
+.modal-message {
+    font-size: 15px;
+    text-align: center;
 }
 </style>
 <style>

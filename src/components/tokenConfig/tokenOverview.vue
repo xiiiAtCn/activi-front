@@ -19,12 +19,14 @@
             :title="modalTitle"
             @on-cancel="modalCancel"
         >
-            <p>{{modalMessage}}</p>
+            <p class="modal-message">{{modalMessage}}</p>
             <div slot="footer">
-                <Button @click="modalCancel">
-                    {{cancelMsg}}
-                </Button>
-                <Button @click="modalOK">
+                <Button 
+                    type="primary" 
+                    long 
+                    size="large" 
+                    @click="modalOK"
+                >
                     {{okMsg}}
                 </Button>
             </div>
@@ -111,6 +113,10 @@ export default {
 .config-overview
 .content-container{
     text-align: right;
+}
+.modal-message {
+    font-size: 15px;
+    text-align: center;
 }
 </style>
 

@@ -49,8 +49,8 @@ export const CacheStatus = {
     error: 'error'
 }
 export const ErrMsg = {
-    active: '当前有尚未生效的库所信息，是否生效它？（如不生效未生效信息会被清除）',
-    activeTitle: '是否生效'
+    active: '当前有尚未生效的库所信息，请生效或清除它',
+    activeTitle: '请生效'
 }
 // 事件类型
 export const EventType = {

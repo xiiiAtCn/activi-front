@@ -86,7 +86,7 @@ const mixin = {
                     // 判断当前数据是否未生效，如果未生效提示信息
                     if (!!this.activeId && this.activeId === this.templateId) {
                         this.modalTitle = '是否生效'
-                        this.modalMessage = '当前库所信息未生效，是否生效它（如不生效，当前未生效信息会被清除）'
+                        this.modalMessage = '当前库所信息未生效，是否生效它'
                         this.okMsg = '生效'
                         this.cancelMsg = '清除未生效数据并退出'
                         this.modalOK = () => {
@@ -103,7 +103,11 @@ const mixin = {
                     }
                     break
                 case PageNames.editPage:
-                    this._goToViewPage()
+                    if (!this.templateId) {
+                        this._goToListPage()
+                    } else {
+                        this._goToViewPage()
+                    }
                     break
                 case PageNames.RulePage:
                     this._goToViewPage()
@@ -118,12 +122,12 @@ const mixin = {
             this.modalTitle = ErrMsg.activeTitle
             this.modalOK = () => {
                 this._goToViewPage(this.activeId)
+                this.$router.go(0)
             }
             this.modalCancel = () => {
                 this.modal = false
             }
             this.modalMessage = ErrMsg.active
-            this.cancelMsg = '取消'
             this.okMsg = '生效或清除'
             // 当前页面错误状态提示信息
             if (this.cache === CacheStatus.error) {
