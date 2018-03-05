@@ -117,11 +117,11 @@
                 v-if="showAllRow"
                 type="arrow-up-b"></Icon>
         </Button>
-        <div 
+        <!-- <div 
             v-show=" !filterData || filterData.length === 0"
             class="no-data-container">
             {{ option.noDataText }}
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
