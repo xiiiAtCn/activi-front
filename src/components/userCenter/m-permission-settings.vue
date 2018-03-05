@@ -26,14 +26,14 @@
                                 <Input v-model="menuForm.labelName" placeholder="请输入菜单名称"></Input>
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
-                                <Input v-model="menuForm.currentKey" placeholder="key值为父节点key值+自定义数字">
-                                    <span slot="prepend" v-show="menuForm.parentKey">{{menuForm.parentKey}}</span>
+                                <Input v-model="menuForm.currentKey" placeholder="key值为父菜单key值+自定义数字">
+                                    <span slot="prepend" >{{menuForm.parentKey||'无父菜单'}}</span>
                                 </Input>
                             </FormItem>
                             <FormItem label="描述">
                                 <Input v-model="menuForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
-                            <FormItem label="URL">
+                            <FormItem label="URL" v-if="menuForm.parentKey">
                                 <Input v-model="menuForm.url" placeholder="请输入URL"></Input>
                             </FormItem>
                             <FormItem label="背景图" v-if="!menuForm.parentKey">
@@ -74,7 +74,8 @@
                                 <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
-                                <Input v-model="editForm.currentKey" placeholder="key值为父节点key值+自定义数字">
+                                <Input v-model="editForm.currentKey" placeholder="key值为父菜单key值+自定义数字" readonly disabled>
+                                    <span slot="prepend" >{{editForm.parentKey||'无父菜单'}}</span>
                                 </Input>
                             </FormItem>
                             <FormItem label="描述" prop="description">
@@ -164,13 +165,16 @@
                 }else if(!/^.{1,254}$/.test(val)){
                     callback('输入的字符数太多了！')
                     return
+                }else if(!/^[0-9]$/.test(val)){
+                    callback('key值必须为数字！')
+                    return
                 }else if(this.cKey === val){
                     callback()
                     return
                 }
                 let url ={
                     pathParams:{
-                        currentKey : (this.menuForm.parentKey||'') + val
+                        currentKey : (this.menuForm.parentKey||this.editForm.parentKey||'') + val
                     },
                     url:'/api/menu/usable/{currentKey}'
                 }
@@ -349,6 +353,7 @@
                 })
                 this.roleTree = roleTree
             },
+
             //获得默认的菜单列表并处理
             getDefaultMenu(){
                 getData('/api/menu/menus', (result) => {
@@ -580,7 +585,7 @@
                 if(data.id){this.getPowerData(data.id)}
 
                 this.cKey = data.currentKey
-
+                this.editForm.currentKey = this.editForm.currentKey.replace(this.editForm.parentKey,'')
 
                 this.showEditLayer = true
                 this.layerEditLoading = true
@@ -602,6 +607,7 @@
             },
             HandleEditMenu(){
                 let body = this.editForm
+                body.currentKey = (body.parentKey||'') + body.currentKey
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
                 this.handlePost(body,'/api/menu/update',()=>{

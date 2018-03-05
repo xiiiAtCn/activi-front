@@ -60,6 +60,10 @@
     export default{
         data () {
             const nameValid =(rule, val, callback)=>{
+                if(!/^[A-Za-z0-9-_]{1,}$/.test(val)){
+                    callback('用户名必须为字母，数字，“-”或“_”组成')
+                }
+
                 let url ={
                     pathParams:{
                         username : val
@@ -220,7 +224,6 @@
                 })
 
             },
-            //点击ok
             handleOk(){
                 this.layerLoading = false
                 if(this.changeRole){
@@ -230,11 +233,21 @@
                 }
                 setTimeout(()=>{this.layerLoading = true},500)
             },
-            //点击取消
             handleCancel(){
                 this.showLayer = false
                 this.clearForm('formItem')
                 this.currentData = ''
+            },
+            //提交验证
+            handleSubmit(name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.submitMessage()
+                        this.showLayer = false
+                    } else {
+                        this.$Message.error('验证失败!')
+                    }
+                })
             },
             //提交用户信息
             submitMessage(){
@@ -255,21 +268,77 @@
                     }
                 })
             },
-            //提交验证
-            handleSubmit(name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.submitMessage()
-                        this.showLayer = false
-                    } else {
-                        this.$Message.error('验证失败!')
+
+            //更改角色
+            showChangeRole(){
+                if(!this.currentData){
+                    iView.Message.error('请选择一条数据！')
+                    return
+                }
+                this.formItem.username = _.get(this.currentData,'username')
+                this.formItem.nickName = _.get(this.currentData,'nickName')
+                let List = _.get(this.currentData,'roles',[])
+
+                this.formItem.roles = []
+                for(let i = 0;i<List.length;i++){
+                    this.formItem.roles.push(List[i].id)
+                }
+                this.changeRole = true
+                this.getDefaultRole()
+            },
+            //获取所有可分配的角色
+            getDefaultRole(){
+                getData('/api/role/roles', (result) => {
+                    if(result){
+                        this.defaultRole = result
+                        this.showLayer = true
+                        this.titleText = '分配用户权限'
+                        this.layerLoading = true
                     }
                 })
             },
-            //存id
+            //提交角色更改
+            HandleChangeRole(){
+                let body = this.getRoleList(this.formItem.roles)
+                let url ={
+                    method:'POST',
+                    body: body,
+                    pathParams:{
+                        userId :this.currentData.id
+                    },
+                    url:'/api/user/changeRole/{userId}'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                            this.showLayer = false
+                            this.clearForm('formItem')
+                            this.getUserData()
+                        }else{
+                            iView.Message.info(result.description)
+                        }
+                    }
+                })
+            },
+            //获取可用角色列表
+            getRoleList(role){
+                let list = []
+                let roles = new Set(role)
+                this.defaultRole.forEach(value => {
+                    if(roles.has(value.id)){
+                        list.push(value)
+                        return
+                    }
+                })
+                return list
+            },
+
+            //存行信息
             addId(arg){
                 this.currentData = arg
             },
+
             //按id禁用用户
             delData(){
                 if(!this.currentData){
@@ -290,7 +359,6 @@
                     }
                 })
             },
-
 
             //重置用户信息
             editLayer(){
@@ -332,72 +400,6 @@
                         }
                     }
                 })
-            },
-
-            //更改角色
-            showChangeRole(){
-                if(!this.currentData){
-                    iView.Message.error('请选择一条数据！')
-                    return
-                }
-                this.formItem.username = _.get(this.currentData,'username')
-                this.formItem.nickName = _.get(this.currentData,'nickName')
-                let List = _.get(this.currentData,'roles',[])
-
-                this.formItem.roles = []
-                for(let i = 0;i<List.length;i++){
-                    this.formItem.roles.push(List[i].id)
-                }
-                this.changeRole = true
-                this.getDefaultRole()
-            },
-            //获取所有可分配的角色
-            getDefaultRole(){
-                getData('/api/role/roles', (result) => {
-                    if(result){
-                        this.defaultRole = result
-                        this.showLayer = true
-                        this.titleText = '编辑用户信息'
-                        this.layerLoading = true
-                    }
-                })
-            },
-            //提交角色更改
-            HandleChangeRole(){
-                let body = this.getRoleList(this.formItem.roles)
-                let url ={
-                    method:'POST',
-                    body: body,
-                    pathParams:{
-                        userId :this.currentData.id
-                    },
-                    url:'/api/user/changeRole/{userId}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                            this.showLayer = false
-                            this.clearForm('formItem')
-                            this.getUserData()
-                        }else{
-                            iView.Message.info(result.description)
-                        }
-                    }
-                })
-            },
-
-            //角色列表
-            getRoleList(role){
-                let list = []
-                let roles = new Set(role)
-                this.defaultRole.forEach(value => {
-                    if(roles.has(value.id)){
-                        list.push(value)
-                        return
-                    }
-                })
-                return list
             },
 
             /*工具类*/
