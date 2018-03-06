@@ -14,9 +14,9 @@
 
         <div class="btn">
             <Button @click="selectAll">选中所有</Button>
-            <Button @click="foldMenu">折叠菜单</Button>
             <Button @click="resetSelect">重置菜单</Button>
-            <Button type="primary" @click="handleSubmit">保存</Button>
+            <Button @click="foldMenu">折叠菜单</Button>
+            <Button type="primary" @click="handleSubmitConfirm">保存</Button>
         </div>
 
 
@@ -132,14 +132,6 @@
                 </Row>
             </div>
         </mLayer>
-
-        <Modal
-            v-model="showModal"
-            title="确定删除菜单"
-            @on-ok="modalOk"
-            @on-cancel="modalCancel">
-           <p>您确定要删这条菜单么？</p>
-        </Modal>
     </div>
 </template>
 
@@ -206,7 +198,9 @@
                 defaultMenu:[],
                 menuTree:[],
                 currentRole:'',
+
                 checkList:[],
+                defaultList:[],
 
                 showLayer:false,
                 showRoleLayer:false,
@@ -217,9 +211,6 @@
 
                 currentKey:'',
                 roleTitle:'添加角色',
-
-                showModal:false,
-                menuDeleteData:'',
 
                 menuForm: {
                     labelName: '',
@@ -380,6 +371,7 @@
             },
             handleMenuData(data){
                 let menuTree = []
+                this.defaultList = []
                 menuTree = this.handleTreeData(data)
                 this.defaultMenu = _.cloneDeep(menuTree)
                 this.menuTree = menuTree
@@ -391,6 +383,7 @@
                     if(val.children){
                         children = this.handleTreeData(val.children)
                     }
+                    this.defaultList.push(val.menu.currentKey)
                     menuTree.push({
                         currentKey:val.menu.currentKey,
                         title:val.menu.labelName,
@@ -446,7 +439,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.deleteMenu(data)
+                                            this.deleteMenuConfirm(data)
                                         }
                                     }
                                 }, [
@@ -519,28 +512,33 @@
             },
 
             //提交权限信息
-            handleSubmit(){
+            handleSubmitConfirm(){
                 if(!this.currentRole){
                     iView.Message.warning('请选择角色！')
                     return
                 }
-                let url ={
-                    method:'POST',
-                    pathParams:{
-                        role : this.currentRole
-                    },
-                    body: this.checkList,
-                    url:'/api/role/menus/update/{role}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            this.layerLoading = false
-                            iView.Message.success(result.description)
-                            this.showLayer = false
-                        }else{
-                            iView.Message.info(result.description)
+
+                this.$Modal.info({
+                    title:'确认操作',
+                    content:'您确定要保存该角色对应的菜单么？',
+                    onOk:()=>{
+                        let url ={
+                            method:'POST',
+                            pathParams:{
+                                role : _.cloneDeep(this.currentRole)
+                            },
+                            body: this.checkList,
+                            url:'/api/role/menus/update/{role}'
                         }
+                        getData(url, (result) => {
+                            if(result){
+                                if(result.code === 200 ){
+                                    iView.Message.success(result.description)
+                                }else{
+                                    iView.Message.info(result.description)
+                                }
+                            }
+                        })
                     }
                 })
             },
@@ -678,34 +676,30 @@
             },
 
             //删除菜单
-            deleteMenu(data){
-                this.menuDeleteData = data.id
-                this.showModal = true
-            },
-            modalOk(){
-                let url ={
-                    method:'DELETE',
-                    pathParams:{
-                        id : this.menuDeleteData
-                    },
-                    url:'/api/menu/{id}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            iView.Message.success(result.description)
-                            this.showModal = false
-                            this.menuDeleteData = ''
-                            this.updateMenu()
-                        }else{
-                            iView.Message.info(result.description)
+            deleteMenuConfirm(data){
+                this.$Modal.warning({
+                    title:'确认操作',
+                    content:'您确定要删除该条菜单么？',
+                    onOk:()=>{
+                        let url ={
+                            method:'DELETE',
+                            pathParams:{
+                                id : data.id
+                            },
+                            url:'/api/menu/{id}'
                         }
+                        getData(url, (result) => {
+                            if(result){
+                                if(result.code === 200 ){
+                                    iView.Message.success(result.description)
+                                    result.data && this.updateMenu()
+                                }else{
+                                    iView.Message.info(result.description)
+                                }
+                            }
+                        })
                     }
                 })
-            },
-            modalCancel(){
-                this.showModal = false
-                this.menuDeleteData = ''
             },
 
             //角色树点击事件
@@ -724,9 +718,11 @@
                     v.checked = true
                     bus.$emit('layoutTop')
                 })
+                this.checkList = _.cloneDeep(this.defaultList)
             },
             resetSelect(){
                 this.menuTree = _.cloneDeep(this.defaultMenu)
+                this.checkList = []
                 bus.$emit('layoutTop')
             },
             foldMenu(){
@@ -773,7 +769,8 @@
                 Object.keys(this[name]).forEach(v=>{
                     this[name][v] = ''
                 })
-            }
+            },
+
         }
     }
 </script>
