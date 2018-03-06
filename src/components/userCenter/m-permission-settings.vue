@@ -132,6 +132,14 @@
                 </Row>
             </div>
         </mLayer>
+
+        <Modal
+            v-model="showModal"
+            title="确定删除菜单"
+            @on-ok="modalOk"
+            @on-cancel="modalCancel">
+           <p>您确定要删这条菜单么？</p>
+        </Modal>
     </div>
 </template>
 
@@ -208,6 +216,9 @@
 
                 currentKey:'',
                 roleTitle:'添加角色',
+
+                showModal:false,
+                menuDeleteData:'',
 
                 menuForm: {
                     labelName: '',
@@ -408,7 +419,7 @@
                                 h('span', {
                                     style: {
                                         display: 'inline-block',
-                                        marginRight: '16px'
+                                        marginRight: '2px'
                                     },
                                     on: {
                                         click: () => {
@@ -421,7 +432,29 @@
                                             type: 'plus-round'
                                         },
                                         style: {
-                                            width: '26px',
+                                            width: '15px',
+                                            marginLeft: '6px',
+                                            cursor:'pointer'
+                                        }
+                                    })
+                                ]),
+                                h('span', {
+                                    style: {
+                                        display: 'inline-block',
+                                        marginRight: '2px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.deleteMenu(data)
+                                        }
+                                    }
+                                }, [
+                                    h('Icon', {
+                                        props: {
+                                            type: 'minus-round'
+                                        },
+                                        style: {
+                                            width: '15px',
                                             marginLeft: '6px',
                                             cursor:'pointer'
                                         }
@@ -576,10 +609,7 @@
 
                 this.handlePost(body,'/api/menu/add',()=>{
                     this.showLayer = false
-                    this.getDefaultMenu()
-                    if(this.currentRole){
-                        this.getMenuData()
-                    }
+                    this.updateMenu()
                 })
             },
 
@@ -617,10 +647,7 @@
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
                 this.handlePost(body,'/api/menu/update',()=>{
-                    this.getDefaultMenu()
-                    if(this.currentRole){
-                        this.getMenuData()
-                    }
+                    this.updateMenu()
                 })
             },
             //编辑时请求权限数据
@@ -639,6 +666,45 @@
                         })
                     }
                 })
+            },
+
+            //重新获取菜单列表
+            updateMenu(){
+                this.getDefaultMenu()
+                if(this.currentRole){
+                    this.getMenuData()
+                }
+            },
+
+            //删除菜单
+            deleteMenu(data){
+                this.menuDeleteData = data.id
+                this.showModal = true
+            },
+            modalOk(){
+                let url ={
+                    method:'DELETE',
+                    pathParams:{
+                        id : this.menuDeleteData
+                    },
+                    url:'/api/menu/{id}'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        if(result.code === 200 ){
+                            iView.Message.success(result.description)
+                            this.showModal = false
+                            this.menuDeleteData = ''
+                            this.updateMenu()
+                        }else{
+                            iView.Message.info(result.description)
+                        }
+                    }
+                })
+            },
+            modalCancel(){
+                this.showModal = false
+                this.menuDeleteData = ''
             },
 
             //角色树点击事件
