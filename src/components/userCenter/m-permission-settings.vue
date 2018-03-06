@@ -12,8 +12,12 @@
             </Col>
         </Row>
 
-        <Button class="btn" type="primary" @click="handleSubmit">保存</Button>
-
+        <div class="btn">
+            <Button @click="selectAll">选中所有</Button>
+            <Button @click="foldMenu">折叠菜单</Button>
+            <Button @click="resetSelect">重置菜单</Button>
+            <Button type="primary" @click="handleSubmit">保存</Button>
+        </div>
 
 
         <mLayer :value="showLayer" titleText="添加菜单" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
@@ -429,6 +433,8 @@
                         icon : val.menu.icon,
                         parentKey:val.menu.parentKey||'',
                         children:children,
+                        expand:false,
+                        checked:false
                     })
                 })
                 return menuTree
@@ -645,6 +651,21 @@
                 this.getMenuData()
             },
 
+            //重置，全选，折叠 操作
+            selectAll(){
+                this.menuTree.forEach(v=>{
+                    v.checked = true
+                })
+            },
+            resetSelect(){
+                this.menuTree = _.cloneDeep(this.defaultMenu)
+            },
+            foldMenu(){
+                this.menuTree.forEach(v=>{
+                    v.expand = false
+                })
+            },
+
             /*工具类*/
             //验证信息
             HandleValid(name,callback){
@@ -718,6 +739,9 @@
         position: fixed;
         right: 40px;
         bottom: 50px;
+    }
+    .btn .ivu-btn{
+        margin-left: 10px;
     }
     .tree-container .ivu-tree-title{
         color: #00ff00;
