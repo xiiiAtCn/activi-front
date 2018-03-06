@@ -176,8 +176,8 @@
         },
         methods: {
             initialize(define){
-                document.title = _.get( define , 'title', '无标题')
-                if(document.title === 'null'){document.title = '无标题'}
+                if(define.title){document.title = _.get( define , 'title', '无标题')}
+                else{document.title = '无标题'}
                 this.handleButtonList( define.buttons )
             },
             edit: function (url) {

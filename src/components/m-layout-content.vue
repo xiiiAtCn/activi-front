@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 </Row>
-                <Row class="layout-container">
+                <Row class="layout-container" ref="layout">
                     <div class="layout-content">
                         <transition name="fade" mode="out-in">
                             <router-view></router-view>
@@ -66,6 +66,8 @@
 
 <script>
     import mHead from './m-head.vue'
+    import  bus from '../router/bus'
+
     export default {
         components: {mHead},
         data () {
@@ -190,12 +192,24 @@
             },
             getNickName() {
                 this.setUrl('/api/module/nickName').forGet(data => this.nickName = data)
-            }
+            },
+            handleScrollTop(){
+                let top = this.$refs['layout'].$el
 
+                let interval = setInterval(()=>{
+                    if(top.scrollTop<1){
+                        top.scrollTop =0
+                        clearInterval(interval)
+                    }else{
+                        top.scrollTop = top.scrollTop + (0 - top.scrollTop)/2
+                    }
+                },17)
+            }
         },
         mounted: function () {
             this.getLeftMenu()
             this.getNickName()
+            bus.$on('layoutTop',this.handleScrollTop)
         },
         watch: {
             '$route' () {

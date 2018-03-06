@@ -147,6 +147,7 @@
     import { getData } from 'utils/actionUtils'
     import _ from 'lodash'
     import iView from 'iview'
+    import  bus from '../../router/bus'
 
     export default{
         data () {
@@ -721,14 +722,17 @@
             selectAll(){
                 this.menuTree.forEach(v=>{
                     v.checked = true
+                    bus.$emit('layoutTop')
                 })
             },
             resetSelect(){
                 this.menuTree = _.cloneDeep(this.defaultMenu)
+                bus.$emit('layoutTop')
             },
             foldMenu(){
                 this.menuTree.forEach(v=>{
                     v.expand = false
+                    bus.$emit('layoutTop')
                 })
             },
 
