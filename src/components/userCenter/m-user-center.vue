@@ -11,6 +11,9 @@
             <Col span="24">
                 <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
             </Col>
+            <Col span="24" class="page-container">
+                <Page :total="dataTotal" show-elevator @on-change="pageChange"></Page>
+            </Col>
         </Row>
 
         <mLayer :value="showLayer" :titleText="titleText" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
@@ -139,6 +142,9 @@
                     }
                 ],
                 tableData:[],
+                allData:[],
+                dataTotal:10,
+
                 showLayer:false,
                 layerLoading:false,
                 titleText:'新建用户',
@@ -192,7 +198,7 @@
                 currentData:null,
                 roleList:[],
                 defaultRole:[],
-                changeRole:false
+                changeRole:false,
             }
         },
         watch:{},
@@ -203,13 +209,22 @@
             init(){
                 this.getUserData()
             },
+            //获得角色列表
             getUserData(){
                 getData('/api/users', (result) => {
                     if(result){
-                        this.tableData =result
+                        this.dataTotal = result.length
+                        this.allData = result
+                        this.tableData = result.slice(0,10)
                     }
                 })
             },
+            //切换页
+            pageChange(page){
+                this.currentData = ''
+                this.tableData = this.allData.slice(10*(page-1),10*page)
+            },
+
             //新建用户
             openLayer(){
                 this.getDefaultRole(()=>{
@@ -442,5 +457,9 @@
     }
     .button{
         margin-left: 8px;
+    }
+    .page-container{
+        margin-top: 10px;
+        text-align: right;
     }
 </style>

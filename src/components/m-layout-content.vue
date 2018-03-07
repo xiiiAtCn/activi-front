@@ -400,6 +400,7 @@
     }
     .right-container{
         position: fixed;
+        z-index: 1000;
     }
     .layout-logo{
         position: absolute;
