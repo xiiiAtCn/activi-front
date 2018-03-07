@@ -337,7 +337,6 @@
     }
 
     .exit {
-        font-size: 60%;
         font-weight: bold;
         color: #888888;
         cursor: pointer;
