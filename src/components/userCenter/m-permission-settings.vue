@@ -14,9 +14,9 @@
 
         <div class="btn">
             <Button @click="selectAll">选中所有</Button>
-            <Button @click="foldMenu">折叠菜单</Button>
             <Button @click="resetSelect">重置菜单</Button>
-            <Button type="primary" @click="handleSubmit">保存</Button>
+            <Button @click="foldMenu">折叠菜单</Button>
+            <Button type="primary" @click="handleSubmitConfirm">保存</Button>
         </div>
 
 
@@ -139,6 +139,7 @@
     import { getData } from 'utils/actionUtils'
     import _ from 'lodash'
     import iView from 'iview'
+    import  bus from '../../router/bus'
 
     export default{
         data () {
@@ -197,7 +198,9 @@
                 defaultMenu:[],
                 menuTree:[],
                 currentRole:'',
+
                 checkList:[],
+                defaultList:[],
 
                 showLayer:false,
                 showRoleLayer:false,
@@ -368,6 +371,7 @@
             },
             handleMenuData(data){
                 let menuTree = []
+                this.defaultList = []
                 menuTree = this.handleTreeData(data)
                 this.defaultMenu = _.cloneDeep(menuTree)
                 this.menuTree = menuTree
@@ -379,6 +383,7 @@
                     if(val.children){
                         children = this.handleTreeData(val.children)
                     }
+                    this.defaultList.push(val.menu.currentKey)
                     menuTree.push({
                         currentKey:val.menu.currentKey,
                         title:val.menu.labelName,
@@ -408,7 +413,7 @@
                                 h('span', {
                                     style: {
                                         display: 'inline-block',
-                                        marginRight: '16px'
+                                        marginRight: '2px'
                                     },
                                     on: {
                                         click: () => {
@@ -421,7 +426,29 @@
                                             type: 'plus-round'
                                         },
                                         style: {
-                                            width: '26px',
+                                            width: '15px',
+                                            marginLeft: '6px',
+                                            cursor:'pointer'
+                                        }
+                                    })
+                                ]),
+                                h('span', {
+                                    style: {
+                                        display: 'inline-block',
+                                        marginRight: '2px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.deleteMenuConfirm(data)
+                                        }
+                                    }
+                                }, [
+                                    h('Icon', {
+                                        props: {
+                                            type: 'minus-round'
+                                        },
+                                        style: {
+                                            width: '15px',
                                             marginLeft: '6px',
                                             cursor:'pointer'
                                         }
@@ -485,28 +512,33 @@
             },
 
             //提交权限信息
-            handleSubmit(){
+            handleSubmitConfirm(){
                 if(!this.currentRole){
                     iView.Message.warning('请选择角色！')
                     return
                 }
-                let url ={
-                    method:'POST',
-                    pathParams:{
-                        role : this.currentRole
-                    },
-                    body: this.checkList,
-                    url:'/api/role/menus/update/{role}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
-                            this.layerLoading = false
-                            iView.Message.success(result.description)
-                            this.showLayer = false
-                        }else{
-                            iView.Message.info(result.description)
+
+                this.$Modal.confirm({
+                    title:'确认操作',
+                    content:'您确定要保存该角色对应的菜单么？',
+                    onOk:()=>{
+                        let url ={
+                            method:'POST',
+                            pathParams:{
+                                role : _.cloneDeep(this.currentRole)
+                            },
+                            body: this.checkList,
+                            url:'/api/role/menus/update/{role}'
                         }
+                        getData(url, (result) => {
+                            if(result){
+                                if(result.code === 200 ){
+                                    iView.Message.success(result.description)
+                                }else{
+                                    iView.Message.info(result.description)
+                                }
+                            }
+                        })
                     }
                 })
             },
@@ -576,10 +608,7 @@
 
                 this.handlePost(body,'/api/menu/add',()=>{
                     this.showLayer = false
-                    this.getDefaultMenu()
-                    if(this.currentRole){
-                        this.getMenuData()
-                    }
+                    this.updateMenu()
                 })
             },
 
@@ -617,10 +646,7 @@
                 body.authorityEntity = _.cloneDeep(this.powerForm)
 
                 this.handlePost(body,'/api/menu/update',()=>{
-                    this.getDefaultMenu()
-                    if(this.currentRole){
-                        this.getMenuData()
-                    }
+                    this.updateMenu()
                 })
             },
             //编辑时请求权限数据
@@ -641,6 +667,41 @@
                 })
             },
 
+            //重新获取菜单列表
+            updateMenu(){
+                this.getDefaultMenu()
+                if(this.currentRole){
+                    this.getMenuData()
+                }
+            },
+
+            //删除菜单
+            deleteMenuConfirm(data){
+                this.$Modal.confirm({
+                    title:'确认操作',
+                    content:'您确定要删除该条菜单么？',
+                    onOk:()=>{
+                        let url ={
+                            method:'DELETE',
+                            pathParams:{
+                                id : data.id
+                            },
+                            url:'/api/menu/{id}'
+                        }
+                        getData(url, (result) => {
+                            if(result){
+                                if(result.code === 200 ){
+                                    iView.Message.success(result.description)
+                                    result.data && this.updateMenu()
+                                }else{
+                                    iView.Message.info(result.description)
+                                }
+                            }
+                        })
+                    }
+                })
+            },
+
             //角色树点击事件
             roleTreeClick(root,data){
                 root.forEach(v=>{
@@ -655,14 +716,19 @@
             selectAll(){
                 this.menuTree.forEach(v=>{
                     v.checked = true
+                    bus.$emit('layoutTop')
                 })
+                this.checkList = _.cloneDeep(this.defaultList)
             },
             resetSelect(){
                 this.menuTree = _.cloneDeep(this.defaultMenu)
+                this.checkList = []
+                bus.$emit('layoutTop')
             },
             foldMenu(){
                 this.menuTree.forEach(v=>{
                     v.expand = false
+                    bus.$emit('layoutTop')
                 })
             },
 
@@ -703,14 +769,14 @@
                 Object.keys(this[name]).forEach(v=>{
                     this[name][v] = ''
                 })
-            }
+            },
+
         }
     }
 </script>
 <style scoped>
     .container{
         margin: 15px 30px auto;
-        height: 100%;
     }
 
     .title-container{

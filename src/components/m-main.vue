@@ -1,11 +1,11 @@
 <template>
     <div class="container90">
-        <div v-if="define.title">
+        <div>
             <Row>
                 <Col span="20" style="display: flex; justify-content: flex-start; align-items: flex-end">
                 <Breadcrumb  style="margin-right: 10px">
-                    <Breadcrumb-item v-if="typeof define.title === 'string'">
-                        <span v-text="define.title"></span>
+                    <Breadcrumb-item v-if="typeof define.title === 'string' || !define.title">
+                        <span>{{define.title||'无标题'}}</span>
                     </Breadcrumb-item>
                     <Breadcrumb v-if="define.title instanceof Array">
                         <Breadcrumb-item
@@ -172,11 +172,12 @@
         inject: ['form'],
         mounted () {
             this.initialize(this.define)
-            console.log('inject form',this.form)
+            //console.log('inject form',this.form)
         },
         methods: {
             initialize(define){
-                document.title = _.get( define , 'title', '')
+                if(define.title){document.title = _.get( define , 'title', '无标题')}
+                else{document.title = '无标题'}
                 this.handleButtonList( define.buttons )
             },
             edit: function (url) {

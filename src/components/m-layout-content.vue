@@ -1,64 +1,64 @@
 <template>
     <div class="full-height">
         <Row class="full-height">
-            <Col span="3" class="full-height out-use-menu-vertical">
-            <m-head></m-head>
+            <Col span="3" class="full-height out-use-menu-vertical left-menu">
+                <m-head></m-head>
             </Col>
-            <Col span="21">
-            <div class="layout" v-if="leftMenu">
-                <Row type="flex" class="breadMenu out-use-menu-horizontal">
-                    <i-col class="iCol">
-                        <Breadcrumb class="out-use-menu-horizontal" separator="<b class='demo-breadcrumb-separator'></b>">
-                            <BreadcrumbItem href="/layoutContent/00/allMenu" v-if="firstShow" class="title_main">
-                                <Icon type="cube"></Icon>
-                                <span>全部功能</span>
-                            </BreadcrumbItem>
-                            <!--<BreadcrumbItem href="/layoutContent/04/workbench" class="title_main" v-if="deskShow">-->
-                                <!--<Icon type="laptop"></Icon>-->
-                                <!--<span>我的桌面</span>-->
-                            <!--</BreadcrumbItem>-->
-                            <BreadcrumbItem :href="secondUrl" v-if="secondShow" class="title_main">
-                                <Icon :type="secondIcon"></Icon>
-                                <span>{{secondTitle}}</span>
-                            </BreadcrumbItem>
-                        </Breadcrumb>
-                    </i-col>
-                    <div class="daJieStyle1">
-                        <img class="daJieStyle2" src="../assets/img/head-portrait.jpg"/>
-                        <div class="daJieStyle3" style="">
-                            <div class="daJieStyle4">
-                                <span class="daJieStyle5">{{nickName}}</span>
-                            </div>
-                            <div class="daJieStyle6">
-                                <a @click="myDesk" class="exit">桌面</a>
-                                <a @click="logout" class="exit">退出</a>
+            <Col span="21" push="3" class="right-container">
+                <div class="layout" v-if="leftMenu">
+                    <Row type="flex" class="breadMenu out-use-menu-horizontal">
+                        <i-col class="iCol">
+                            <Breadcrumb class="out-use-menu-horizontal" separator="<b class='demo-breadcrumb-separator'></b>">
+                                <BreadcrumbItem href="/layoutContent/00/allMenu" v-if="firstShow" class="title_main">
+                                    <Icon type="cube"></Icon>
+                                    <span>全部功能</span>
+                                </BreadcrumbItem>
+                                <!--<BreadcrumbItem href="/layoutContent/04/workbench" class="title_main" v-if="deskShow">-->
+                                    <!--<Icon type="laptop"></Icon>-->
+                                    <!--<span>我的桌面</span>-->
+                                <!--</BreadcrumbItem>-->
+                                <BreadcrumbItem :href="secondUrl" v-if="secondShow" class="title_main">
+                                    <Icon :type="secondIcon"></Icon>
+                                    <span>{{secondTitle}}</span>
+                                </BreadcrumbItem>
+                            </Breadcrumb>
+                        </i-col>
+                        <div class="daJieStyle1">
+                            <img class="daJieStyle2" src="../assets/img/head-portrait.jpg"/>
+                            <div class="daJieStyle3" style="">
+                                <div class="daJieStyle4">
+                                    <span class="daJieStyle5">{{nickName}}</span>
+                                </div>
+                                <div class="daJieStyle6">
+                                    <a @click="myDesk" class="exit">桌面</a>
+                                    <a @click="logout" class="exit">退出</a>
 
-                                <a href="javascript:;" class="designStyle daJieStyle7" @click="showDesign"
-                                   v-if="designFlag">
-                                    <Icon type="navicon-round"></Icon>
-                                </a>
-                                <a href="javascript:;" class="designStyle daJieStyle8" @click="showDesign"
-                                   v-if="!designFlag">
-                                    <Icon type="navicon-round"></Icon>
-                                </a>
+                                    <a href="javascript:;" class="designStyle daJieStyle7" @click="showDesign"
+                                       v-if="designFlag">
+                                        <Icon type="navicon-round"></Icon>
+                                    </a>
+                                    <a href="javascript:;" class="designStyle daJieStyle8" @click="showDesign"
+                                       v-if="!designFlag">
+                                        <Icon type="navicon-round"></Icon>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div v-if="designFlag" class="tools">
-                        <div class="tools_title" v-for="item in signRecordMsg">
-                            <Icon :type="item.icon"></Icon>
-                            <a :href="item.url" target="_blank">{{item.text}}</a>
+                        <div v-if="designFlag" class="tools">
+                            <div class="tools_title" v-for="item in signRecordMsg">
+                                <Icon :type="item.icon"></Icon>
+                                <a :href="item.url" target="_blank">{{item.text}}</a>
+                            </div>
                         </div>
-                    </div>
-                </Row>
-                <Row class="layout-container">
-                    <div class="layout-content">
-                        <transition name="fade" mode="out-in">
-                            <router-view></router-view>
-                        </transition>
-                    </div>
-                </Row>
-            </div>
+                    </Row>
+                    <Row class="layout-container" ref="layout">
+                        <div class="layout-content">
+                            <transition name="fade" mode="out-in">
+                                <router-view></router-view>
+                            </transition>
+                        </div>
+                    </Row>
+                </div>
             </Col>
         </Row>
     </div>
@@ -66,6 +66,8 @@
 
 <script>
     import mHead from './m-head.vue'
+    import  bus from '../router/bus'
+
     export default {
         components: {mHead},
         data () {
@@ -190,12 +192,24 @@
             },
             getNickName() {
                 this.setUrl('/api/module/nickName').forGet(data => this.nickName = data)
-            }
+            },
+            handleScrollTop(){
+                let top = this.$refs['layout'].$el
 
+                let interval = setInterval(()=>{
+                    if(top.scrollTop<1){
+                        top.scrollTop =0
+                        clearInterval(interval)
+                    }else{
+                        top.scrollTop = top.scrollTop + (0 - top.scrollTop)/2
+                    }
+                },17)
+            }
         },
         mounted: function () {
             this.getLeftMenu()
             this.getNickName()
+            bus.$on('layoutTop',this.handleScrollTop)
         },
         watch: {
             '$route' () {
@@ -253,7 +267,6 @@
     .layout-content {
         width: 100%;
         background: #fff;
-        border-left: 5px solid #e5e8f0;
     }
 
     .tools {
@@ -381,4 +394,18 @@
         color: #888888
     }
 
+    .out-use-menu-vertical::-webkit-scrollbar {display:none}
+    .layout{
+        background: #fff;
+    }
+    .right-container{
+        position: fixed;
+    }
+    .layout-logo{
+        position: absolute;
+        z-index: 900;
+    }
+    .layout-container{
+        border-left: 5px solid #e5e8f0;
+    }
 </style>
