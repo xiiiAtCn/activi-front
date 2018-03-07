@@ -29,6 +29,8 @@ axios.interceptors.response.use(res => {
                     }
                 })
             }
+        } else if(error.response.status === 401) {
+            console.warn('error handler add in the login page')
         } else {
             iView.Message.error('服务器出错了，请联系管理员解决')
         }
