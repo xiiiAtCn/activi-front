@@ -29,6 +29,7 @@
                 :define="tableDefine"
                 :data="tableDataWidthOption"
                 :changeModel="changeModel"
+                :rowClassName="rowClassName"
                 @on-current-change="currentChange"
                 ref="configTable"
                 class="config-table"
@@ -103,17 +104,26 @@ export default {
                 {
                     key: 'name',
                     title: '变迁名称',
-                    type: 'input'
+                    type: 'input',
+                    rules: [
+                        {required: true, message: '请填写变迁名称'}
+                    ]
                 },
                 {
                     key: 'inputId',
                     title: '输入',
-                    type: 'select'
+                    type: 'select',
+                    rules: [
+                        {required: true, message: '请选择输入'}
+                    ]
                 },
                 {
                     key: 'outputId',
                     title: '输出',
-                    type: 'select'
+                    type: 'select',
+                    rules: [
+                        {required: true, message: '请选择输出'}
+                    ]
                 },
                 {
                     title: 'meta关系',
@@ -208,7 +218,6 @@ export default {
         },
         delRow () {
             for (let i = 0, len = this.tableData.length; i < len; i++) {
-                debugger
                 // 有id调接口删除
                 if (!!this.tableData[i].id && this.tableData[i].id === this.currentRow.id) {
                     // 显示modal 确认后删除
@@ -322,22 +331,41 @@ export default {
             })
         },
         save () {
-            const data = this.tableData.filter(row => row._edit)
-            if (!!data && data.length > 0) {
-                this.requestNum++
-                this.setUrl(fetchDir.saveTransition)
-                    .setBody(data)
-                    .forPost((result, err) => {
-                        this.requestNum--
-                        if (err || !result.success) {
-                            this.$Message(result.message || "保存失败")
+            // 表格校验
+            this.$refs['configTable']
+                .validate()
+                .then((valid) => {
+                    if (valid) {
+                        // 校验是否有空的rels
+                        let noRelsRow = this.tableData.filter(row => !row.rels || row.rels.length === 0)
+                        if (!noRelsRow || noRelsRow.lenght === 0) {
+                            this.$Message.error("请将所有的meta关系设置后再进行保存！")
                         } else {
-                            this.init()
+                            // 数据校验是否填写
+                            const data = this.tableData.filter(row => row._edit)
+                            if (!!data && data.length > 0) {
+                                this.postData(data)
+                            } else {
+                                this.$Message.error('当前没有编辑过的数据')
+                            }
                         }
-                    })
-            } else {
-                this.$Message.info('当前没有编辑过的数据')
-            }
+                    } else {
+                        this.$Message.error('数据填写有误，请核对后再保存！')
+                    }
+                })
+        },
+        postData (data) {
+            this.requestNum++
+            this.setUrl(fetchDir.saveTransition)
+                .setBody(data)
+                .forPost((result, err) => {
+                    this.requestNum--
+                    if (err || !result.success) {
+                        this.$Message(result.message || "保存失败")
+                    } else {
+                        this.init()
+                    }
+                })
         },
         setMeta(index) {
             this.index = index
@@ -357,7 +385,6 @@ export default {
             this.setRelationFlag = false
         },
         showDelModal (id) {
-            debugger
             this.modalTitle = "是否删除"
             this.modalMessage = "请确认是否要删除当前数据"
             this.modalOK = () => {
@@ -377,6 +404,11 @@ export default {
             this.cancelMsg = "取消"
 
             this.modal = true
+        },
+        rowClassName (row, index) {
+            if (!row.rels || !row.rels.length || row.rels.length === 0) {
+                return 'table-error-row'
+            }
         },
         // 计算当前显示的option
         calculateShowOption() {
@@ -427,3 +459,11 @@ export default {
     text-align: right;
 }
 </style>
+<style>
+.ivu-table .table-error-row td{
+    background-color: #ff6600;
+    color: #fff;
+    opacity: 0.8;
+}
+</style>
+

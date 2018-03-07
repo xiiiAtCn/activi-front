@@ -6,6 +6,7 @@
             :columns="columns"
             :data="data"
             @on-current-change="changeCurrentRow"
+            :row-class-name="rowClassName"
         />
     </div>
 </template>
@@ -55,6 +56,10 @@ export default {
         changeModel: {
             type: Function,
             default: () => {}
+        },
+        rowClassName: {
+            type: Function,
+            default: () => ''
         }
     },
     data() {
@@ -152,7 +157,7 @@ export default {
                                     options = options[0].option
                                 }
                                 return h('tableItem', {
-                                    props: this.getTableItemProp(index, key, testId)
+                                    props: this.getTableItemProp(index, key, testId, TableFieldType.select)
                                 }, [
                                     h('Select', {
                                         props: {
@@ -247,11 +252,15 @@ export default {
                 }
             }
         },
-        getTableItemProp (index, columnKey, id) {
+        getTableItemProp (index, columnKey, id, type) {
             let columnIndex = this.findColumnIndexByKey(columnKey)
+            let prop = `${columnKey}`
+            if (type === TableFieldType.select) {
+                prop = `${columnKey}.value`
+            }
             return {
                 rules: this.define[columnIndex].rules,
-                prop: `${columnKey}`,
+                prop: prop,
                 testId: id,
                 model: this.data[index],
                 validateState: this.validateResult[id] ? this.validateResult[id].state : '',
