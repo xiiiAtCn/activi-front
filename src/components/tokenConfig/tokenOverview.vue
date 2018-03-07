@@ -1,13 +1,13 @@
 <template>
     <div class="config-overview">
-        <h1>库所预览</h1>
+        <h1>库所配置预览</h1>
         <Card class="content-container">
             <ButtonGroup>
                 <Button
                     @click="linkToEditPage"
                     type="primary"
                 >
-                    创建库所
+                    创建库所配置
                 </Button>
                 <Button
                     @click="linkTotransitionPage"
@@ -70,7 +70,7 @@ export default {
                     }
                 },
                 {
-                    title: '库所Id',
+                    title: '模板Id',
                     key: 'id',
                     align: 'center'
                 },

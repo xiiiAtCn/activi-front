@@ -150,7 +150,6 @@ export default {
                                     }
                                     options = options[0].option
                                 }
-                                
                                 return h('tableItem', {
                                     props: this.getTableItemProp(index, key, testId)
                                 }, [

@@ -1,6 +1,6 @@
 <template>
     <div :class="classes">
-        <slot @on-blur="test"></slot>
+        <slot></slot>
         <transition name="fade">
             <div
                 :class="[prefixCls + '-error-tip']" 

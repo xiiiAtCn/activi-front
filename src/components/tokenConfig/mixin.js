@@ -136,6 +136,9 @@ const mixin = {
             return new Promise((resolve, reject) => {
                 this.requestNum++
                 this.setUrl(fetchDir.delCache)
+                    .setPathVariables({
+                        templateId: this.templateId
+                    })
                     .forGet((res, err) => {
                         this.requestNum--
                         if (err || res.result === false) {
