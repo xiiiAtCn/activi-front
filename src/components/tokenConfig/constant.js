@@ -10,7 +10,7 @@ export const fetchDir = {
     // 查看页面
     viewTableData: "/api/placeConfig/cache/getTableData/{templateId}/{nodeId}",
     active: "/api/placeConfig/cache/active/{templateId}",
-    delCache: "/api/placeConfig/cache/delCache",
+    delCache: "/api/placeConfig/cache/delCache/{templateId}",
     // 编辑页面
     metaList: "/api/placeConfig/cache/getFormMetaList/{type}",
     formData: "/api/placeConfig/cache/getFormData/{templateId}",
@@ -23,10 +23,14 @@ export const fetchDir = {
     ruleKeyList: "/api/placeConfig/cache/getKeyList/{templateId}/{tokenMetaId}",
     saveRule: "/api/placeConfig/cache/saveRule",
     // 资源选择
-    resourceList: "/api/placeConfig/cache/getResourceList",
+    resourceList: "/api/placeConfig/cache/getResourceList/{templateId}",
     saveResource: "/api/placeConfig/cache/saveResource",
     // 变迁配置
-    configList: "/api/placeConfig/getConfigList"
+    configList: "/api/placeConfig/getConfigList",
+    getNodesByTemplateId: "/api/placeConfig/cache/getNodesByTemplateId/{templateId}/{cache}",
+    findAllTransition: "/api/transitionConfig/findAllTransition",
+    saveTransition: "/api/transitionConfig/saveTransition",
+    delTransition: "/api/transitionConfig/delTransition/{id}"
 }
 export const relTableColumns = [
     {

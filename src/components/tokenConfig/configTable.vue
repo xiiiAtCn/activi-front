@@ -133,6 +133,7 @@ export default {
                                 let key = column.key
                                 let testId = this.generateId(index, this.findColumnIndexByKey(key), row.id || row.generateId)
                                 let options = []
+                                // 先从data中取option取不到从define中取
                                 if (row[key].options && row[key].options.length >= 0) {
                                     options = row[key].options
                                 } else {
@@ -150,7 +151,6 @@ export default {
                                     }
                                     options = options[0].option
                                 }
-                                
                                 return h('tableItem', {
                                     props: this.getTableItemProp(index, key, testId)
                                 }, [

@@ -83,6 +83,9 @@ export default {
         getTableData () {
             this.requestNum++
             this.setUrl(fetchDir.resourceList)
+                .setPathVariables({
+                    templateId: this.templateId
+                })
                 .forGet((result, err) => {
                     this.requestNum--
                     if (err) {
