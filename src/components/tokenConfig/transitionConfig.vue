@@ -29,7 +29,6 @@
                 :define="tableDefine"
                 :data="tableDataWidthOption"
                 :changeModel="changeModel"
-                :rowClassName="rowClassName"
                 @on-current-change="currentChange"
                 ref="configTable"
                 class="config-table"
@@ -136,7 +135,8 @@ export default {
                         }, [
                             h('Button', {
                                 props: {
-                                    size: 'small'
+                                    size: 'small',
+                                    type: !row.rels || row.rels.length === 0 ? 'error' : 'ghost'
                                 },
                                 on: {
                                     click: () => {
@@ -404,11 +404,6 @@ export default {
             this.cancelMsg = "取消"
 
             this.modal = true
-        },
-        rowClassName (row, index) {
-            if (!row.rels || !row.rels.length || row.rels.length === 0) {
-                return 'table-error-row'
-            }
         },
         // 计算当前显示的option
         calculateShowOption() {
