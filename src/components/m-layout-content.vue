@@ -4,7 +4,7 @@
             <Col span="3" class="full-height out-use-menu-vertical left-menu">
                 <m-head></m-head>
             </Col>
-            <Col span="21" push="3">
+            <Col span="21" push="3" class="right-container">
                 <div class="layout" v-if="leftMenu">
                     <Row type="flex" class="breadMenu out-use-menu-horizontal">
                         <i-col class="iCol">
@@ -395,9 +395,11 @@
     }
 
     .out-use-menu-vertical::-webkit-scrollbar {display:none}
-    .left-menu{
+    .layout{
+        background: #fff;
+    }
+    .right-container{
         position: fixed;
-        overflow-y: auto;
     }
     .layout-logo{
         position: absolute;

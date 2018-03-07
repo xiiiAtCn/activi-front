@@ -227,12 +227,12 @@
                 }else{
                     this.handleSubmit('formItem')
                 }
+                this.currentData = ''
                 setTimeout(()=>{this.layerLoading = true},500)
             },
             handleCancel(){
                 this.showLayer = false
                 this.clearForm('formItem')
-                this.currentData = ''
             },
             //提交验证
             handleSubmit(name) {
@@ -378,10 +378,10 @@
             handleEditOk(){
                 this.layerEditLoading = false
                 this.handleReset()
+                this.currentData = ''
                 setTimeout(()=>{this.layerEditLoading = true},500)
             },
             handleEditCancel(){
-                this.currentData = ''
                 this.showEditLayer = false
             },
             handleReset(){
