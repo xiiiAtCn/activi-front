@@ -146,7 +146,9 @@ export default {
             // 当前选中row
             index: null,
             delBtnLoading: false,
-            setRelationFlag: false
+            setRelationFlag: false,
+            inputShowOption: [],
+            outputShowOption: {}
         }
     },
     computed: {
@@ -164,7 +166,15 @@ export default {
         },
         currentRelation () {
             return this.currentRowData.rels || []
-        }
+        },
+        // todo 不确定对应关系
+        // configListMap () {
+        //     let result = {}
+        //     for (let option of this.configList) {
+        //         result[option.value] = option
+        //     }
+        //     return result
+        // }
     },
     watch: {
         tableData: {
@@ -214,16 +224,42 @@ export default {
             this.currentRow = null
         },
         changeModel (index, key, value) {
+            // 改变对应的值
             this.$set(this.tableData[index], key, value)
+            // 状态改为已编辑
             this.$set(this.tableData[index], '_edit', true)
+            // 如果更改下拉 将关联删除 重新计算显示的option
+            if (key === 'inputId' || key === 'outputId') {
+                this.$set(this.tableData[index], 'rels', [])
+                // todo 不确定对应关系
+                // this.calculateShowOption()
+            }
         },
         currentChange (newRow, oldRow) {
             this.currentRow = newRow
         },
         addOptionToTableData () {
             let tableData = _.cloneDeep(this.tableData)
-
+            // todo 不确定对应关系
+            // let inputShowOption = _.cloneDeep(this.inputShowOption),
+            //     inputRowOption = [],
+            //     outputShowOption = _.cloneDeep(this.outputShowOption),
+            //     outputRowOption = []
             for (let row of tableData) {
+                // todo 不确定对应关系
+                // if (!!row.inputId) {//input有值将自己添加进去
+                //     inputRowOption = inputShowOption.concat([this.configListMap[row.inputId]])
+                //     debugger
+                //     if (!!row.outputId) {// output有值将自己添加进去
+                //         outputRowOption = outputShowOption[row.inputId].concat([this.configListMap[row.outputId]])
+                //     } else {
+                //         outputRowOption = outputShowOption[row.inputId]
+                //     }
+                // } else {
+                //     inputRowOption = inputShowOption
+                //     outputRowOption = [{label: '', value: ''}]
+                // }
+                
                 row.inputId = {
                     value: row.inputId,
                     options: this.configList
@@ -246,6 +282,8 @@ export default {
                         this.$Message("获取table数据失败")
                     } else {
                         this.tableData = result.data
+                        // todo 不确定对应关系
+                        // this.calculateShowOption()
                     }
                 })
         },
@@ -339,6 +377,43 @@ export default {
             this.cancelMsg = "取消"
 
             this.modal = true
+        },
+        // 计算当前显示的option
+        calculateShowOption() {
+            // key: id value: [options]
+            let tempMap = {}
+            let key = ''
+            for (let i = 0; i < this.configList.length; i++) {
+                key = this.configList[i].value
+                tempMap[key] = _.cloneDeep(this.configListMap)
+                // output 与input不能相同
+                delete tempMap[key][key]
+            }
+            // 删除当前存在的
+            for (let row of this.tableData) {
+                if (!!row.inputId && !!row.outputId) {
+                    delete tempMap[row.inputId][row.outputId]
+                }
+            }
+            // 构建当前需要显示的
+            let inputList = _.cloneDeep(this.configList),
+                outputListMap = {},
+                inputFilterIdArr = []
+            for (let value in tempMap) {
+                // 已经都选了
+                if (!tempMap[value]) {
+                    inputFilterIdArr.push(value)
+                    outputListMap[value] = []
+                } else {
+                    outputListMap[value] = []
+                    for (let optionValue in tempMap[value]) {
+                        outputListMap[value].push(tempMap[value][optionValue])
+                    }
+                }
+            }
+            inputList = inputList.filter(item => !inputFilterIdArr.includes(item.value))
+            this.inputShowOption = inputList
+            this.outputShowOption = outputListMap
         }
     }
 }
@@ -346,6 +421,7 @@ export default {
 <style scoped>
 .transition-config {
     margin: 30px;
+    margin-bottom: 200px; 
 }
 .button-area {
     text-align: right;

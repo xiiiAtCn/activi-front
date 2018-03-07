@@ -281,13 +281,10 @@ export default {
         },
         delRel () {
             const relIdIndex = {}
-            this.rels.forEach((rel, index) => {
-                relIdIndex[rel.id] = index
-            })
             this.relsSelected.forEach(id => {
-                if (!!relIdIndex[id] || relIdIndex[id] === 0) {
-                    this.rels.splice(relIdIndex[id], 1)
-                }
+                this.rels.splice(this.rels.findIndex(item => {
+                    return item.id === id
+                }), 1)
             })
             this.relsSelected = []
         },
@@ -385,37 +382,29 @@ export default {
             this[mapAttr] = map
         },
         checkboxDis(id, type) {
-            let attr = '',
-                reverseAttr = '',
-                nodeAttr = '',
-                selectedId = '' 
             switch (type) {
                 case 'input':
-                    attr = 'inputToOutputMap'
-                    reverseAttr = 'outputToInputMap'
-                    nodeAttr = 'outputNodes'
-                    selectedId = this.outputSelected[0] || ''
+                    // 输出都被选择完 不能选择
+                    if (Object.keys(this.outputToInputMap).length === this.outputNodes.length) {
+                        return true
+                    }
+
+                    // 都选择了也不能选择
+                    if (!!this.inputToOutputMap[id] && this.inputToOutputMap[id].length === this.outputNodes.length) {
+                        return true
+                    } else {
+                        return false
+                    }
                     break
                 case 'output':
-                    attr = 'outputToInputMap'
-                    reverseAttr = 'inputToOutputMap'
-                    nodeAttr = 'inputNodes'
-                    selectedId = this.inputSelected[0] || ''
+                    if (!!this.outputToInputMap[id]) {
+                        return true
+                    } else {
+                        return false
+                    }
                     break
                 default:
                     throw new Error(`方法checkboxDis不支持的type:${type}`)
-            }
-
-            // 已经选中的不能再次选择
-            if (!!this[reverseAttr][selectedId] && this[reverseAttr][selectedId].includes(id)) {
-                return true
-            }
-
-            // 都选择了也不能选择
-            if (!!this[attr][id] && this[attr][id].length === this[nodeAttr].length) {
-                return true
-            } else {
-                return false
             }
         }
     }
