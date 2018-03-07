@@ -518,7 +518,7 @@
                     return
                 }
 
-                this.$Modal.info({
+                this.$Modal.confirm({
                     title:'确认操作',
                     content:'您确定要保存该角色对应的菜单么？',
                     onOk:()=>{
@@ -677,7 +677,7 @@
 
             //删除菜单
             deleteMenuConfirm(data){
-                this.$Modal.warning({
+                this.$Modal.confirm({
                     title:'确认操作',
                     content:'您确定要删除该条菜单么？',
                     onOk:()=>{
@@ -777,7 +777,6 @@
 <style scoped>
     .container{
         margin: 15px 30px auto;
-        height: 100%;
     }
 
     .title-container{

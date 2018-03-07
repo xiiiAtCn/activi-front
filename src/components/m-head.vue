@@ -1,14 +1,14 @@
 <template>
     <div class="s-nav">
+        <div class="logo-container">
+            <div class="posRea">
+                <a @click="logout" ><img src="../assets/img/yushi-logo.png" alt=""></a>
+                <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
+                <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
+            </div>
+            <div style="clear: both"></div>
+        </div>
         <Menu active-name="" theme="light" class="themeLight" style="width:auto;">
-            <li class="layout-logo">
-                <div class="posRea">
-                    <a @click="logout" ><img src="../assets/img/yushi-logo.png" alt=""></a>
-                    <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
-                    <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
-                </div>
-                <div style="clear: both"></div>
-            </li>
             <div class="custom-menu">
                 <Menu-item v-for="item in items" :name="item.code" class="customItem" :key="item.code" :id="item.code">
                     <router-link class="business-module" :to="'/layoutContent/' + item.code">
@@ -65,6 +65,8 @@
 </script>
 
 <style scoped>
+
+
     /*背景： #595959*/
 
     .ivu-menu-vertical .ivu-menu-item:hover,
@@ -168,7 +170,7 @@
     }
 
     .custom-menu {
-        border-top: 1px solid #ddd;
+        border-top: 5px solid #e5e8f0;
         background: #3e4a58;
     }
 
@@ -259,5 +261,23 @@
         right: 20px;
         top: 38px;
         color: #333333;
+    }
+
+    .logo-container{
+        background: #fff;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        width: 12.5%;
+    }
+    .posRea {
+        height: 70px;
+        /*text-align: center;*/
+    }
+    .posRea img{
+        margin-left: 20px;
+    }
+    .s-nav{
+        padding-top: 70px;
     }
 </style>
