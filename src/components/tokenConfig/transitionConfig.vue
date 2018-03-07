@@ -338,7 +338,7 @@ export default {
                     if (valid) {
                         // 校验是否有空的rels
                         let noRelsRow = this.tableData.filter(row => !row.rels || row.rels.length === 0)
-                        if (!noRelsRow || noRelsRow.lenght === 0) {
+                        if (!noRelsRow || noRelsRow.length > 0) {
                             this.$Message.error("请将所有的meta关系设置后再进行保存！")
                         } else {
                             // 数据校验是否填写

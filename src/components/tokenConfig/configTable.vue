@@ -218,7 +218,6 @@ export default {
                 let valid = true
                 let count = 0
                 let validCount = 0
-                console.log(`fields :${this.fields}`)
                 // 没有需要校验的东西
                 if (this.fields.length === 0) {
                     resolve(valid)
