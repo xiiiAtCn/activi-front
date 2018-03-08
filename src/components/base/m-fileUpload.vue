@@ -32,6 +32,11 @@
                         <Icon type="document-text"></Icon>
                         <span>{{item.name}}</span>
                         <template >
+                            <div class="file-delete-action">
+                                <a :href="item.url" :download="item.name">
+                                    <Icon type="arrow-down-a"></Icon>
+                                </a>
+                            </div>
                             <div class="file-delete-action" v-if="!readonly">
                                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                             </div>
@@ -134,7 +139,7 @@
                         const fileList = this.$refs.upload.fileList.slice()
                         fileList.splice(fileList.indexOf(file), 1)
                         this.$refs.upload.fileList = fileList
-                        this.objectModel = this.$refs.upload.fileList
+                        this.objectModel = this.$refs.upload.fileListfileList
                         this.$Message.success(`文件${file.name}已删除`)
                         this.valid()
                     }
