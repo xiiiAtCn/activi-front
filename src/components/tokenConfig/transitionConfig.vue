@@ -369,7 +369,14 @@ export default {
         },
         setMeta(index) {
             this.index = index
-            this.layer = true
+            // 校验当前行
+            this.$refs['configTable']
+                .validate()
+                .then((valid) => {
+                    if (valid) {
+                        this.layer = true
+                    }
+                })
         },
         getRelation (data) {
             if (this.setRelationFlag) {
