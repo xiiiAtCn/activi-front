@@ -150,7 +150,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                             this.wordList = data.wordList || []
                         }else{
                             this.serverPage = false
-                            this.rowsContent = data
+                            this.rowsContent = data.data || data
                             this.wordList = data.wordList || []
                         }
                     }
