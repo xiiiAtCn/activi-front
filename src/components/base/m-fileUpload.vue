@@ -35,6 +35,11 @@
                             <div class="file-delete-action" v-if="!readonly">
                                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                             </div>
+                            <div class="file-delete-action" style="margin-right: 10px;">
+                                <a :href="item.url" :download="item.name">
+                                    <Icon type="arrow-down-a"></Icon>
+                                </a>
+                            </div>
                         </template>
                     </div>
                 </template>
@@ -126,19 +131,24 @@
             handleRemove (file) {
                 console.log(file)
                 let id = file.id
-                console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
-                this.setUrl(this.deleteAddress).setQuery({id: id}).forGet((result, err) => {
-                    if(err) {
-                        this.$Message.error(`删除文件${file.name}失败`)
-                    } else {
-                        const fileList = this.$refs.upload.fileList.slice()
-                        fileList.splice(fileList.indexOf(file), 1)
-                        this.$refs.upload.fileList = fileList
-                        this.objectModel = this.$refs.upload.fileList
-                        this.$Message.success(`文件${file.name}已删除`)
-                        this.valid()
+                this.$Modal.confirm({
+                    content: '确认删除?',
+                    onOk: () => {
+                        this.setUrl(this.deleteAddress).setQuery({id: id}).forGet((result, err) => {
+                            if(err) {
+                                this.$Message.error(`删除文件${file.name}失败`)
+                            } else {
+                                const fileList = this.$refs.upload.fileList.slice()
+                                fileList.splice(fileList.indexOf(file), 1)
+                                this.$refs.upload.fileList = fileList
+                                this.objectModel = this.$refs.upload.fileListfileList
+                                this.$Message.success(`文件${file.name}已删除`)
+                                this.valid()
+                            }
+                        })
                     }
                 })
+                console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
             },
             handleSuccess (res, file) {
                 file['url'] = file['response']['url']
