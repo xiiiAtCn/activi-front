@@ -72,7 +72,6 @@ export default {
         validate (callback = function () {}) {
             // 获取当前trigger对应的rules 
             const rules = this.rules
-
             if (!rules || rules.length === 0) {
                 callback()
                 return true
@@ -98,7 +97,17 @@ export default {
         },
         // 获取表单元素的值
         getFieldValue () {
-            return this.model[this.prop]
+            let result = null
+            if (this.prop.includes('.')) {
+                let pathArr = this.prop.split('.')
+                result = this.model
+                for (let path of pathArr ) {
+                    result = result[path]
+                }
+            } else {
+                result = this.model[this.prop]
+            }
+            return result 
         }
     },
     mounted () {

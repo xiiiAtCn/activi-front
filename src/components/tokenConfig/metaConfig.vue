@@ -233,11 +233,11 @@ export default {
                 .then(data => {
                     this.inputName = data.name
                     this.inputNodes = data.nodes
-                })
-            this.getNodes(this.outputId)
-                .then(data => {
-                    this.outputName = data.name
-                    this.outputNodes = data.nodes
+                    this.getNodes(this.outputId)
+                        .then(data => {
+                            this.outputName = data.name
+                            this.outputNodes = data.nodes
+                        })
                 })
             this.fillData()
         },
