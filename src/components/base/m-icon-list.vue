@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Option v-for="item in list" :value="item" :label="item"><span style="display: none">{{item}}</span><Icon :type="item" style="font-size: 15px"></Icon></Option>
+        <Option v-for="item in list" :value="item" :label="item"><span style="display: none">{{item}}</span><Icon :type="item" style="font-size: 17px"></Icon></Option>
     </div>
 </template>
 <script>
