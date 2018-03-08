@@ -123,14 +123,17 @@ export default {
             //         callback(data, err)
             //     }
             // })
-            getData(this.getDataUrlObj('selectData'), (data, err) => {
-                if (data) {
-                    this.selectData.push(data)
-                }
-                if (callback) {
-                    callback(data, err)
-                }
-            })
+            const data = this.getDataUrlObj('selectData')
+            if (data) {
+                getData(data, (data, err) => {
+                    if (data) {
+                        this.selectData.push(data)
+                    }
+                    if (callback) {
+                        callback(data, err)
+                    }
+                })
+            }
         },
         watchValuesChanged () {
             this.getSelectData()

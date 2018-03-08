@@ -37,11 +37,11 @@ const mixin = {
          * @param {*} callback 回调
          */
         getDataUrlObj (type) {
-            // 此时relation还未传入 
+            // 此时relation还未传入
             if (this.relation && Object.keys(this.relation).length > 0) {
                 let dataLink = deepCopy(this.dataLink)
                 // 没有link对象
-                if (Object.keys(dataLink).length > 0) {
+                if (dataLink && Object.keys(dataLink).length > 0) {
                     let obj = _.filter(dataLink, (item) => {
                         return item.attr === type
                     })[0]
@@ -78,7 +78,7 @@ const mixin = {
                         let defaultValue = param[key].defaultValue
                         data[key] = NoData
                         if (componentData) {
-                            // 如果为数组逐层取值 
+                            // 如果为数组逐层取值
                             if (Array.isArray(value)) {
                                 data[key] = _.get(componentData, [...value], NoData)
                             } else {
@@ -97,13 +97,13 @@ const mixin = {
                             delete data[key]
                         }
                     }
-                }                    
+                }
             }
             return data
         },
         /**
          * 向vuex提交数据
-         * @param {*} payload 
+         * @param {*} payload
          */
         commitData (payload) {
             this.$store.commit(Mutations.SET_COMPONENT_DATA, {
