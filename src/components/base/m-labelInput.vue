@@ -1,6 +1,6 @@
 <template>
     <div class="ivu-form-item m-flex" style="margin-bottom: 0px;">
-        <label class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" >{{label}}</label>
+        <label :class="{'ivu-form-star': addStar}" class="ivu-form-item-label" :style="{width: labelWidth + 'px'}" >{{label}}</label>
         <div class="ivu-form-item-content m-input">
             <component 
                 :form="form" 
@@ -16,7 +16,12 @@
 import _ from 'lodash'
 
 export default {
+    name: 'm-labelInput',
     props: ['define', 'content', 'statusKey'],
+    data() {
+        return {
+        }
+    },
     computed: {
         form() {
             if(this.content instanceof Array) {
@@ -49,6 +54,10 @@ export default {
             } else {
                 return this.content
             }
+        },
+        addStar() {
+            let required = _.get(this.childContent, 'required', false)
+            return required
         }
     }
 }
@@ -58,6 +67,16 @@ export default {
 
 .ivu-form-item-label {
     text-align: right;
+}
+
+.ivu-form-star::before {
+    content: "*";
+    display: inline-block;
+    margin-right: 2px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1em;
+    color: #ed3f14;
 }
 
 .expend-all {
