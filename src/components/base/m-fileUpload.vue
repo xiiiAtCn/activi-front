@@ -126,7 +126,7 @@
                     return false
                 }
                 this.data['filename'] = `${encodeURI(file.name)}`
-                this.objectModel = this.$refs.upload.fileList
+                this.$refs.upload.fileList = this.objectModel
             },
             handleRemove (file) {
                 console.log(file)
@@ -141,7 +141,7 @@
                                 const fileList = this.$refs.upload.fileList.slice()
                                 fileList.splice(fileList.indexOf(file), 1)
                                 this.$refs.upload.fileList = fileList
-                                this.objectModel = this.$refs.upload.fileListfileList
+                                this.objectModel = this.$refs.upload.fileList
                                 this.$Message.success(`文件${file.name}已删除`)
                                 this.valid()
                             }
@@ -151,6 +151,7 @@
                 console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
             },
             handleSuccess (res, file) {
+                debugger
                 file['url'] = file['response']['url']
                 file['id'] = file['response']['id']
                 this.valid()
