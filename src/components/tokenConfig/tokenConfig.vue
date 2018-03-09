@@ -298,6 +298,7 @@ export default {
             this.relTableColumns = _.cloneDeep(relTableColumns)
             this.selectedNode = null
             this.currentModalStatus = ModalStatus.none
+            this.$refs['form'].resetFields()
 
             this.validatePageStatus(() => {
                 this.getTreeData()
