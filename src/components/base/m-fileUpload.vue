@@ -126,6 +126,7 @@
                     return false
                 }
                 this.data['filename'] = `${encodeURI(file.name)}`
+                this.objectModel = this.objectModel || []
                 this.$refs.upload.fileList = this.objectModel
             },
             handleRemove (file) {
@@ -156,6 +157,7 @@
                 file['id'] = file['response']['id']
                 this.valid()
                 this.$Message.success('上传成功')
+                this.objectModel = this.$refs.upload.fileList
             },
             handleError() {
                 this.$Message.error('上传失败，请稍后重试')
@@ -218,6 +220,11 @@
     .file-delete-action {
         float: right;
         cursor: pointer;
+    }
+
+    .file-delete-action:hover {
+        font-size: 1.8em;
+        transition: all .1s ease-in-out;
     }
 
     .upload-body {
