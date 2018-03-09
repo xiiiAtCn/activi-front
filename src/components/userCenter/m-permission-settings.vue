@@ -405,6 +405,12 @@
                                 }
                             }, [
                                 h('span', [
+                                    h('span', {
+                                        style: {
+                                            marginRight: '8px',
+                                            fontWeight: '500'
+                                        }
+                                    },'['+data.menuOrder+']'),
                                     h('span',{
                                         style: {
                                             cursor : 'pointer'
