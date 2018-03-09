@@ -16,8 +16,11 @@
                 </Button>
             </ButtonGroup>
             <Table
+                highlight-row
                 :data="tableData"
-                :columns="columns" />
+                :columns="columns" 
+                @on-current-change="currentChange"
+            />
         </Card>
         <Modal
             v-model="modal"
@@ -55,19 +58,9 @@ export default {
             tableData: [],
             columns: [
                 {
-                    title: '序号',
-                    render: (h, {row, cloumn, index}) => {
-                        return h('Button', {
-                            props: {
-                                type: 'text'
-                            },
-                            on: {
-                                'click': () => {
-                                    this.linkToViewPage(row.id)
-                                }
-                            }
-                        }, index + 1)
-                    }
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
                 },
                 {
                     title: '模板Id',
@@ -100,6 +93,9 @@ export default {
                         this.tableData = result
                     }
                 })
+        },
+        currentChange (row) {
+            this.linkToViewPage(row.id)
         },
         // 如果store中的id与要查看的id不相同，提示信息
         linkToViewPage(id) {

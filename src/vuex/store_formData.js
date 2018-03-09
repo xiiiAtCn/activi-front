@@ -156,8 +156,14 @@ export default {
             }
         },
         [Mutations.ERASURE_DATA](state,payload) {
-            if(state[payload.form])
-                delete state[payload.form][payload.name]
+            if(state[payload.form]) {
+                delete state[payload.form]
+                if(payload.form.startsWith('_')) {
+                    delete state[payload.form + 'formvalidateResult']
+                } else {
+                    delete state['_' + payload.form + 'validateResult']
+                }
+            }
         }
     },
     actions: {
@@ -322,7 +328,11 @@ export default {
         },
         [Actions.FETCH_FORM_DATA]({commit, state}, payload) {
             let { url } = payload
-            getData(url, data => {
+            getData(url, (data, err) => {
+                if(err) {
+                    console.error('error happens when fetch form data')
+                    return
+                }
                 commit(Mutations.CLEAR_ALL_DATA)
                 console.log(data)
                 if(!Array.isArray(data)) {
