@@ -43,6 +43,9 @@
                             <FormItem label="背景图" v-if="!menuForm.parentKey">
                                 <Input v-model="menuForm.picUrl" placeholder="请输入背景图URL"></Input>
                             </FormItem>
+                            <FormItem label="菜单顺序">
+                                <InputNumber :min="0" v-model="menuForm.menuOrder"  style="width:100%;"></InputNumber>
+                            </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
                                     <mIconList></mIconList>
@@ -90,6 +93,9 @@
                             </FormItem>
                             <FormItem label="背景图" v-if="!editForm.parentKey">
                                 <Input v-model="editForm.picUrl" placeholder="请输入背景图URL"></Input>
+                            </FormItem>
+                            <FormItem label="菜单顺序">
+                                <InputNumber :min="0" v-model="editForm.menuOrder" style="width:100%;"></InputNumber>
                             </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
@@ -170,9 +176,6 @@
                 }else if(!/^.{1,254}$/.test(val)){
                     callback('输入的字符数太多了！')
                     return
-                }else if(!/^[0-9]*$/.test(val)){
-                    callback('key值必须为数字！')
-                    return
                 }else if(this.cKey === val){
                     callback()
                     return
@@ -218,6 +221,7 @@
                     description: '',
                     url:'',
                     icon:'',
+                    menuOrder:0,
                     picUrl:'',
                     id:'',
                     parentKey:''
@@ -234,6 +238,7 @@
                     description: '',
                     url:'',
                     picUrl:'',
+                    menuOrder:0,
                     icon:'',
                     id:'',
                     parentKey:''
@@ -391,6 +396,7 @@
                         id : val.menu.id,
                         url : val.menu.url,
                         picUrl:val.menu.picUrl,
+                        menuOrder:val.menu.menuOrder,
                         render: (h, { root, node, data }) => {
                             return h('span', {
                                 style: {
@@ -767,7 +773,8 @@
             clearForm(name){
                 this.$refs[name].resetFields()
                 Object.keys(this[name]).forEach(v=>{
-                    this[name][v] = ''
+                    if(v==='menuOrder'){this[name][v] = 0}
+                    else{this[name][v] = ''}
                 })
             },
 
