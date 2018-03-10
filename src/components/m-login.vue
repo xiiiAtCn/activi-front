@@ -22,17 +22,6 @@
                     <Form-item class="form-element" label="密码" prop="password" >
                         <Input type="password" placeholder="请输入您的密码" v-model="form.password" @on-enter="login"/>
                     </Form-item>
-                    <!-- <Form-item class="form-element" label="选择系统">
-                        <Select v-model="system">
-                            <Option
-                                v-for="( value,key, index) in systems"
-                                :key="index"
-                                :value="key"
-                            >
-                                {{value}}
-                            </Option>
-                        </Select>
-                    </Form-item> -->
                     <div class="optration">
                         <div class="check">
                             <input type="checkbox" value="1" class="checkbox">

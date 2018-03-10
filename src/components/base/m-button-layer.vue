@@ -3,6 +3,7 @@
         <Button :type="define.type || 'default'" :size="define.size || 'default'" @click="handleClick">{{define.text}}</Button>
         <mLayer :value="showLayer" :titleText="define.text" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
+                :key="item"
                 v-if="item"
                 v-for="item in downData.ui_content"
                 :is="item.ui_type"

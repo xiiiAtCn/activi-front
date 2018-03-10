@@ -1,12 +1,12 @@
 <template>
     <div>
-        <Card :bordered="true" v-for="(item,key) in tableData" class="card-table">
+        <Card :bordered="true" v-for="(item,key) in tableData" :key="key" class="card-table">
             <div slot="title">
                 <Table :columns="columnsData" :data="item" style="text-align: center"></Table>
             </div>
             <div>
                 <Row class="container">
-                    <Col span="6" v-for="v in spanData[key]">
+                    <Col span="6" v-for="v in spanData[key]" :key="v">
                         <span class="title">{{v.title}} </span>
                         <span class="content"> {{v.value}}</span>
                     </Col>
@@ -16,11 +16,9 @@
     </div>
 </template>
 <script>
-  //  import Vue from 'vue'
-  //  import utils from '../utils/utils'
-  import _ from 'lodash'
-  import { dispatch } from '../utils/actionUtils'
-
+/**
+ * 特殊页面的定制开发
+ */
   export default {
       props:{
           content:{
@@ -141,7 +139,6 @@
 </script>
 <style scoped>
     .container span{
-        float: left;
         display: inline-block;
         height: 36px;
     }

@@ -11,7 +11,6 @@
  */
 import _ from 'lodash'
 import Mutations from 'store/Mutation'
-// import { getData } from 'utils/actionUtils'
 import { deepCopy } from 'utils/utils'
 
 let NoData = Symbol('NoData')

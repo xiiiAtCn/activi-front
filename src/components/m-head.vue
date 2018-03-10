@@ -3,8 +3,6 @@
         <div class="logo-container">
             <div class="posRea">
                 <a @click="logout" ><img src="../assets/img/yushi-logo.png" alt=""></a>
-                <!--<a href="http://www.sohu.com/" target="_blank" class="aMain">[ 主 页 ]</a>-->
-                <!--<a href="/layoutContent/04/workbench" class="deskStyle">[ 桌 面 ]</a>-->
             </div>
             <div style="clear: both"></div>
         </div>

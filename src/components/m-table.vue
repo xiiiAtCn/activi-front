@@ -37,7 +37,6 @@
     </div>
 </template>
     <script>
-  //  import Vue from 'vue'
   import _ from 'lodash'
   import bus from '../router/bus'
   import { dispatch } from '../utils/actionUtils'
@@ -82,7 +81,7 @@
               get () {
                   return _.get(this.$store.state.pageData.data, [this.tableName, 'value'], null)
               },
-              set (value) {
+              set () {
 //                this.$store.commit('updateItem', {name: '_' + this.tableName, type:'table', value: this.dataSource});
                   this.$store.commit('updateItem', {name: this.tableName, exType: this.exType, exContent: this.exContent, value: this.dataSource})
               }

@@ -9,9 +9,10 @@
             </Menu>
         </Col>
         <Col :span="define.mode === 'vertical' ? 21 :24">
-            <div class="container" v-for="(val,key) in content">
+            <div class="container" v-for="(val,key) in content" :key="key">
                 <keep-alive>
                     <component
+                        :key="item"
                         v-for="item in val.ui_content"
                         v-if="key === menuName"
                         :is="item.ui_type"

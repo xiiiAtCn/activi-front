@@ -16,8 +16,6 @@
   </Row>
 </template>
 <script>
-  //  import Vue from 'vue'
-  //  import utils from '../utils/utils'
   import _ from 'lodash'
   import { dispatch } from '../utils/actionUtils'
 
@@ -26,7 +24,6 @@
       props: {'define': {type: Object}},
       computed: {
           items: function () {
-//        return utils(this.define, [], 'links')
               return _.get(this.define, 'links', [])
           }
       },
