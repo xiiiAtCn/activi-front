@@ -323,9 +323,13 @@ export default {
             }
             
             if (state[form]['_validate'] === true) {
-                iView.Modal.error({
-                    title:'错误',
-                    content: '画面必填项缺失, 请确认后再试!'
+                Object.keys(rest).forEach(element => {
+                    if(rest[element] === true) {
+                        iView.Modal.error({
+                            title:'错误',
+                            content: '画面必填项缺失, 请确认后再试!'
+                        })
+                    }
                 })
                 dispatch(Actions.COUNT_CHECK_RESULT, {form})
             }
