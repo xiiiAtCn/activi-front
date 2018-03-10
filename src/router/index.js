@@ -10,21 +10,6 @@ const workbench = resolve => require(['../components/businessModule/workbench.vu
 // 登录页
 const mLogin = resolve => require(['../components/m-login.vue'], resolve)
 
-
-// 任务中心路由
-
-
-// 工作流程路由
-const workflow = resolve => require(['../components/businessModule/workflow/workflow.vue'], resolve)
-const workflowDetails = resolve => require(['../components/businessModule/workflow/workflowDetails.vue'], resolve)
-const workflowCheck = resolve => require(['../components/businessModule/workflow/workflowCheck.vue'], resolve)
-
-const saleDashboard = resolve => require(['../components/saleDashboard/m-saleDashboard.vue'], resolve)
-
-const fishBoneChart = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
-const copyFishBone = resolve => require(['../components/saleDashboard/copyFishBone.vue'], resolve)
-const stackChart = resolve => require(['../components/chart/chartContainer.vue'], resolve)
-
 //urlSection
 const mUrlSection = resolve => require(['../components/m-url-section.vue'], resolve)
 
@@ -72,22 +57,6 @@ const router = new VueRouter({
                 // 用户中心路由
                 { path: '/layoutContent/:id/userCenter/power', component: power },
                 { path: '/layoutContent/:id/userCenter/user', component: userCenter },
-                // 工作流程
-                {
-                    path: '/layoutContent/:id/workflow', component: workflow,
-                    children: [
-                        { path: 'details/:rowId/:rowName', name: 'workflowDetails', component: workflowDetails }
-                    ]
-                },
-                // 工作流程 查看
-                {
-                    path: '/layoutContent/:id/workflow/check/:rowId', name: 'workflowCheck', component: workflowCheck,
-                },
-                // 销售看板
-                {
-                    path: '/layoutContent/:id/saleDashBoard',
-                    component: saleDashboard,
-                },
                 // 库所一览
                 {
                     path: '/layoutContent/:id/tokenOverview',
@@ -119,18 +88,6 @@ const router = new VueRouter({
                     component: resourceSelect
                 }
             ]
-        },
-        {
-            path: '/test',
-            component: fishBoneChart
-        },
-        {
-            path: '/test2',
-            component: copyFishBone
-        },
-        {
-            path: '/test4',
-            component: stackChart
         },
     ]
 })

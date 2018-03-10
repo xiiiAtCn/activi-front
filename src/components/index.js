@@ -2,8 +2,6 @@ import Vue from 'vue'
 
 import './base'
 import './boFilterNEW_vuex'
-import './saleDashboard'
-import './chart'
 import './tokenConfig'
 
 const mCard = resolve => {
