@@ -1,5 +1,5 @@
 <template>
-    <div v-show="visible">
+    <div> 
         <Row>
             <Date-picker 
                 :value="objectModel" 

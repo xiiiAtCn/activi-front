@@ -1,5 +1,5 @@
 <template>
-    <div v-show="visible">
+    <div>
         <Row >
             <Input 
                 v-model="objectModel"
