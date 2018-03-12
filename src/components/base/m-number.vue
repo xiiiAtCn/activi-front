@@ -1,11 +1,11 @@
 <template>
-    <div v-show="visible">
+    <div>
         <Row >
-            <Input 
+            <Input
                 v-model="objectModel"
-                :placeholder="placeholder" 
-                :disabled="readonly" 
-                @on-change="inputNumber($event)"  
+                :placeholder="placeholder"
+                :disabled="readonly"
+                @on-change="inputNumber($event)"
                 @on-blur="inputNumber($event, true)" >
             </Input>
         </Row>
