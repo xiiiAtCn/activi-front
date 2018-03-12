@@ -3,7 +3,7 @@
         <Row>
             <div class="search">
                 <Input v-model="objectModel" :placeholder="placeholder" readonly :disabled="readonly">
-                    <Button slot="append" @click="handleDeleteChoose" v-show="showClose" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
+                    <Button slot="append" @click="handleDeleteChoose" v-show="objectModel === '' ? 0: 1" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
                     <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
@@ -59,12 +59,10 @@
                 return  '请选择' + _.get(this.define, 'title', '相关信息')
             },
             key(){
-                return _.get(this.define, 'key', '')
+                return _.get(this.define, 'ral_key', '')
             }
         },
         mounted(){
-            if(this.objectModel){this.showClose = true}
-
             //bus接收双击确定事件
             bus.$on(this.dataDomain + '_dbclick', id =>{
                 if(id && _.isString(id)){
@@ -112,8 +110,6 @@
 
                 this.objectModel = data[this.key]
 
-                this.showClose = true
-
                 this.valid()
                 if (this.objectModel !== '') {
                     this.errorMessage = ''
@@ -135,7 +131,6 @@
             handleDeleteChoose(){
                 bus.$emit(this.dataDomain + 'delete')
                 this.objectModel = ''
-                this.showClose = false
             }
         }
     }

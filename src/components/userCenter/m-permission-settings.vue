@@ -322,7 +322,8 @@
                                 h('span', [
                                     h('span',{
                                         style: {
-                                            cursor : 'pointer'
+                                            cursor : 'pointer',
+                                            minWidth:'100px'
                                         },
                                         class:{
                                             'ivu-tree-title':true,
@@ -404,13 +405,17 @@
                                     width: '100%'
                                 }
                             }, [
-                                h('span', [
+                                h('span',{
+                                    style: {
+                                        display: 'inline-block',
+                                        minWidth: '100px'
+                                    }
+                                }, [
                                     h('span', {
                                         style: {
-                                            marginRight: '8px',
-                                            fontWeight: '500'
+                                            marginRight: '8px'
                                         }
-                                    },'['+data.menuOrder+']'),
+                                    },'['+ (data.menuOrder||0) +']'),
                                     h('span',{
                                         style: {
                                             cursor : 'pointer'

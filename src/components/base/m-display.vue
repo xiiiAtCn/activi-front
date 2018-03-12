@@ -25,12 +25,12 @@
                 return _.get(this.define, 'dataDomain', '')
             },
             key(){
-                return _.get(this.define, 'key', '')
+                return _.get(this.define, 'ral_key', '')
             }
         },
         mounted(){
             bus.$on(this.dataDomain + 'add',data=>{
-                this.objectModel = data[this.key]
+                this.objectModel = data[this.key]||''
             })
             bus.$on(this.dataDomain + 'delete',()=>{
                 this.objectModel = ''
