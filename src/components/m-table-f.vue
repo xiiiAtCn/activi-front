@@ -2,60 +2,66 @@
     <div ref="tableCt" class="table-f">
         <Row class="top-content" style="text-align: right">
             <Col span="24">
-                <div class="button-container search" v-if="search" >
-                    <Row>
-                        <Col span="18">
-                            <AutoComplete
-                                v-model="valueSearch"
-                                placeholder="查询"
-                                @on-search="searchSuggest"
-                                @enter="handleTopSearch">
-                                <Option v-for="(option, index) in suggestList" :value="option" :key="index">{{option}}</Option>
-                            </AutoComplete>
-                        </Col>
-                        <Col span="6" class="btn-ct">
-                            <Button class="search-button" @click="handleTopSearch" type="info">搜索</Button>
-                        </Col>
-                    </Row>
-                </div>
-                <div class="button-container" >
-                    <Poptip placement="bottom">
-                        <Button type="ghost" icon="grid"></Button>
-                        <div class="api" slot="content" style="text-align: left">
-                            <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                                <Checkbox :indeterminate="indeterminate"
-                                          :value="checkAll"
-                                          @click.prevent.native="handleCheckAll">全选</Checkbox>
-                            </div>
-                            <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange" style="height: 400px;overflow-y: scroll">
-                                <div v-for='(item, index) in dataList' :key="index">
-                                    <Checkbox :label="item.label"></Checkbox>
-                                </div>
-                            </CheckboxGroup>
+            <div class="button-container search" v-if="search" >
+                <Row>
+                    <Col span="18">
+                    <AutoComplete
+                        v-model="valueSearch"
+                        placeholder="查询"
+                        @on-search="searchSuggest"
+                        @enter="handleTopSearch">
+                        <Option v-for="(option, index) in suggestList" :value="option" :key="index">{{option}}</Option>
+                    </AutoComplete>
+                    </Col>
+                    <Col span="6" class="btn-ct">
+                    <Button class="search-button" @click="handleTopSearch" type="info">搜索</Button>
+                    </Col>
+                </Row>
+            </div>
+            <div class="button-container" >
+                <Poptip placement="bottom">
+                    <Button type="ghost" icon="grid"></Button>
+                    <div class="api" slot="content" style="text-align: left">
+                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                            <Checkbox :indeterminate="indeterminate"
+                                      :value="checkAll"
+                                      @click.prevent.native="handleCheckAll">全选</Checkbox>
                         </div>
-                    </Poptip>
-                </div>
-                <div class="button-container">
-                    <div>
-                        <Select style="width:120px" placeholder="请选择显示行数" @on-change="changeSelect">
-                            <Option v-for="item in rowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                        </Select>
+                        <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange" style="height: 400px;overflow-y: scroll">
+                            <div v-for='(item, index) in dataList' :key="index">
+                                <Checkbox :label="item.label"></Checkbox>
+                            </div>
+                        </CheckboxGroup>
                     </div>
+                </Poptip>
+            </div>
+            <div class="button-container">
+                <div>
+                    <Select style="width:120px" placeholder="请选择显示行数" @on-change="changeSelect">
+                        <Option v-for="item in rowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
                 </div>
-                <div v-for="(item, index) in operation"  :key="index" class="button-container" >
-                    <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.action)">{{item.text}}</Button>
-                </div>
+            </div>
+            <div v-for="(item, index) in operation"  :key="index" class="button-container" >
+                <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.action)">{{item.text}}</Button>
+            </div>
             </Col>
         </Row>
         <div>
             <Table :highlight-row="checkRow === 'S' ? true : false" border @on-current-change="handleRowClick" @on-selection-change="handleRowsClick"  @on-row-dblclick="handledblclick"
-                   :columns="columnsData" :data="dataTable" :height="tableHeight"></Table>
+                   :columns="columnsData" :data="dataTable"></Table>
         </div>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;" ref="pageCt">
                 <Page :total="pageTotal || rowsContent.length" :page-size="parseInt(rowCount)" :current="currentPage" @on-change="changePage"></Page>
             </div>
         </div>
+        <mLayer :value="showLayer" :titleText="layerTitle" @on-cancel="handleCancel" @on-ok="handleOk">
+            <component
+                :is="componentName"
+                :define="layerDefine"
+            ></component>
+        </mLayer>
     </div>
 </template>
 <script>
@@ -67,6 +73,10 @@
     export default {
         props: {
             showModalBtn: {
+                type: null,
+                default: false
+            },
+            customBtn: {//自定义表格内菜单
                 type: null,
                 default: false
             },
@@ -103,10 +113,6 @@
             tableName:{
                 type: null,
                 default: undefined
-            },
-            tableHeight:{
-                type: null,
-                default: 500
             },
             checkRow:{
                 type: null,
@@ -190,7 +196,13 @@
                 //提示数据列表
                 suggestList: [],
                 suggestFlag: false,
-                searchLoading: false
+                searchLoading: false,
+
+                //弹出框
+                showLayer:false,
+                layerDefine:{},
+                componentName:'',
+                layerTitle:'活动一览详情展示'
             }
         },
         watch: {
@@ -300,19 +312,28 @@
                             let contentRender = []
                             for(let i = 0; i < container.length; i++) {
                                 let element = container[i]
-                                if(element.flag) {
-                                    contentRender.push(h('span',
-                                        {
-                                            style:{
-                                                color: 'red'
+                                if((element['data'] !== undefined) && ((typeof element['data'].valueOf()) === "boolean")){
+                                    contentRender.push(
+                                        h('Icon', {
+                                            props: {
+                                                type: element['data'].valueOf()?'checkmark-round':'close-round'
                                             }
-                                        },
-                                        element['data']
-                                    ))
-                                } else {
-                                    contentRender.push(h('span',
-                                        element['data']
-                                    ))
+                                        }))
+                                }else{
+                                    if(element.flag) {
+                                        contentRender.push(h('span',
+                                            {
+                                                style:{
+                                                    color: 'red'
+                                                }
+                                            },
+                                            element['data']
+                                        ))
+                                    } else {
+                                        contentRender.push(h('span',
+                                            element['data']
+                                        ))
+                                    }
                                 }
                             }
                             if (val.icon) {
@@ -391,28 +412,64 @@
                     align: 'center',
                     fixed: 'left',
                     render: (h, params) => {
-                        let buttons=params.row.buttons[0]
-                        return h('div', [
-                            h('span', {
-                                style:{
-                                    marginRight:'5px',
-                                    marginLeft:'-5px'
-                                }
-                            }, params.index + 1 + (this.currentPage-1)*Number(this.rowCount)),
-                            h('Button', {
-                                props:{
-                                  size:'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.handleButtonClick(buttons)
+                        if(this.customBtn){
+                            return h('div', [
+                                h('span', {
+                                    style:{
+                                        marginRight:'5px',
+                                        marginLeft:'-5px'
                                     }
-                                }
-                            }, buttons.text)
-                        ])
+                                }, params.index + 1 + (this.currentPage-1)*Number(this.rowCount)),
+                                h('Button', {
+                                    props:{
+                                        size:'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.handleCustomBtn(params.row.id)
+                                        }
+                                    }
+                                }, '查看')
+                            ])
+                        }else{
+                            let buttons=params.row.buttons[0]
+                            return h('div', [
+                                h('span', {
+                                    style:{
+                                        marginRight:'5px',
+                                        marginLeft:'-5px'
+                                    }
+                                }, params.index + 1 + (this.currentPage-1)*Number(this.rowCount)),
+                                h('Button', {
+                                    props:{
+                                        size:'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.handleButtonClick(buttons)
+                                        }
+                                    }
+                                }, buttons.text)
+                            ])
+                        }
+
                     }
                 })
             },
+            //打开弹出框
+            handleCustomBtn(id){
+                this.layerDefine.id = id
+                this.componentName = 'mFilterTable'
+                this.showLayer = true
+            },
+            handleCancel(){
+                this.showLayer = false
+            },
+            handleOk(){
+                this.showLayer = false
+            },
+
+
             //tableData存入行数据
             handleContent(){
                 if(this.rowsContent.length === undefined || this.rowsContent.length === 0){
@@ -427,7 +484,9 @@
                 }
                 this.showButton()
                 this.checkRowClick()
-                this.checkValue()
+                this.$nextTick(function() {
+                    this.checkValue()
+                })
             },
             //是否去除无用的操作列
             removeColButton(){

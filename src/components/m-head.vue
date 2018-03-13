@@ -6,7 +6,7 @@
             </div>
             <div style="clear: both"></div>
         </div>
-        <Menu active-name="" theme="light" class="themeLight" style="width:auto;">
+        <Menu ref="leftMenu" :active-name="active" theme="light" class="themeLight" style="width:auto;">
             <div class="custom-menu">
                 <Menu-item v-for="item in items" :name="item.code" class="customItem" :key="item.code" :id="item.code">
                     <router-link class="business-module" :to="'/layoutContent/' + item.code">
@@ -20,11 +20,16 @@
 </template>
 
 <script>
+    import {getData} from 'utils/actionUtils'
+    import Mutations from 'store/Mutation'
+    import _ from 'lodash'
+
     export default {
         data: function () {
             return {
                 items: [],
-                username: 'developer'
+                username: 'developer',
+                active:''
             }
         },
         mounted: function () {
@@ -36,27 +41,22 @@
                 this.setUrl('/api/logout').forPost(() => location.href = '/')
             },
             getLeftMenu () {
-                let systemKey = localStorage.getItem('systemKey')
-                let queries = {}
-                if(systemKey !== '') {
-                    queries = {
-                        ...queries,
-                        systemKey
-                    }
+                let items = _.get(this.$store.state.componentPageData,['topMenu'], '')
+
+                if(!items){
+                    getData('/api/module/topMenu',(res)=>{
+                        if(res){
+                            this.items = res
+                            this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: 'topMenu', data: res })
+                        }
+                    })
+                }else{
+                    this.items = items
                 }
-                this.setUrl('/api/module/topMenu')
-                .setQuery(queries)
-                .forGet(res => {
-                    this.items = res
+                this.$nextTick(function() {
+                    this.active = this.$route.params.id
+                    this.$refs.leftMenu.updateActiveName()
                 })
-            },
-            chooseId () {
-                document.getElementById(this.$router.currentRoute.params.id).click()
-            }
-        },
-        watch: {
-            '$route': function () {
-                this.chooseId()
             }
         }
     }

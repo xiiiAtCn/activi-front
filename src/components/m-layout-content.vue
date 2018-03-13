@@ -67,6 +67,7 @@
 <script>
     import mHead from './m-head.vue'
     import  bus from '../router/bus'
+    import _ from 'lodash'
 
     export default {
         components: {mHead},
@@ -145,7 +146,9 @@
                 } else {
                     this.firstShow = true
                     this.secondShow = true
-                    this.setUrl('/api/module/topMenu').forGet(res => {
+
+                    let res = _.get(this.$store.state.componentPageData,['topMenu'], '')
+                    if(res){
                         this.ids = []
                         for (let i of res) {
                             this.ids.push(i.code)
@@ -154,7 +157,18 @@
                                 this.secondIcon = i.icon
                             }
                         }
-                    })
+                    }else{
+                        this.setUrl('/api/module/topMenu').forGet(res => {
+                            this.ids = []
+                            for (let i of res) {
+                                this.ids.push(i.code)
+                                if (i.code === currentId) {
+                                    this.secondTitle = i.title
+                                    this.secondIcon = i.icon
+                                }
+                            }
+                        })
+                    }
                 }
             },
             getTopBread () {

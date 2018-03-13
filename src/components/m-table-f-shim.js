@@ -12,7 +12,7 @@ let tableFShim = Vue.component('tableF-Shim', {
                 operation: this.operation,
                 cols: this.cols,
                 rowsContent: this.rowsContent,
-                tableHeight: this.tableHeight,
+                //tableHeight: this.tableHeight,
                 search:this.showSearch,//是否显示搜索框
                 tableName:'',//为本地存贮提供表格名字
                 serverPage:this.serverPage,//是否服务器分页
