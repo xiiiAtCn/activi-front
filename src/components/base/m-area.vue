@@ -25,8 +25,7 @@
     import _ from 'lodash'
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
-    import Vue from 'vue'
-    import VueAMap,{lazyAMapApiLoaderInstance} from 'vue-amap'
+    import {lazyAMapApiLoaderInstance} from 'vue-amap'
 
     export default {
         mixins: [mixin],
