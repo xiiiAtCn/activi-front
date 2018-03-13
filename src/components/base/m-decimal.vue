@@ -60,9 +60,29 @@
                     let regex = /\./g
                     let pointCount = value.match(regex)
                     if (!value.endsWith('.')) {
-                        value = parseFloat(value)
+                        let appendix = ''
+                        let hasDot = false
+                        let radixLength = 0
+                        if(/(0*$)/.test(value)) {
+                            appendix = /(0*$)/.exec(value)[1]
+                            if(value.indexOf('.') != -1) {
+                                hasDot = true
+                                radixLength = value.split('.')[1].length
+                            }
+                            value = parseFloat(value)
+                        }
                         if (isNaN(value)) {
                             value = ''
+                        }
+                        if(hasDot && value!== '' && String(value).indexOf('.') === -1) {
+                            value += '.'
+                        }
+                        if(hasDot) {
+                            if(radixLength < 15) {
+                                value += appendix
+                            } else {
+                                value = parseFloat(value).toFixed(14)
+                            }
                         }
                     } else {
                         if (pointCount.length > 1) {
@@ -81,6 +101,9 @@
                 this.$nextTick(() => {
                     e.target.value = value
                 })
+                if(!isFinite(value)) {
+                    value = 1.0000000000000003e+219
+                }
                 this.objectModel = String(value)
                 this.valid()
             }
