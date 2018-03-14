@@ -2,8 +2,8 @@
     <div>
         <Row>
             <div class="search">
-                <Input v-model="objectModel" :placeholder="placeholder" readonly :disabled="readonly">
-                    <Button slot="append" @click="handleDeleteChoose" v-show="objectModel === '' ? 0: 1" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
+                <Input v-model="objectModel.value" :placeholder="placeholder" readonly :disabled="readonly">
+                    <Button slot="append" @click="handleDeleteChoose" v-show="(objectModel === '' )||(objectModel.value === '' ) || (objectModel.value === 'undefined') ? 0: 1" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
                     <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
@@ -91,13 +91,15 @@
                 this.getChooseData(id)
             },
             getChooseData(id){
-                let action={
+                const action={
                     url:this.backUrl,
                     type: 'GET',
                     queryParams:{
                         id:id
                     }
                 }
+                this.objectModel = {}
+                this.objectModel.id = _.cloneDeep(id)
                 getData(action,(data)=>{
                     if (data) {
                         this.handleData(data)
@@ -108,18 +110,18 @@
             handleData(data){
                 bus.$emit(this.dataDomain + 'add',data)
 
-                this.objectModel = data[this.key]
+                this.objectModel.value = data[this.key]
 
                 this.valid()
-                if (this.objectModel !== '') {
+                if (this.objectModel.value !== '') {
                     this.errorMessage = ''
                 }
             },
             valid(){
-                let hasError =false
+                let hasError = false
                 if (!this.readonly) {
                     if (this.required) {
-                        if (this.objectModel === '') {
+                        if (this.objectModel.value === '') {
                             hasError = true
                             this.errorMessage = '请选择必填项'
                         }
