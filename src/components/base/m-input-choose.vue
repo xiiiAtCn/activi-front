@@ -122,7 +122,7 @@
                 let hasError = false
                 if (!this.readonly) {
                     if (this.required) {
-                        if (this.objectModel.value === '') {
+                        if (this.objectModel === '' || this.objectModel.value === '') {
                             hasError = true
                             this.errorMessage = '请选择必填项'
                         }
