@@ -91,6 +91,9 @@
                 this.getChooseData(id)
             },
             getChooseData(id){
+                this.objectModel = {}
+                this.objectModel.id = _.cloneDeep(id)
+
                 const action={
                     url:this.backUrl,
                     type: 'GET',
@@ -98,13 +101,11 @@
                         id:id
                     }
                 }
-                this.objectModel = {}
-                this.objectModel.id = _.cloneDeep(id)
+
                 getData(action,(data)=>{
                     if (data) {
                         this.handleData(data)
                     }
-
                 })
             },
             handleData(data){

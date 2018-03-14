@@ -2,7 +2,7 @@
     <div>
         <Row>
             <Col span="10" style="margin-right: 15px">
-                <Cascader :data="data" :modal="objectModel" readonly :disabled="readonly" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
+                <Cascader :data="data" :modal="selectModal" readonly :disabled="readonly" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
             </Col>
             <Col span="10">
                 <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :placeholder="placeholder" readonly :disabled="readonly"></Input>
@@ -40,6 +40,10 @@
             }
         },
         mounted(){
+            if(this.objectModel){
+                this.selectModal = this.objectModel.area
+                this.address = this.objectModel.address
+            }
         },
         methods: {
             loadData (item, callback) {
@@ -132,11 +136,11 @@
                 this.showLayer = false
             },
             getSelect(arg){
-                this.objectModel = _.cloneDeep(arg)
+                this.selectModal = _.cloneDeep(arg)
                 this.concatAddress(arg,this.address)
             },
             addAddress(){
-                this.concatAddress(this.objectModel,this.address)
+                this.concatAddress(this.selectModal,this.address)
             },
             concatAddress(arg,address){
                 if(arg.length >0){
@@ -147,14 +151,19 @@
                 }
 
                 this.searchName += address
+
+                this.objectModel ={
+                    area : this.selectModal,
+                    address : address
+                }
             },
             valid(){
                 let hasError = false
                 if (!this.readonly) {
                     if (this.required) {
-                        if (this.objectModel === '') {
+                        if (this.objectModel.area || this.objectModel.address) {
                             hasError = true
-                            this.errorMessage = '请选择必填项'
+                            this.errorMessage = '请填写地址信息'
                         }
                     }
                 }
