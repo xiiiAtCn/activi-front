@@ -42,17 +42,20 @@
             },
             getLeftMenu () {
                 let items = _.get(this.$store.state.componentPageData,['topMenu'], '')
-
                 if(!items){
                     getData('/api/module/topMenu',(res)=>{
                         if(res){
                             this.items = res
                             this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: 'topMenu', data: res })
+                            this.activeSelect()
                         }
                     })
                 }else{
                     this.items = items
+                    this.activeSelect()
                 }
+            },
+            activeSelect(){
                 this.$nextTick(function() {
                     this.active = this.$route.params.id
                     this.$refs.leftMenu.updateActiveName()
