@@ -256,16 +256,22 @@
                         align: 'center',
                         width: this.getLength(val.text),
                         render: (h, params) => {
+                            let data = params.row[val.field]
+                            if(!data){
+                                return h('div',h('span', ''))
+                            } else if(Object.prototype.toString.call(data) === '[object Object]'){
+                                data = data.value
+                            }
                             if(self.columnsData){
                                 self.columnsData.forEach((v,j)=>{
                                     if(!v.key){return}
-                                    if(v.key === val.field && self.getLength(params.row[val.field]) > self.columnsData[j].width){
+                                    if(v.key === val.field && self.getLength(data) > self.columnsData[j].width){
                                         if(!self.columnsData[j]){return}
-                                        self.columnsData[j].width = self.getLength(params.row[val.field])
+                                        self.columnsData[j].width = self.getLength(data)
                                     }
                                 })
                             }
-                            let data = params.row[val.field]
+
                             let container = []
                             if(this.wordList.length > 0 && typeof data === 'string' && data) {
                                 for(let i = 0; i < this.wordList.length; i++) {
