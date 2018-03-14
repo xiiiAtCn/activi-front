@@ -331,7 +331,7 @@
                             align: 'center',
                             ui_define: col['uiObject'],
                             render: (h, column) => {
-                                return _.get(column, ['row', col['key'], 'value'], '')
+                                return _.get(column, ['row', col['key'], 'value', 'value'], '') || _.get(column, ['row', col['key'], 'value'], '')
                             }
                         }
                         columns.push(column)
