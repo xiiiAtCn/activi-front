@@ -140,18 +140,21 @@ export default {
                 }
             }
             this.$emit('on-ok')
+            this.$emit('on-close')
         },
         cancel () {
             if (this.autoClose) {
                 this.closeLayer()
             }
             this.$emit('on-cancel')
+            this.$emit('on-close')
         },
         EscClose (e) {
             if (this.visible) {
                 if (e.keyCode === 27) {
                     this.closeLayer()
                     this.$emit('on-cancel')
+                    this.$emit('on-close')
                 }
             }
         }

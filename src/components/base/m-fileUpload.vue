@@ -26,21 +26,30 @@
                     <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 </div>
             </template>
-            <div v-for="item in objectModel" :key="item.url">
+            <div v-for="item in objectModel" :key="item.url" >
                 <template v-if="item.status === 'finished'">
                     <div class="file-item">
-                        <Icon type="document-text"></Icon>
-                        <span>{{item.name}}</span>
-                        <template >
-                            <div class="file-delete-action" v-if="!readonly">
-                                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                            </div>
-                            <div class="file-delete-action" style="margin-right: 10px;">
-                                <a :href="item.url" :download="item.name">
-                                    <Icon type="arrow-down-a"></Icon>
-                                </a>
-                            </div>
-                        </template>
+                        <Row>
+                            <Col span="18">
+                                <Icon type="document-text"></Icon>
+                                <span>{{item.name}}</span>
+                            </Col>
+                            <Col span="6" style="min-width: 100px;">
+                                <template >
+                                    <div class="file-action" v-if="!readonly">
+                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                                    </div>
+                                    <div class="file-action" >
+                                        <a :href="item.url" :download="item.name">
+                                            <Icon type="arrow-down-a"></Icon>
+                                        </a>
+                                    </div>
+                                    <div class="file-action" v-show="isSupport(item)" >
+                                        <Icon type="eye" style="color: rgb(92, 107, 119);" @click.native="editFile(item)"></Icon>
+                                    </div>
+                                </template>
+                            </Col>
+                        </Row>
                     </div>
                 </template>
                 <template v-else>
@@ -53,12 +62,17 @@
             <div v-if="hasError" class="gateway-item-error">{{errorMessage}}</div>
             <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
+        <mLayer v-model="showModal" @on-close="clearEditor">
+            <div :id="id">
+            </div>
+        </mLayer>
     </div>
 </template>
 <script>
     import _ from 'lodash'
     import mixin from './mixin'
     import { ELEMENT_VALIDATE_RESULT } from 'store/Action'
+    import DocsAPI from 'DocsAPI'
     export default {
         name:'m-picture-upload',
         mixins: [mixin],
@@ -99,11 +113,74 @@
         },
         data() {
             return {
+                showModal: false,
                 data: {
-                }
+
+                },
+                id: '',
+                docEditor: null,
+                textTypes: new Set(['doc', 'docm', 'docx', 'dot', 'dotm', 'dotx', 'epub', 'fodt', 
+                    'htm', 'html', 'mht', 'odt', 'pdf', 'rtf', 'txt', 'djvu', 'xps']),
+                sheetTypes: new Set(['csv', 'fods', 'ods', 'xls', 'xlsm', 'xlsx', 'xlt', 'xltm', 'xltx']),
+                presentationTypes: new Set(['fodp', 'odp', 'pot', 'potm', 'potx', 'pps', 'ppsm', 'ppsx', 'ppt', 'pptm', 'pptx'])
             }
         },
+        mounted() {
+            this.id = 'editContainer' + this._uid
+        },
         methods: {
+            isSupport(item) {
+                let type = item.id.substring(item.id.lastIndexOf('.') + 1).toLowerCase()
+                //can only support these file types. more information: https://api.onlyoffice.com/editors/config/
+                if(this.textTypes.has(type) 
+                    || this.sheetTypes.has(type) 
+                    || this.presentationTypes.has(type)) {
+                    return true
+                }
+                return false
+            },
+            editFile(item) {
+                if(DocsAPI === null || DocsAPI === undefined) {
+                    this.$Message.error('预览插件加载失败, 请稍后重试')
+                    return
+                }
+                this.showModal = true
+                if(this.objectModel.length > 1 || this.docEditor === null) {
+                    const id = item.id
+                    const key = id.substring(id.lastIndexOf('/') + 1, id.lastIndexOf('.')).substring(0, 20)
+                    const url = item.url.replace('/', '\/')
+                    const fileType = id.substring(id.lastIndexOf('.') + 1)
+                    let documentType = 'text'
+                    if(this.sheetTypes.has(fileType)) {
+                        documentType = 'spreadsheet'
+                    } else if(this.presentationTypes.has(fileType)) {
+                        documentType = 'presentation'
+                    }
+                    this.docEditor = new DocsAPI.DocEditor(this.id, {
+                        //document setting. more information: https://api.onlyoffice.com/editors/config/
+                        document: {
+                            fileType: fileType,
+                            key: key,
+                            title: item.name,
+                            url: url,
+                            permissions: {
+                                comment: false,
+                                edit: false,
+                                review: false,
+                                print: false,
+                                download: false
+                            }
+                        },
+                        documentType: documentType
+                    })
+                }
+            },
+            clearEditor() {
+                if(this.objectModel.length > 1) {
+                    this.docEditor.destroyEditor()
+                    this.docEditor = null
+                }
+            },
             valid() {
                 if (!this.readonly) {
                     let hasError = false
@@ -152,12 +229,15 @@
                 console.log( '请求路径为 ', this.deleteAddress + '?id=' + id)
             },
             handleSuccess (res, file) {
-                debugger
                 file['url'] = file['response']['url']
                 file['id'] = file['response']['id']
                 this.valid()
                 this.$Message.success('上传成功')
                 this.objectModel = this.$refs.upload.fileList
+                if(this.docEditor !== null) {
+                    this.docEditor.destroyEditor()
+                    this.docEditor = null
+                }
             },
             handleError() {
                 this.$Message.error('上传失败，请稍后重试')
@@ -217,12 +297,14 @@
         margin: 0 2px;
     }
 
-    .file-delete-action {
+    .file-action {
         float: right;
         cursor: pointer;
+        margin-right: 5px;
+        margin-left: 5px;
     }
 
-    .file-delete-action:hover {
+    .file-action:hover {
         font-size: 1.8em;
         transition: all .1s ease-in-out;
     }

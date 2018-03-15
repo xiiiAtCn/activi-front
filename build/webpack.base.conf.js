@@ -80,6 +80,7 @@ module.exports = {
     ]
   },
   externals: {
-    'd4': 'window.d3'
+    'd4': 'window.d3',
+    'DocsAPI': 'window.DocsAPI'
   }
 }
