@@ -48,7 +48,14 @@ const router = new VueRouter({
                 {
                     path: 'page',
                     component: mUrlSection,
-                    props: (route) => ({ query: route.query })
+                    props: (route) => ({ query: route.query }),
+                    children: [
+                        {
+                            path: 'tabs',
+                            component: mUrlSection,
+                            props: route => ({ query: route.query })
+                        }
+                    ]
                 },
                 {
                     path: '/layoutContent/:id/workbench',
