@@ -80,6 +80,10 @@
                 type: null,
                 default: false
             },
+            justTable:{
+                type: null,
+                default: false
+            },
             operation: {
                 type: null,
                 default () {
@@ -200,7 +204,7 @@
 
                 //弹出框
                 showLayer:false,
-                layerDefine:{},
+                layerDefine:'',
                 componentName:'',
                 layerTitle:'活动一览详情展示'
             }
@@ -222,6 +226,10 @@
         },
         mounted () {
             console.log('mTableF run')
+            if(this.justTable){
+                this.handleDefine()
+                this.handleContent()
+            }
         },
         methods: {
             // 配置表格
@@ -464,14 +472,18 @@
             },
             //打开弹出框
             handleCustomBtn(id){
-                this.layerDefine.id = id
+                this.layerDefine ={
+                    id:id
+                }
                 this.componentName = 'mFilterTable'
                 this.showLayer = true
             },
             handleCancel(){
+                this.layerDefine = ''
                 this.showLayer = false
             },
             handleOk(){
+                this.layerDefine = ''
                 this.showLayer = false
             },
 

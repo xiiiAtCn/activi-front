@@ -3,6 +3,7 @@ import Vue from 'vue'
 import './base'
 import './boFilterNEW_vuex'
 import './tokenConfig'
+import './stock'
 
 const mCard = resolve => {
     require(['./m-card.vue'], resolve)
@@ -40,10 +41,8 @@ const mTable = resolve => {
     require(['./m-table.vue'], resolve)
 }
 
-
 const mTableF = resolve => {
     require(['./m-table-f.vue'], resolve)
-    require(['./m-table-f-shim.js'], resolve)
 }
 
 const mLayer = resolve => {
@@ -70,6 +69,10 @@ const mChoreographContent = resolve => {
     require(['./m-choreograph-content.vue'], resolve)
 }
 
+const mShowMap = resolve => {
+    require(['./m-show-map.vue'], resolve)
+}
+
 Vue.component('mCard', mCard)
 Vue.component('mHead', mHead)
 Vue.component('mLayoutContentDefault', mLayoutContentDefault)
@@ -86,3 +89,4 @@ Vue.component('mTabs', mTabs)
 Vue.component('mUrlSection', mUrlSection)
 Vue.component('mCardTable', mCardTable)
 Vue.component('mChoreographContent', mChoreographContent)
+Vue.component('mShowMap', mShowMap)
