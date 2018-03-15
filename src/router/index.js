@@ -28,6 +28,9 @@ const power = resolve => require(['../components/userCenter/m-permission-setting
 //室内地图
 const ngrMap = resolve => require(['../components/m-show-map.vue'], resolve)
 
+//帮助中新
+const Helper = resolve => require(['../components/debug/m-helper.vue'], resolve)
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -102,6 +105,10 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/ngrMap',
                     component: ngrMap
                 },
+                {
+                    path: '/layoutContent/fq/helper',
+                    component: Helper
+                }
             ]
         },
     ]
