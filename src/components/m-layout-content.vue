@@ -65,12 +65,10 @@
 </template>
 
 <script>
-    import mHead from './m-head.vue'
     import  bus from '../router/bus'
     import _ from 'lodash'
 
     export default {
-        components: {mHead},
         data () {
             return {
                 leftMenu: true,
@@ -124,6 +122,20 @@
                 ],
                 ids: [],
                 nickName: ''
+            }
+        },
+        mounted() {
+            this.getLeftMenu()
+            this.getNickName()
+            bus.$on('layoutTop',this.handleScrollTop)
+            let documentSDK = document.querySelector('documentSDK')
+            if(documentSDK === null || documentSDK === undefined) {
+                let script = document.createElement('script')
+                script.id = 'documentSDK'
+                this.setUrl('/api/config/documentSDK').forGet(message => {
+                    script.src = `https://${message.data.host}:${message.data.port}/web-apps/apps/api/documents/api.js`
+                    document.body.appendChild(script)
+                })
             }
         },
         methods: {
@@ -219,11 +231,6 @@
                     }
                 },17)
             }
-        },
-        mounted: function () {
-            this.getLeftMenu()
-            this.getNickName()
-            bus.$on('layoutTop',this.handleScrollTop)
         },
         watch: {
             '$route' () {

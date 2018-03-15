@@ -141,7 +141,24 @@
             },
             editFile(item) {
                 if(DocsAPI === null || DocsAPI === undefined) {
-                    this.$Message.error('预览插件加载失败, 请稍后重试')
+                    this.$Message.error({
+                        render: h => {
+                            return h('span',
+                                [
+                                    '请前往',
+                                    h('a',
+                                        {
+                                            attrs: {
+                                                href: '/layoutContent/fq/helper'
+                                            }
+                                        },
+                                        'FAQ下的页面报错及处理部分'
+                                    ),
+                                    '寻找解决办法'
+                                ]
+                            )
+                        }
+                    })
                     return
                 }
                 this.showModal = true
