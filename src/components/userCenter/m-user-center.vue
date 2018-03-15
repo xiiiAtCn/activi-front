@@ -12,7 +12,7 @@
                 <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
             </Col>
             <Col span="24" class="page-container">
-                <Page :total="dataTotal" show-elevator @on-change="pageChange"></Page>
+                <Page :total="dataTotal" :current="currentPage" show-elevator @on-change="pageChange"></Page>
             </Col>
         </Row>
 
@@ -144,6 +144,7 @@
                 tableData:[],
                 allData:[],
                 dataTotal:10,
+                currentPage:1,
 
                 showLayer:false,
                 layerLoading:false,
@@ -216,6 +217,7 @@
                         this.dataTotal = result.length
                         this.allData = result
                         this.tableData = result.slice(0,10)
+                        this.currentPage = 1
                     }
                 })
             },

@@ -37,6 +37,26 @@
                             <FormItem label="描述">
                                 <Input v-model="menuForm.description" placeholder="请输入描述信息"></Input>
                             </FormItem>
+                            <FormItem label="选择URL类型" v-if="menuForm.parentKey">
+                                <RadioGroup v-model="menuForm.urlType">
+                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">{{item.value}}</Radio>
+                                </RadioGroup>
+                            </FormItem>
+                            <FormItem label="选择后生成URL" v-show="menuForm.urlType !== 'other'" v-if="menuForm.parentKey">
+                                <Row>
+                                    <Col span="11">
+                                        <Select v-model="menuForm.selectResultKey" placeholder="请选择类型" filterable @on-change="selectChange">
+                                            <Option v-for="(item,key) in selectList" :key="key" :value="key">{{item.name}}</Option>
+                                        </Select>
+                                    </Col>
+                                    <Col span="2" style="text-align: center" v-show="menuForm.urlType === 'resource'">-选择metaKey:</Col>
+                                    <Col span="11" v-show="menuForm.urlType === 'resource'">
+                                        <Select v-model="menuForm.metaKey" placeholder="请选择类型" @on-change="generateUrl">
+                                            <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">{{item.nodeName}}</Option>
+                                        </Select>
+                                    </Col>
+                                </Row>
+                            </FormItem>
                             <FormItem label="URL" v-if="menuForm.parentKey">
                                 <Input v-model="menuForm.url" placeholder="请输入URL"></Input>
                             </FormItem>
@@ -87,6 +107,26 @@
                             </FormItem>
                             <FormItem label="描述" prop="description">
                                 <Input v-model="editForm.description" placeholder="请输入描述信息"></Input>
+                            </FormItem>
+                            <FormItem label="选择URL类型" v-if="editForm.parentKey">
+                                <RadioGroup v-model="editForm.urlType">
+                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">{{item.value}}</Radio>
+                                </RadioGroup>
+                            </FormItem>
+                            <FormItem label="选择后生成URL" v-show="editForm.urlType !== 'other'" v-if="editForm.parentKey">
+                                <Row>
+                                    <Col span="11">
+                                    <Select v-model="editForm.selectResultKey" placeholder="请选择类型" filterable @on-change="selectChange">
+                                        <Option v-for="(item,key) in selectList" :key="key" :value="key">{{item.name}}</Option>
+                                    </Select>
+                                    </Col>
+                                    <Col span="2" style="text-align: center" v-show="editForm.urlType === 'resource'">-选择metaKey:</Col>
+                                    <Col span="11" v-show="editForm.urlType === 'resource'">
+                                    <Select v-model="editForm.metaKey" placeholder="请选择类型" @on-change="generateUrl">
+                                        <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">{{item.nodeName}}</Option>
+                                    </Select>
+                                    </Col>
+                                </Row>
                             </FormItem>
                             <FormItem label="URL" v-if="editForm.parentKey">
                                 <Input v-model="editForm.url" placeholder="请输入URL"></Input>
@@ -215,11 +255,31 @@
                 currentKey:'',
                 roleTitle:'添加角色',
 
+                urlTypeList:[
+                    {
+                        value:'资源',
+                        label:'resource'
+                    },
+                    {
+                        value:'活动库所',
+                        label:'petri'
+                    },
+                    {
+                        value:'其他',
+                        label:'other'
+                    }
+                ],
+                selectList:[],
+                metaKeyList:[],
+
                 menuForm: {
                     labelName: '',
                     currentKey: '',
                     description: '',
                     url:'',
+                    urlType:'resource',
+                    selectResultKey:'',
+                    metaKey:'',
                     icon:'',
                     menuOrder:0,
                     picUrl:'',
@@ -237,6 +297,9 @@
                     currentKey: '',
                     description: '',
                     url:'',
+                    urlType:'resource',
+                    selectResultKey:'',
+                    metaKey:'',
                     picUrl:'',
                     menuOrder:0,
                     icon:'',
@@ -288,8 +351,69 @@
         },
         mounted() {
             this.init()
+            this.getSelectData()
         },
         methods: {
+            selectChange(key){
+                if(key === ''){return}
+                if(this.menuForm.selectResultKey){
+                    if(this.menuForm.urlType === 'petri'){
+                        this.setFormUrl('menuForm')
+                        return
+                    }
+                }else{
+                    if(this.editForm.urlType === 'petri'){
+                        this.setFormUrl('editForm')
+                        return
+                    }
+                }
+                this.getmetaKey(this.selectList[key].id)
+            },
+            getSelectData(){
+                getData('/api/placeConfig/getAllPlaceConfig', (result) => {
+                    if(result){
+                        this.selectList = result
+                    }
+                })
+            },
+            getmetaKey(id){
+                const url ={
+                    method:'GET',
+                    pathParams:{
+                        templateId : id
+                    },
+                    url:'/api/placeConfig/cache/getRel/only/{templateId}'
+                }
+                getData(url, (result) => {
+                    if(result){
+                        this.metaKeyList =result
+                    }
+                })
+            },
+            generateUrl(key){
+                if(!key){return}
+                if(this.menuForm.metaKey){
+                    this.setFormUrl('menuForm')
+                } else{
+                    this.setFormUrl('editForm')
+                }
+            },
+            setFormUrl(form){
+                let Form = this[form]
+                if(Form.urlType){
+                    if(Form.urlType === 'resource'){
+                        if(!Form.metaKey){
+                            iView.Message.warning('请选择一个metaKey！')
+                            return
+                        }
+                        Form.url = `/api/resource/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentKey}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览&metaKey=${Form.metaKey}`
+                    }else if(Form.urlType === 'petri'){
+                        Form.url = `/api/petri/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentKey}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览`
+                    }
+                }else{
+                    iView.Message.warning('请选择一个URL类型！')
+                }
+            },
             init(){
                 this.getRoleData()
                 this.getDefaultMenu()
