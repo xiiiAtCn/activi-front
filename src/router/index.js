@@ -25,6 +25,9 @@ const resourceSelect = resolve => require(['../components/tokenConfig/resourceSe
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
 const power = resolve => require(['../components/userCenter/m-permission-settings.vue'], resolve)
 
+//室内地图
+const ngrMap = resolve => require(['../components/m-show-map.vue'], resolve)
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -93,7 +96,12 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/:id/resourceSelect/:tokenId',
                     component: resourceSelect
-                }
+                },
+                // 室内地图
+                {
+                    path: '/layoutContent/:id/ngrMap',
+                    component: ngrMap
+                },
             ]
         },
     ]
