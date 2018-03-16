@@ -2,7 +2,7 @@
     <div>
         <Row>
             <Col span="10" style="margin-right: 15px">
-                <Cascader :data="data" :modal="selectModal" readonly :disabled="readonly" :placeholder="defaultTest||'请选择省市区'" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
+                <Cascader :data="data" :modal="selectModal" :readonly="readonly" :disabled="readonly" :placeholder="defaultTest||'请选择省市区'" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
             </Col>
             <Col span="10">
                 <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :readonly="readonly" :disabled="readonly"></Input>

@@ -704,7 +704,8 @@
                         //         return
                         //     }
                         // }
-                        delete this.columnsData[i].width
+                        this.columnsData[i].width < 170 && delete this.columnsData[i].width
+
                         val=this.columnsData[i]
                         if(val.key && val.key === 'action'){
                             this.columnsData.splice(i,1)
