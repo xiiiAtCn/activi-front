@@ -2,13 +2,13 @@
     <div>
         <Row>
             <Col span="10" style="margin-right: 15px">
-                <Cascader :data="data" :modal="selectModal" readonly :disabled="readonly" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
+                <Cascader :data="data" :modal="selectModal" readonly :disabled="readonly" :placeholder="defaultTest||'请选择省市区'" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
             </Col>
             <Col span="10">
-                <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :placeholder="placeholder" readonly :disabled="readonly"></Input>
+                <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :readonly="readonly" :disabled="readonly"></Input>
             </Col>
             <Col span="2" style="text-align: center;height: 32px"  @click="showMap">
-                <Icon type="android-pin" style="color:#495060;font-size:17px;margin-top: 6px;" @click.native="showMap"></Icon>
+                <Icon type="android-pin" style="color:#495060;font-size:17px;margin-top: 6px;cursor:pointer;" @click.native="showMap"></Icon>
             </Col>
             <mLayer :value="showLayer" titleText="在地图上的位置" @on-cancel="handleCancel" @on-ok="handleOk">
                 <el-amap ref="map" vid="amapDemo" :zoom="12" class="amap-demo"></el-amap>
@@ -36,13 +36,18 @@
                 showLayer:false,
                 selectModal:'',
                 map:'',
-                searchName:''
+                searchName:'',
+
+                defaultTest:''
             }
         },
         mounted(){
             if(this.objectModel){
                 this.selectModal = this.objectModel.area
                 this.address = this.objectModel.address
+                this.searchName = this.objectModel.value
+
+                this.defaultTest = this.selectModal.join('/')
             }
         },
         methods: {
@@ -61,13 +66,13 @@
                             if(item.level === 1){
                                 list.push({
                                     label:v.name,
-                                    value:v.pinyin,
+                                    value:v.name,
                                     id:v.id,
                                 })
                             }else{
                                 list.push({
                                     label:v.name,
-                                    value:v.pinyin,
+                                    value:v.name,
                                     id:v.id,
                                     loading:false,
                                     level:v.level,
@@ -96,7 +101,7 @@
                         result.forEach(v=>{
                             list.push({
                                 label:v.name,
-                                value:v.pinyin,
+                                value:v.name,
                                 id:v.id,
                                 loading :false,
                                 level:v.level,
@@ -146,7 +151,7 @@
                 if(arg.length >0){
                     this.searchName = ''
                     arg.forEach(v=>{
-                        this.searchName += v.name
+                        this.searchName += v
                     })
                 }
 
@@ -154,7 +159,8 @@
 
                 this.objectModel ={
                     area : this.selectModal,
-                    address : address
+                    address : address,
+                    value: this.searchName
                 }
             },
             valid(){
