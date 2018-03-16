@@ -206,7 +206,7 @@
                 showLayer:false,
                 layerDefine:'',
                 componentName:'',
-                layerTitle:'活动一览详情展示'
+                layerTitle:'活动库所一览详情展示'
             }
         },
         watch: {

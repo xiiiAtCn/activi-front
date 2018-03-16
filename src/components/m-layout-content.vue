@@ -21,6 +21,10 @@
                                     <Icon :type="secondIcon"></Icon>
                                     <span>{{secondTitle}}</span>
                                 </BreadcrumbItem>
+                                <BreadcrumbItem v-if="thirdShow"  class="title_main">
+                                    <Icon :type="thirdIcon"></Icon>
+                                    <span>{{thirdTitle}}</span>
+                                </BreadcrumbItem>
                             </Breadcrumb>
                         </i-col>
                         <div class="daJieStyle1">
@@ -127,6 +131,7 @@
         mounted() {
             this.getLeftMenu()
             this.getNickName()
+            this.getTopBread()
             bus.$on('layoutTop',this.handleScrollTop)
             let documentSDK = document.querySelector('documentSDK')
             if(documentSDK === null || documentSDK === undefined) {
@@ -137,6 +142,7 @@
                     document.body.appendChild(script)
                 })
             }
+
         },
         methods: {
             myDesk () {
@@ -191,12 +197,12 @@
                         id: this.$route.params.id
                     }).forGet(res => {
                         for (let i of res) {
-                            if (i.url === chooseUrl) {
+                            if ((i.url.replace(/([^\u0000-\u00FF])/g, function ($) { return encodeURI($)})) === chooseUrl) {
                                 this.thirdTitle = i.title
                                 this.thirdIcon = i.icon
+                                this.thirdShow = true
                             }
                         }
-                        this.thirdShow = true
                     })
                 } else {
                     for (let i of this.ids) {

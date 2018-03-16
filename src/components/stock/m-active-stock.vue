@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h3 class="title-container">活动一览</h3>
+        <h3 class="title-container">活动库所一览</h3>
         <Row>
             <Col span="24">
                 <mTableF
