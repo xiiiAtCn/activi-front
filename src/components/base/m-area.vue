@@ -1,8 +1,8 @@
 <template>
     <div>
         <Row>
-            <Col span="10" style="margin-right: 15px">
-                <Cascader :data="data" :modal="selectModal" :readonly="readonly" :disabled="readonly" :placeholder="defaultTest||'请选择省市区'" :load-data="loadData" @on-visible-change="handleChange" @on-change="getSelect"></Cascader>
+            <Col span="10" style="margin-right: 15px" ref="cascaderCt">
+                <Cascader :data="data" :modal="selectModal" :readonly="readonly" :disabled="readonly" placeholder="请选择省市区" @on-change="getSelect"></Cascader>
             </Col>
             <Col span="10">
                 <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :readonly="readonly" :disabled="readonly"></Input>
@@ -26,6 +26,7 @@
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
     import {lazyAMapApiLoaderInstance} from 'vue-amap'
+    import addressData from './address.json'
 
     export default {
         mixins: [mixin],
@@ -37,84 +38,27 @@
                 selectModal:'',
                 map:'',
                 searchName:'',
-
-                defaultTest:''
+            }
+        },
+        watch:{
+            objectModel(){
+                this.handleDefault()
             }
         },
         mounted(){
-            if(this.objectModel){
-                this.selectModal = this.objectModel.area
-                this.address = this.objectModel.address
-                this.searchName = this.objectModel.value
-
-                this.defaultTest = this.selectModal.join('/')
-            }
+            this.data = addressData
+            this.handleDefault()
         },
         methods: {
-            loadData (item, callback) {
-                item.loading = true;
-                const url={
-                    pathParams:{
-                        parentId : item.id
-                    },
-                    url:'/api/address/{parentId}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        let list=[]
-                        result.forEach(v=>{
-                            if(item.level === 1){
-                                list.push({
-                                    label:v.name,
-                                    value:v.name,
-                                    id:v.id,
-                                })
-                            }else{
-                                list.push({
-                                    label:v.name,
-                                    value:v.name,
-                                    id:v.id,
-                                    loading:false,
-                                    level:v.level,
-                                    children:[]
-                                })
-                            }
+            handleDefault(){
+                if(this.objectModel){
+                    this.selectModal = this.objectModel.area
+                    this.address = this.objectModel.address
+                    this.searchName = this.objectModel.value
+                    this.$nextTick(()=>{
+                        this.$refs.cascaderCt.$el.querySelectorAll('.ivu-input')[0].value = this.objectModel.area.join('/')
+                    })
 
-                        })
-
-                        item.children = list
-                        item.loading = false;
-                        callback();
-                    }
-                })
-            },
-            getTreeData(id){
-                const url={
-                    pathParams:{
-                        parentId : id
-                    },
-                    url:'/api/address/{parentId}'
-                }
-                getData(url, (result) => {
-                    if(result){
-                        let list=[]
-                        result.forEach(v=>{
-                            list.push({
-                                label:v.name,
-                                value:v.name,
-                                id:v.id,
-                                loading :false,
-                                level:v.level,
-                                children:[]
-                            })
-                        })
-                        this.data = list
-                    }
-                })
-            },
-            handleChange(arg){
-                if(arg){
-                   this.getTreeData(0)
                 }
             },
             showMap(){
