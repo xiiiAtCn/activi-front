@@ -9,7 +9,7 @@
                     <Row type="flex" class="breadMenu out-use-menu-horizontal">
                         <i-col class="iCol">
                             <Breadcrumb class="out-use-menu-horizontal" separator="<b class='demo-breadcrumb-separator'></b>">
-                                <BreadcrumbItem href="/layoutContent/00/allMenu" v-if="firstShow" class="title_main">
+                                <BreadcrumbItem href="/layoutContent/04/workbench" v-if="firstShow" class="title_main">
                                     <Icon type="cube"></Icon>
                                     <span>全部功能</span>
                                 </BreadcrumbItem>
@@ -21,7 +21,7 @@
                                     <Icon :type="secondIcon"></Icon>
                                     <span>{{secondTitle}}</span>
                                 </BreadcrumbItem>
-                                <BreadcrumbItem v-if="thirdShow"  class="title_main">
+                                <BreadcrumbItem v-if="thirdShow"  class="title_main" @click.native="dispatchUrl">
                                     <Icon :type="thirdIcon"></Icon>
                                     <span>{{thirdTitle}}</span>
                                 </BreadcrumbItem>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+    import { dispatch } from '../utils/actionUtils'
     import  bus from '../router/bus'
     import _ from 'lodash'
 
@@ -84,6 +85,7 @@
                 thirdShow: false,
                 thirdTitle: '',
                 thirdIcon: '',
+                thirdUrl:'',
                 designFlag: false,
                 firstMenuFlag: false,
                 secondMenuFlag: false,
@@ -201,6 +203,7 @@
                                 this.thirdTitle = i.title
                                 this.thirdIcon = i.icon
                                 this.thirdShow = true
+                                this.thirdUrl = i.url
                             }
                         }
                     })
@@ -212,6 +215,9 @@
                         }
                     }
                 }
+            },
+            dispatchUrl(){
+                dispatch(this.thirdUrl)
             },
             showDesign () {
                 this.designFlag = !this.designFlag
@@ -257,6 +263,7 @@
         background: #0f7cee;
         border-radius: 3px;
         text-align: center;
+        cursor: pointer;
     }
 
     .title_main i,
