@@ -20,6 +20,7 @@ const tokenView = resolve => require(['../components/tokenConfig/tokenView.vue']
 const extractConfig = resolve => require(['../components/tokenConfig/extractConfig.vue'], resolve)
 const transitionConfig = resolve => require(['../components/tokenConfig/transitionConfig.vue'], resolve)
 const resourceSelect = resolve => require(['../components/tokenConfig/resourceSelect.vue'], resolve)
+const mActiveStock = resolve => require(['../components/stock/m-active-stock.vue'], resolve)
 
 //用户中心
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
@@ -28,7 +29,7 @@ const power = resolve => require(['../components/userCenter/m-permission-setting
 //室内地图
 const ngrMap = resolve => require(['../components/m-show-map.vue'], resolve)
 
-//帮助中新
+//帮助中心
 const Helper = resolve => require(['../components/debug/m-helper.vue'], resolve)
 
 const router = new VueRouter({
@@ -108,7 +109,12 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/fq/helper',
                     component: Helper
-                }
+                },
+                //活动库所
+                {
+                    path: '/layoutContent/:id/mActiveStock',
+                    component: mActiveStock
+                },
             ]
         },
     ]
