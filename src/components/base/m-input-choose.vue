@@ -111,7 +111,7 @@
             handleData(data){
                 bus.$emit(this.dataDomain + 'add',data)
 
-                this.objectModel.value = data[this.key]
+                this.objectModel.value = data[this.key].value
 
                 this.valid()
                 if (this.objectModel.value !== '') {
