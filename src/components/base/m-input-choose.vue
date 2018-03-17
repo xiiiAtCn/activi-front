@@ -3,7 +3,7 @@
         <Row>
             <div class="search">
                 <Input v-model="objectModel.value" :placeholder="placeholder" readonly :disabled="readonly">
-                    <Button slot="append" @click="handleDeleteChoose" v-show="(objectModel === '' )||(objectModel.value === '' ) || (objectModel.value === 'undefined') ? 0: 1" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
+                    <Button slot="append" @click="handleDeleteChoose" v-show="(objectModel === '' )||(!objectModel.value) ? 0: 1" :style="{cursor:readonly?'default':'pointer'}" icon="close"></Button>
                     <Button slot="append" @click="handleChooseClick" :style="{cursor:readonly?'default':'pointer'}">选择</Button>
                 </Input>
             </div>
