@@ -21,6 +21,7 @@ const extractConfig = resolve => require(['../components/tokenConfig/extractConf
 const transitionConfig = resolve => require(['../components/tokenConfig/transitionConfig.vue'], resolve)
 const resourceSelect = resolve => require(['../components/tokenConfig/resourceSelect.vue'], resolve)
 const mActiveStock = resolve => require(['../components/stock/m-active-stock.vue'], resolve)
+const mStockView = resolve => require(['../components/stock/m-stock-view.vue'], resolve)
 
 //用户中心
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
@@ -114,6 +115,10 @@ const router = new VueRouter({
                 {
                     path: '/layoutContent/:id/mActiveStock',
                     component: mActiveStock
+                },
+                {
+                    path: '/layoutContent/:id/mStockView',
+                    component: mStockView
                 },
             ]
         },

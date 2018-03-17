@@ -5,16 +5,16 @@
             <div class="button-container search" v-if="search" >
                 <Row>
                     <Col span="18">
-                    <AutoComplete
-                        v-model="valueSearch"
-                        placeholder="查询"
-                        @on-search="searchSuggest"
-                        @enter="handleTopSearch">
-                        <Option v-for="(option, index) in suggestList" :value="option" :key="index">{{option}}</Option>
-                    </AutoComplete>
+                        <AutoComplete
+                            v-model="valueSearch"
+                            placeholder="查询"
+                            @on-search="searchSuggest"
+                            @enter="handleTopSearch">
+                            <Option v-for="(option, index) in suggestList" :value="option" :key="index">{{option}}</Option>
+                        </AutoComplete>
                     </Col>
                     <Col span="6" class="btn-ct">
-                    <Button class="search-button" @click="handleTopSearch" type="info">搜索</Button>
+                        <Button class="search-button" @click="handleTopSearch" type="info">搜索</Button>
                     </Col>
                 </Row>
             </div>
@@ -58,7 +58,8 @@
         </div>
         <mLayer :value="showLayer" :titleText="layerTitle" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
-                :is="componentName"
+                v-if="layerDefine"
+                :is="layerComponent"
                 :define="layerDefine"
             ></component>
         </mLayer>
@@ -79,6 +80,14 @@
             customBtn: {//自定义表格内菜单
                 type: null,
                 default: false
+            },
+            layerTitle:{
+                type: null,
+                default: ''
+            },
+            layerComponent:{
+                type: null,
+                default: ''
             },
             justTable:{
                 type: null,
@@ -205,8 +214,6 @@
                 //弹出框
                 showLayer:false,
                 layerDefine:'',
-                componentName:'',
-                layerTitle:'活动库所一览详情展示'
             }
         },
         watch: {
@@ -475,7 +482,6 @@
                 this.layerDefine ={
                     id:id
                 }
-                this.componentName = 'mFilterTable'
                 this.showLayer = true
             },
             handleCancel(){
