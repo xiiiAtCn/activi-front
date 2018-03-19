@@ -1,6 +1,6 @@
 <template>
     <div class="config-overview">
-        <h1>库所配置预览</h1>
+        <h1>活动库所配置预览</h1>
         <Card class="content-container">
             <ButtonGroup>
                 <Button
