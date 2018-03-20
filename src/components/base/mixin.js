@@ -170,13 +170,28 @@ const mixin = {
                                 ...valueObject,
                                 _META_: this._META_,
                                 value: tmp,
-
                                 type: this.$options._componentTag
                             },
                             form: formFix,
                             checkKey: this.name
                         }
                     )
+                let _META_ = _.get(this.$store.state.formData[formFix], [this.name, '_META_'])
+                if(_META_ == undefined) {
+                    debugger
+                    this.$store.commit(FORM_ELEMENT_VALUE,
+                        {
+                            [this.name]: {
+                                ...valueObject,
+                                _META_: this._META_,
+                                value: tmp,
+                                type: this.$options._componentTag
+                            },
+                            form: formFix,
+                            checkKey: this.name
+                        }
+                    )
+                }
                 return tmp
             },
             set (value) {
