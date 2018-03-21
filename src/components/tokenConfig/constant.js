@@ -11,6 +11,8 @@ export const fetchDir = {
     viewTableData: "/api/placeConfig/cache/getTableData/{templateId}/{nodeId}",
     active: "/api/placeConfig/cache/active/{templateId}",
     delCache: "/api/placeConfig/cache/delCache/{templateId}",
+    getCodeRule: "/api/placeConfig/cache/getCodeRule/{templateId}/{cache}",
+    saveCodeRule: "/api/placeConfig/cache/saveCodeRule/{templateId}",
     // 编辑页面
     metaList: "/api/placeConfig/cache/getFormMetaList/{type}",
     formData: "/api/placeConfig/cache/getFormData/{templateId}",

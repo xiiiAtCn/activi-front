@@ -10,6 +10,7 @@
                     <Button @click="active" :disabled="activeBtnDis">生效</Button>
                     <Button @click="extractConfig">抽取一览配置</Button>
                     <Button @click="selectResource">资源选择</Button>
+                    <Button @click="codeRule">编码规则</Button>
                     <Button @click="exit">退出</Button>
                 </ButtonGroup>
             </Col>
@@ -71,6 +72,46 @@
                 </Button>
             </div>
         </Modal> 
+        <mLayer
+            titleText="编码规则"
+            okText="保存"
+            :loading="layerLoading"
+            v-model="layer"
+            @on-ok="layerOk"
+            @on-cancel="layerCancel"
+        >
+            <Form 
+                ref="codeRuleForm" 
+                :label-width="100" 
+                :rules="codeRuleFormRules"
+                :model="codeRuleForm"
+            > 
+                <FormItem label="业务前缀" prop="prefix">
+                    <Input
+                        v-model="codeRuleForm.prefix"
+                    />
+                </FormItem>
+                <FormItem label="业务后缀" prop="suffix">
+                    <Input
+                        v-model="codeRuleForm.suffix"
+                    />
+                </FormItem>
+                <FormItem label="日期格式" prop="format">
+                    <Select v-model="codeRuleForm.format">
+                        <Option v-for="item in formatList" :value="item.value" :key="item.value">
+                            {{ item.label }}
+                        </Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="格式化符号" prop="symbol">
+                    <Select v-model="codeRuleForm.symbol">
+                        <Option v-for="item in symbolList" :value="item.value" :key="item.value">
+                            {{ item.label }}
+                        </Option>
+                    </Select>
+                </FormItem>
+            </Form>
+        </mLayer>
         <mLoading
             :event-bus="bus"
             event-show="token-config-show"
@@ -148,6 +189,58 @@ export default {
             relTableColumns: [],
             titleForm: {
                 title: ''
+            },
+            formatList: [
+                {
+                    label: '年月日时分秒',
+                    value: 'yyyyMMddhhmmss'
+                },
+                {
+                    label: '年月日时分',
+                    value: 'yyyyMMddhhmm'
+                },
+                {
+                    label: '年月日时',
+                    value: 'yyyyMMddhh'
+                },
+                {
+                    label: '年月日',
+                    value: 'yyyyMMdd'
+                },
+                {
+                    label: '年月',
+                    value: 'yyyyMM'
+                },
+                {
+                    label: '年',
+                    value: 'yyyy'
+                }
+            ],
+            symbolList: [
+                {
+                    label: '-(横线)',
+                    value: '-'
+                },
+                {
+                    label: '_(下划线)',
+                    value: '_'
+                }
+            ],
+            layer: false,
+            layerLoading: true,
+            codeRuleForm: {
+                prefix: '',
+                suffix: '',
+                format: '',
+                symbol: '',
+                id: ''
+            },
+            previousCodeRuleForm: {},
+            codeRuleFormRules: {
+                prefix: [{required: true, message: '请填写业务前缀'}],
+                suffix: [{required: true, message: '请填写业务后缀'}],
+                format: [{required: true, message: '请选择日期格式'}],
+                symbol: [{required: true, message: '请选择格式化符号'}]
             }
         }
     },
@@ -177,12 +270,17 @@ export default {
                     if (err || !res.success) {
                         this.$Message.error(res.message ? res.message : '获取treeData失败')
                     } else {
-                        traverseTree(res.data['root'], node => {
-                            node.expand = true
-                        })
-                        this.treeData = [res.data.root]
-                        this.$set(this.titleForm, 'title', res.data.treeTitle)
-                        this.getRelData()
+                        if (res.data === null) {
+                            this.$Message.error('未查询到当前库所信息')
+                        } else {
+                            traverseTree(res.data['root'], node => {
+                                node.expand = true
+                            })
+                            this.treeData = [res.data.root]
+                            this.$set(this.titleForm, 'title', res.data.treeTitle)
+                            this.getRelData()
+                            this.getCodeRule()
+                        }
                     }
                 })
             
@@ -216,6 +314,47 @@ export default {
                         }
                     })
         },
+        getCodeRule () {
+            this.requestNum++
+            this.setUrl(fetchDir.getCodeRule)
+                .setPathVariables({
+                    templateId: this.templateId,
+                    cache: this.cache
+                })
+                .forGet((res, err) => {
+                        this.requestNum--
+                        if (err || !res.success) {
+                            this.$Message.error('获取编码规则数据失败')
+                        } else {
+                            this.createRuleFormData(res.data)
+                        }
+                    })
+        },
+        createRuleFormData (resData) {
+            let data = {}
+            for (let key of Object.keys(this.codeRuleForm)) {
+                data[key] = resData && resData[key] ? resData[key] : ''
+            }
+            this.codeRuleForm = data
+        },
+        saveCodeRule () {
+            this.setUrl(fetchDir.saveCodeRule)
+                .setPathVariables({templateId: this.templateId})
+                .setBody({
+                    ...this.codeRuleForm
+                })
+                .forPost((res, err) => {
+                        if (err || !res.success) {
+                            this.$Message.error('保存编码规则失败')
+                        } else {
+                            this.$Message.success('保存编码规则成功')
+                            this.store.setItem(TempTemplateId, res.data)
+                            this.activeId = res.data
+                            this.layer = false
+                            this.getCodeRule()
+                        }
+                    })
+        },
         nodeClick (data) {
             this.getTableData(data[0].id)
         },
@@ -227,6 +366,33 @@ export default {
         },
         selectResource () {
             this._goToResourcePage()
+        },
+        // 编码规则
+        codeRule () {
+            // 将form中的数据拷贝一份
+            this.previousCodeRuleForm = _.cloneDeep(this.codeRuleForm)
+            //显示layer
+            this.layer = true
+        },
+        // 校验表单
+        layerOk () {
+            this.$refs['codeRuleForm'].validate(valid => {
+                if (valid) {
+                    // 保存
+                    this.saveCodeRule()
+                    this.previousCodeRuleForm = {}
+                } else {
+                    // 提示
+                    this.$Message.error('表单填写有误，请确认无误后再保存！')
+                    this.layerLoading = false
+                    this.$nextTick(() => {this.layerLoading = true})
+                }
+            })
+        },
+        layerCancel () {
+            this.codeRuleForm = _.cloneDeep(this.previousCodeRuleForm)
+            this.previousCodeRuleForm = {}
+            this.$refs['codeRuleForm'].resetFields()
         },
         active () {
             if (this.cache === CacheStatus.error) {
