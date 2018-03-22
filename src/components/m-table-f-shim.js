@@ -23,7 +23,8 @@ let tableFShim = Vue.component('tableF-Shim', {
                 name:this.name, //selectid
                 wordList: this.wordList,    //分词结果
                 reload:this.reloadData,
-                suggestUrl: this.suggestUrl
+                suggestUrl: this.suggestUrl,
+                showAddress:this.showAddress,//是否显示查看地址
             },
             on:{
                 rowsPageChange : this.handleRowsPageChange,
@@ -48,7 +49,8 @@ let tableFShim = Vue.component('tableF-Shim', {
             lastUrlData:{},
             pageTotal:null,
             wordList: [],
-            suggestUrl: {}
+            suggestUrl: {},
+            showAddress:false
         }
     },
     props: {
@@ -85,6 +87,10 @@ let tableFShim = Vue.component('tableF-Shim', {
     watch: {
         define () {
             this.initialize(this.define)
+        },
+        relation(){
+            this.getTableDefine()
+            this.getTableData()
         }
     },
     methods: {
@@ -104,6 +110,7 @@ let tableFShim = Vue.component('tableF-Shim', {
             this.tableHeight = _.get(def,'tableHeight', null)
             this.checkRow= _.get(def,'checkRow', '')
             this.suggestUrl = _.get(def, 'suggestUrl', {})
+            this.showAddress = _.get(def, 'showAddress', true)
             if(Object.keys(this.relation).length === 0){
                 this.lastUrlData = _.cloneDeep(this.url)
                 this.tableGetData(this.url,'data')

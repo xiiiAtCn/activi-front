@@ -83,6 +83,9 @@ const mIconList = resolve =>
 const mArea = resolve =>
     require(['./m-area.vue'], resolve)
 
+const mLayerAmap = resolve =>
+    require(['./m-layer-amap.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
@@ -111,3 +114,4 @@ Vue.component('mButtonIframe', mButtonIframe)
 Vue.component('mBoolean', mBoolean)
 Vue.component('mIconList', mIconList)
 Vue.component('mAddress', mArea)
+Vue.component('mLayerAmap', mLayerAmap)

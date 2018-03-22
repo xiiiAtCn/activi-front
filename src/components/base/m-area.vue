@@ -26,7 +26,7 @@
     import {ELEMENT_VALIDATE_RESULT} from 'store/Action'
     import {getData} from 'utils/actionUtils'
     import {lazyAMapApiLoaderInstance} from 'vue-amap'
-    import addressData from './address.json'
+    import addressData from '../../assets/jsonData/address.json'
 
     export default {
         mixins: [mixin],
@@ -58,7 +58,6 @@
                     this.$nextTick(()=>{
                         this.$refs.cascaderCt.$el.querySelectorAll('.ivu-input')[0].value = this.objectModel.area.join('/')
                     })
-
                 }
             },
             showMap(){

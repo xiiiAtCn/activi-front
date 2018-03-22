@@ -45,6 +45,9 @@
             <div v-for="(item, index) in operation"  :key="index" class="button-container" >
                 <Button  :type="item.type?item.type:'primary'" :size="item.size?item.size:'default'" @click="handleTopButton(item.action)">{{item.text}}</Button>
             </div>
+            <div class="button-container" v-if="showAddressBtn">
+                <Button size="default" @click="showLayerAmap">查看地址</Button>
+            </div>
             </Col>
         </Row>
         <div>
@@ -56,10 +59,10 @@
                 <Page :total="pageTotal || rowsContent.length" :page-size="parseInt(rowCount)" :current="currentPage" @on-change="changePage"></Page>
             </div>
         </div>
-        <mLayer :value="showLayer" :titleText="layerTitle" @on-cancel="handleCancel" @on-ok="handleOk">
+        <mLayer :value="showLayer" :titleText="customTitle" @on-cancel="handleCancel" @on-ok="handleOk">
             <component
                 v-if="layerDefine"
-                :is="layerComponent"
+                :is="customComponent"
                 :define="layerDefine"
             ></component>
         </mLayer>
@@ -81,15 +84,15 @@
                 type: null,
                 default: false
             },
-            layerTitle:{
+            layerTitle:{//layer的标题
                 type: null,
                 default: ''
             },
-            layerComponent:{
+            layerComponent:{//layer内容是哪个组件
                 type: null,
                 default: ''
             },
-            justTable:{
+            justTable:{//最简化显示table
                 type: null,
                 default: false
             },
@@ -156,10 +159,17 @@
                 default () {
                     return function () {}
                 }
+            },
+            showAddress:{//是否显示展示地图按钮
+                type: null,
+                default: false
             }
         },
         data () {
             return {
+                customTitle:'在地图上的位置',
+                customComponent:'',
+
                 columnsData: [],
                 columnsDataCopy: [],
                 dataTable: [],
@@ -214,6 +224,9 @@
                 //弹出框
                 showLayer:false,
                 layerDefine:'',
+
+                //查看地址按钮
+                showAddressBtn:false,
             }
         },
         watch: {
@@ -237,10 +250,13 @@
                 this.handleDefine()
                 this.handleContent()
             }
+
+            this.showAddressBtn = this.showAddress
         },
         methods: {
             // 配置表格
             handleDefine () {
+                this.showAddressBtn = this.showAddress
                 this.getColumnsDataWay(this.cols)
                 if(this.showModalBtn) this.showButton()
             },
@@ -479,6 +495,8 @@
             },
             //打开弹出框
             handleCustomBtn(id){
+                this.customComponent = this.layerComponent
+                this.customTitle = this.layerTitle
                 this.layerDefine ={
                     id:id
                 }
@@ -746,6 +764,15 @@
                         })
                     }
                 }, 500)
+            },
+
+
+            //多地址展示
+            showLayerAmap(){
+                this.customComponent = 'mLayerAmap'
+                this.layerDefine = this.dataTable
+                this.showLayer = true
+                this.customTitle = '在地图上的位置'
             }
         }
     }
