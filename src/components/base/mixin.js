@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { ADD_NEW_OBJECT, FORM_ELEMENT_VALUE , ERASURE_DATA } from 'store/Mutation'
 import { VALIDATION } from 'utils/consts'
+import bus from 'routers/bus'
 const mixin = {
     inject: {
         baseForm: {
@@ -161,8 +162,8 @@ const mixin = {
                     }
                 }
                 let tmp = _.get(this.$store.state.formData[formFix], [this.name, 'value'], '')
-                let type = _.get(this.$store.state.formData[formFix], [this.name, 'type'])
                 let valueObject = _.get(this.$store.state.formData[formFix], this.name)
+                let type = _.get(this.$store.state.formData[formFix], [this.name, 'type'])
                 let _META_ = _.get(this.$store.state.formData[formFix], [this.name, '_META_'])
                 if (type === undefined || _META_ === undefined)
                     this.$store.commit(FORM_ELEMENT_VALUE,
@@ -234,6 +235,13 @@ const mixin = {
         return {
             errorMessage: ''
         }
+    },
+    mounted() {
+        bus.$on('finish', data => {
+            if(this.name === data.target) {
+                this.objectModel = data.result
+            }
+        })
     },
     destroyed() {
         let formFix = this.tmpForm ? this.tmpForm : this.form

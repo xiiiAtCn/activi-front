@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div v-if="designFlag" class="tools">
-                            <div class="tools_title" v-for="item in signRecordMsg">
+                            <div class="tools_title" v-for="(item, key) in signRecordMsg" :key="key">
                                 <Icon :type="item.icon"></Icon>
                                 <a :href="item.url" target="_blank">{{item.text}}</a>
                             </div>

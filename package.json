@@ -25,6 +25,7 @@
     "iview": "^2.9.1",
     "jquery": "^3.2.1",
     "lodash": "latest",
+    "mathjs": "^4.0.1",
     "node.extend": "^2.0.0",
     "vue": "^2.5.9",
     "vue-amap": "^0.5.3",
