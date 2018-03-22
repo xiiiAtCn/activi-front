@@ -7,19 +7,29 @@
     import math from 'mathjs'
     import _ from 'lodash'
     export default {
+        inject: {
+            tmpForm: {
+                default: ''
+            }
+        },
         props: {
             define: {
                 type: Object,
                 default () {
                     return {}
                 }
+            },
+        },
+        computed: {
+            fixForm() {
+                return this.tmpForm ? this.tmpForm : this.form
+            },
+            form() {
+                return _.get(this.define, 'ui_form', 'form')
             }
         },
         data() {
             return {
-                refField: [],
-                formula: '',
-                resultField: '',
                 result: ''
             }
         },
@@ -29,33 +39,57 @@
             })
         },
         mounted() {
-            this.refField = this.define.refField instanceof Array ? this.define.refField : []
-            this.formula = this.define.formula
-            this.resultField = this.define.resultField
-            bus.$emit('calulate')
+            let formulas = this.define.formulas
+            let prefix = [ '$store','state','formData', this.fixForm]
+            let keySet = new Set()
+            for(let i=0; i < formulas.length; i++) {
+                let formula = formulas[i]
+                Object.keys(formula['refField']).forEach(e => {
+                    let bak = prefix.slice()
+                    bak.push(formula['refField'][e], 'value')
+                    keySet.add(bak)
+                })
+            }
+            let self = this
+            this.$nextTick(() => {
+                keySet.forEach(e => {
+                    bus.$watch(function() {
+                        console.log(e)
+                        return _.get(self, e, '')
+                    }, () => {
+                        bus.$emit('calculate')
+                    })
+                })
+            })
         },
         methods: {
             calculate() {
-                let parameters = {}
-                for(let i = 0; i < this.refField.length; i++) {
-                    let key = this.refField[i]
-                    let value = _.get(this.$store, ['formData', 'form', key], '')
-                    if(value === '') {
-                        console.warn(`required paramter ${key} is not an empty string or not exist, 
-                        no math calculation will execute and will stop now`)
-                        return
+                let formulas = this.define.formulas
+                for (let i =0 ;i < formulas.length; i++) {
+                    let execution = formulas[i]
+                    let { formula, resultField, refField } = execution
+                    let parameters = {}
+                    for(let k of Object.entries(refField)) {
+                        let key = k[0]
+                        let value = k[1]
+                        let parameter = _.get(this.$store, ['state', 'formData', this.fixForm, value, 'value'], '')
+                        if(parameter === '') {
+                            console.warn(`required paramter ${key} is not an empty string or not exist, 
+                            no math calculation will execute and will stop now`)
+                            return
+                        }
+                        parameters[key] = parameter
                     }
-                    parameters[key] = value
+                    let func = math.parse(formula)
+                    let simplify = math.simplify(func)
+                    let result = simplify.eval(parameters)
+                    this.finish(resultField, result)
                 }
-                let formula = math.parse(this.formula)
-                let simplify = math.simplify(formula)
-                this.result = simplify.eval(parameters)
-                this.finish()
             },
-            finish() {
+            finish(target, result) {
                 bus.$emit('finish', {
-                    data:  this.result,
-                    target: this.resultField
+                    data:  result,
+                    target 
                 })
             }
         }

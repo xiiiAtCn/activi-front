@@ -5,6 +5,9 @@ const mBarrier = resolve =>
 const mDate = resolve =>
     require(['./m-date'], resolve)
 
+const formulaCollection = resolve => 
+    require(['./m-calculator.vue'], resolve)
+
 const mDecimal = resolve =>
     require(['./m-decimal.vue'], resolve)
 
@@ -87,6 +90,7 @@ const mLayerAmap = resolve =>
     require(['./m-layer-amap.vue'], resolve)
 
 Vue.component('mBarrier', mBarrier)
+Vue.component('mFormulaCollection', formulaCollection)
 Vue.component('mDate', mDate)
 Vue.component('mDecimal', mDecimal)
 Vue.component('mDetailChoose', mDetailChoose)

@@ -218,6 +218,23 @@
                 columns.unshift(index)
                 return columns
             },
+            tableColumns() {
+                let tmp = _.get(this.$store.state.formData, this.temporary_form)
+                if(tmp === undefined) {
+                    this.$store.commit(ADD_NEW_OBJECT,
+                        {
+                            attribute: this.temporary_form,
+                            value: {
+                                _loading: true,
+                                _reset: false,
+                                _validate: false,
+                                _visible: false,
+                                ['_' + this.temporary_form + 'waitCheck']: []
+                            }
+                        }
+                    )
+                }
+            },
             dataSource() {
                 let form = _.get(this.$store.state.formData, this.form)
                 if(form === undefined) {
@@ -334,6 +351,7 @@
                                 return _.get(column, ['row', col['key'], 'value', 'value'], '') || _.get(column, ['row', col['key'], 'value'], '')
                             }
                         }
+                        // if(col.typeString !== 'mFormulaCollection') 
                         columns.push(column)
                     })
                     if(cols.length === 0) {

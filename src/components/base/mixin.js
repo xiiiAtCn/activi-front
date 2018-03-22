@@ -238,10 +238,15 @@ const mixin = {
     },
     mounted() {
         bus.$on('finish', data => {
-            if(this.name === data.target) {
-                this.objectModel = data.result
-            }
+            this.changeValue(data)
         })
+    },
+    methods: {
+        changeValue(data) {
+            if(this.name === data.target) {
+                this.objectModel = data.data
+            }
+        }
     },
     destroyed() {
         let formFix = this.tmpForm ? this.tmpForm : this.form
