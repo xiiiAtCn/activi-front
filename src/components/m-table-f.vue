@@ -227,6 +227,7 @@
 
                 //查看地址按钮
                 showAddressBtn:false,
+                mapData:[],
             }
         },
         watch: {
@@ -250,13 +251,10 @@
                 this.handleDefine()
                 this.handleContent()
             }
-
-            this.showAddressBtn = this.showAddress
         },
         methods: {
             // 配置表格
             handleDefine () {
-                this.showAddressBtn = this.showAddress
                 this.getColumnsDataWay(this.cols)
                 if(this.showModalBtn) this.showButton()
             },
@@ -511,7 +509,6 @@
                 this.showLayer = false
             },
 
-
             //tableData存入行数据
             handleContent(){
                 if(this.rowsContent.length === undefined || this.rowsContent.length === 0){
@@ -523,6 +520,16 @@
                     this.lastId = this.rowsContent[this.rowsContent.length-1].id
                 }else{
                     this.dataTable = this.rowsContent.slice(0,this.rowCount)
+                }
+                //确定有地址才注入数据
+                if(this.showAddress){
+                    this.mapData = []
+                    this.dataTable.forEach(v => {
+                        if(v.FAddress && v.FAddress.value){
+                            this.mapData.push(v)
+                        }
+                    })
+                    this.mapData.length !== 0 && (this.showAddressBtn = true)
                 }
                 this.showButton()
                 this.checkRowClick()
@@ -770,7 +777,7 @@
             //多地址展示
             showLayerAmap(){
                 this.customComponent = 'mLayerAmap'
-                this.layerDefine = this.dataTable
+                this.layerDefine = this.mapData
                 this.showLayer = true
                 this.customTitle = '在地图上的位置'
             }
