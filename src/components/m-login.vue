@@ -1,7 +1,7 @@
 <template>
     <div id="main">
         <header>
-            <img data-src="../assets/img/yushi-logo.png" src="../assets/img/yushi-logo.png" class="logo">
+            <img data-src="../assets/img/logo.png" src="../assets/img/logo.png" class="logo">
             <span class="line">|</span>
             <span class="title">一站式管理系统</span>
         </header>
@@ -236,7 +236,9 @@
     }
     img.logo{
         width:105px;
-        padding-top:15px;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
         float:left
     }
     span.line{

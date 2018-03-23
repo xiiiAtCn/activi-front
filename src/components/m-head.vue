@@ -2,7 +2,7 @@
     <div class="s-nav">
         <div class="logo-container">
             <div class="posRea">
-                <a @click="logout" ><img src="../assets/img/yushi-logo.png" alt=""></a>
+                <a @click="logout" ><img src="../assets/img/logo.png" alt=""></a>
             </div>
             <div style="clear: both"></div>
         </div>
@@ -274,6 +274,11 @@
     .posRea {
         height: 70px;
         /*text-align: center;*/
+    }
+    .posRea a{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
     }
     .posRea img{
         margin-left: 20px;
