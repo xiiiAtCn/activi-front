@@ -5,7 +5,7 @@ const mBarrier = resolve =>
 const mDate = resolve =>
     require(['./m-date'], resolve)
 
-const formulaCollection = resolve => 
+const formulaCollection = resolve =>
     require(['./m-calculator.vue'], resolve)
 
 const mDecimal = resolve =>
@@ -89,6 +89,9 @@ const mArea = resolve =>
 const mLayerAmap = resolve =>
     require(['./m-layer-amap.vue'], resolve)
 
+const mCode = resolve =>
+    require(['./m-code.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mFormulaCollection', formulaCollection)
 Vue.component('mDate', mDate)
@@ -119,3 +122,4 @@ Vue.component('mBoolean', mBoolean)
 Vue.component('mIconList', mIconList)
 Vue.component('mAddress', mArea)
 Vue.component('mLayerAmap', mLayerAmap)
+Vue.component('mCode', mCode)
