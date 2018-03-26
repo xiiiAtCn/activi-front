@@ -10,7 +10,7 @@
             <Col span="2" style="text-align: center;height: 32px"  @click="showMap">
                 <Icon type="android-pin" style="color:#495060;font-size:17px;margin-top: 6px;cursor:pointer;" @click.native="showMap"></Icon>
             </Col>
-            <mLayer :value="showLayer" titleText="在地图上的位置" @on-cancel="handleCancel" @on-ok="handleOk">
+            <mLayer :value="showLayer" titleText="在地图上的位置" @on-cancel="handleCancel" @on-ok="handleOk" okText="选择当前位置">
                 <el-amap ref="map" vid="amapDemo" :zoom="12" class="amap-demo"></el-amap>
             </mLayer>
         </Row>
@@ -38,6 +38,9 @@
                 selectModal:'',
                 map:'',
                 searchName:'',
+                marker:null,
+                layerData:{},
+                infoWindow:null
             }
         },
         watch:{
@@ -50,6 +53,7 @@
             this.handleDefault()
         },
         methods: {
+            //转换字段
             handleDefault(){
                 if(this.objectModel){
                     this.selectModal = this.objectModel.area
@@ -60,6 +64,7 @@
                     })
                 }
             },
+            //展示地址在地图上的位置
             showMap(){
                 this.showLayer = true
 
@@ -67,18 +72,86 @@
 
                 lazyAMapApiLoaderInstance.load().then(() => {
 
-                    let placeSearch = new AMap.PlaceSearch({
-                        pageSize: 1,
-                        pageIndex: 1,
-                        map: this.map
+                    let geocoder = new AMap.Geocoder({
+                        radius: 1000
                     })
 
-                    placeSearch.search(this.searchName);
+                    if(this.objectModel.ll){
+                        this.drawMarker(this.objectModel.ll,this.objectModel.value)
+                    }else{
+                        geocoder.getLocation(this.searchName, (status, result)=>{
+                            if (status === 'complete' && result.info === 'OK') {
+
+                                let geocode = result.geocodes[0]
+
+                                this.drawMarker([geocode.location.getLng(),geocode.location.getLat()],geocode.formattedAddress)
+                            }
+                        })
+                    }
+
+                    this.map.on('click', (e)=>{
+                        this.showClick([e.lnglat.lng,e.lnglat.lat])
+                    });
                 })
             },
+            //点击地图获得坐标点
+            showClick(lnglatXY){
+                let geocoder = new AMap.Geocoder({
+                    radius: 1000
+                })
+                geocoder.getAddress(lnglatXY, (status, result)=>{
+                    if (status === 'complete' && result.info === 'OK') {
 
+                        let area = result.regeocode.addressComponent
+
+                        this.layerData = {
+                            area:[
+                                area.province,
+                                area.city || '直辖区',
+                                area.district
+                            ],
+                            address:result.regeocode.formattedAddress.replace(area.province + area.city + area.district,''),
+                            value:result.regeocode.formattedAddress,
+                            ll:lnglatXY
+                        }
+
+                        this.drawMarker(lnglatXY,result.regeocode.formattedAddress)
+                    }
+                })
+
+            },
+            //根据经纬度画出坐标点
+            drawMarker(ll,title){
+                if(this.marker){
+                    this.marker.setMap(null)
+                    this.marker = null
+                    this.infoWindow.close()
+                }
+
+                this.marker = new AMap.Marker({
+                    map: this.map,
+                    position: ll
+                })
+
+                this.infoWindow = new AMap.InfoWindow({
+                    content: title,
+                    offset: {x: 0, y: -30}
+                })
+
+                this.marker.on("mouseover", (e)=>{
+                    this.infoWindow.open(this.map, this.marker.getPosition())
+                })
+
+                this.infoWindow.open(this.map, this.marker.getPosition())
+                this.map.setZoomAndCenter(12,ll)//锁定地图中心，缩放等级和中心点
+
+                this.map.setFitView()
+            },
             handleOk(){
                 this.showLayer = false
+                if(!this.readonly){
+                    this.objectModel = _.cloneDeep(this.layerData)
+                }
             },
             handleCancel(){
                 this.showLayer = false
@@ -90,6 +163,7 @@
             addAddress(){
                 this.concatAddress(this.selectModal,this.address)
             },
+            //拼接地址
             concatAddress(arg,address){
                 if(arg.length >0){
                     this.searchName = ''
@@ -136,4 +210,6 @@
         width: 100%;
         height: 500px;
     }
+
+
 </style>

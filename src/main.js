@@ -14,7 +14,7 @@ import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
     key: '8bda06f2951a19b7d012692eb1855019',
-    plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType','AMap.PlaceSearch'],
+    plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType','AMap.PlaceSearch','AMap.Geocoder'],
     uiVersion: '1.0',
     v: '1.4.4'
 });

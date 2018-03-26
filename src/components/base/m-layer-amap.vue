@@ -34,9 +34,8 @@
                         pageSize: 1,
                         pageIndex: 1,
                         zoom:4,
-                        panel:'panel'
+                        panel:'panel'//没这个就没缩略图
                     })
-
 
                     for(let i=0;i<this.define.length;i++){
                         let promise = new Promise((resolve)=>{
@@ -60,16 +59,18 @@
             },
             //拿到数据画点和提示内容
             showMarker(data){
-                let infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+                let infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)})
+
                 for (let i = 0; i < data.length; i++) {
                     let marker = new AMap.Marker({
                         position: [data[i].result.location.lng,data[i].result.location.lat],
                         map: this.map
                     })
+
                     marker.content = `
                     <div>
                         <div style="float: left;">
-                            <img src="${data[i].result.photos[0].url}" alt="${data[i].result.photos[0].title}" style="width:100%;height:150px;">
+                            <img src="${data[i].result.photos && data[i].result.photos[0].url}" alt="${data[i].result.photos && data[i].result.photos[0].title}" style="width:100%;height:150px;">
                         </div>
                         <div style="float: left;padding-left: 5px">
                             <p style="font-size: 15px;padding-bottom: 3px">${data[i].name.FAddress.value}</p>
@@ -78,13 +79,13 @@
                     </div>`
 
                     marker.on('click', (e)=>{
-                        infoWindow.setContent(e.target.content);
-                        infoWindow.open(this.map, e.target.getPosition());
-                    });
-                    marker.emit('click', {target: marker});
+                        infoWindow.setContent(e.target.content)
+                        infoWindow.open(this.map, e.target.getPosition())
+                    })
+                    marker.emit('click', {target: marker})
                 }
 
-                this.map.setFitView();
+                this.map.setFitView()
             }
         }
     }
