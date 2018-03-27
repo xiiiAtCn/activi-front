@@ -36,7 +36,7 @@
                 const url = {
                     method:'GET',
                     queryParams:{
-                        resourceTemplateId:'05a0ed47-8cd9-415e-8b28-baa5939ba394-20180324103150 ',
+                        resourceTemplateId:'fac72b82-9b84-43df-9c63-717ccb0425c5-20180324113556',
                         metaKey:'cable'
                     },
                     url:'/api/actives'

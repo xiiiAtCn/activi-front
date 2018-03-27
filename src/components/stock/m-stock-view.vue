@@ -35,7 +35,7 @@
             getTableData(){
                 const url = {
                     method:'GET',
-                    url:'/api/stock/05a0ed47-8cd9-415e-8b28-baa5939ba394-20180324103150/d65d40e4-a6a0-4371-aab1-a7b161120375'
+                    url:'/api/stock/fac72b82-9b84-43df-9c63-717ccb0425c5-20180324113556/c39eba00-5d27-4115-9b99-1779890d20a6'
                 }
                 getData(url, (result) => {
                     if(result){

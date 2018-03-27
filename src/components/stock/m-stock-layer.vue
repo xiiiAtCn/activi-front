@@ -35,7 +35,7 @@
                     pathParams:{
                         resourcePlaceId: this.define.id
                     },
-                    url:`/api/stock/6317d954-65ce-4051-8597-24a3d1a74ab8-20180301120827/aa6220ff-b145-4ec3-980c-c0a3e9c3b969/{resourcePlaceId}`
+                    url:`/api/stock/fac72b82-9b84-43df-9c63-717ccb0425c5-20180324113556/c39eba00-5d27-4115-9b99-1779890d20a6/{resourcePlaceId}`
                 }
                 getData(url, (result) => {
                     if(result){
