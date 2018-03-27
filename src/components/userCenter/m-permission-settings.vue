@@ -743,9 +743,12 @@
                 setTimeout(()=>{this.layerLoading = true},500)
             },
             HandleAddMenu(){
-                let body = this.menuForm
+                let body = _.cloneDeep(this.menuForm)
                 body.currentKey = (body.parentKey||'') + body.currentKey
                 body.authorityEntity = _.cloneDeep(this.powerForm)
+                delete body.metaKey
+                delete body.selectResultKey
+                delete body.urlType
 
                 this.handlePost(body,'/api/menu/add',()=>{
                     this.showLayer = false
@@ -782,9 +785,12 @@
                 this.clearForm('powerForm')
             },
             HandleEditMenu(){
-                let body = this.editForm
+                let body = _.cloneDeep(this.editForm)
                 body.currentKey = (body.parentKey||'') + body.currentKey
                 body.authorityEntity = _.cloneDeep(this.powerForm)
+                delete body.metaKey
+                delete body.selectResultKey
+                delete body.urlType
 
                 this.handlePost(body,'/api/menu/update',()=>{
                     this.updateMenu()

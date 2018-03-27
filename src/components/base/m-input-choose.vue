@@ -91,32 +91,29 @@
                 this.getChooseData(id)
             },
             getChooseData(id){
-                this.objectModel = {}
-                this.objectModel.id = _.cloneDeep(id)
-
                 const action={
                     url:this.backUrl,
                     type: 'GET',
                     queryParams:{
-                        id:id
+                        id:_.cloneDeep(id)
                     }
                 }
 
                 getData(action,(data)=>{
                     if (data) {
-                        this.handleData(data)
+                        bus.$emit(this.dataDomain + 'add',data)
+
+                        this.objectModel = {
+                            id:_.cloneDeep(id),
+                            value:data[this.key].value || data[this.key],
+                        }
+
+                        this.valid()
+                        if (this.objectModel.value !== '') {
+                            this.errorMessage = ''
+                        }
                     }
                 })
-            },
-            handleData(data){
-                bus.$emit(this.dataDomain + 'add',data)
-
-                this.objectModel.value = data[this.key].value || data[this.key]
-
-                this.valid()
-                if (this.objectModel.value !== '') {
-                    this.errorMessage = ''
-                }
             },
             valid(){
                 let hasError = false

@@ -20,7 +20,7 @@
             </div>
             <div class="button-container" >
                 <Poptip placement="bottom">
-                    <Button type="ghost" icon="grid"></Button>
+                    <Button class="icon-btn" type="ghost" icon="grid"></Button>
                     <div class="api" slot="content" style="text-align: left">
                         <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
                             <Checkbox :indeterminate="indeterminate"
@@ -594,6 +594,9 @@
                 this.showButton()
                 this.checkRowClick()
                 this.dataListChange = _.cloneDeep(this.checkAllGroup)
+                this.$nextTick(function() {
+                    this.checkValue()
+                })
             },
             checkAllGroupChange (data) {
                 if (data.length === this.dataList.length) {
@@ -613,6 +616,10 @@
                 if(this.tableName){
                     window.localStorage.setItem(this.tableName+'.checkAllGroup',JSON.stringify(data))
                 }
+
+                this.$nextTick(function() {
+                    this.checkValue()
+                })
             },
             //添加或删除列
             handleColumnsData (obj) {
@@ -627,7 +634,7 @@
                 } else if (obj.method === 'add') {
                     this.columnsDataCopy.forEach((val,i) => {
                         if (val.title === obj.str) {
-                            this.columnsData.splice(i,0,val)
+                            this.columnsData.splice(i+1,0,val)
                         }
                     })
                 }
@@ -670,6 +677,9 @@
                 }else{
                     this.$emit('rowsPageChange', {from:arg, size:this.rowCount,lastDataId:this.lastId})
                 }
+                this.$nextTick(function() {
+                    this.checkValue()
+                })
             },
             //用户选择一页显示行数时
             changeSelect(arg){
@@ -816,6 +826,11 @@
     }
     .columns-select .api{
         text-align: initial;
+    }
+
+    .icon-btn{
+        padding: 0 14px;
+        font-size: 20px;
     }
 </style>
 <style>

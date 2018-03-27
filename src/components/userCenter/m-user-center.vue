@@ -11,8 +11,8 @@
             <Col span="24">
                 <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
             </Col>
-            <Col span="24" class="page-container">
-                <Page :total="dataTotal" :current="currentPage" show-elevator @on-change="pageChange"></Page>
+            <Col span="24" class="page-container" ref="pageCt">
+                <Page :total="dataTotal" :current="currentPage" @on-change="pageChange"></Page>
             </Col>
         </Row>
 
@@ -217,7 +217,9 @@
                         this.dataTotal = result.length
                         this.allData = result
                         this.tableData = result.slice(0,10)
-                        this.currentPage = 1
+                        this.$nextTick(function() {
+                            this.$refs.pageCt.$el.querySelector('.ivu-page-item').click()
+                        })
                     }
                 })
             },
