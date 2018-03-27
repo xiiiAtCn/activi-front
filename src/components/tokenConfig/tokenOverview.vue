@@ -17,10 +17,16 @@
             </ButtonGroup>
             <Table
                 highlight-row
-                :data="tableData"
+                :data="currentTableData"
                 :columns="columns" 
-                @on-current-change="currentChange"
             />
+            <div>
+                <Page 
+                    :current="current"
+                    :total="total"
+                    :page-size="size"
+                    @on-change="pageChange"/>
+            </div>
         </Card>
         <Modal
             v-model="modal"
@@ -58,9 +64,11 @@ export default {
             tableData: [],
             columns: [
                 {
-                    type: 'index',
                     width: 60,
-                    align: 'center'
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('span', params.index + 1 + (this.current - 1) * this.size)
+                    }
                 },
                 {
                     title: '模板Id',
@@ -71,8 +79,37 @@ export default {
                     title: '库所名称',
                     key: 'name',
                     align: 'center'
+                },
+                {
+                    title: '操作',
+                    width: 100,
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                on : {
+                                    click: () => {
+                                        this.linkToViewPage(params.row.id)
+                                    }
+                                }
+                            }, '查看')
+                        ])
+                    }
                 }
-            ]
+            ],
+            current: 1,
+            size: 15
+        }
+    },
+    computed: {
+        currentTableData () {
+            return this.tableData.slice((this.current - 1) * this.size, this.current * this.size)
+        },
+        total () {
+            return this.tableData.length
         }
     },
     methods: {
@@ -94,8 +131,8 @@ export default {
                     }
                 })
         },
-        currentChange (row) {
-            this.linkToViewPage(row.id)
+        pageChange (num) {
+            this.current = num
         },
         // 如果store中的id与要查看的id不相同，提示信息
         linkToViewPage(id) {
