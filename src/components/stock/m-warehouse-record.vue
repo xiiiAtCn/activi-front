@@ -7,6 +7,9 @@
                     :cols="tableData"
                     :search="false"
                     :rowsContent = "rowsContent"
+                    @rowsPageChange="pageChange"
+                    :serverPage="isServerPage"
+                    :pageTotal="total"
                 ></mTableF>
             </Col>
         </Row>
@@ -19,7 +22,9 @@
         data() {
             return {
                 tableData: [],
-                rowsContent:[]
+                rowsContent:[],
+                isServerPage:false,
+                total:10
             }
         },
         mounted() {
@@ -35,6 +40,23 @@
                     if(result){
                         this.tableData = result.meta.ui_define.cols || []
                         this.rowsContent = result.data.data || []
+                        this.isServerPage = !!result.data.total
+                        this.total = result.data.total
+                    }
+                })
+            },
+            pageChange(arg){
+                let url = {
+                    method:'GET',
+                    queryParams:{},
+                    url: this.$route.query.url.split('?')[0].replace('stock','stock/data')
+                }
+                for(let key in arg){
+                    url.queryParams[key] = arg[key]
+                }
+                getData(url, (result) => {
+                    if(result){
+                        this.rowsContent = result.data || []
                     }
                 })
             }
