@@ -19,9 +19,7 @@
         data() {
             return {
                 tableData: [],
-                rowsContent:[],
-                title:'出入库记录一览',
-                layerComponent:'mStockLayer',
+                rowsContent:[]
             }
         },
         mounted() {
@@ -31,7 +29,7 @@
             getTableData(){
                 const url = {
                     method:'GET',
-                    url:'/api/stock/all/fac72b82-9b84-43df-9c63-717ccb0425c5-20180324113556/c39eba00-5d27-4115-9b99-1779890d20a6'
+                    url: this.$route.query.url.split('?')[0]
                 }
                 getData(url, (result) => {
                     if(result){
