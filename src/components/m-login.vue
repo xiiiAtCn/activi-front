@@ -48,20 +48,20 @@
         </main>
         <footer>
             <p>
-                <a href="javascript:;" class="bottomTitle">
+                <!-- <a href="javascript:;" class="bottomTitle">
                     <span>关于昱石 </span>
                     <span class="bottomLine">|</span>
-                </a>
-                <a href="/functionLog" target="_blank" class="bottomTitle">
+                </a> -->
+                <a href="javascript:void(0);" target="_blank" class="bottomTitle">
                     <span>功能日志 </span>
                     <span class="bottomLine">|</span>
                 </a>
-                <a href="javascript:;" class="bottomTitle">
+                <a href="javascript:void(0);" class="bottomTitle">
                     <span>联系我们 </span>
-                    <span class="bottomLine">|</span>
+                    <!-- <span class="bottomLine">|</span> -->
                 </a>
-                <span>杭州昱石网络科技有限公司     </span>
-                <span style="margin-left:20px">备案号：浙ICP备16047571号</span>
+                <!-- <span>杭州昱石网络科技有限公司     </span> -->
+                <!-- <span style="margin-left:20px">备案号：浙ICP备16047571号</span> -->
             </p>
         </footer>
     </div>
