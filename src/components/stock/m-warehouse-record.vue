@@ -1,16 +1,12 @@
 <template>
     <div class="container">
-        <h3 class="title-container">库存一览</h3>
+        <h3 class="title-container">出入库记录一览</h3>
         <Row>
             <Col span="24">
                 <mTableF
                     :cols="tableData"
                     :search="false"
                     :rowsContent = "rowsContent"
-                    :showModalBtn = "true"
-                    :customBtn="true"
-                    :layerComponent="layerComponent"
-                    :layerTitle="title"
                     @rowsPageChange="pageChange"
                     :serverPage="isServerPage"
                     :pageTotal="total"
@@ -27,8 +23,6 @@
             return {
                 tableData: [],
                 rowsContent:[],
-                title:'库存一览详情',
-                layerComponent:'mStockLayer',
                 isServerPage:false,
                 total:10
             }

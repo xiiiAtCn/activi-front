@@ -35,7 +35,7 @@
                     pathParams:{
                         resourcePlaceId: this.define.id
                     },
-                    url:`/api/stock/6317d954-65ce-4051-8597-24a3d1a74ab8-20180301120827/aa6220ff-b145-4ec3-980c-c0a3e9c3b969/{resourcePlaceId}`
+                    url:`${this.$route.query.url.split('?')[0]}/{resourcePlaceId}`
                 }
                 getData(url, (result) => {
                     if(result){
