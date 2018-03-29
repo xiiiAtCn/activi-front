@@ -227,7 +227,6 @@
                 }else{
                     dispatch(btn.action)
                 }
-
             },
             handleButtonList(list){
                 this.clearButtonList()
