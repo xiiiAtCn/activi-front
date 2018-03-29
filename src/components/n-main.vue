@@ -215,7 +215,7 @@
                 dispatch(url)
             },
             btnClick (btn) {
-                if(btn.type === 'submit'){
+                if(btn.action.type === 'submit'){
                     let action = btn.action
                     action.url.body = this.formData
 
