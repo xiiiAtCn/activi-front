@@ -257,7 +257,8 @@
 <style scoped>
     .title_main {
         display: inline-block;
-        width: 130px;
+        min-width: 130px;
+        padding: 0 12px;
         height: 30px;
         line-height: 30px;
         background: #0f7cee;
@@ -285,7 +286,6 @@
     }
 
     .demo-breadcrumb-separator {
-        color: #333333;
         padding: 0 5px;
         color: #2d8cf0;
         font-size: 15px;
