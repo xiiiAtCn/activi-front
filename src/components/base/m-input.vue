@@ -33,7 +33,7 @@
                 return _.get(this.define, 'pattern', '.*')
             },
             placeholder () {
-                return _.get(this.define, 'placeholder', '请输入相关信息')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请输入相关信息')
             },
         },
         methods: {

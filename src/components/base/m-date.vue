@@ -1,12 +1,12 @@
 <template>
-    <div> 
+    <div>
         <Row>
-            <Date-picker 
-                :value="objectModel" 
-                :format="format" 
-                :type="type" 
-                :placeholder="placeholder" 
-                :disabled="readonly" 
+            <Date-picker
+                :value="objectModel"
+                :format="format"
+                :type="type"
+                :placeholder="placeholder"
+                :disabled="readonly"
                 @on-change="handleChange"
                 class="full-opacity">
             </Date-picker>
@@ -33,7 +33,7 @@
                 return _.get(this.define, 'format', 'yyyy-MM-dd')
             },
             placeholder () {
-                return _.get(this.define, 'placeholder', '请选择日期')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请选择日期')
             }
         },
         methods: {
