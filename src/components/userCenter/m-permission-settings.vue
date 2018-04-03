@@ -509,17 +509,17 @@
                 let menuTree = []
                 data.forEach((val)=>{
                     let children = []
-                    if(val.menu.children){
-                        children = this.handleTreeData(val.menu.children)
+                    if(val.children){
+                        children = this.handleTreeData(val.children)
                     }
-                    this.defaultList.push(val.menu.currentKey)
+                    this.defaultList.push(val.currentKey)
                     menuTree.push({
-                        currentKey:val.menu.currentKey,
-                        title:val.menu.title,
-                        id : val.menu.id,
-                        url : val.menu.url,
-                        picUrl:val.menu.picUrl,
-                        menuOrder:val.menu.menuOrder,
+                        currentKey:val.currentKey,
+                        title:val.title,
+                        id : val.id,
+                        url : val.url,
+                        picUrl:val.picUrl,
+                        menuOrder:val.menuOrder,
                         render: (h, { root, node, data }) => {
                             return h('span', {
                                 style: {
@@ -595,9 +595,9 @@
                                 ])
                             ]);
                         },
-                        description : val.menu.description,
-                        icon : val.menu.icon,
-                        parentKey:val.menu.parentKey||'',
+                        description : val.description,
+                        icon : val.icon,
+                        parentKey:val.parentKey||'',
                         children:children,
                         expand:false,
                         checked:false
