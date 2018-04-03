@@ -26,8 +26,8 @@
                     <Col span="24" class="layerSection">
                         <h4>菜单信息</h4>
                         <Form ref="menuForm" :label-width="120" :model="menuForm" :rules="rules">
-                            <FormItem label="菜单名称" prop="labelName">
-                                <Input v-model="menuForm.labelName" placeholder="请输入菜单名称"></Input>
+                            <FormItem label="菜单名称" prop="title">
+                                <Input v-model="menuForm.title" placeholder="请输入菜单名称"></Input>
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
                                 <Input v-model="menuForm.currentKey" placeholder="key值为父菜单key值+自定义数字">
@@ -97,8 +97,8 @@
                     <Col span="24" class="layerSection">
                         <h4>菜单信息</h4>
                         <Form ref="editForm" :label-width="120" :model="editForm" :rules="editRules">
-                            <FormItem label="菜单名称" prop="labelName">
-                                <Input v-model="editForm.labelName" placeholder="请输入菜单名称"></Input>
+                            <FormItem label="菜单名称" prop="title">
+                                <Input v-model="editForm.title" placeholder="请输入菜单名称"></Input>
                             </FormItem>
                             <FormItem label="key值" prop="currentKey">
                                 <Input v-model="editForm.currentKey" placeholder="key值为父菜单key值+自定义数字" readonly disabled>
@@ -167,8 +167,8 @@
                 <Row>
                     <Col span="24">
                         <Form ref="roleForm" :label-width="120" :model="roleForm" :rules="roleRules">
-                            <FormItem label="角色名称" prop="roleName">
-                                <Input v-model="roleForm.roleName" placeholder="请输入角色名称"></Input>
+                            <FormItem label="角色名称" prop="title">
+                                <Input v-model="roleForm.title" placeholder="请输入角色名称"></Input>
                             </FormItem>
                             <FormItem label="角色英文名称" prop="authority">
                                 <Input v-model="roleForm.authority" placeholder="请输入角色英文名称"></Input>
@@ -273,7 +273,7 @@
                 metaKeyList:[],
 
                 menuForm: {
-                    labelName: '',
+                    title: '',
                     currentKey: '',
                     description: '',
                     url:'',
@@ -293,7 +293,7 @@
                     id:''
                 },
                 editForm:{
-                    labelName: '',
+                    title: '',
                     currentKey: '',
                     description: '',
                     url:'',
@@ -307,16 +307,16 @@
                     parentKey:''
                 },
                 roleForm: {
-                    roleName: '',
+                    title: '',
                     authority: ''
                 },
                 roleDefault: {
-                    roleName: '',
+                    title: '',
                     authority: ''
                 },
                 cKey:'',
                 rules: {
-                    labelName: [
+                    title: [
                         { required: true, message:'请输入用户名', trigger: 'blur' }
                     ],
                     currentKey: [
@@ -332,7 +332,7 @@
                     ]
                 },
                 editRules: {
-                    labelName: [
+                    title: [
                         { required: true, message:'请输入用户名', trigger: 'blur' }
                     ],
                     currentKey: [
@@ -340,7 +340,7 @@
                     ]
                 },
                 roleRules: {
-                    roleName: [
+                    title: [
                         { required: true, message:'请输入角色名称', trigger: 'blur' }
                     ],
                     authority: [
@@ -431,8 +431,7 @@
                 data.forEach((val)=>{
                     roleTree.push({
                         authority:val.authority,
-                        title:val.roleName,
-                        roleName:val.roleName,
+                        title:val.title,
                         id:val.id,
                         flag:val.flag,
                         renderSelect:false,
@@ -510,14 +509,13 @@
                 let menuTree = []
                 data.forEach((val)=>{
                     let children = []
-                    if(val.children){
-                        children = this.handleTreeData(val.children)
+                    if(val.menu.children){
+                        children = this.handleTreeData(val.menu.children)
                     }
                     this.defaultList.push(val.menu.currentKey)
                     menuTree.push({
                         currentKey:val.menu.currentKey,
-                        title:val.menu.labelName,
-                        labelName : val.menu.labelName,
+                        title:val.menu.title,
                         id : val.menu.id,
                         url : val.menu.url,
                         picUrl:val.menu.picUrl,
