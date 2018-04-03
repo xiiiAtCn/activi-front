@@ -61,7 +61,7 @@
                 return _.get(this.define, 'szie', 'default')
             },
             placeholder () {
-                return _.get(this.define, 'placeholder', '请选择')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请选择')
             },
             notFound () {
                 return _.get(this.define, 'notFound', '无匹配数据')

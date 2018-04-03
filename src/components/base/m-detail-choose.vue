@@ -2,16 +2,16 @@
     <div v-show="visible">
         <Row >
             <Col span="22">
-                <Input 
-                    readonly 
-                    :value="visibleName" 
+                <Input
+                    readonly
+                    :value="visibleName"
                     :placeholder="placeholder">
                 </Input>
             </Col>
             <Col span="2" >
-                <Button 
+                <Button
                     :disabled="readonly"
-                    style="float: right;" 
+                    style="float: right;"
                     @click="openLayer" >
                     选择
                 </Button>
@@ -22,8 +22,8 @@
             <div v-else class="occupation gateway-item-error">隐藏</div>
         </Row>
         <mLayer v-model="visible" :autoClose="true">
-            <Table 
-                :columns="columns" 
+            <Table
+                :columns="columns"
                 :data="data"
             >
             </Table>
@@ -46,7 +46,7 @@
         },
         computed: {
             placeholder () {
-                return _.get(this.define, 'placeholder', '请选择')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请选择')
             },
             showAttribute () {
                 return _.get(this.define, 'showAttribute', 'name')

@@ -1,11 +1,11 @@
 <template>
     <div>
         <Row >
-            <Input 
+            <Input
                 v-model="objectModel"
-                :placeholder="placeholder" 
-                :disabled="readonly" 
-                @on-change="inputNumber($event)"  
+                :placeholder="placeholder"
+                :disabled="readonly"
+                @on-change="inputNumber($event)"
                 @on-blur="inputNumber($event, true)" >
             </Input>
         </Row>
@@ -24,7 +24,7 @@
         mixins: [mixin],
         computed: {
             placeholder () {
-                return _.get(this.define, 'placeholder', '请输入一个小数')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请输入一个小数')
             },
             minValue () {
                 return _.get(this.define, 'minValue', Number.MIN_VALUE)

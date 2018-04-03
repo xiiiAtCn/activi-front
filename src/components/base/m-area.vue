@@ -2,10 +2,10 @@
     <div>
         <Row>
             <Col span="10" style="margin-right: 15px" ref="cascaderCt">
-                <Cascader :data="data" :modal="selectModal" :readonly="readonly" :disabled="readonly" placeholder="请选择省市区" @on-change="getSelect"></Cascader>
+                <Cascader :data="data" :modal="selectModal" :readonly="readonly" :disabled="readonly" :placeholder="this.readonly?'':'请选择省市区'" @on-change="getSelect"></Cascader>
             </Col>
             <Col span="10">
-                <Input v-model="address" placeholder="输入详细地址" @on-blur="addAddress" :readonly="readonly" :disabled="readonly"></Input>
+                <Input v-model="address" :placeholder="this.readonly?'':'输入详细地址'" @on-blur="addAddress" :readonly="readonly" :disabled="readonly"></Input>
             </Col>
             <Col span="2" style="text-align: center;height: 32px"  @click="showMap">
                 <Icon type="android-pin" style="color:#495060;font-size:17px;margin-top: 6px;cursor:pointer;" @click.native="showMap"></Icon>

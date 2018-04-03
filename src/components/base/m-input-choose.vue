@@ -44,7 +44,7 @@
                 return _.get(this.define, 'url', '')
             },
             placeholder () {
-                return _.get(this.define, 'placeholder', '请选择相关信息')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请选择相关信息')
             },
             dataDomain () {
                 return _.get(this.define, 'dataDomain', '')

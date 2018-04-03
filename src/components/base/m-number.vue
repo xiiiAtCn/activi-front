@@ -25,7 +25,7 @@
         mixins: [mixin],
         computed: {
             placeholder () {
-                return _.get(this.define, 'placeholder', '请输入一个数字')
+                return this.readonly?'':_.get(this.define, 'placeholder', '请输入一个数字')
             },
             minValue () {
                 return _.get(this.define, 'minValue', Number.MIN_SAFE_INTEGER)
