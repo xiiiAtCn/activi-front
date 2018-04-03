@@ -26,7 +26,7 @@ const mWarehouseRecord = resolve => require(['../components/stock/m-warehouse-re
 
 //用户中心
 const userCenter = resolve => require(['../components/userCenter/m-user-center.vue'], resolve)
-const power = resolve => require(['../components/userCenter/m-permission-settings.vue'], resolve)
+const auth = resolve => require(['../components/userCenter/m-permission-settings.vue'], resolve)
 
 //室内地图
 const ngrMap = resolve => require(['../components/m-show-map.vue'], resolve)
@@ -71,8 +71,8 @@ const router = new VueRouter({
                     component: workbench
                 },
                 // 用户中心路由
-                { path: '/layoutContent/:id/userCenter/power', component: power },
-                { path: '/layoutContent/:id/userCenter/user', component: userCenter },
+                { path: '/layoutContent/systemSetting/auth', component: auth },
+                { path: '/layoutContent/systemSetting/user', component: userCenter },
                 // 库所一览
                 {
                     path: '/layoutContent/:id/tokenOverview',
