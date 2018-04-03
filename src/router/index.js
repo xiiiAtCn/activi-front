@@ -34,6 +34,9 @@ const ngrMap = resolve => require(['../components/m-show-map.vue'], resolve)
 //帮助中心
 const Helper = resolve => require(['../components/debug/m-helper.vue'], resolve)
 
+//table测试
+const cTable = resolve => require(['../components/complicated-table.vue'], resolve)
+
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -65,6 +68,10 @@ const router = new VueRouter({
                             props: route => ({ query: route.query })
                         }
                     ]
+                },
+                {
+                    path: '/layoutContent/123/table',
+                    component: cTable
                 },
                 {
                     path: '/layoutContent/:id/workbench',

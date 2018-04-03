@@ -5,6 +5,10 @@ import './boFilterNEW_vuex'
 import './tokenConfig'
 import './stock'
 
+const cTable = resolve => {
+    require(['./complicated-table.vue'], resolve)
+}
+
 const mCard = resolve => {
     require(['./m-card.vue'], resolve)
 }
@@ -73,6 +77,7 @@ const mShowMap = resolve => {
     require(['./m-show-map.vue'], resolve)
 }
 
+Vue.component('cTable', cTable)
 Vue.component('mCard', mCard)
 Vue.component('mHead', mHead)
 Vue.component('mLayoutContentDefault', mLayoutContentDefault)
