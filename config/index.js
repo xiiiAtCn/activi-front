@@ -32,7 +32,7 @@ module.exports = {
             '/api': {
                 target: 'http://TESTSERVER:23002',
                 pathRewrite: {
-                    '^/api': '/'
+                    // '^/api': '/'
                 }
             }
         },

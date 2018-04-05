@@ -357,11 +357,11 @@
                 this.getmetaKey(this.selectList[key].id)
             },
             getSelectData(){
-                getData('/api/placeConfig/getAllPlaceConfig', (result) => {
-                    if(result){
-                        this.selectList = result
-                    }
-                })
+                // getData('/api/placeConfig/getAllPlaceConfig', (result) => {
+                //     if(result){
+                //         this.selectList = result
+                //     }
+                // })
             },
             getmetaKey(id){
                 const url ={
