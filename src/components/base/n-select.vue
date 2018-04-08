@@ -1,41 +1,37 @@
 <template>
-    <Input
-        v-model="modelData"
-        :placeholder="define.placeholder"
-        :disabled="define.readonly"
-    >
-    </Input>
+    <div>
+        <Select v-model="modelData" filterable>
+            <Option v-for="(k,v) in options" :value="v" :key="k">{{k}} ({{v}})</Option>
+        </Select>
+    </div>
 </template>
 <script>
     import _ from 'lodash'
 
     export default {
         name: 'n-input',
-        props:['define','content','modelText','form'],
-        data(){
+        props: ['define', 'content', 'modelText', 'form'],
+        data() {
             return {
-                modelData:''
+                modelData: '',
             }
         },
         computed: {
-        },
-        watch:{
-            modelData(){
-                this.$emit('dataChange',{
-                    form:this.form,
-                    name:this.define.name,
-                    data:this.modelData
-                })
-            },
-            modelText(newdata){
-                if(newdata){
-                    this.modelData = newdata
-                }
+            options() {
+                return _.get(this.define, 'options', ['abc'])
             }
         },
-        mounted(){
+        watch: {
+            modelData() {
+                this.$emit('dataChange', {
+                    form: this.form,
+                    name: this.define.name,
+                    data: this.modelData
+                })
+            }
         },
-        methods: {
-        }
+        mounted() {
+        },
+        methods: {}
     }
 </script>
