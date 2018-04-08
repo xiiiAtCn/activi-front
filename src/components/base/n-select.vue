@@ -18,7 +18,7 @@
         },
         computed: {
             options() {
-                return _.get(this.define, 'options', ['abc'])
+                return _.get(this.define, 'options', [])
             }
         },
         watch: {
