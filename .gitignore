@@ -23,3 +23,5 @@ config/index.js
 package-lock.json
 config/index.js
 .vscode/launch.json
+.editorconfig
+yarn.lock
