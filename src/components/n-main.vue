@@ -77,24 +77,28 @@
         <div>
             <transition-group name="fade" mode="out-in" tag="div">
                 <div :key="index" v-for="(items, index) in define.forms">
-                    <Form :model="formItem" :label-width="120" label-position="right">
-                        <Row v-for="(row,rowKey) in items.ui_content" :key="rowKey">
-                            <Col v-for="(col,colKey) in row.ui_content" :span="col.ui_define.col" :key="colKey">
-                                <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label" :key="key">
-                                    <component
-                                        v-for="v in item.ui_content"
-                                        :is="v.ui_type"
-                                        :define="v.ui_define"
-                                        :content="v.ui_content"
-                                        :modelText="formItem[v.ui_define.name]"
-                                        :form="items.ui_define.model"
-                                        @dataChange="handleChange"
-                                    >
-                                    </component>
-                                </FormItem>
-                            </Col>
-                        </Row>
-                    </Form>
+                    <Card style="margin-bottom: 10px;">
+                        <p slot="title">{{items.caption}}</p>
+                        <Form :model="formItem" :label-width="120" label-position="right">
+                            <Row v-for="(row,rowKey) in items.ui_content" :key="rowKey">
+                                <Col v-for="(col,colKey) in row.ui_content" :span="col.ui_define.col" :key="colKey">
+                                    <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label" :key="key">
+                                        <component
+                                            v-for="(v, offset) in item.ui_content"
+                                            :key="offset"
+                                            :is="v.ui_type"
+                                            :define="v.ui_define"
+                                            :content="v.ui_content"
+                                            :modelText="formItem[v.ui_define.name]"
+                                            :form="items.ui_define.model"
+                                            @dataChange="handleChange"
+                                        >
+                                        </component>
+                                    </FormItem>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Card>
                 </div>
             </transition-group>
             <hr/>
