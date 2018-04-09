@@ -42,11 +42,17 @@
             let formulas = this.define.formulas
             let prefix = [ '$store','state','formData', this.fixForm]
             let keySet = new Set()
+            let containerSet = new Set()
             for(let i=0; i < formulas.length; i++) {
                 let formula = formulas[i]
                 Object.keys(formula['refField']).forEach(e => {
+                    let id = formula['refField'][e]
+                    if(containerSet.has(id)) {
+                        return
+                    } 
+                    containerSet.add(id)
                     let bak = prefix.slice()
-                    bak.push(formula['refField'][e], 'value')
+                    bak.push(id, 'value')
                     keySet.add(bak)
                 })
             }

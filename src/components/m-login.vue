@@ -33,13 +33,13 @@
                 </Form>
                 <Form id="registerForm"  v-show="!switchForm" :labelWidth="labelWidth" :model="registerForm" :rules="registerRules" ref="registerForm">
                     <FormItem class="form-element" label="用户名" prop="username">
-                        <Input v-model="registerForm.username" placeholder="请输入用户名"></Input>
+                        <Input v-model="registerForm.username" placeholder="请输入用户名" />
                     </FormItem>
                     <FormItem class="form-element" label="昵称" prop="nickName">
-                        <Input v-model="registerForm.nickName" placeholder="请输入昵称"></Input>
+                        <Input v-model="registerForm.nickName" placeholder="请输入昵称" />
                     </FormItem>
                     <FormItem class="form-element" label="密码" prop="password">
-                        <Input type="password" v-model="registerForm.password" placeholder="请输入密码"></Input>
+                        <Input type="password" v-model="registerForm.password" placeholder="请输入密码" />
                     </FormItem>
                     <Button type="primary" @click="register" class="tab">注册</Button>
                 </Form>
@@ -188,12 +188,12 @@
                 this.$refs['registerForm'].validate(valid => {
                     if(valid) {
                         let body = this.registerForm
-                        this.setUrl('/api/user/add').setBody(body).forPost((data, error) => {
+                        this.setUrl('/api/user/add').setBody(body).forPost((data) => {
                             if(data.code === 200 ){
                                 iView.Message.success(data.description)
                                 this.switchForm = true
                             }else{
-                                iView.Message.info(result.description)
+                                iView.Message.info(data.description)
                             }
                         })
                     }

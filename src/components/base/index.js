@@ -92,6 +92,14 @@ const mLayerAmap = resolve =>
 const mCode = resolve =>
     require(['./m-code.vue'], resolve)
 
+const nForm = resolve =>
+    require(['./n-form.vue'], resolve)
+
+const nInput = resolve =>
+    require(['./n-input.vue'], resolve)
+const nSelect = resolve =>
+    require(['./n-select.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mFormulaCollection', formulaCollection)
 Vue.component('mDate', mDate)
@@ -123,3 +131,6 @@ Vue.component('mIconList', mIconList)
 Vue.component('mAddress', mArea)
 Vue.component('mLayerAmap', mLayerAmap)
 Vue.component('mCode', mCode)
+Vue.component('nForm', nForm)
+Vue.component('nInput', nInput)
+Vue.component('nSelect', nSelect)

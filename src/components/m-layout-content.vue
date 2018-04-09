@@ -135,16 +135,15 @@
             this.getNickName()
             this.getTopBread()
             bus.$on('layoutTop',this.handleScrollTop)
-            let documentSDK = document.querySelector('documentSDK')
-            if(documentSDK === null || documentSDK === undefined) {
-                let script = document.createElement('script')
-                script.id = 'documentSDK'
-                this.setUrl('/api/config/documentSDK').forGet(message => {
-                    let { data } = message
-                    script.src = `${data.protocol}://${data.host}:${data.port}${data.path}`
-                    document.body.appendChild(script)
-                })
-            }
+            // let documentSDK = document.querySelector('documentSDK')
+            // if(documentSDK === null || documentSDK === undefined) {
+            //     let script = document.createElement('script')
+            //     script.id = 'documentSDK'
+            //     this.setUrl('/api/config/documentSDK').forGet(message => {
+            //         script.src = `https://${message.data.host}:${message.data.port}/web-apps/apps/api/documents/api.js`
+            //         document.body.appendChild(script)
+            //     })
+            // }
 
         },
         methods: {
