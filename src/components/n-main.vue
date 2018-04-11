@@ -3,54 +3,57 @@
         <div>
             <Row>
                 <Col span="20" style="display: flex; justify-content: flex-start; align-items: flex-end">
-                <Breadcrumb  style="margin-right: 10px">
-                    <Breadcrumb-item v-if="typeof define.title === 'string' || !define.title">
-                        <span>{{define.title||'无标题'}}</span>
-                    </Breadcrumb-item>
-                    <Breadcrumb v-if="define.title instanceof Array">
-                        <Breadcrumb-item
-                            v-for="(item, index) in define.title"
-                            href=""
-                            :key="index">
-                            {{item}}
+                    <Breadcrumb style="margin-right: 10px">
+                        <Breadcrumb-item v-if="typeof caption === 'string' || !caption">
+                            <span>{{caption||'无标题'}}</span>
                         </Breadcrumb-item>
+                        <Breadcrumb v-if="define.title instanceof Array">
+                            <Breadcrumb-item
+                                    v-for="(item, index) in define.title"
+                                    href=""
+                                    :key="index">
+                                {{item}}
+                            </Breadcrumb-item>
+                        </Breadcrumb>
                     </Breadcrumb>
-                </Breadcrumb>
 
-                <div class="btn-container-top-left" v-for="(item, sequence) in topLeft" :key="sequence">
-                    <template name="fade" mode="out-in"  v-for="(btn, index) in item" >
-                        <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
-                            <Button :type="btn.type || 'default'">
-                                {{btn.text}}
-                                <Icon type="arrow-down-b"></Icon>
-                            </Button>
-                            <div slot="content" style="padding: 0 14px;">
-                                <div  v-for="(v, key) in btn.child" :key="key">
-                                    <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
-                                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
-                                    <Button
-                                        v-else
-                                        :type="v.type || 'default'"
-                                        :key="index"
-                                        :size="v.size || 'default'"
-                                        @click="btnClick(v)">
-                                        {{ v.text }}
-                                    </Button>
+                    <div class="btn-container-top-left" v-for="(item, sequence) in topLeft" :key="sequence">
+                        <template name="fade" mode="out-in" v-for="(btn, index) in item">
+                            <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
+                                <Button :type="btn.type || 'default'">
+                                    {{btn.text}}
+                                    <Icon type="arrow-down-b"></Icon>
+                                </Button>
+                                <div slot="content" style="padding: 0 14px;">
+                                    <div v-for="(v, key) in btn.child" :key="key">
+                                        <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v"
+                                                      style="margin-bottom: 5px"></mButtonLayer>
+                                        <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'"
+                                                       :define="btn"></mButtonIframe>
+                                        <Button
+                                                v-else
+                                                :type="v.type || 'default'"
+                                                :key="index"
+                                                :size="v.size || 'default'"
+                                                @click="btnClick(v)">
+                                            {{ v.text }}
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        </Poptip>
-                        <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn" :key="index"></mButtonIframe>
-                        <Button
-                            v-else
-                            :type="btn.type || 'default'"
-                            class="submit-btn"
-                            :key="index"
-                            :size="btn.size || 'default'"
-                            @click="btnClick(btn)">
-                            {{ btn.text }}
-                        </Button>
-                    </template>
-                </div>
+                            </Poptip>
+                            <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"
+                                           :key="index"></mButtonIframe>
+                            <Button
+                                    v-else
+                                    :type="btn.type || 'default'"
+                                    class="submit-btn"
+                                    :key="index"
+                                    :size="btn.size || 'default'"
+                                    @click="btnClick(btn)">
+                                {{ btn.text }}
+                            </Button>
+                        </template>
+                    </div>
                 </Col>
                 <Col span="4" class="pull-right">
                     <transition name="fade" mode="out-in">
@@ -68,7 +71,7 @@
                             <Icon type="reply"></Icon>
                             返回
                         </Button>
-                </transition>
+                    </transition>
                 </Col>
             </Row>
             <hr/>
@@ -82,13 +85,13 @@
                             <Col v-for="(col,colKey) in row.ui_content" :span="col.ui_define.col" :key="colKey">
                                 <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label" :key="key">
                                     <component
-                                        v-for="v in item.ui_content"
-                                        :is="v.ui_type"
-                                        :define="v.ui_define"
-                                        :content="v.ui_content"
-                                        :modelText="formItem[v.ui_define.name]"
-                                        :form="items.ui_define.model"
-                                        @dataChange="handleChange"
+                                            v-for="v in item.ui_content"
+                                            :is="v.ui_type"
+                                            :define="v.ui_define"
+                                            :content="v.ui_content"
+                                            :modelText="formItem[v.ui_define.name]"
+                                            :form="items.ui_define.model"
+                                            @dataChange="handleChange"
                                     >
                                     </component>
                                 </FormItem>
@@ -99,35 +102,38 @@
             </transition-group>
             <hr/>
             <div class="btn-container-bottom-right" v-for="(item, sequence) in bottomRight" :key="sequence">
-                <template name="fade" mode="out-in"  v-for="(btn, index) in item" >
+                <template name="fade" mode="out-in" v-for="(btn, index) in item">
                     <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
                         <Button :type="btn.type || 'default'">
                             {{btn.text}}
                             <Icon type="arrow-down-b"></Icon>
                         </Button>
                         <div slot="content" style="padding: 0 14px;">
-                            <div  v-for="(v, key) in btn.child" :key="key">
-                                <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v" style="margin-bottom: 5px"></mButtonLayer>
-                                <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"></mButtonIframe>
+                            <div v-for="(v, key) in btn.child" :key="key">
+                                <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v"
+                                              style="margin-bottom: 5px"></mButtonLayer>
+                                <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'"
+                                               :define="btn"></mButtonIframe>
                                 <Button
-                                    v-else
-                                    :type="v.type || 'default'"
-                                    :key="index"
-                                    :size="v.size || 'default'"
-                                    @click="btnClick(v)">
+                                        v-else
+                                        :type="v.type || 'default'"
+                                        :key="index"
+                                        :size="v.size || 'default'"
+                                        @click="btnClick(v)">
                                     {{ v.text }}
                                 </Button>
                             </div>
                         </div>
                     </Poptip>
-                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn" :key="index"></mButtonIframe>
+                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"
+                                   :key="index"></mButtonIframe>
                     <Button
-                        v-else
-                        :type="btn.type || 'default'"
-                        class="submit-btn"
-                        :key="index"
-                        :size="btn.size || 'default'"
-                        @click="btnClick(btn)">
+                            v-else
+                            :type="btn.type || 'default'"
+                            class="submit-btn"
+                            :key="index"
+                            :size="btn.size || 'default'"
+                            @click="btnClick(btn)">
                         {{ btn.text }}
                     </Button>
                 </template>
@@ -137,39 +143,40 @@
     </div>
 </template>
 <script>
-    import {dispatch,getData} from '../utils/actionUtils'
-    import { FETCH_FORM_DATA} from 'store/Action'
+    import {dispatch, getData} from '../utils/actionUtils'
+    import {FETCH_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
 
     export default {
-        props:{
-            define:{
-                type:null,
-                default () {
+        props: {
+            define: {
+                type: null,
+                default() {
                     return {}
                 }
             },
-            form:{
-                type:String,
-                default:'form'
+            caption: {type: String},
+            form: {
+                type: String,
+                default: 'form'
             },
-            content:{
-                type:null,
-                default () {
+            content: {
+                type: null,
+                default() {
                     return {}
                 }
             }
         },
-        data () {
+        data() {
             return {
-                topLeft:[],
-                bottomRight:[],
-                formData:{},
-                rules:[],
-                formItem:{},
-                formItemDefault:{
-                    item3:'123',
-                    item4:'1233333'
+                topLeft: [],
+                bottomRight: [],
+                formData: {},
+                rules: [],
+                formItem: {},
+                formItemDefault: {
+                    item3: '123',
+                    item4: '1233333'
                 },
             }
         },
@@ -182,26 +189,30 @@
             }
         },
         watch: {
-            define () {
-                this.initialize(this.define)
+            define() {
+                this.initialize(this.caption,this.define)
             }
         },
         inject: ['form'],
-        mounted () {
-            this.initialize(this.define)
+        mounted() {
+            this.initialize(this.caption, this.define)
             //console.log('inject form',this.form)
         },
         methods: {
-            handleChange(data){
-                if(!this.formData[data.form]){
+            handleChange(data) {
+                if (!this.formData[data.form]) {
                     this.formData[data.form] = {}
                 }
                 this.formData[data.form][data.name] = data.data
             },
-            initialize(define){
-                if(define.title){document.title = _.get( define , 'title', '无标题')}
-                else{document.title = '无标题'}
-                this.handleButtonList( define.buttons )
+            initialize(caption,define) {
+                if (caption) {
+                    document.title = caption
+                }
+                else {
+                    document.title = '无标题'
+                }
+                this.handleButtonList(define.buttons)
             },
             edit: function (url) {
                 dispatch(url)
@@ -214,44 +225,44 @@
                 this.clearButtonList()
                 dispatch(url)
             },
-            btnClick (btn) {
-                if(btn.action.type === 'submit'){
+            btnClick(btn) {
+                if (btn.action.type === 'submit') {
                     let action = btn.action
                     action.url.body = this.formData
 
-                    getData(action.url,(data)=>{
+                    getData(action.url, (data) => {
                         if (data) {
                             console.log(data)
                         }
                     })
-                }else{
+                } else {
                     dispatch(btn.action)
                 }
             },
-            handleButtonList(list){
+            handleButtonList(list) {
                 this.clearButtonList()
-                if(!list){
+                if (!list) {
                     return
                 }
-                list.forEach((val)=>{
-                    if(val.location === 'topLeft'){
-                        if(!this.topLeft[val.groupNo]){
-                            this.topLeft[val.groupNo]=[val]
-                        }else{
+                list.forEach((val) => {
+                    if (val.location === 'topLeft') {
+                        if (!this.topLeft[val.groupNo]) {
+                            this.topLeft[val.groupNo] = [val]
+                        } else {
                             this.topLeft[val.groupNo].push(val)
                         }
-                    } else if(val.location === 'bottomRight'){
-                        if(!this.bottomRight[val.groupNo]){
-                            this.bottomRight[val.groupNo]=[val]
-                        }else{
+                    } else if (val.location === 'bottomRight') {
+                        if (!this.bottomRight[val.groupNo]) {
+                            this.bottomRight[val.groupNo] = [val]
+                        } else {
                             this.bottomRight[val.groupNo].push(val)
                         }
                     }
                 })
             },
-            clearButtonList(){
-                this.topLeft={}
-                this.bottomRight={}
+            clearButtonList() {
+                this.topLeft = {}
+                this.bottomRight = {}
             }
         }
     }
@@ -274,15 +285,18 @@
     .form-button-group {
         float: right;
     }
-    .form-button-group .drop-down{
+
+    .form-button-group .drop-down {
         min-width: 0;
         text-align: center;
     }
-    .form-button-group .submit-btn{
+
+    .form-button-group .submit-btn {
         margin-bottom: 10px;
         width: 80%;
     }
-    .form-button-group .drop-down-container{
+
+    .form-button-group .drop-down-container {
         text-align: center;
     }
 
@@ -291,11 +305,13 @@
         margin-left: 10px;
         margin-bottom: 10px;
     }
-    .btn-container-top-left{
+
+    .btn-container-top-left {
         margin-left: 10px;
         margin-right: 10px;
     }
-    .submit-btn{
+
+    .submit-btn {
         margin-right: 5px;
     }
 </style>

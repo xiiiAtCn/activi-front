@@ -5,6 +5,7 @@
         :define="downData.ui_define"
         :content="downData.ui_content"
         :form="downData.ui_form"
+        :caption="downData.caption"
     ></component>
 </template>
 
