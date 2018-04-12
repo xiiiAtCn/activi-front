@@ -96,7 +96,6 @@
                                                 :content="v.ui_content"
                                                 :modelText="formItem[v.ui_define.name]"
                                                 :form="items.ui_define.model"
-                                                :formIndex="index"
                                                 @dataChange="handleChange"
                                         >
                                         </component>
@@ -207,8 +206,8 @@
         },
         methods: {
             handleChange(data) {
-                if (!this.formData[data.formIndex]) {
-                    this.formData[data.formIndex] = {}
+                if (!this.formData[data.form]) {
+                    this.formData[data.form] = {}
                 }
                 this.formData[data.form][data.name] = data.data
             },

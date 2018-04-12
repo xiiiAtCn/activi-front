@@ -24,7 +24,6 @@
                     form: this.form,
                     name: this.define.name,
                     data: this.modelData,
-                    formIndex: this.formIndex
                 })
             },
             modelText(newdata) {
