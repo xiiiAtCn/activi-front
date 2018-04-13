@@ -36,5 +36,5 @@ const app = new Vue({
 
 app.$Message.config({
     top: 120,
-    duration: 3
+    duration: 5
 })

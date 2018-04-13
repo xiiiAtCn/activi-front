@@ -90,13 +90,14 @@
                                     <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label"
                                               :key="key">
                                         <component
-                                                v-for="v in item.ui_content"
-                                                :is="v.ui_type"
-                                                :define="v.ui_define"
-                                                :content="v.ui_content"
-                                                :modelText="formItem[v.ui_define.name]"
-                                                :form="items.ui_define.model"
-                                                @dataChange="handleChange"
+                                            :key="index"
+                                            v-for="(v, index) in item.ui_content"
+                                            :is="v.ui_type"
+                                            :define="v.ui_define"
+                                            :content="v.ui_content"
+                                            :modelText="formItem[v.ui_define.name]"
+                                            :form="items.ui_define.model"
+                                            @dataChange="handleChange"
                                         >
                                         </component>
                                     </FormItem>
@@ -150,8 +151,6 @@
 </template>
 <script>
     import {dispatch, getData} from '../utils/actionUtils'
-    import {FETCH_FORM_DATA} from 'store/Action'
-    import _ from 'lodash'
 
     export default {
         props: {
@@ -202,7 +201,6 @@
         inject: ['form'],
         mounted() {
             this.initialize(this.caption, this.define)
-            //console.log('inject form',this.form)
         },
         methods: {
             handleChange(data) {
@@ -235,10 +233,9 @@
                 if (btn.action.type === 'submit') {
                     let action = btn.action
                     action.url.body = this.formData
-
                     getData(action.url, (data) => {
                         if (data) {
-                            console.log(data)
+                            dispatch(data)
                         }
                     })
                 } else {
