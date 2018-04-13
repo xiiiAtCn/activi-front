@@ -24,13 +24,14 @@ module.exports = {
     },
     dev: {
         env: require('./dev.env'),
+
         port: 23001,
         autoOpenBrowser: true,
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
         proxyTable: {
             '/api': {
-                target: 'http://TESTSERVER:23002',
+                target: 'http://SOONBOY:23002',
                 pathRewrite: {
                     // '^/api': '/'
                 }

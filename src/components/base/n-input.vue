@@ -7,7 +7,6 @@
     </Input>
 </template>
 <script>
-    import _ from 'lodash'
 
     export default {
         name: 'n-input',
@@ -26,9 +25,10 @@
                     data: this.modelData,
                 })
             },
-            modelText(newdata) {
-                if (newdata) {
-                    this.modelData = newdata
+            modelText(newData) {
+                debugger
+                if (newData) {
+                    this.modelData = newData
                 }
             }
         },

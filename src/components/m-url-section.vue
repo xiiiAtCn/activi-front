@@ -6,13 +6,12 @@
         :content="downData.ui_content"
         :form="downData.ui_form"
         :caption="downData.caption"
+        :resource="resource"
     ></component>
 </template>
 
 <script>
     import {getData} from 'utils/actionUtils'
-    import fetch from '../utils/DefineFetcher'
-    import { FETCH_FORM_DATA} from 'store/Action'
     import _ from 'lodash'
 
     export default {
@@ -36,7 +35,8 @@
                 dataUrl: '',
                 statusUrl: '',
                 defineUrl:'',
-                watchRoute:false // 是否监听路由
+                watchRoute:false, // 是否监听路由
+                resource: {}
             }
         },
         provide: {
@@ -50,7 +50,12 @@
             },
             dataUrl(newUrl) {
                 if(newUrl){
-                    this.$store.dispatch(FETCH_FORM_DATA, {url: newUrl})
+                    getData(newUrl, (data, err) => {
+                        if(err) {
+                            console.error(`get data from ${newUrl} error`)
+                        }
+                        this.resource = data
+                    })
                 }
             },
             statusUrl(newUrl) {

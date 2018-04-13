@@ -151,7 +151,7 @@
 </template>
 <script>
     import {dispatch, getData} from '../utils/actionUtils'
-
+    import _ from 'lodash'
     export default {
         props: {
             define: {
@@ -167,6 +167,12 @@
             },
             content: {
                 type: null,
+                default() {
+                    return {}
+                }
+            },
+            resource: {
+                type: Object,
                 default() {
                     return {}
                 }
@@ -196,6 +202,10 @@
         watch: {
             define() {
                 this.initialize(this.caption, this.define)
+            },
+            resource(newVal) {
+
+                this.formData = newVal 
             }
         },
         inject: ['form'],
@@ -230,7 +240,6 @@
                 dispatch(url)
             },
             btnClick(btn) {
-                debugger
                 if (btn.action.type === 'submit') {
                     let action = btn.action
                     action.url.body = this.formData
