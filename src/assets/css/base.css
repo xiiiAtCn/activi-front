@@ -40,6 +40,10 @@ html, body {
     cursor: text !important;
 }
 
+.ivu-message {
+    font-size: 18px !important;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
