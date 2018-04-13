@@ -60,8 +60,8 @@ export const getData = (action, callback) => {
         url = action
     } else if (Object.prototype.toString.apply(action) === '[object Object]') {
         url = action.url
-        url = replace(url, action.pathParams || {})
-        url = addQuery(url, action.queryParams || {})
+        url = replace(url, action.pathParams? {...action.pathParams} : {})
+        url = addQuery(url, action.queryParams? {...action.queryParams} : {})
         if (action.method === 'POST' || action.method === 'PUT' ) {
             body = action.body
             method = action.method

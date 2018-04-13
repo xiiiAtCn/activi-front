@@ -230,6 +230,7 @@
                 dispatch(url)
             },
             btnClick(btn) {
+                debugger
                 if (btn.action.type === 'submit') {
                     let action = btn.action
                     action.url.body = this.formData
