@@ -1,5 +1,7 @@
 <template>
-    <div :style="{margin: height + 'px' + ' 0px'}"></div>
+    <div :style="{margin: height + 'px' + ' 0px', opacity: '0', 'font-size':'0'}">
+       'just opacity here'
+    </div>
 </template>
 <script>
     export default {

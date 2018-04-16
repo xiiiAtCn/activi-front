@@ -100,6 +100,9 @@ const nInput = resolve =>
 const nSelect = resolve =>
     require(['./n-select.vue'], resolve)
 
+const nList = resolve => 
+    require(['./n-list.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mFormulaCollection', formulaCollection)
 Vue.component('mDate', mDate)
@@ -134,3 +137,4 @@ Vue.component('mCode', mCode)
 Vue.component('nForm', nForm)
 Vue.component('nInput', nInput)
 Vue.component('nSelect', nSelect)
+Vue.component('nList', nList)
