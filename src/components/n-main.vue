@@ -146,12 +146,24 @@
                 </template>
             </div>
         </div>
+        <div>
+            <transition-group name="fade" mode="out-in" tag="div">
+                <div :key="index" v-for="(item, index) in content">
+                    <component 
+                        :is="item.ui_type"
+                        :define="item.ui_define"
+                    >
+                    </component>
+                </div>
+            </transition-group>
+        </div>
         <Back-top></Back-top>
     </div>
 </template>
 <script>
+
     import {dispatch, getData} from '../utils/actionUtils'
-    import _ from 'lodash'
+
     export default {
         props: {
             define: {
