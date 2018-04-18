@@ -10,6 +10,7 @@
     </div>
 </template>
 <script>
+    import { getData } from 'utils/actionUtils'
     export default {
         name: 'n-list',
         props: {
@@ -25,7 +26,10 @@
         },
         mounted() {
             this.columns = this.define.cols
-            console.log(this.define)
+            let { dataUrl } = this.define
+            getData(dataUrl, (data) => {
+                this.data = data
+            })
         },
         methods: {
 

@@ -5,7 +5,8 @@
                 <Col span="20" style="display: flex; justify-content: flex-start; align-items: flex-end">
                     <Breadcrumb style="margin-right: 10px">
                         <Breadcrumb-item v-if="typeof caption === 'string' || !caption">
-                            <h2>{{caption||'无标题'}}</h2>
+                            <h2 style="display: inline-block;">{{title}}</h2>
+                            <h4 style="display: inline-block; margin-left: 20px;">{{subTitle}}</h4>
                         </Breadcrumb-item>
                         <Breadcrumb v-if="define.title instanceof Array">
                             <Breadcrumb-item
@@ -16,7 +17,6 @@
                             </Breadcrumb-item>
                         </Breadcrumb>
                     </Breadcrumb>
-
                     <div class="btn-container-top-left" v-for="(item, sequence) in topLeft" :key="sequence">
                         <template name="fade" mode="out-in" v-for="(btn, index) in item">
                             <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
@@ -74,7 +74,6 @@
                     </transition>
                 </Col>
             </Row>
-            <hr/>
         </div>
         <div v-if="!define.title"></div>
         <div>
@@ -201,13 +200,15 @@
                     item3: '123',
                     item4: '1233333'
                 },
+                title: '',
+                subTitle: ''
             }
         },
         computed: {
-            res: function () {
+            res() {
                 return this.$store.state.pageData.data.hidden
             },
-            leftMenu: function () {
+            leftMenu() {
                 return this.define.leftMenu ? this.define.leftMenu : {}
             }
         },
@@ -216,13 +217,14 @@
                 this.initialize(this.caption, this.define)
             },
             resource(newVal) {
-
                 this.formData = newVal 
             }
         },
         inject: ['form'],
         mounted() {
-            this.initialize(this.caption, this.define)
+            this.title = this.caption ? this.caption : this.define.caption || '无标题' 
+            this.subTitle = this.define.subTitle || ''
+            this.initialize(this.title, this.define)
         },
         methods: {
             handleChange(data) {
@@ -232,12 +234,7 @@
                 this.formData[data.form][data.name] = data.data
             },
             initialize(caption, define) {
-                if (caption) {
-                    document.title = caption
-                }
-                else {
-                    document.title = '无标题'
-                }
+                document.title = caption
                 this.handleButtonList(define.buttons)
             },
             edit: function (url) {
