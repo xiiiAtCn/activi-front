@@ -103,6 +103,9 @@ const nSelect = resolve =>
 const nList = resolve => 
     require(['./n-list.vue'], resolve)
 
+const nResource = resolve =>
+    require(['./n-resource.vue'], resolve)
+
 Vue.component('mBarrier', mBarrier)
 Vue.component('mFormulaCollection', formulaCollection)
 Vue.component('mDate', mDate)
@@ -138,3 +141,4 @@ Vue.component('nForm', nForm)
 Vue.component('nInput', nInput)
 Vue.component('nSelect', nSelect)
 Vue.component('nList', nList)
+Vue.component('nResource', nResource)

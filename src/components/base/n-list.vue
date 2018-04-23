@@ -27,7 +27,6 @@
             }
         },
         mounted() {
-            debugger
             let { cols , businessKey, detailUrl } = this.define
             this.columns = this.handleColumns(cols, businessKey, detailUrl)
             let { dataUrl } = this.define
@@ -48,10 +47,12 @@
                             return h('a', {
                                 on: {
                                     click() {
-                                        let url = replace(detailUrl.url, detailUrl.pathParams)
-                                        url = addQuery(url, {
+                                        let urlBak = _.cloneDeep(detailUrl)
+                                        urlBak.pathParams = {
+                                            ...urlBak.pathParams,
                                             id: row['id']
-                                        })
+                                        }
+                                        let url = replace(urlBak.url + '/{id}', urlBak.pathParams)
                                         let bak = {
                                             url,
                                             type: 'link'
