@@ -32,8 +32,8 @@
                     <FormItem label="密码" prop="password" v-if="!changeRole">
                         <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
                     </FormItem>
-                    <FormItem label="选择用户角色" prop="roles">
-                        <Select v-model="formItem.roles" multiple>
+                    <FormItem label="选择用户角色" prop="authorities">
+                        <Select v-model="formItem.authorities" multiple>
                             <Option v-for="item in defaultRole" :value="item.id">{{ item.title }}</Option>
                         </Select>
                     </FormItem>
@@ -122,10 +122,11 @@
                     //     }
                     // },
                     {
-                        "title": "角色",
-                        "key": "authorities",
+                        'title': '角色',
+                        'key': 'authorities',
                         'align': 'center',
                         render: (h, params) => {
+                            console.log('params....',params)
                             if (!params.row.authorities) {
                                 return h('div', '')
                             }
@@ -138,7 +139,7 @@
                                             marginLeft: '5px'
                                         }
                                     },
-                                    roleList[i].roleName
+                                    roleList[i].title
                                 ))
                             }
                             return h('div', roleContainer)
