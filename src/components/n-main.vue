@@ -76,18 +76,32 @@
             </Row>
         </div>
         <div v-if="!define.title"></div>
+        <hr v-if="define.forms && define.forms.length > 0"/>
         <div>
             <transition-group name="fade" mode="out-in" tag="div">
                 <div :key="index" v-for="(items, index) in define.forms">
                     <Card style="margin-bottom: 10px;">
                         <p slot="title">
-                            {{items.caption}}
+                            {{items.ui_define.caption}}
                         </p>
-                        <Form :model="formItem" :label-width="120" label-position="right">
-                            <Row v-for="(row,rowKey) in items.ui_content" :key="rowKey">
-                                <Col v-for="(col,colKey) in row.ui_content" :span="col.ui_define.col" :key="colKey">
-                                    <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label"
-                                              :key="key">
+                        <Form 
+                            :model="formItem" 
+                            :label-width="120" 
+                            label-position="right"
+                        >
+                            <Row 
+                                v-for="(row,rowKey) in items.ui_content" 
+                                :key="rowKey"
+                            >
+                                <Col 
+                                    v-for="(col,colKey) in row.ui_content" 
+                                    :span="col.ui_define.col" 
+                                    :key="colKey">
+                                    <FormItem 
+                                        v-for="(item,key) in col.ui_content" 
+                                        :label="item.ui_define.label"
+                                        :key="key"
+                                    >
                                         <component
                                             :key="index"
                                             v-for="(v, index) in item.ui_content"
@@ -106,7 +120,7 @@
                     </Card>
                 </div>
             </transition-group>
-            <hr/>
+            <hr v-if="content && content.length > 0"/>
             <div class="btn-container-bottom-right" v-for="(item, sequence) in bottomRight" :key="sequence">
                 <template name="fade" mode="out-in" v-for="(btn, index) in item">
                     <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
@@ -222,6 +236,7 @@
         },
         inject: ['form'],
         mounted() {
+            debugger
             this.title = this.caption ? this.caption : this.define.caption || '无标题' 
             this.subTitle = this.define.subTitle || ''
             this.initialize(this.title, this.define)
