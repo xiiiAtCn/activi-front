@@ -3,11 +3,15 @@
         <h3 class="title-container">角色权限</h3>
         <Row>
             <Col span="12" class="tree-container">
-                <div class="head-container" @click="addRole" >角色列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
+                <div class="head-container" @click="addRole">角色列表
+                    <Icon type="plus-round" style="cursor: pointer;margin-left: 10px"></Icon>
+                </div>
                 <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"></Tree>
             </Col>
             <Col span="12" class="tree-container">
-                <div class="head-container" @click="showAddMenu">菜单列表  <Icon type="plus-round"style="cursor: pointer;margin-left: 10px"></Icon></div>
+                <div class="head-container" @click="showAddMenu">菜单列表
+                    <Icon type="plus-round" style="cursor: pointer;margin-left: 10px"></Icon>
+                </div>
                 <Tree class="tree" :data="menuTree" show-checkbox @on-check-change="handleTreeCheck"></Tree>
             </Col>
         </Row>
@@ -34,20 +38,29 @@
                             </FormItem>
                             <FormItem label="选择URL类型" v-if="menuForm.leaf">
                                 <RadioGroup v-model="menuForm.urlType">
-                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">{{item.value}}</Radio>
+                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">
+                                        {{item.value}}
+                                    </Radio>
                                 </RadioGroup>
                             </FormItem>
                             <FormItem label="选择后生成URL" v-show="menuForm.urlType !== 'other'" v-if="menuForm.leaf">
                                 <Row>
                                     <Col span="11">
-                                        <Select v-model="menuForm.selectResultKey" placeholder="请选择类型" filterable @on-change="selectChange">
-                                            <Option v-for="(item,key) in selectList" :key="key" :value="key">{{item.name}}</Option>
+                                        <Select v-model="menuForm.selectResultKey" placeholder="请选择类型" filterable
+                                                @on-change="selectChange">
+                                            <Option v-for="(item,key) in selectList" :key="key" :value="key">
+                                                {{item.name}}
+                                            </Option>
                                         </Select>
                                     </Col>
-                                    <Col span="2" style="text-align: center" v-show="menuForm.urlType === 'resource'">-选择metaKey:</Col>
+                                    <Col span="2" style="text-align: center" v-show="menuForm.urlType === 'resource'">
+                                        -选择metaKey:
+                                    </Col>
                                     <Col span="11" v-show="menuForm.urlType === 'resource'">
                                         <Select v-model="menuForm.metaKey" placeholder="请选择类型" @on-change="generateUrl">
-                                            <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">{{item.nodeName}}</Option>
+                                            <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">
+                                                {{item.nodeName}}
+                                            </Option>
                                         </Select>
                                     </Col>
                                 </Row>
@@ -59,7 +72,7 @@
                                 <Input v-model="menuForm.picUrl" placeholder="请输入背景图URL"></Input>
                             </FormItem>
                             <FormItem label="菜单顺序">
-                                <InputNumber :min="0" v-model="menuForm.menuOrder"  style="width:100%;"></InputNumber>
+                                <InputNumber :min="0" v-model="menuForm.menuOrder" style="width:100%;"></InputNumber>
                             </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
@@ -86,7 +99,8 @@
             </div>
         </mLayer>
 
-        <mLayer :value="showEditLayer" titleText="编辑菜单" @on-cancel="handleEditCancel" @on-ok="handleEditOk" :loading="layerEditLoading">
+        <mLayer :value="showEditLayer" titleText="编辑菜单" @on-cancel="handleEditCancel" @on-ok="handleEditOk"
+                :loading="layerEditLoading">
             <div>
                 <Row>
                     <Col span="24" class="layerSection">
@@ -100,21 +114,30 @@
                             </FormItem>
                             <FormItem label="选择URL类型" v-if="editForm.leaf">
                                 <RadioGroup v-model="editForm.urlType">
-                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">{{item.value}}</Radio>
+                                    <Radio :label="item.label" v-for="(item,key) in urlTypeList" :key="key">
+                                        {{item.value}}
+                                    </Radio>
                                 </RadioGroup>
                             </FormItem>
                             <FormItem label="选择后生成URL" v-show="editForm.urlType !== 'other'" v-if="editForm.leaf">
                                 <Row>
                                     <Col span="11">
-                                    <Select v-model="editForm.selectResultKey" placeholder="请选择类型" filterable @on-change="selectChange">
-                                        <Option v-for="(item,key) in selectList" :key="key" :value="key">{{item.name}}</Option>
-                                    </Select>
+                                        <Select v-model="editForm.selectResultKey" placeholder="请选择类型" filterable
+                                                @on-change="selectChange">
+                                            <Option v-for="(item,key) in selectList" :key="key" :value="key">
+                                                {{item.name}}
+                                            </Option>
+                                        </Select>
                                     </Col>
-                                    <Col span="2" style="text-align: center" v-show="editForm.urlType === 'resource'">-选择metaKey:</Col>
+                                    <Col span="2" style="text-align: center" v-show="editForm.urlType === 'resource'">
+                                        -选择metaKey:
+                                    </Col>
                                     <Col span="11" v-show="editForm.urlType === 'resource'">
-                                    <Select v-model="editForm.metaKey" placeholder="请选择类型" @on-change="generateUrl">
-                                        <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">{{item.nodeName}}</Option>
-                                    </Select>
+                                        <Select v-model="editForm.metaKey" placeholder="请选择类型" @on-change="generateUrl">
+                                            <Option v-for="(item,key) in metaKeyList" :key="key" :value="item.formName">
+                                                {{item.nodeName}}
+                                            </Option>
+                                        </Select>
                                     </Col>
                                 </Row>
                             </FormItem>
@@ -152,7 +175,8 @@
             </div>
         </mLayer>
 
-        <mLayer :value="showRoleLayer" :titleText="roleTitle" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk" :loading="layerRoleLoading">
+        <mLayer :value="showRoleLayer" :titleText="roleTitle" @on-cancel="handleRoleCancel" @on-ok="handleRoleOk"
+                :loading="layerRoleLoading">
             <div>
                 <Row>
                     <Col span="24">
@@ -160,8 +184,8 @@
                             <FormItem label="角色名称" prop="title">
                                 <Input v-model="roleForm.title" placeholder="请输入角色名称"></Input>
                             </FormItem>
-                            <FormItem label="角色英文名称" prop="authority">
-                                <Input v-model="roleForm.authority" placeholder="请输入角色英文名称"></Input>
+                            <FormItem label="角色英文名称" prop="express">
+                                <Input v-model="roleForm.express" placeholder="请输入角色英文名称"></Input>
                             </FormItem>
                         </Form>
                     </Col>
@@ -172,55 +196,58 @@
 </template>
 
 <script>
-    import { getData } from 'utils/actionUtils'
+    import {getData} from 'utils/actionUtils'
     import _ from 'lodash'
     import iView from 'iview'
-    import  bus from '../../router/bus'
+    import bus from '../../router/bus'
 
-    export default{
-        data () {
+    export default {
+        data() {
             //验证菜单名
-            const labelValid =(rule, val, callback)=>{
-                let url ={
-                    pathParams:{
-                        menuName : val,
-                        parentId : this.menuForm.parentId
+            const labelValid = (rule, val, callback) => {
+                let url = {
+                    pathParams: {
+                        menuName: val,
+                        parentId: this.menuForm.parentId
                     },
-                    url:'/api/user/check/{username}'
+                    url: '/api/user/isExist/{username}'
                 }
                 getData(url, (result) => {
-                    if(result){
-                        if(!result.data){
-                            callback(result.description)
-                        }else{
-                            callback()
-                        }
+                    if (result === true) {
+                        callback('用户名已经被占用！')
+                        // if(!result.data){
+                        //     callback(result.description)
+                        // }else{
+                        //     callback()
+                        // }
+                    } else {
+                        callback()
                     }
                 })
             }
             //验证菜单key值是否重复
-            const keyValid =(rule,val,callback)=>{
-                if(!val){
+            const keyValid = (rule, val, callback) => {
+                if (!val) {
                     callback('请输入key值！')
                     return
-                }else if(!/^.{1,254}$/.test(val)){
+                } else if (!/^.{1,254}$/.test(val)) {
                     callback('输入的字符数太多了！')
                     return
-                }else if(this.cKey === val){
+                } else if (this.cKey === val) {
                     callback()
                     return
                 }
-                let url ={
-                    pathParams:{
-                        id : (this.menuForm.parentId||this.editForm.parentId||'') + val
+                let url = {
+                    pathParams: {
+                        id: (this.menuForm.parentId || this.editForm.parentId || '') + val
                     },
-                    url:'/api/menu/usable/{id}'
+                    url: '/api/menu/usable/{id}'
                 }
                 getData(url, (result) => {
-                    if(result){
-                        if(!result.data){
+                    if (result) {
+                        if (!result.data) {
                             callback(result.description)
-                        }else{
+                        } else {
                             callback()
                         }
                     }
@@ -228,110 +255,110 @@
             }
             return {
                 roleTree: [],
-                defaultMenu:[],
-                menuTree:[],
-                currentRole:'',
+                defaultMenu: [],
+                menuTree: [],
+                currentRole: '',
 
-                menuTreeMap:{},
-                currentMenuData:{},
+                menuTreeMap: {},
+                currentMenuData: {},
 
-                checkList:[],
-                defaultList:[],
+                checkList: [],
+                defaultList: [],
 
-                showLayer:false,
-                showRoleLayer:false,
-                layerLoading:false,
-                layerRoleLoading:false,
-                showEditLayer:false,
-                layerEditLoading:false,
+                showLayer: false,
+                showRoleLayer: false,
+                layerLoading: false,
+                layerRoleLoading: false,
+                showEditLayer: false,
+                layerEditLoading: false,
 
-                id:'',
-                roleTitle:'添加角色',
+                id: '',
+                roleTitle: '添加角色',
 
-                urlTypeList:[
+                urlTypeList: [
                     {
-                        value:'资源',
-                        label:'resource'
+                        value: '资源',
+                        label: 'resource'
                     },
                     {
-                        value:'活动库所',
-                        label:'petri'
+                        value: '活动库所',
+                        label: 'petri'
                     },
                     {
-                        value:'其他',
-                        label:'other'
+                        value: '其他',
+                        label: 'other'
                     }
                 ],
-                selectList:[],
-                metaKeyList:[],
+                selectList: [],
+                metaKeyList: [],
 
                 menuForm: {
                     title: '',
                     id: '',
                     description: '',
-                    url:'',
-                    urlType:'resource',
-                    selectResultKey:'',
-                    metaKey:'',
-                    icon:'',
-                    menuOrder:0,
-                    picUrl:'',
-                    parentId:'',
-                    leaf:false
+                    url: '',
+                    urlType: 'resource',
+                    selectResultKey: '',
+                    metaKey: '',
+                    icon: '',
+                    menuOrder: 0,
+                    picUrl: '',
+                    parentId: '',
+                    leaf: false
                 },
-                powerForm:{
-                    title:'',
-                    description:'',
-                    express:'',
-                    id:''
+                powerForm: {
+                    title: '',
+                    description: '',
+                    express: '',
+                    id: ''
                 },
-                editForm:{
+                editForm: {
                     title: '',
                     id: '',
                     description: '',
-                    url:'',
-                    urlType:'resource',
-                    selectResultKey:'',
-                    metaKey:'',
-                    picUrl:'',
-                    menuOrder:0,
-                    icon:'',
-                    parentId:'',
-                    leaf:false
+                    url: '',
+                    urlType: 'resource',
+                    selectResultKey: '',
+                    metaKey: '',
+                    picUrl: '',
+                    menuOrder: 0,
+                    icon: '',
+                    parentId: '',
+                    leaf: false
                 },
                 roleForm: {
                     title: '',
-                    authority: ''
+                    express: ''
                 },
                 roleDefault: {
                     title: '',
-                    authority: ''
+                    express: ''
                 },
-                cKey:'',
+                cKey: '',
                 rules: {
                     title: [
-                        { required: true, message:'请输入用户名', trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'}
                     ]
                 },
                 powerRules: {
                     title: [
-                        { required: true, message:'请输入权限名', trigger: 'blur' }
+                        {required: true, message: '请输入权限名', trigger: 'blur'}
                     ],
-                    authority: [
-                        { required: true, message:'请输入权限表达式', trigger: 'blur' }
+                    express: [
+                        {required: true, message: '请输入权限表达式', trigger: 'blur'}
                     ]
                 },
                 editRules: {
                     title: [
-                        { required: true, message:'请输入用户名', trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'}
                     ]
                 },
                 roleRules: {
                     title: [
-                        { required: true, message:'请输入角色名称', trigger: 'blur' }
+                        {required: true, message: '请输入角色名称', trigger: 'blur'}
                     ],
-                    authority: [
-                        { required: true, message:'请输入角色英文名称', trigger: 'blur' }
+                    express: [
+                        {required: true, message: '请输入角色英文名称', trigger: 'blur'}
                     ]
                 },
             }
@@ -341,88 +368,92 @@
             this.getSelectData()
         },
         methods: {
-            selectChange(key){
-                if(key === ''){return}
-                if(this.menuForm.selectResultKey){
-                    if(this.menuForm.urlType === 'petri'){
+            selectChange(key) {
+                if (key === '') {
+                    return
+                }
+                if (this.menuForm.selectResultKey) {
+                    if (this.menuForm.urlType === 'petri') {
                         this.setFormUrl('menuForm')
                         return
                     }
-                }else{
-                    if(this.editForm.urlType === 'petri'){
+                } else {
+                    if (this.editForm.urlType === 'petri') {
                         this.setFormUrl('editForm')
                         return
                     }
                 }
                 this.getmetaKey(this.selectList[key].id)
             },
-            getSelectData(){
+            getSelectData() {
                 // getData('/api/placeConfig/getAllPlaceConfig', (result) => {
                 //     if(result){
                 //         this.selectList = result
                 //     }
                 // })
             },
-            getmetaKey(id){
-                const url ={
-                    method:'GET',
-                    pathParams:{
-                        templateId : id
+            getmetaKey(id) {
+                const url = {
+                    method: 'GET',
+                    pathParams: {
+                        templateId: id
                     },
-                    url:'/api/placeConfig/cache/getRel/only/{templateId}'
+                    url: '/api/placeConfig/cache/getRel/only/{templateId}'
                 }
                 getData(url, (result) => {
-                    if(result){
-                        this.metaKeyList =result
+                    if (result) {
+                        this.metaKeyList = result
                     }
                 })
             },
-            generateUrl(key){
-                if(!key){return}
-                if(this.menuForm.metaKey){
+            generateUrl(key) {
+                if (!key) {
+                    return
+                }
+                if (this.menuForm.metaKey) {
                     this.setFormUrl('menuForm')
-                } else{
+                } else {
                     this.setFormUrl('editForm')
                 }
             },
-            setFormUrl(form){
+            setFormUrl(form) {
                 let Form = this[form]
-                if(Form.urlType){
-                    if(Form.urlType === 'resource'){
-                        if(!Form.metaKey){
+                if (Form.urlType) {
+                    if (Form.urlType === 'resource') {
+                        if (!Form.metaKey) {
                             iView.Message.warning('请选择一个metaKey！')
                             return
                         }
                         Form.url = `/api/resource/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览&metaKey=${Form.metaKey}`
-                    }else if(Form.urlType === 'petri'){
+                    } else if (Form.urlType === 'petri') {
                         Form.url = `/api/petri/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览`
                     }
-                }else{
+                } else {
                     iView.Message.warning('请选择一个URL类型！')
                 }
             },
-            init(){
+            init() {
                 this.getRoleData()
                 this.getDefaultMenu()
             },
             //获得角色列表并处理
-            getRoleData(){
+            getRoleData() {
                 getData('/api/role/roles', (result) => {
-                    if(result){
+                    if (result) {
                         this.handleRoleData(result)
                     }
                 })
             },
-            handleRoleData(data){
+            handleRoleData(data) {
                 let roleTree = []
-                data.forEach((val)=>{
+                data.forEach((val) => {
                     roleTree.push({
-                        authority:val.authority,
-                        title:val.title,
-                        id:val.id,
-                        flag:val.flag,
-                        renderSelect:false,
-                        render: (h, { root, node, data }) => {
+                        express: val.express,
+                        title: val.title,
+                        id: val.id,
+                        flag: val.flag,
+                        renderSelect: false,
+                        render: (h, {root, node, data}) => {
                             return h('span', {
                                 style: {
                                     display: 'inline-block',
@@ -430,19 +461,19 @@
                                 }
                             }, [
                                 h('span', [
-                                    h('span',{
+                                    h('span', {
                                         style: {
-                                            cursor : 'pointer',
-                                            minWidth:'100px'
+                                            cursor: 'pointer',
+                                            minWidth: '100px'
                                         },
-                                        class:{
-                                            'ivu-tree-title':true,
-                                            'ivu-tree-title-selected':data.renderSelect
+                                        class: {
+                                            'ivu-tree-title': true,
+                                            'ivu-tree-title-selected': data.renderSelect
                                         },
                                         on: {
                                             click: () => {
                                                 //点击左侧人员获得权限信息
-                                                this.roleTreeClick(root,data)
+                                                this.roleTreeClick(root, data)
                                             }
                                         }
                                     }, data.title)
@@ -465,8 +496,8 @@
                                         style: {
                                             width: '26px',
                                             marginLeft: '6px',
-                                            cursor:'pointer',
-                                            fontSize:'15px'
+                                            cursor: 'pointer',
+                                            fontSize: '15px'
                                         }
                                     })
                                 ])
@@ -478,37 +509,37 @@
             },
 
             //获得默认的菜单列表并处理
-            getDefaultMenu(){
+            getDefaultMenu() {
                 getData('/api/menu/menus', (result) => {
-                    if(result){
+                    if (result) {
                         this.handleMenuData(result)
                     }
                 })
             },
-            handleMenuData(data){
+            handleMenuData(data) {
                 let menuTree = []
                 this.defaultList = []
                 menuTree = this.handleTreeData(data)
                 this.defaultMenu = _.cloneDeep(menuTree)
                 this.menuTree = menuTree
             },
-            handleTreeData(data){
+            handleTreeData(data) {
                 let menuTree = []
-                data.forEach((val)=>{
+                data.forEach((val) => {
                     let children = []
-                    if(val.children){
+                    if (val.children) {
                         children = this.handleTreeData(val.children)
                     }
                     this.defaultList.push(val.id)
                     let obj = val
-                    obj.render =(h, { root, node, data }) => {
+                    obj.render = (h, {root, node, data}) => {
                         return h('span', {
                             style: {
                                 display: 'inline-block',
                                 width: '100%'
                             }
                         }, [
-                            h('span',{
+                            h('span', {
                                 style: {
                                     display: 'inline-block',
                                     minWidth: '100px'
@@ -518,10 +549,10 @@
                                     style: {
                                         marginRight: '8px'
                                     }
-                                },'['+ (data.menuOrder||0) +']'),
-                                h('span',{
+                                }, '[' + (data.menuOrder || 0) + ']'),
+                                h('span', {
                                     style: {
-                                        cursor : 'pointer'
+                                        cursor: 'pointer'
                                     },
                                     on: {
                                         click: () => {
@@ -548,7 +579,7 @@
                                     style: {
                                         width: '15px',
                                         marginLeft: '6px',
-                                        cursor:'pointer'
+                                        cursor: 'pointer'
                                     }
                                 })
                             ]),
@@ -570,7 +601,7 @@
                                     style: {
                                         width: '15px',
                                         marginLeft: '6px',
-                                        cursor:'pointer'
+                                        cursor: 'pointer'
                                     }
                                 })
                             ])
@@ -586,33 +617,33 @@
             },
 
             //根据选中的角色展示显示的菜单
-            getMenuData(){
-                if(!this.currentRole){
+            getMenuData() {
+                if (!this.currentRole) {
                     this.menuTree = this.defaultMenu
                     return
                 }
-                let url ={
-                    method:'POST',
-                    pathParams:{
-                        role : this.currentRole
+                let url = {
+                    method: 'GET',
+                    pathParams: {
+                        role: this.currentRole
                     },
-                    url:'/api/role/menus/{role}'
+                    url: '/api/role/{role}/menus'
                 }
                 getData(url, (result) => {
-                    if(result){
+                    if (result) {
                         let tree = _.cloneDeep(this.defaultMenu)
                         let list = new Set(result)
-                        this.menuTree = this.handleMenu(tree,list)
+                        this.menuTree = this.handleMenu(tree, list)
                     }
                 })
 
             },
-            handleMenu(data,list){
-                for(let i = 0;i<data.length;i++){
-                    if(data[i].children.length !== 0){
-                        data[i].children = this.handleMenu(data[i].children,list)
-                    }else{
-                        if(list.has(data[i].id)){
+            handleMenu(data, list) {
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].children.length !== 0) {
+                        data[i].children = this.handleMenu(data[i].children, list)
+                    } else {
+                        if (list.has(data[i].id)) {
                             data[i].checked = true
                             list.delete(data[i].id)
                         }
@@ -622,9 +653,9 @@
             },
 
             //获取勾选权限列表
-            handleTreeCheck(arg){
+            handleTreeCheck(arg) {
                 let checkList = []
-                arg.forEach((v)=>{
+                arg.forEach((v) => {
                     checkList.push(v.id)
                 })
                 this.checkList = checkList
@@ -632,16 +663,16 @@
 
 
             //递归去render
-            deleteRander(list){
-                list.forEach(v=>{
+            deleteRander(list) {
+                list.forEach(v => {
                     delete v.render
-                    if(v.children && v.children.length){
+                    if (v.children && v.children.length) {
                         this.deleteRander(list)
                     }
                 })
             },
             //提交权限信息
-            handleSubmitConfirm(){
+            handleSubmitConfirm() {
                 // let body = [],list = _.cloneDeep(this.menuTree)
                 // list.forEach(v=>{
                 //     delete v.render
@@ -661,28 +692,28 @@
                 // })
 
 
-                if(!this.currentRole){
+                if (!this.currentRole) {
                     iView.Message.warning('请选择角色！')
                     return
                 }
 
                 this.$Modal.confirm({
-                    title:'确认操作',
-                    content:'您确定要保存该角色对应的菜单么？',
-                    onOk:()=>{
-                        let url ={
-                            method:'POST',
-                            pathParams:{
-                                role : _.cloneDeep(this.currentRole)
+                    title: '确认操作',
+                    content: '您确定要保存该角色对应的菜单么？',
+                    onOk: () => {
+                        let url = {
+                            method: 'POST',
+                            pathParams: {
+                                role: _.cloneDeep(this.currentRole)
                             },
                             body: this.checkList,
-                            url:'/api/role/menus/update/{role}'
+                            url: '/api/role/menus/update/{role}'
                         }
                         getData(url, (result) => {
-                            if(result){
-                                if(result.code === 200 ){
+                            if (result) {
+                                if (result.code === 200) {
                                     iView.Message.success(result.description)
-                                }else{
+                                } else {
                                     iView.Message.info(result.description)
                                 }
                             }
@@ -692,36 +723,38 @@
             },
 
             //打开添加角色
-            addRole(){
+            addRole() {
                 this.roleTitle = '添加角色'
                 this.showRoleLayer = true
                 this.layerRoleLoading = true
                 this.roleForm = _.cloneDeep(this.roleDefault)
             },
-            handleRoleCancel(){
+            handleRoleCancel() {
                 this.showRoleLayer = false
                 this.clearForm('roleForm')
             },
-            handleRoleOk(){
+            handleRoleOk() {
                 this.layerRoleLoading = false
-                this.HandleValid('roleForm',()=>{
+                this.HandleValid('roleForm', () => {
                     this.handleAddRole()
                 })
-                setTimeout(()=>{this.layerRoleLoading = true},500)
+                setTimeout(() => {
+                    this.layerRoleLoading = true
+                }, 500)
             },
-            handleAddRole(){
-                let url='/api/role/add'
-                if(this.roleForm.id){
-                    url='/api/role/update'
+            handleAddRole() {
+                let url = '/api/role/add'
+                if (this.roleForm.id) {
+                    url = '/api/role/update'
                 }
-                this.handlePost(this.roleForm,url,()=>{
+                this.handlePost(this.roleForm, url, () => {
                     this.showRoleLayer = false
                     this.getRoleData()
                 })
             },
 
             //编辑角色信息
-            showEditRole(data){
+            showEditRole(data) {
                 this.roleTitle = '编辑角色信息'
                 this.showRoleLayer = true
                 this.layerRoleLoading = true
@@ -730,8 +763,8 @@
             },
 
             //添加菜单
-            showAddMenu(data){
-                if(data.id){
+            showAddMenu(data) {
+                if (data.id) {
                     this.menuForm.parentId = data.id
                     this.menuForm.parentData = data
                 }
@@ -740,42 +773,44 @@
                 this.showLayer = true
                 this.layerLoading = true
             },
-            handleCancel(){
+            handleCancel() {
                 this.showLayer = false
                 this.clearForm('menuForm')
                 this.clearForm('powerForm')
             },
-            handleOk(){
+            handleOk() {
                 this.layerLoading = false
-                this.HandleValid('menuForm',()=>{
-                    this.HandleValid('powerForm',()=>{
+                this.HandleValid('menuForm', () => {
+                    this.HandleValid('powerForm', () => {
                         this.HandleAddMenu()
                         this.clearForm('editForm')
                         this.clearForm('powerForm')
                     })
                 })
-                setTimeout(()=>{this.layerLoading = true},500)
+                setTimeout(() => {
+                    this.layerLoading = true
+                }, 500)
             },
-            HandleAddMenu(){
-                let body = _.cloneDeep(this.menuForm),obj={}
+            HandleAddMenu() {
+                let body = _.cloneDeep(this.menuForm), obj = {}
                 delete body.metaKey
                 delete body.selectResultKey
                 delete body.urlType
                 body.auth = _.cloneDeep(this.powerForm)
                 body.children = []
-                if(body.parentId){
+                if (body.parentId) {
                     obj = _.cloneDeep(body.parentData)
                     delete body.parentData
                     delete body.parentId
                     obj.children.push(body)
                     delete obj.render
-                }else{
+                } else {
                     obj = body
                 }
 
                 this.showLayer = false
 
-                this.handlePost(obj,'/api/menu',()=>{
+                this.handlePost(obj, '/api/menu', () => {
                     this.showLayer = false
                     this.updateMenu()
                 })
@@ -790,11 +825,11 @@
             },
 
             //编辑菜单信息
-            showEditMenu(data){
-                Object.keys(this.editForm).forEach(v=>{
-                    this.editForm[v] = _.get(data,v,'')
+            showEditMenu(data) {
+                Object.keys(this.editForm).forEach(v => {
+                    this.editForm[v] = _.get(data, v, '')
                 })
-                if(data.auth){
+                if (data.auth) {
                     this.powerForm = data.auth
                 }
 
@@ -805,30 +840,32 @@
                 this.showEditLayer = true
                 this.layerEditLoading = true
             },
-            handleEditOk(){
+            handleEditOk() {
                 this.layerEditLoading = false
-                this.HandleValid('editForm',()=>{
-                    this.HandleValid('powerForm',()=>{
+                this.HandleValid('editForm', () => {
+                    this.HandleValid('powerForm', () => {
                         this.HandleEditMenu()
                         this.showEditLayer = false
                         this.clearForm('editForm')
                         this.clearForm('powerForm')
                     })
                 })
-                setTimeout(()=>{this.layerEditLoading = true},500)
+                setTimeout(() => {
+                    this.layerEditLoading = true
+                }, 500)
             },
-            handleEditCancel(){
+            handleEditCancel() {
                 this.showEditLayer = false
 
-                if(this.editForm.leaf){
+                if (this.editForm.leaf) {
                     this.clearForm('powerForm')
                 }
                 this.clearForm('editForm')
             },
-            HandleEditMenu(){
+            HandleEditMenu() {
                 let body = _.cloneDeep(this.editForm)
                 body.auth = _.cloneDeep(this.powerForm)
-                this.handlePost(body,'/api/menu',()=>{
+                this.handlePost(body, '/api/menu', () => {
                     this.updateMenu()
                 })
 
@@ -843,50 +880,50 @@
                 // })
             },
             //编辑时请求权限数据
-            getPowerData(id){
-                let url ={
-                    method:'GET',
-                    pathParams:{
-                        id : id
+            getPowerData(id) {
+                let url = {
+                    method: 'GET',
+                    pathParams: {
+                        id: id
                     },
-                    url:'/api/authority/one/{id}'
+                    url: '/api/authority/one/{id}'
                 }
                 getData(url, (result) => {
-                    if(result && Object.keys(result)){
-                        Object.keys(this.powerForm).forEach(v=>{
-                            this.powerForm[v] = _.get(result,v,'')
+                    if (result && Object.keys(result)) {
+                        Object.keys(this.powerForm).forEach(v => {
+                            this.powerForm[v] = _.get(result, v, '')
                         })
                     }
                 })
             },
 
             //重新获取菜单列表
-            updateMenu(){
+            updateMenu() {
                 this.getDefaultMenu()
-                if(this.currentRole){
+                if (this.currentRole) {
                     this.getMenuData()
                 }
             },
 
             //删除菜单
-            deleteMenuConfirm(data){
+            deleteMenuConfirm(data) {
                 this.$Modal.confirm({
-                    title:'确认操作',
-                    content:'您确定要删除该条菜单么？',
-                    onOk:()=>{
-                        let url ={
-                            method:'DELETE',
-                            pathParams:{
-                                id : data.id
+                    title: '确认操作',
+                    content: '您确定要删除该条菜单么？',
+                    onOk: () => {
+                        let url = {
+                            method: 'DELETE',
+                            pathParams: {
+                                id: data.id
                             },
-                            url:'/api/menu/{id}'
+                            url: '/api/menu/{id}'
                         }
                         getData(url, (result) => {
-                            if(result){
-                                if(result.code === 200 ){
+                            if (result) {
+                                if (result.code === 200) {
                                     iView.Message.success(result.description)
                                     result.data && this.updateMenu()
-                                }else{
+                                } else {
                                     iView.Message.info(result.description)
                                 }
                             }
@@ -896,30 +933,30 @@
             },
 
             //角色树点击事件
-            roleTreeClick(root,data){
-                root.forEach(v=>{
+            roleTreeClick(root, data) {
+                root.forEach(v => {
                     v.node.renderSelect = false
                 })
                 data.renderSelect = true
-                this.currentRole = data.authority
+                this.currentRole = data.id
                 this.getMenuData()
             },
 
             //重置，全选，折叠 操作
-            selectAll(){
-                this.menuTree.forEach(v=>{
+            selectAll() {
+                this.menuTree.forEach(v => {
                     v.checked = true
                     bus.$emit('layoutTop')
                 })
                 this.checkList = _.cloneDeep(this.defaultList)
             },
-            resetSelect(){
+            resetSelect() {
                 this.menuTree = _.cloneDeep(this.defaultMenu)
                 this.checkList = []
                 bus.$emit('layoutTop')
             },
-            foldMenu(){
-                this.menuTree.forEach(v=>{
+            foldMenu() {
+                this.menuTree.forEach(v => {
                     v.expand = false
                     bus.$emit('layoutTop')
                 })
@@ -927,7 +964,7 @@
 
             /*工具类*/
             //验证信息
-            HandleValid(name,callback){
+            HandleValid(name, callback) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         callback()
@@ -937,30 +974,34 @@
                 })
             },
             //纯提交操作
-            handlePost(body,link,callback){
+            handlePost(body, link, callback) {
                 let data = _.cloneDeep(body)
-                let url ={
-                    method:'POST',
-                    body:data,
-                    url:link
+                let url = {
+                    method: 'POST',
+                    body: data,
+                    url: link
                 }
                 getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
+                    if (result) {
+                        if (result.code === 200) {
                             iView.Message.success(result.description)
                             callback()
-                        }else{
+                        } else {
                             iView.Message.info(result.description)
                         }
                     }
                 })
             },
             //表格验证清空+对象清空
-            clearForm(name){
+            clearForm(name) {
                 this.$refs[name].resetFields()
-                Object.keys(this[name]).forEach(v=>{
-                    if(v==='menuOrder'){this[name][v] = 0}
-                    else{this[name][v] = ''}
+                Object.keys(this[name]).forEach(v => {
+                    if (v === 'menuOrder') {
+                        this[name][v] = 0
+                    }
+                    else {
+                        this[name][v] = ''
+                    }
                 })
             },
 
@@ -968,30 +1009,33 @@
     }
 </script>
 <style scoped>
-    .container{
+    .container {
         margin: 15px 30px auto;
     }
 
-    .title-container{
+    .title-container {
         padding-bottom: 10px;
         margin-bottom: 15px;
         font-size: 18px;
         border-bottom: 1px solid #ccc;
     }
 
-    .head-container{
+    .head-container {
         padding-bottom: 6px;
         margin-bottom: 3px;
         font-size: 17px;
     }
-    .tree-container{
+
+    .tree-container {
         padding: 5px 10px;
         font-size: 20px;
     }
-    .tree{
+
+    .tree {
         padding: 5px 10px;
     }
-    .btn{
+
+    .btn {
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
@@ -999,27 +1043,33 @@
         right: 40px;
         bottom: 50px;
     }
-    .btn .ivu-btn{
+
+    .btn .ivu-btn {
         margin-left: 10px;
     }
-    .tree-container .ivu-tree-title{
+
+    .tree-container .ivu-tree-title {
         color: #00ff00;
         font-size: 18px !important;
     }
-    .ivu-tree ul li{
+
+    .ivu-tree ul li {
         font-size: 18px !important;
     }
-    .tree ul.ivu-tree-children li li{
+
+    .tree ul.ivu-tree-children li li {
         font-size: 16px;
     }
-    .tree ul.ivu-tree-children li li li{
+
+    .tree ul.ivu-tree-children li li li {
         font-size: 14px;
     }
 
-    .layerSection{
+    .layerSection {
         padding: 0 7px;
     }
-    .layerSection h4{
+
+    .layerSection h4 {
         font-weight: normal;
         border-bottom: 1px solid #ccc;
         margin-bottom: 18px;

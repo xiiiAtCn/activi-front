@@ -30,7 +30,7 @@
                     </FormItem>
                     <FormItem label="选择用户角色" prop="roles">
                         <Select v-model="formItem.roles" multiple>
-                            <Option v-for="item in defaultRole" :value="item.id">{{ item.roleName }}</Option>
+                            <Option v-for="item in defaultRole" :value="item.id">{{ item.title }}</Option>
                         </Select>
                     </FormItem>
                 </Form>
@@ -71,15 +71,13 @@
                     pathParams:{
                         username : val
                     },
-                    url:'/api/user/check/{username}'
+                    url:'/api/user/isExist/{username}'
                 }
                 getData(url, (result) => {
                     if(result){
-                        if(!result.data){
-                            callback(result.description)
-                        }else{
-                            callback()
-                        }
+                        callback('该用户名已经被占用了。请重新选择')
+                    } else {
+                        callback()
                     }
                 })
             }
