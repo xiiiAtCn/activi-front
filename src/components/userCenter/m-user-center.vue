@@ -9,21 +9,25 @@
                 <Button class="button" type="error" @click="delData">禁用</Button>
             </Col>
             <Col span="24">
-                <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small" ref="table"></Table>
+                <Table @on-row-click="addId" highlight-row :columns="colData" :data="tableData" size="small"
+                       ref="table"></Table>
             </Col>
             <Col span="24" class="page-container" ref="pageCt">
                 <Page :total="dataTotal" :current="currentPage" @on-change="pageChange"></Page>
             </Col>
         </Row>
 
-        <mLayer :value="showLayer" :titleText="titleText" @on-cancel="handleCancel" @on-ok="handleOk" :loading="layerLoading">
+        <mLayer :value="showLayer" :titleText="titleText" @on-cancel="handleCancel" @on-ok="handleOk"
+                :loading="layerLoading">
             <div>
                 <Form ref="formItem" :model="formItem" :label-width="120" :rules="rules">
                     <FormItem label="用户名" prop="username" :show-message="!changeRole">
-                        <Input v-model="formItem.username" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
+                        <Input v-model="formItem.username" placeholder="请输入用户名" :readonly="changeRole"
+                               :disabled="changeRole"></Input>
                     </FormItem>
-                    <FormItem label="昵称" prop="nickName" :show-message="!changeRole">
-                        <Input v-model="formItem.nickName" placeholder="请输入昵称" :readonly="changeRole" :disabled="changeRole"></Input>
+                    <FormItem label="昵称" prop="title" :show-message="!changeRole">
+                        <Input v-model="formItem.title" placeholder="请输入昵称" :readonly="changeRole"
+                               :disabled="changeRole"></Input>
                     </FormItem>
                     <FormItem label="密码" prop="password" v-if="!changeRole">
                         <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
@@ -37,14 +41,16 @@
             </div>
         </mLayer>
 
-        <mLayer :value="showEditLayer" titleText="重置用户信息" @on-cancel="handleEditCancel" @on-ok="handleEditOk" :loading="layerEditLoading">
+        <mLayer :value="showEditLayer" titleText="重置用户信息" @on-cancel="handleEditCancel" @on-ok="handleEditOk"
+                :loading="layerEditLoading">
             <div>
                 <Form ref="editForm" :model="editForm" :label-width="120" :rules="editRules">
                     <FormItem label="用户名" prop="username" :show-message="!changeRole">
-                        <Input v-model="editForm.username" placeholder="请输入用户名" :readonly="changeRole" :disabled="changeRole"></Input>
+                        <Input v-model="editForm.username" placeholder="请输入用户名" :readonly="changeRole"
+                               :disabled="changeRole"></Input>
                     </FormItem>
-                    <FormItem label="昵称" prop="nickName" :show-message="!changeRole">
-                        <Input v-model="editForm.nickName" placeholder="请输入昵称"></Input>
+                    <FormItem label="昵称" prop="title" :show-message="!changeRole">
+                        <Input v-model="editForm.title" placeholder="请输入昵称"></Input>
                     </FormItem>
                     <FormItem label="密码" prop="password">
                         <Input type="password" v-model="editForm.password" placeholder="请输入密码"></Input>
@@ -56,42 +62,42 @@
 </template>
 
 <script>
-    import { getData } from 'utils/actionUtils'
+    import {getData} from 'utils/actionUtils'
     import _ from 'lodash'
     import iView from 'iview'
 
-    export default{
-        data () {
-            const nameValid =(rule, val, callback)=>{
-                if(!/^[A-Za-z0-9-_]{1,}$/.test(val)){
+    export default {
+        data() {
+            const nameValid = (rule, val, callback) => {
+                if (!/^[A-Za-z0-9-_]{1,}$/.test(val)) {
                     callback('用户名必须为字母，数字，“-”或“_”组成')
                 }
 
-                let url ={
-                    pathParams:{
-                        username : val
+                let url = {
+                    pathParams: {
+                        username: val
                     },
-                    url:'/api/user/isExist/{username}'
+                    url: '/api/user/isExist/{username}'
                 }
                 getData(url, (result) => {
-                    if(result){
+                    if (result) {
                         callback('该用户名已经被占用了。请重新选择')
                     } else {
                         callback()
                     }
                 })
             }
-            const passValid = (rule, val, callback)=>{
-                if(/^[A-Za-z0-9]{6,}$/.test(val)){
+            const passValid = (rule, val, callback) => {
+                if (/^[A-Za-z0-9]{6,}$/.test(val)) {
                     callback()
-                }else{
+                } else {
                     callback('请输入6位以上数字字母密码')
                 }
             }
-            const nickValid =(rule, val, callback)=>{
-                if(/^.{1,}$/.test(val)){
+            const nickValid = (rule, val, callback) => {
+                if (/^.{1,}$/.test(val)) {
                     callback()
-                }else{
+                } else {
                     callback('请输入昵称')
                 }
             }
@@ -100,12 +106,12 @@
                     {
                         "title": "用户名",
                         "key": "username",
-                        'align':'center'
+                        'align': 'center'
                     },
                     {
                         "title": "昵称",
-                        "key": "nickName",
-                        'align':'center'
+                        "key": "title",
+                        'align': 'center'
                     },
                     // {
                     //     "title": "状态",
@@ -117,18 +123,18 @@
                     // },
                     {
                         "title": "角色",
-                        "key": "roles",
-                        'align':'center',
-                        render: (h, params) =>{
-                            if(!params.row.roles){
+                        "key": "authorities",
+                        'align': 'center',
+                        render: (h, params) => {
+                            if (!params.row.authorities) {
                                 return h('div', '')
                             }
-                            let roleList = params.row.roles
+                            let roleList = params.row.authorities
                             let roleContainer = []
-                            for(let i=0;i<roleList.length;i++){
+                            for (let i = 0; i < roleList.length; i++) {
                                 roleContainer.push(h('span',
                                     {
-                                        style:{
+                                        style: {
                                             marginLeft: '5px'
                                         }
                                     },
@@ -139,97 +145,97 @@
                         }
                     }
                 ],
-                tableData:[],
-                allData:[],
-                dataTotal:10,
-                currentPage:1,
+                tableData: [],
+                allData: [],
+                dataTotal: 10,
+                currentPage: 1,
 
-                showLayer:false,
-                layerLoading:false,
-                titleText:'新建用户',
+                showLayer: false,
+                layerLoading: false,
+                titleText: '新建用户',
 
-                showEditLayer:false,
-                layerEditLoading:false,
+                showEditLayer: false,
+                layerEditLoading: false,
                 formItem: {
                     username: '',
-                    nickName: '',
+                    title: '',
                     password: '',
-                    roles:[]
+                    authorities: []
                 },
-                defaultForm:{
+                defaultForm: {
                     username: '',
-                    nickName: '',
+                    title: '',
                     password: '',
-                    roles:[]
+                    authorities: []
                 },
-                editForm:{
+                editForm: {
                     username: '',
-                    nickName: '',
+                    title: '',
                     password: '',
-                    id:'',
+                    id: '',
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' },
-                        { validator:nameValid , trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                        {validator: nameValid, trigger: 'blur'}
                     ],
-                    nickName: [
-                        { required: true, validator:nickValid,trigger: 'blur' }
+                    title: [
+                        {required: true, validator: nickValid, trigger: 'blur'}
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' },
-                        { validator:passValid,trigger: 'blur' }
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                        {validator: passValid, trigger: 'blur'}
                     ]
                 },
                 editRules: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' },
-                        { validator:nameValid , trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                        {validator: nameValid, trigger: 'blur'}
                     ],
-                    nickName: [
-                        { required: true, validator:nickValid,trigger: 'blur' }
+                    title: [
+                        {required: true, validator: nickValid, trigger: 'blur'}
                     ],
                     password: [
-                        {  message: '请输入密码', trigger: 'blur' },
-                        { validator:passValid,trigger: 'blur' }
+                        {message: '请输入密码', trigger: 'blur'},
+                        {validator: passValid, trigger: 'blur'}
                     ]
                 },
-                currentData:null,
-                roleList:[],
-                defaultRole:[],
-                changeRole:false,
+                currentData: null,
+                roleList: [],
+                defaultRole: [],
+                changeRole: false,
             }
         },
-        watch:{},
+        watch: {},
         mounted() {
             this.init()
         },
         methods: {
-            init(){
+            init() {
                 this.getUserData()
             },
             //获得角色列表
-            getUserData(){
+            getUserData() {
                 getData('/api/users', (result) => {
-                    if(result){
+                    if (result) {
                         this.dataTotal = result.length
                         this.allData = result
-                        this.tableData = result.slice(0,10)
-                        this.$nextTick(function() {
+                        this.tableData = result.slice(0, 10)
+                        this.$nextTick(function () {
                             this.$refs.pageCt.$el.querySelector('.ivu-page-item').click()
                         })
                     }
                 })
             },
             //切换页
-            pageChange(page){
+            pageChange(page) {
                 this.currentData = ''
-                this.tableData = this.allData.slice(10*(page-1),10*page)
+                this.tableData = this.allData.slice(10 * (page - 1), 10 * page)
             },
 
             //新建用户
-            openLayer(){
-                this.getDefaultRole(()=>{
+            openLayer() {
+                this.getDefaultRole(() => {
                     this.titleText = '新建用户'
                     this.changeRole = false
                     this.formItem = _.cloneDeep(this.defaultForm)
@@ -237,17 +243,19 @@
                     this.layerLoading = true
                 })
             },
-            handleOk(){
+            handleOk() {
                 this.layerLoading = false
-                if(this.changeRole){
+                if (this.changeRole) {
                     this.HandleChangeRole()
-                }else{
+                } else {
                     this.handleSubmit('formItem')
                 }
                 this.currentData = ''
-                setTimeout(()=>{this.layerLoading = true},500)
+                setTimeout(() => {
+                    this.layerLoading = true
+                }, 500)
             },
-            handleCancel(){
+            handleCancel() {
                 this.showLayer = false
                 this.clearForm('formItem')
             },
@@ -263,51 +271,51 @@
                 })
             },
             //提交用户信息
-            submitMessage(){
-                this.formItem.roles = this.getRoleList(this.formItem.roles)
-                let url ={
-                    method:'POST',
-                    body:this.formItem,
-                    url:'/api/user/add'
+            submitMessage() {
+                this.formItem.authorities = this.getRoleList(this.formItem.authorities)
+                let url = {
+                    method: 'POST',
+                    body: this.formItem,
+                    url: '/api/user/add'
                 }
                 getData(url, (result) => {
-                    if(result.code === 200 ){
+                    if (result.code === 200) {
                         iView.Message.success(result.description)
                         this.showLayer = false
                         this.getUserData()
                         this.clearForm('formItem')
-                    }else{
+                    } else {
                         iView.Message.info(result.description)
                     }
                 })
             },
 
             //更改角色
-            showChangeRole(){
-                if(!this.currentData){
+            showChangeRole() {
+                if (!this.currentData) {
                     iView.Message.error('请选择一条数据！')
                     return
                 }
-                this.formItem.username = _.get(this.currentData,'username')
-                this.formItem.nickName = _.get(this.currentData,'nickName')
-                let List = _.get(this.currentData,'roles',[])
+                this.formItem.username = _.get(this.currentData, 'username')
+                this.formItem.title = _.get(this.currentData, 'title')
+                let List = _.get(this.currentData, 'authorities', [])
 
-                this.formItem.roles = []
-                for(let i = 0;i<List.length;i++){
-                    this.formItem.roles.push(List[i].id)
+                this.formItem.authorities = []
+                for (let i = 0; i < List.length; i++) {
+                    this.formItem.authorities.push(List[i].id)
                 }
                 this.changeRole = true
-                this.getDefaultRole(()=>{
+                this.getDefaultRole(() => {
                     this.showLayer = true
                     this.titleText = '分配用户权限'
                     this.layerLoading = true
                 })
             },
             //获取所有可分配的角色
-            getDefaultRole(callback){
+            getDefaultRole(callback) {
                 getData('/api/role/roles', (result) => {
-                    if(result){
-                        result.forEach((v,i)=>{
+                    if (result) {
+                        result.forEach((v, i) => {
                             result[i] = this.filterObj(v)
                         })
                         this.defaultRole = result
@@ -316,36 +324,36 @@
                 })
             },
             //提交角色更改
-            HandleChangeRole(){
-                let body = this.getRoleList(this.formItem.roles)
+            HandleChangeRole() {
+                let body = this.getRoleList(this.formItem.authorities)
 
-                let url ={
-                    method:'POST',
+                let url = {
+                    method: 'POST',
                     body: body,
-                    pathParams:{
-                        userId :this.currentData.id
+                    pathParams: {
+                        userId: this.currentData.id
                     },
-                    url:'/api/user/changeRole/{userId}'
+                    url: '/api/user/changeRole/{userId}'
                 }
                 getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
+                    if (result) {
+                        if (result.code === 200) {
                             iView.Message.success(result.description)
                             this.showLayer = false
                             this.clearForm('formItem')
                             this.getUserData()
-                        }else{
+                        } else {
                             iView.Message.info(result.description)
                         }
                     }
                 })
             },
             //获取可用角色列表
-            getRoleList(role){
+            getRoleList(role) {
                 let list = []
                 let roles = new Set(role)
                 this.defaultRole.forEach(value => {
-                    if(roles.has(value.id)){
+                    if (roles.has(value.id)) {
                         list.push(value)
                         return
                     }
@@ -354,25 +362,25 @@
             },
 
             //存行信息
-            addId(arg){
+            addId(arg) {
                 this.currentData = arg
             },
 
             //按id禁用用户
-            delData(){
-                if(!this.currentData){
+            delData() {
+                if (!this.currentData) {
                     iView.Message.error('请选择一条数据！')
                     return
                 }
-                let url ={
-                    method:'DELETE',
-                    pathParams:{
-                        userId :this.currentData.id
+                let url = {
+                    method: 'DELETE',
+                    pathParams: {
+                        userId: this.currentData.id
                     },
-                    url:'/api/user/del/{userId}'
+                    url: '/api/user/del/{userId}'
                 }
                 getData(url, (result) => {
-                    if(result){
+                    if (result) {
                         iView.Message.success(result.description)
                         this.getUserData()
                     }
@@ -380,41 +388,43 @@
             },
 
             //重置用户信息
-            editLayer(){
-                if(!this.currentData){
+            editLayer() {
+                if (!this.currentData) {
                     iView.Message.error('请选择一条数据！')
                     return
                 }
-                this.editForm.username = _.get(this.currentData,'username')
-                this.editForm.nickName = _.get(this.currentData,'nickName')
-                this.editForm.id = _.get(this.currentData,'id')
-                this.changeRole=true
+                this.editForm.username = _.get(this.currentData, 'username')
+                this.editForm.title = _.get(this.currentData, 'title')
+                this.editForm.id = _.get(this.currentData, 'id')
+                this.changeRole = true
 
-                this.showEditLayer=true
+                this.showEditLayer = true
             },
-            handleEditOk(){
+            handleEditOk() {
                 this.layerEditLoading = false
                 this.handleReset()
                 this.currentData = ''
-                setTimeout(()=>{this.layerEditLoading = true},500)
+                setTimeout(() => {
+                    this.layerEditLoading = true
+                }, 500)
             },
-            handleEditCancel(){
+            handleEditCancel() {
                 this.showEditLayer = false
             },
-            handleReset(){
-                let url ={
-                    method:'POST',
+            handleReset() {
+                let url = {
+                    method: 'POST',
                     body: this.editForm,
-                    url:'/api/user/reset'
+                    url: '/api/user/reset'
                 }
                 getData(url, (result) => {
-                    if(result){
-                        if(result.code === 200 ){
+                    if (result) {
+                        if (result.code === 200) {
                             iView.Message.success(result.description)
                             this.showEditLayer = false
                             this.clearForm('editForm')
                             this.getUserData()
-                        }else{
+                        } else {
                             iView.Message.info(result.description)
                         }
                     }
@@ -423,16 +433,16 @@
 
             /*工具类*/
             //表格验证清空+对象清空
-            clearForm(name){
+            clearForm(name) {
                 this.$refs[name].resetFields()
-                Object.keys(this[name]).forEach(v=>{
+                Object.keys(this[name]).forEach(v => {
                     this[name][v] = ''
                 })
             },
             //过滤对象属性null
-            filterObj(obj){
+            filterObj(obj) {
                 Object.keys(obj).forEach(value => {
-                    if(obj[value] === null ){
+                    if (obj[value] === null) {
                         delete obj[value]
                     }
                 })
@@ -442,25 +452,28 @@
     }
 </script>
 <style scoped>
-    .container{
+    .container {
         margin: 15px 30px auto;
     }
 
-    .title-container{
+    .title-container {
         padding-bottom: 10px;
         margin-bottom: 15px;
         font-size: 18px;
         border-bottom: 1px solid #ccc;
     }
-    .btn{
+
+    .btn {
         margin: 5px 0;
         padding: 5px 15px;
         text-align: right;
     }
-    .button{
+
+    .button {
         margin-left: 8px;
     }
-    .page-container{
+
+    .page-container {
         margin-top: 10px;
         text-align: right;
     }
