@@ -11,7 +11,7 @@
 </template>
 <script>
     import { getData, dispatch } from 'utils/actionUtils'
-    import { replace, addQuery } from 'utils/request-addon'
+    import { replace } from 'utils/request-addon'
     import _ from 'lodash'
     export default {
         name: 'n-list',

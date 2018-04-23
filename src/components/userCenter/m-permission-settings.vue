@@ -203,56 +203,6 @@
 
     export default {
         data() {
-            //验证菜单名
-            const labelValid = (rule, val, callback) => {
-                let url = {
-                    pathParams: {
-                        menuName: val,
-                        parentId: this.menuForm.parentId
-                    },
-                    url: '/api/user/isExist/{username}'
-                }
-                getData(url, (result) => {
-                    if (result === true) {
-                        callback('用户名已经被占用！')
-                        // if(!result.data){
-                        //     callback(result.description)
-                        // }else{
-                        //     callback()
-                        // }
-                    } else {
-                        callback()
-                    }
-                })
-            }
-            //验证菜单key值是否重复
-            const keyValid = (rule, val, callback) => {
-                if (!val) {
-                    callback('请输入key值！')
-                    return
-                } else if (!/^.{1,254}$/.test(val)) {
-                    callback('输入的字符数太多了！')
-                    return
-                } else if (this.cKey === val) {
-                    callback()
-                    return
-                }
-                let url = {
-                    pathParams: {
-                        id: (this.menuForm.parentId || this.editForm.parentId || '') + val
-                    },
-                    url: '/api/menu/usable/{id}'
-                }
-                getData(url, (result) => {
-                    if (result) {
-                        if (!result.data) {
-                            callback(result.description)
-                        } else {
-                            callback()
-                        }
-                    }
-                })
-            }
             return {
                 roleTree: [],
                 defaultMenu: [],
@@ -365,7 +315,6 @@
         },
         mounted() {
             this.init()
-            this.getSelectData()
         },
         methods: {
             selectChange(key) {
@@ -384,13 +333,6 @@
                     }
                 }
                 this.getmetaKey(this.selectList[key].id)
-            },
-            getSelectData() {
-                // getData('/api/placeConfig/getAllPlaceConfig', (result) => {
-                //     if(result){
-                //         this.selectList = result
-                //     }
-                // })
             },
             getmetaKey(id) {
                 const url = {
@@ -656,7 +598,9 @@
             handleTreeCheck(arg) {
                 let checkList = []
                 arg.forEach((v) => {
-                    checkList.push(v.id)
+                    if(v.auth) {
+                        checkList.push(v.auth.id)
+                    }
                 })
                 this.checkList = checkList
             },
