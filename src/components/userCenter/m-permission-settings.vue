@@ -651,7 +651,7 @@
                                 role: _.cloneDeep(this.currentRole)
                             },
                             body: this.checkList,
-                            url: '/api/role/menus/update/{role}'
+                            url: '/api/role/{role}/menus'
                         }
                         getData(url, (result) => {
                             if (result) {
