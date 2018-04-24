@@ -585,7 +585,7 @@
                     if (data[i].children.length !== 0) {
                         data[i].children = this.handleMenu(data[i].children, list)
                     } else {
-                        if (list.has(data[i].id)) {
+                        if (list.has(data[i].auth.express)) {
                             data[i].checked = true
                             list.delete(data[i].id)
                         }
