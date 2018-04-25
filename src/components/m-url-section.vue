@@ -7,7 +7,8 @@
         :form="downData.ui_form"
         :caption="downData.caption"
         :resource="resource"
-    ></component>
+    >
+    </component>
 </template>
 
 <script>

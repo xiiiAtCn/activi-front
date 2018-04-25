@@ -8,7 +8,10 @@
             <Option 
                 v-for="(item, index) in data"
                 :key="index"
+                :value="item.id"
+                :label="item.value"
             >
+            {{item.option}}
             </Option>
         </Select>
     </div>
