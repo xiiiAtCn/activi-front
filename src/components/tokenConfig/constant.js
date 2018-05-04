@@ -3,36 +3,36 @@ export const delItem = 'config-table-item-delete'
 // 与后台交互接口地址
 export const fetchDir = {
     // 列表页
-    overviewData: "/api/placeConfig/getAllPlaceConfig",
+    overviewData: "/placeConfig/getAllPlaceConfig",
     // 查看 + 编辑
-    treeData: "/api/placeConfig/cache/getTreeData/{templateId}/{cache}",
-    relData: "/api/placeConfig/cache/getRel/{templateId}",
+    treeData: "/placeConfig/cache/getTreeData/{templateId}/{cache}",
+    relData: "/placeConfig/cache/getRel/{templateId}",
     // 查看页面
-    viewTableData: "/api/placeConfig/cache/getTableData/{templateId}/{nodeId}",
-    active: "/api/placeConfig/cache/active/{templateId}",
-    delCache: "/api/placeConfig/cache/delCache/{templateId}",
-    getCodeRule: "/api/placeConfig/cache/getCodeRule/{templateId}/{cache}",
-    saveCodeRule: "/api/placeConfig/cache/saveCodeRule/{templateId}",
+    viewTableData: "/placeConfig/cache/getTableData/{templateId}/{nodeId}",
+    active: "/placeConfig/cache/active/{templateId}",
+    delCache: "/placeConfig/cache/delCache/{templateId}",
+    getCodeRule: "/placeConfig/cache/getCodeRule/{templateId}/{cache}",
+    saveCodeRule: "/placeConfig/cache/saveCodeRule/{templateId}",
     // 编辑页面
-    metaList: "/api/placeConfig/cache/getFormMetaList/{type}",
-    formData: "/api/placeConfig/cache/getFormData/{templateId}",
-    tableData: "/api/placeConfig/cache/getTableData/{metaId}",
-    saveData: "/api/placeConfig/cache/saveNode",
-    delData: "/api/placeConfig/cache/delNode/{templateId}/{nodeId}",
+    metaList: "/placeConfig/cache/getFormMetaList/{type}",
+    formData: "/placeConfig/cache/getFormData/{templateId}",
+    tableData: "/placeConfig/cache/getTableData/{metaId}",
+    saveData: "/placeConfig/cache/saveNode",
+    delData: "/placeConfig/cache/delNode/{templateId}/{nodeId}",
     // 规则抽取
-    ruleTableData: "/api/placeConfig/cache/getRule/{templateId}/{cache}",
-    ruleMetaList: "/api/placeConfig/cache/getMetaList/{templateId}",   
-    ruleKeyList: "/api/placeConfig/cache/getKeyList/{templateId}/{tokenMetaId}",
-    saveRule: "/api/placeConfig/cache/saveRule",
+    ruleTableData: "/placeConfig/cache/getRule/{templateId}/{cache}",
+    ruleMetaList: "/placeConfig/cache/getMetaList/{templateId}",
+    ruleKeyList: "/placeConfig/cache/getKeyList/{templateId}/{tokenMetaId}",
+    saveRule: "/placeConfig/cache/saveRule",
     // 资源选择
-    resourceList: "/api/placeConfig/cache/getResourceList/{templateId}",
-    saveResource: "/api/placeConfig/cache/saveResource",
+    resourceList: "/placeConfig/cache/getResourceList/{templateId}",
+    saveResource: "/placeConfig/cache/saveResource",
     // 变迁配置
-    configList: "/api/placeConfig/getConfigList",
-    getNodesByTemplateId: "/api/placeConfig/cache/getNodesByTemplateId/{templateId}/{cache}",
-    findAllTransition: "/api/transitionConfig/findAllTransition",
-    saveTransition: "/api/transitionConfig/saveTransition",
-    delTransition: "/api/transitionConfig/delTransition/{id}"
+    configList: "/placeConfig/getConfigList",
+    getNodesByTemplateId: "/placeConfig/cache/getNodesByTemplateId/{templateId}/{cache}",
+    findAllTransition: "/transitionConfig/findAllTransition",
+    saveTransition: "/transitionConfig/saveTransition",
+    delTransition: "/transitionConfig/delTransition/{id}"
 }
 export const relTableColumns = [
     {

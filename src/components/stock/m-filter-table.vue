@@ -38,7 +38,7 @@
                     pathParams:{
                         resourcePlaceId: this.define.id
                     },
-                    url:'/api/actives/{resourcePlaceId}'
+                    url:'/actives/{resourcePlaceId}'
                 }
                 getData(url, (result) => {
                     if(result){

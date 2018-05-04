@@ -39,7 +39,7 @@
                         resourceTemplateId:'fac72b82-9b84-43df-9c63-717ccb0425c5-20180324113556',
                         metaKey:'cable'
                     },
-                    url:'/api/actives'
+                    url:'/actives'
                 }
                 getData(url, (result) => {
                     if(result){

@@ -31,7 +31,7 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/api': {
-                target: 'http://SOONBOY:23002',
+                target: 'http://SOONBOY:6778',
                 pathRewrite: {
                     // '^/api': '/'
                 }

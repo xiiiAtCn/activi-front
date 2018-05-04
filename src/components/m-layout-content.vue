@@ -139,8 +139,8 @@
             // if(documentSDK === null || documentSDK === undefined) {
             //     let script = document.createElement('script')
             //     script.id = 'documentSDK'
-            //     this.setUrl('/api/config/documentSDK').forGet(message => {
-            //         script.src = `https://${message.data.host}:${message.data.port}/web-apps/apps/api/documents/api.js`
+            //     this.setUrl('/config/documentSDK').forGet(message => {
+            //         script.src = `https://${message.data.host}:${message.data.port}/web-apps/apps/documents/api.js`
             //         document.body.appendChild(script)
             //     })
             // }
@@ -154,7 +154,7 @@
             },
             logout(e) {
                 e.preventDefault()
-                this.setUrl('/api/logout').forPost(() => location.href = '/')
+                this.setUrl('/logout').forPost(() => location.href = '/')
             },
             getLeftMenu () {
                 let currentId = this.$route.params.id
@@ -178,7 +178,7 @@
                             }
                         }
                     }else{
-                        this.setUrl('/api/module/topMenu').forGet(res => {
+                        this.setUrl('/module/topMenu').forGet(res => {
                             this.ids = []
                             for (let i of res) {
                                 this.ids.push(i.code)
@@ -195,7 +195,7 @@
                 let chooseUrl = this.$route.query.url
                 let path = this.$route.path
                 if (chooseUrl) {
-                    this.setUrl('/api/module/leftMenu?id={id}').setPathVariables({
+                    this.setUrl('/module/leftMenu?id={id}').setPathVariables({
                         id: this.$route.params.id
                     }).forGet(res => {
                         for (let i of res) {
@@ -229,7 +229,7 @@
                 this.secondMenuFlag = !this.secondMenuFlag
             },
             getNickName() {
-                this.setUrl('/api/module/nickName').forGet(data => this.nickName = data)
+                this.setUrl('/module/nickName').forGet(data => this.nickName = data)
             },
             handleScrollTop(){
                 let top = this.$refs['layout'].$el

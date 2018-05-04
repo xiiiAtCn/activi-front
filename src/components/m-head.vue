@@ -38,12 +38,12 @@
         methods: {
             logout(e) {
                 e.preventDefault()
-                this.setUrl('/api/logout').forPost(() => location.href = '/')
+                this.setUrl('/logout').forPost(() => location.href = '/')
             },
             getLeftMenu () {
                 let items = _.get(this.$store.state.componentPageData,['topMenu'], '')
                 if(!items){
-                    getData('/api/module/topMenu',(res)=>{
+                    getData('/module/topMenu',(res)=>{
                         if(res){
                             this.items = res
                             this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: 'topMenu', data: res })

@@ -2,7 +2,7 @@
     <div style="margin: 30px; font-size: 18px;">
         <Collapse accordion>
             <Panel name="1">
-                引入js提示<span style="color:red;">GET https://192.168.1.105:8282/web-apps/apps/api/documents/api.js net::ERR_CERT_AUTHORITY_INVALID</span>
+                引入js提示<span style="color:red;">GET https://192.168.1.105:8282/web-apps/apps/documents/api.js net::ERR_CERT_AUTHORITY_INVALID</span>
                 <p slot="content">
                     点击<a href="https://192.168.1.105:8282/" target="_blank">此处</a>, 在弹出的页面中忽略浏览器提醒, 操作完成后<a onclick="javascript:location.reload();">刷新</a>页面即可
                 </p>

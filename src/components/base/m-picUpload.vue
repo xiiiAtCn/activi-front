@@ -72,10 +72,10 @@
         },
         computed: {
             uploadAddress() {
-                return _.get(this.define, 'uploadAddress', '/api/file/picUpload')
+                return _.get(this.define, 'uploadAddress', '/file/picUpload')
             },
             deleteAddress() {
-                return _.get(this.define, 'deleteAddress', '/api/file/picDelete')
+                return _.get(this.define, 'deleteAddress', '/file/picDelete')
             },
             picMaxNumber() {
                 return _.get(this.define, 'maxNumber', 5)

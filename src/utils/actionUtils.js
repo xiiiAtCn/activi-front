@@ -149,7 +149,7 @@ export const getData = (action, callback) => {
  *  例：
  *  {
  *      type: "link",               // 固定
- *      url: "/api/XXXXx",          // 一般是后端指定
+ *      url: "/XXXXx",          // 一般是后端指定
  *      at: "/layout/page"          // 选择路由
  *      query: {jobId: 123}         // url里边附加的参数
  *      confirm: "您确定要XXXX吗",   // 可选  按钮按下后的确认信息(是否两个按钮)
@@ -184,7 +184,7 @@ function asLink(action) {
             if (action.url) {
                 routLinkParam.query = extend({ url: action.url }, action.query)
             } else {
-                action.url = '/api/program/isBuilding/template?at=' + action.at
+                action.url = '/program/isBuilding/template?at=' + action.at
                 routLinkParam.query = extend({ url: action.url }, action.query)
             }
             if (action.mode === 'replace') {
@@ -234,7 +234,7 @@ function asSubmit(action) {
  *  例：
  *  {
  *      type: "serverAction",       // 固定
- *      url: "/api/XXXXx",          // 一般是后端指定
+ *      url: "/XXXXx",          // 一般是后端指定
  *      confirm: "您确定要XXXX吗",   // 可选  按钮按下后的确认信息(是否两个按钮)
  *      alert: "XXXXX",             // 可选  确认按钮（一个按钮）
  *  }

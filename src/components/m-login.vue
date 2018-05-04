@@ -83,7 +83,7 @@
                     pathParams:{
                         username : val
                     },
-                    url:'/api/user/check/{username}'
+                    url:'/user/check/{username}'
                 }
                 getData(url, (result) => {
                     if(result){
@@ -156,7 +156,7 @@
             }
         },
         mounted() {
-            // this.setUrl('/api/module/systems').forGet(data => this.systems = data)
+            // this.setUrl('/module/systems').forGet(data => this.systems = data)
         },
         methods: {
             trlToWorkbench () {
@@ -168,7 +168,7 @@
                 this.$refs['login-form'].validate(valid => {
                     if(valid) {
                         let body = `loginName=${this.form.loginName}&password=${this.form.password}`
-                        this.setUrl('/api/login').setBody(body).forPost((data, error) => {
+                        this.setUrl('/login').setBody(body).forPost((data, error) => {
                             if(error) {
                                 console.log(error)
                                 if(error.response) {
@@ -188,7 +188,7 @@
                 this.$refs['registerForm'].validate(valid => {
                     if(valid) {
                         let body = this.registerForm
-                        this.setUrl('/api/user/add').setBody(body).forPost((data) => {
+                        this.setUrl('/user/add').setBody(body).forPost((data) => {
                             if(data.code === 200 ){
                                 iView.Message.success(data.description)
                                 this.switchForm = true

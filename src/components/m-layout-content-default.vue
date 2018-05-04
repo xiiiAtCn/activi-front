@@ -41,7 +41,7 @@ export default {
                 'id': this.$route.params.id,
                 systemKey
             }
-            this.setUrl('/api/module/leftMenu')
+            this.setUrl('/module/leftMenu')
                 .setQuery(params)
                 .forGet(computedAry => {
                     if (computedAry.length % 4 !== 0) {

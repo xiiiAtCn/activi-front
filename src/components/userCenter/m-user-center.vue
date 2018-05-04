@@ -77,7 +77,7 @@
                     pathParams: {
                         username: val
                     },
-                    url: '/api/user/isExist/{username}'
+                    url: '/user/isExist/{username}'
                 }
                 getData(url, (result) => {
                     if (result) {
@@ -217,7 +217,7 @@
             },
             //获得角色列表
             getUserData() {
-                getData('/api/users', (result) => {
+                getData('/users', (result) => {
                     if (result) {
                         this.dataTotal = result.length
                         this.allData = result
@@ -277,7 +277,7 @@
                 let url = {
                     method: 'POST',
                     body: this.formItem,
-                    url: '/api/user/add'
+                    url: '/user/add'
                 }
                 getData(url, (result) => {
                     if (result.code === 200) {
@@ -314,7 +314,7 @@
             },
             //获取所有可分配的角色
             getDefaultRole(callback) {
-                getData('/api/role/roles', (result) => {
+                getData('/role/roles', (result) => {
                     if (result) {
                         result.forEach((v, i) => {
                             result[i] = this.filterObj(v)
@@ -334,7 +334,7 @@
                     pathParams: {
                         userId: this.currentData.id
                     },
-                    url: '/api/user/changeRole/{userId}'
+                    url: '/user/changeRole/{userId}'
                 }
                 getData(url, (result) => {
                     if (result) {
@@ -378,7 +378,7 @@
                     pathParams: {
                         userId: this.currentData.id
                     },
-                    url: '/api/user/del/{userId}'
+                    url: '/user/del/{userId}'
                 }
                 getData(url, (result) => {
                     if (result) {
@@ -416,7 +416,7 @@
                 let url = {
                     method: 'POST',
                     body: this.editForm,
-                    url: '/api/user/reset'
+                    url: '/user/reset'
                 }
                 getData(url, (result) => {
                     if (result) {

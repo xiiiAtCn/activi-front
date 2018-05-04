@@ -13,7 +13,7 @@ import axios from 'axios'
  * @param urlObject 后端url(字符串)或者url对象。
  *   urlObject对象示例：
  *   {
- *      url: /api/xxxx
+ *      url: /xxxx
  *      otherParam1:  1003
  *   }
  *

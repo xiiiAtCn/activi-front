@@ -340,7 +340,7 @@
                     pathParams: {
                         templateId: id
                     },
-                    url: '/api/placeConfig/cache/getRel/only/{templateId}'
+                    url: '/placeConfig/cache/getRel/only/{templateId}'
                 }
                 getData(url, (result) => {
                     if (result) {
@@ -366,9 +366,9 @@
                             iView.Message.warning('请选择一个metaKey！')
                             return
                         }
-                        Form.url = `/api/resource/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览&metaKey=${Form.metaKey}`
+                        Form.url = `/resource/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览&metaKey=${Form.metaKey}`
                     } else if (Form.urlType === 'petri') {
-                        Form.url = `/api/petri/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览`
+                        Form.url = `/petri/template/url/${this.selectList[Form.selectResultKey].id}/?at=/layoutContent/${Form.parentId}/page&title=${this.selectList[Form.selectResultKey].name}&subTitle=${this.selectList[Form.selectResultKey].name}一览`
                     }
                 } else {
                     iView.Message.warning('请选择一个URL类型！')
@@ -380,7 +380,7 @@
             },
             //获得角色列表并处理
             getRoleData() {
-                getData('/api/role/roles', (result) => {
+                getData('/role/roles', (result) => {
                     if (result) {
                         this.handleRoleData(result)
                     }
@@ -452,7 +452,7 @@
 
             //获得默认的菜单列表并处理
             getDefaultMenu() {
-                getData('/api/menu/menus', (result) => {
+                getData('/menu/menus', (result) => {
                     if (result) {
                         this.handleMenuData(result)
                     }
@@ -569,7 +569,7 @@
                     pathParams: {
                         role: this.currentRole
                     },
-                    url: '/api/role/{role}/menus'
+                    url: '/role/{role}/menus'
                 }
                 getData(url, (result) => {
                     if (result) {
@@ -627,7 +627,7 @@
                 // let url ={
                 //     method:'POST',
                 //     body:this.menuTree,
-                //     url:'/api/menu'
+                //     url:'/menu'
                 // }
                 // getData(url, (result) => {
                 //     if(result){
@@ -651,7 +651,7 @@
                                 role: _.cloneDeep(this.currentRole)
                             },
                             body: this.checkList,
-                            url: '/api/role/{role}/menus'
+                            url: '/role/{role}/menus'
                         }
                         getData(url, (result) => {
                             if (result) {
@@ -687,9 +687,9 @@
                 }, 500)
             },
             handleAddRole() {
-                let url = '/api/role/add'
+                let url = '/role/add'
                 if (this.roleForm.id) {
-                    url = '/api/role/update'
+                    url = '/role/update'
                 }
                 this.handlePost(this.roleForm, url, () => {
                     this.showRoleLayer = false
@@ -754,7 +754,7 @@
 
                 this.showLayer = false
 
-                this.handlePost(obj, '/api/menu', () => {
+                this.handlePost(obj, '/menu', () => {
                     this.showLayer = false
                     this.updateMenu()
                 })
@@ -809,7 +809,7 @@
             HandleEditMenu() {
                 let body = _.cloneDeep(this.editForm)
                 body.auth = _.cloneDeep(this.powerForm)
-                this.handlePost(body, '/api/menu', () => {
+                this.handlePost(body, '/menu', () => {
                     this.updateMenu()
                 })
 
@@ -819,7 +819,7 @@
                 // delete body.selectResultKey
                 // delete body.urlType
                 //
-                // this.handlePost(body,'/api/menu/update',()=>{
+                // this.handlePost(body,'/menu/update',()=>{
                 //     this.updateMenu()
                 // })
             },
@@ -830,7 +830,7 @@
                     pathParams: {
                         id: id
                     },
-                    url: '/api/authority/one/{id}'
+                    url: '/authority/one/{id}'
                 }
                 getData(url, (result) => {
                     if (result && Object.keys(result)) {
@@ -860,7 +860,7 @@
                             pathParams: {
                                 id: data.id
                             },
-                            url: '/api/menu/{id}'
+                            url: '/menu/{id}'
                         }
                         getData(url, (result) => {
                             if (result) {

@@ -141,7 +141,7 @@ function drawFlowChart(idList) {
 		type: "GET",
 		dataType: "json",
 		contentType: "application/json",
-	    // url: "/api/webserverconf/entitygrid/FlowChartForm",
+	    // url: "/webserverconf/entitygrid/FlowChartForm",
         url: '/webserverconf/entitygrid/FlowChartForm',
 	    async: false,
 	    data: idList,
