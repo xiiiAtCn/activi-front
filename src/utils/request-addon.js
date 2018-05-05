@@ -191,6 +191,9 @@ Request.prototype.setUrl = function (url) {
         throw new Error(`requestUrl '${this.$requestUrl}' has been set but never used, 
         please check if there was a request not sending`)
     }
+    if(process.env.NODE_ENV === 'development') {
+        url = '/api' + url
+    }
     this.$requestUrl = url
     return this
 }
