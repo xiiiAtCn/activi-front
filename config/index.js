@@ -33,7 +33,7 @@ module.exports = {
             '/api': {
                 target: 'http://SOONBOY:6778',
                 pathRewrite: {
-                    // '^/api': '/'
+                    '^/api': '/'
                 }
             }
         },

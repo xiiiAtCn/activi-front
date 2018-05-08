@@ -2,14 +2,14 @@
     <div class="s-nav">
         <div class="logo-container">
             <div class="posRea">
-                <a @click="logout" ><img src="../assets/img/logo.png" alt=""></a>
+                <a @click="logout"><img src="../assets/img/logo.png" alt=""></a>
             </div>
             <div style="clear: both"></div>
         </div>
         <Menu ref="leftMenu" :active-name="active" theme="light" class="themeLight" style="width:auto;">
             <div class="custom-menu">
-                <Menu-item v-for="item in items" :name="item.code" class="customItem" :key="item.code" :id="item.code">
-                    <router-link class="business-module" :to="'/layoutContent/' + item.code">
+                <Menu-item v-for="item in items" :name="item.id" class="customItem" :key="item.id" :id="item.id">
+                    <router-link class="business-module" :to="'/layoutContent/' + item.id">
                         <Icon :type="item.icon" class="item-icon"></Icon>
                         <span class="func-title">{{item.title}}</span>
                     </router-link>
@@ -29,7 +29,7 @@
             return {
                 items: [],
                 username: 'developer',
-                active:''
+                active: ''
             }
         },
         mounted: function () {
@@ -40,23 +40,23 @@
                 e.preventDefault()
                 this.setUrl('/logout').forPost(() => location.href = '/')
             },
-            getLeftMenu () {
-                let items = _.get(this.$store.state.componentPageData,['topMenu'], '')
-                if(!items){
-                    getData('/module/topMenu',(res)=>{
-                        if(res){
+            getLeftMenu() {
+                let items = _.get(this.$store.state.componentPageData, ['topMenu'], '')
+                if (!items) {
+                    getData('/module/topMenu', (res) => {
+                        if (res) {
                             this.items = res
-                            this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: 'topMenu', data: res })
+                            this.$store.commit(Mutations.SET_COMPONENT_DATA, {id: 'topMenu', data: res})
                             this.activeSelect()
                         }
                     })
-                }else{
+                } else {
                     this.items = items
                     this.activeSelect()
                 }
             },
-            activeSelect(){
-                this.$nextTick(function() {
+            activeSelect() {
+                this.$nextTick(function () {
                     this.active = this.$route.params.id
                     this.$refs.leftMenu.updateActiveName()
                 })
@@ -264,26 +264,30 @@
         color: #333333;
     }
 
-    .logo-container{
+    .logo-container {
         background: #fff;
         position: fixed;
         z-index: 999;
         top: 0;
         width: 12.5%;
     }
+
     .posRea {
         height: 70px;
         /*text-align: center;*/
     }
-    .posRea a{
+
+    .posRea a {
         position: relative;
         top: 50%;
         transform: translateY(-50%);
     }
-    .posRea img{
+
+    .posRea img {
         margin-left: 20px;
     }
-    .s-nav{
+
+    .s-nav {
         padding-top: 70px;
     }
 </style>
