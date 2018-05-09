@@ -97,10 +97,12 @@ const nForm = resolve =>
 
 const nInput = resolve =>
     require(['./n-input.vue'], resolve)
+const nText = resolve =>
+    require(['./n-text.vue'], resolve)
 const nSelect = resolve =>
     require(['./n-select.vue'], resolve)
 
-const nList = resolve => 
+const nList = resolve =>
     require(['./n-list.vue'], resolve)
 
 const nResource = resolve =>
@@ -137,8 +139,10 @@ Vue.component('mIconList', mIconList)
 Vue.component('mAddress', mArea)
 Vue.component('mLayerAmap', mLayerAmap)
 Vue.component('mCode', mCode)
+// 新的
 Vue.component('nForm', nForm)
 Vue.component('nInput', nInput)
+Vue.component('nText', nText)
 Vue.component('nSelect', nSelect)
 Vue.component('nList', nList)
 Vue.component('nResource', nResource)
