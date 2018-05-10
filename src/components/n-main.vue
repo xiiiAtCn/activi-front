@@ -81,7 +81,7 @@
             <transition-group name="fade" mode="out-in" tag="div">
                 <div :key="index" v-for="(items, index) in define.forms">
                     <Card style="margin-bottom: 10px;">
-                        <p v-if="items.length > 1" slot="title">
+                        <p v-if="define.forms.length > 1" slot="title">
                             {{items.ui_define.caption}}
                         </p>
                         <Form 
