@@ -36,6 +36,8 @@ const Helper = resolve => require(['../components/debug/m-helper.vue'], resolve)
 
 //table测试
 const cTable = resolve => require(['../components/complicated-table.vue'], resolve)
+// 任务列表
+const todoList = resolve => require(['../components/businessModule/todoList.vue'], resolve)
 
 const router = new VueRouter({
     mode: 'history',
@@ -60,12 +62,12 @@ const router = new VueRouter({
                 {
                     path: 'page',
                     component: mUrlSection,
-                    props: (route) => ({ query: route.query }),
+                    props: (route) => ({query: route.query}),
                     children: [
                         {
                             path: 'tabs',
                             component: mUrlSection,
-                            props: route => ({ query: route.query })
+                            props: route => ({query: route.query})
                         }
                     ]
                 },
@@ -78,8 +80,8 @@ const router = new VueRouter({
                     component: workbench
                 },
                 // 用户中心路由
-                { path: '/layoutContent/systemSetting/auth', component: auth },
-                { path: '/layoutContent/systemSetting/user', component: userCenter },
+                {path: '/layoutContent/systemSetting/auth', component: auth},
+                {path: '/layoutContent/systemSetting/user', component: userCenter},
                 // 库所一览
                 {
                     path: '/layoutContent/:id/tokenOverview',
@@ -132,6 +134,10 @@ const router = new VueRouter({
                     path: '/layoutContent/:id/mWarehouseRecord',
                     component: mWarehouseRecord
                 },
+                {
+                    path: '/layoutContent/:id/todoList',
+                    component: todoList
+                }
             ]
         },
     ]
