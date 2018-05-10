@@ -1,5 +1,5 @@
 <template>
-    <Table border :columns="columns7" :data="data6"></Table>
+    <Table border :columns="columns" :data="data6"></Table>
 </template>
 
 <script>
@@ -7,10 +7,19 @@
         name: "todoList",
         data() {
             return {
-                columns7: [
+                columns: [
                     {
-                        title: 'Name',
-                        key: 'name',
+                        title: '待办事项',
+                        key: 'taskName',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('strong', params.row.name)
+                            ]);
+                        }
+                    },
+                    {
+                        title: '所有者',
+                        key: 'owner',
                         render: (h, params) => {
                             return h('div', [
                                 h('Icon', {
@@ -18,20 +27,16 @@
                                         type: 'person'
                                     }
                                 }),
-                                h('strong', params.row.name)
+                                h('span', params.row.name)
                             ]);
                         }
                     },
                     {
-                        title: 'Age',
-                        key: 'age'
+                        title: '创建日期',
+                        key: 'createDate'
                     },
                     {
-                        title: 'Address',
-                        key: 'address'
-                    },
-                    {
-                        title: 'Action',
+                        title: '处理',
                         key: 'action',
                         width: 150,
                         align: 'center',
@@ -50,18 +55,7 @@
                                             this.show(params.index)
                                         }
                                     }
-                                }, 'View'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, 'Delete')
+                                }, '签收')
                             ]);
                         }
                     }
