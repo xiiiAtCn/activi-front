@@ -32,7 +32,10 @@ export const fetchDir = {
     getNodesByTemplateId: "/placeConfig/cache/getNodesByTemplateId/{templateId}/{cache}",
     findAllTransition: "/transitionConfig/findAllTransition",
     saveTransition: "/transitionConfig/saveTransition",
-    delTransition: "/transitionConfig/delTransition/{id}"
+    delTransition: "/transitionConfig/delTransition/{id}",
+    // 代办任务
+    todoList: 'process/myTask',
+    claimTask: 'process/task/{taskId}/claim'
 }
 export const relTableColumns = [
     {
@@ -71,6 +74,7 @@ export const EventType = {
     showLoading: 'token-config-show',
     hideLoading: 'token-config-hide'
 }
+
 // 遍历树节点
 export function traverseTree(root, callback) {
     if (root) {
@@ -82,25 +86,32 @@ export function traverseTree(root, callback) {
         }
     }
 }
+
 // 存储于localstorage中的未保存的TempTemplateId
 export const TempTemplateId = "TempTemplateId"
+
 // 页面url
-export function ListUrl (id) {
+export function ListUrl(id) {
     return `/layoutContent/${id}/tokenOverview`
 }
-export function ViewUrl (id, templateId) {
+
+export function ViewUrl(id, templateId) {
     return `/layoutContent/${id}/tokenView/${templateId}`
 }
-export function EditUrl (id, templateId) {
+
+export function EditUrl(id, templateId) {
     return `/layoutContent/${id}/tokenConfig?tokenId=${templateId ? templateId : ''}`
 }
-export function RuleUrl (id, templateId) {
+
+export function RuleUrl(id, templateId) {
     return `/layoutContent/${id}/extractConfig/${templateId}`
 }
-export function TransitionUrl (id) {
-    return `/layoutContent/${id}/transitionConfig` 
+
+export function TransitionUrl(id) {
+    return `/layoutContent/${id}/transitionConfig`
 }
-export function ResourceUrl (id, templateId) {
+
+export function ResourceUrl(id, templateId) {
     return `/layoutContent/${id}/resourceSelect/${templateId}`
 }
 

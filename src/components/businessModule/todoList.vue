@@ -1,8 +1,12 @@
 <template>
-    <Table border :columns="columns" :data="data6"></Table>
+    <Table border :columns="columns" :data="data"></Table>
 </template>
 
 <script>
+    import {
+        fetchDir
+    } from '../tokenConfig/constant'
+
     export default {
         name: "todoList",
         data() {
@@ -13,7 +17,7 @@
                         key: 'taskName',
                         render: (h, params) => {
                             return h('div', [
-                                h('strong', params.row.name)
+                                h('strong', params.row['taskName'])
                             ]);
                         }
                     },
@@ -27,7 +31,7 @@
                                         type: 'person'
                                     }
                                 }),
-                                h('span', params.row.name)
+                                h('span', params.row['owner'])
                             ]);
                         }
                     },
@@ -52,7 +56,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.claim(params.index)
                                         }
                                     }
                                 }, '签收')
@@ -60,39 +64,32 @@
                         }
                     }
                 ],
-                data6: [
-                    {
-                        name: 'John Brown',
-                        age: 18,
-                        address: 'New York No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Jim Green',
-                        age: 24,
-                        address: 'London No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Joe Black',
-                        age: 30,
-                        address: 'Sydney No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Jon Snow',
-                        age: 26,
-                        address: 'Ottawa No. 2 Lake Park'
-                    }
-                ]
+                data: []
             }
         },
-        methods: {
-            show(index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+        mounted() {
+            this.setUrl(fetchDir.todoList)
+                .forGet((res, err) => {
+                    if (err) {
+                        this.$Message.error(res.message ? res.message : '获取待办任务列表失败')
+                    } else {
+                        this.data = res;
+                    }
                 })
-            },
-            remove(index) {
-                this.data6.splice(index, 1);
+        },
+        methods: {
+            claim(index) {
+                var selectTaskId = this.data[index]['taskId'];
+                this.setUrl(fetchDir.claimTask)
+                    .setPathVariables({taskId: selectTaskId})
+                    .forGet((res, err) => {
+                        if (err) {
+                            this.$Message.error('任务签收失败')
+                        } else {
+                            this.data[index]['claimed'] = true
+                        }
+                    })
+
             }
         }
     }
