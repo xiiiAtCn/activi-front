@@ -157,7 +157,7 @@ export const getData = (action, callback) => {
  *      mode:                       //  mode: push/replace/reload
  *  }
  */
-function asLink(action) {
+export function asLink(action) {
     if (action.alert) {
         iView.Message.success(action.alert)
     }

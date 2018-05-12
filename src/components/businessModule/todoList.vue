@@ -4,8 +4,10 @@
 
 <script>
     import {
-        fetchDir
+        fetchDir,
     } from '../tokenConfig/constant'
+
+    import { dispatch, getData} from '../../utils/actionUtils'
 
     export default {
         name: "todoList",
@@ -59,7 +61,21 @@
                                             this.claim(params.index)
                                         }
                                     }
-                                }, '签收')
+                                }, '签收'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.openTask(params.index)
+                                        }
+                                    }
+                                }, '办理')
                             ]);
                         }
                     }
@@ -79,7 +95,7 @@
         },
         methods: {
             claim(index) {
-                var selectTaskId = this.data[index]['taskId'];
+                let selectTaskId = this.data[index]['taskId'];
                 this.setUrl(fetchDir.claimTask)
                     .setPathVariables({taskId: selectTaskId})
                     .forGet((res, err) => {
@@ -90,6 +106,17 @@
                         }
                     })
 
+            },
+            openTask(index) {
+                let selectTaskId = this.data[index]['taskId'];
+                // 画面跳转
+
+                let action = {
+                    type: "link",
+                    url: fetchDir.openTask,
+                    pathParams: {'taskId': selectTaskId}
+                }
+                dispatch(action);
             }
         }
     }

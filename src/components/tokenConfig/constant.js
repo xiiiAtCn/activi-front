@@ -35,7 +35,8 @@ export const fetchDir = {
     delTransition: "/transitionConfig/delTransition/{id}",
     // 代办任务
     todoList: 'process/myTask',
-    claimTask: 'process/task/{taskId}/claim'
+    claimTask: 'process/task/{taskId}/claim',
+    openTask: 'process/task/{taskId}/open'
 }
 export const relTableColumns = [
     {
