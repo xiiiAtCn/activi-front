@@ -236,7 +236,6 @@
         },
         inject: ['form'],
         mounted() {
-            debugger
             this.title = this.caption ? this.caption : this.define.caption || '无标题' 
             this.subTitle = this.define.subTitle || ''
             this.initialize(this.title, this.define)

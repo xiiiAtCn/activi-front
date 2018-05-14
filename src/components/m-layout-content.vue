@@ -13,18 +13,15 @@
                                     <Icon type="cube"></Icon>
                                     <span>全部功能</span>
                                 </BreadcrumbItem>
-                                <!--<BreadcrumbItem href="/layoutContent/04/workbench" class="title_main" v-if="deskShow">-->
-                                    <!--<Icon type="laptop"></Icon>-->
-                                    <!--<span>我的桌面</span>-->
-                                <!--</BreadcrumbItem>-->
-                                <BreadcrumbItem :href="secondUrl" v-if="secondShow" class="title_main">
+                                
+                                <!-- <BreadcrumbItem :href="secondUrl" v-if="secondShow" class="title_main">
                                     <Icon :type="secondIcon"></Icon>
                                     <span>{{secondTitle}}</span>
                                 </BreadcrumbItem>
                                 <BreadcrumbItem v-if="thirdShow"  class="title_main" @click.native="dispatchUrl">
                                     <Icon :type="thirdIcon"></Icon>
                                     <span>{{thirdTitle}}</span>
-                                </BreadcrumbItem>
+                                </BreadcrumbItem> -->
                             </Breadcrumb>
                         </i-col>
                         <div class="daJieStyle1">
@@ -89,43 +86,6 @@
                 designFlag: false,
                 firstMenuFlag: false,
                 secondMenuFlag: false,
-                signRecordMsg: [
-                    {
-                        icon: 'social-instagram',
-                        text: '我的视图',
-                        url: '/layoutContent/01'
-                    },
-                    {
-                        icon: 'email-unread',
-                        text: '我的邮件',
-                        url: '/email'
-                    },
-                    {
-                        icon: 'ios-clock',
-                        text: '浏览记录',
-                        url: '/layoutContent/01/workBench'
-                    },
-                    {
-                        icon: 'ios-help',
-                        text: '帮助中心',
-                        url: ''
-                    },
-                    {
-                        icon: 'ios-bell',
-                        text: '最新通知',
-                        url: ''
-                    },
-                    {
-                        icon: 'android-settings',
-                        text: '我的设置',
-                        url: ''
-                    },
-                    {
-                        icon: 'power',
-                        text: '退出',
-                        url: ''
-                    }
-                ],
                 ids: [],
                 nickName: ''
             }
@@ -133,7 +93,6 @@
         mounted() {
             this.getLeftMenu()
             this.getNickName()
-            this.getTopBread()
             bus.$on('layoutTop',this.handleScrollTop)
         },
         methods: {
