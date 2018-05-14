@@ -1,5 +1,7 @@
 <template>
-    <Table border :columns="columns" :data="data"></Table>
+    <page>
+        <Table border :columns="columns" :data="data"></Table>
+    </page>
 </template>
 
 <script>

@@ -80,7 +80,8 @@ const mShowMap = resolve => {
 const nPage = resolve => {
     require(['./n-main.vue'], resolve)
 }
-
+const page = resolve =>
+    require(['./page.vue'], resolve)
 Vue.component('mCard', mCard)
 Vue.component('mHead', mHead)
 Vue.component('mLayoutContentDefault', mLayoutContentDefault)
@@ -100,3 +101,4 @@ Vue.component('mChoreographContent', mChoreographContent)
 Vue.component('mShowMap', mShowMap)
 
 Vue.component('nPage', nPage)
+Vue.component('page', page)

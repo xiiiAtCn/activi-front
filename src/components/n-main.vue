@@ -10,9 +10,9 @@
                         </Breadcrumb-item>
                         <Breadcrumb v-if="define.title instanceof Array">
                             <Breadcrumb-item
-                                    v-for="(item, index) in define.title"
-                                    href=""
-                                    :key="index">
+                                v-for="(item, index) in define.title"
+                                href=""
+                                :key="index">
                                 {{item}}
                             </Breadcrumb-item>
                         </Breadcrumb>
