@@ -54,9 +54,10 @@
                         key: 'action',
                         width: 200,
                         align: 'center',
-                        render: (h, params) => {
+                        render: (h, { row , index }) => {
+                            let { claimed } = row
                             return h('div', [
-                                h('Button', {
+                                !claimed ? h('Button', {
                                     props: {
                                         type: 'primary',
                                         size: 'small'
@@ -66,11 +67,11 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.claim(params.index)
+                                            this.claim(index)
                                         }
                                     }
-                                }, '签收'),
-                                h('Button', {
+                                }, '签收') : '',
+                                claimed ? h('Button', {
                                     props: {
                                         type: 'primary',
                                         size: 'small'
@@ -80,11 +81,11 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.openTask(params.index)
+                                            this.openTask(index)
                                         }
                                     }
-                                }, '办理'),
-                                h('Button', {
+                                }, '办理') : '',
+                                claimed ? h('Button', {
                                     props: {
                                         type: 'default',
                                         size: 'small'
@@ -97,7 +98,7 @@
                                             console.log('nothing to do now')
                                         }
                                     } 
-                                }, '反签收')
+                                }, '反签收') : ''
                             ])
                         }
                     }
