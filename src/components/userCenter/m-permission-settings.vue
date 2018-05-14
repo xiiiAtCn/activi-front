@@ -9,7 +9,7 @@
                 <Tree class="tree" :data="roleTree" :show-checkbox="false" :multiple="false"></Tree>
             </Col>
             <Col span="12" class="tree-container">
-                <div class="head-container" @click="showAddMenu">菜单列表
+                <div class="head-container" @click="showAddMenu($event, true)">菜单列表
                     <Icon type="plus-round" style="cursor: pointer;margin-left: 10px"></Icon>
                 </div>
                 <Tree class="tree" :data="menuTree" show-checkbox @on-check-change="handleTreeCheck"></Tree>
@@ -707,13 +707,14 @@
             },
 
             //添加菜单
-            showAddMenu(data) {
+            showAddMenu(data, isRoot) {
                 if (data.id) {
                     this.menuForm.parentId = data.id
                     this.menuForm.parentData = data
                 }
-                this.menuForm.leaf = true
-
+                if(!isRoot) {
+                    this.menuForm.leaf = true
+                }
                 this.showLayer = true
                 this.layerLoading = true
             },
