@@ -20,7 +20,7 @@
                         render: (h, params) => {
                             return h('div', [
                                 h('strong', params.row['taskName'])
-                            ]);
+                            ])
                         }
                     },
                     {
@@ -34,14 +34,13 @@
                                     }
                                 }),
                                 h('span', params.row['owner'])
-                            ]);
+                            ])
                         }
                     },
                     {
                         title: '创建日期',
                         key: 'createDate',
                         render:(h, {row}) => {
-                            debugger
                             let primary = new Date(row.createDate)
                             let date = primary.toLocaleDateString().replace(/\//g, '-')
                             let time = `${primary.getHours()}:${primary.getMinutes()}`
@@ -97,7 +96,7 @@
                                         }
                                     } 
                                 }, '反签收')
-                            ]);
+                            ])
                         }
                     }
                 ],
@@ -137,7 +136,7 @@
                     url: fetchDir.openTask,
                     pathParams: {'taskId': selectTaskId}
                 }
-                dispatch(action);
+                dispatch(action)
             }
         }
     }
