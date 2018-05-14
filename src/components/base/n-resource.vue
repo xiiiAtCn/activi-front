@@ -37,7 +37,6 @@
             }
         },
         mounted() {
-            debugger
             let { url } = this.define
             getData(url, data => {
                 this.data = data

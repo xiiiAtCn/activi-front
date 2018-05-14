@@ -249,26 +249,8 @@ export default {
         },
         addOptionToTableData () {
             let tableData = _.cloneDeep(this.tableData)
-            // todo 不确定对应关系
-            // let inputShowOption = _.cloneDeep(this.inputShowOption),
-            //     inputRowOption = [],
-            //     outputShowOption = _.cloneDeep(this.outputShowOption),
-            //     outputRowOption = []
             for (let row of tableData) {
-                // todo 不确定对应关系
-                // if (!!row.inputId) {//input有值将自己添加进去
-                //     inputRowOption = inputShowOption.concat([this.configListMap[row.inputId]])
-                //     debugger
-                //     if (!!row.outputId) {// output有值将自己添加进去
-                //         outputRowOption = outputShowOption[row.inputId].concat([this.configListMap[row.outputId]])
-                //     } else {
-                //         outputRowOption = outputShowOption[row.inputId]
-                //     }
-                // } else {
-                //     inputRowOption = inputShowOption
-                //     outputRowOption = [{label: '', value: ''}]
-                // }
-                
+               
                 row.inputId = {
                     value: row.inputId,
                     options: this.configList

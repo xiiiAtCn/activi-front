@@ -26,7 +26,6 @@
                 })
             },
             modelText(newData) {
-                debugger
                 if (newData) {
                     this.modelData = newData
                 }

@@ -81,7 +81,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.openTask(index)
+                                            this.handleTask(row)
                                         }
                                     }
                                 }, '办理') : '',
@@ -139,6 +139,18 @@
                     url: fetchDir.openTask,
                     pathParams: {'taskId': selectTaskId}
                 }
+                dispatch(action)
+            },
+            handleTask(row) {
+                let { taskId } = row
+                let action = {
+                    type: 'link',
+                    url: `/process/task/${taskId}/handle/layout`,
+                    at: '/layoutContent/xxx/page',
+                    pathParams: {
+                        taskId
+                    }
+                } 
                 dispatch(action)
             }
         }

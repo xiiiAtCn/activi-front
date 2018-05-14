@@ -155,7 +155,6 @@ export default {
     },
     watch: {
         getData () {
-            debugger
             this.getTreeData()
         }
     }

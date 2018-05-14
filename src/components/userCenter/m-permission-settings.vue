@@ -778,8 +778,6 @@
                     this.powerForm = data.auth
                 }
 
-                //debugger
-                //this.editForm.id = this.editForm.id.replace(this.editForm.parentId,'')
                 this.cKey = this.editForm.id
 
                 this.showEditLayer = true
