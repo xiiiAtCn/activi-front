@@ -39,12 +39,19 @@
                     },
                     {
                         title: '创建日期',
-                        key: 'createDate'
+                        key: 'createDate',
+                        render:(h, {row}) => {
+                            debugger
+                            let primary = new Date(row.createDate)
+                            let date = primary.toLocaleDateString().replace(/\//g, '-')
+                            let time = `${primary.getHours()}:${primary.getMinutes()}`
+                            return h('span', {}, `${date} ${time}`)
+                        }
                     },
                     {
                         title: '处理',
                         key: 'action',
-                        width: 150,
+                        width: 200,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -75,7 +82,21 @@
                                             this.openTask(params.index)
                                         }
                                     }
-                                }, '办理')
+                                }, '办理'),
+                                h('Button', {
+                                    props: {
+                                        type: 'default',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            console.log('nothing to do now')
+                                        }
+                                    } 
+                                }, '反签收')
                             ]);
                         }
                     }
