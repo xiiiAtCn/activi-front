@@ -33,6 +33,7 @@
             }
         },
         mounted() {
+            this.modelData = this.modelText
         },
         methods: {}
     }
