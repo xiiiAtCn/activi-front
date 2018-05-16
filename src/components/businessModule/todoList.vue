@@ -125,7 +125,7 @@
                         if (err) {
                             this.$Message.error('任务签收失败')
                         } else {
-                            this.data[index]['claimed'] = true
+                            this.data[index]['claimed'] = res
                         }
                     })
 

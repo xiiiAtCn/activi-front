@@ -209,7 +209,6 @@
                 bottomRight: [],
                 formData: {},
                 rules: [],
-                formItem: {},
                 formItemDefault: {
                     item3: '123',
                     item4: '1233333'
@@ -224,6 +223,18 @@
             },
             leftMenu() {
                 return this.define.leftMenu ? this.define.leftMenu : {}
+            },
+            formItem() {
+                debugger
+                let tmp = this.define.data || {}
+                let formItem = {}
+                for (let value of Object.values(tmp)) {
+                    formItem = {
+                        ...formItem,
+                        ...value
+                    }
+                }
+                return formItem
             }
         },
         watch: {
