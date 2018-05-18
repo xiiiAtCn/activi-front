@@ -76,51 +76,17 @@
             </Row>
         </div>
         <div v-if="!define.title"></div>
-        <hr v-if="define.forms && define.forms.length > 0"/>
+        <hr v-if="define.form"/>
         <div>
-            <transition-group name="fade" mode="out-in" tag="div">
-                <div :key="index" v-for="(items, index) in define.forms">
-                    <Card style="margin-bottom: 10px;">
-                        <p v-if="define.forms.length > 1" slot="title">
-                            {{items.ui_define.caption}}
-                        </p>
-                        <Form 
-                            :model="formItem" 
-                            :label-width="120" 
-                            label-position="right"
-                        >
-                            <Row 
-                                v-for="(row,rowKey) in items.ui_content" 
-                                :key="rowKey"
-                            >
-                                <Col 
-                                    v-for="(col,colKey) in row.ui_content" 
-                                    :span="col.ui_define.col" 
-                                    :key="colKey">
-                                    <FormItem 
-                                        v-for="(item,key) in col.ui_content" 
-                                        :label="item.ui_define.label"
-                                        :key="key"
-                                    >
-                                        <component
-                                            :key="index"
-                                            v-for="(v, index) in item.ui_content"
-                                            :is="v.ui_type"
-                                            :define="v.ui_define"
-                                            :content="v.ui_content"
-                                            :modelText="formItem[v.ui_define.name]"
-                                            :form="items.ui_define.model"
-                                            @dataChange="handleChange"
-                                        >
-                                        </component>
-                                    </FormItem>
-                                </Col>
-                            </Row>
+            <slot name="form">
+                <template v-if="define.form">
+                    <Card>
+                        <Form>
+                            
                         </Form>
                     </Card>
-                </div>
-            </transition-group>
-            <hr v-if="content && content.length > 0"/>
+                </template>
+            </slot>
             <div class="btn-container-bottom-right" v-for="(item, sequence) in bottomRight" :key="sequence">
                 <template name="fade" mode="out-in" v-for="(btn, index) in item">
                     <Poptip placement="bottom" v-if="btn && btn.child" :key="index">
@@ -130,12 +96,7 @@
                         </Button>
                         <div slot="content" style="padding: 0 14px;">
                             <div v-for="(v, key) in btn.child" :key="key">
-                                <mButtonLayer v-if=" v.buttonType === 'layer-button' " :define="v"
-                                              style="margin-bottom: 5px"></mButtonLayer>
-                                <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'"
-                                               :define="btn"></mButtonIframe>
                                 <Button
-                                        v-else
                                         :type="v.type || 'default'"
                                         :key="index"
                                         :size="v.size || 'default'"
@@ -145,10 +106,7 @@
                             </div>
                         </div>
                     </Poptip>
-                    <mButtonIframe v-else-if="btn.buttonType === 'layer-iframe-button'" :define="btn"
-                                   :key="index"></mButtonIframe>
                     <Button
-                            v-else
                             :type="btn.type || 'default'"
                             class="submit-btn"
                             :key="index"
