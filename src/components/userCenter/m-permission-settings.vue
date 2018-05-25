@@ -76,7 +76,7 @@
                             </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
-                                    <mIconList></mIconList>
+                                    <!--<mIconList></mIconList>-->
                                 </Select>
                             </FormItem>
                         </Form>
@@ -152,7 +152,7 @@
                             </FormItem>
                             <FormItem label="图标">
                                 <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
-                                    <mIconList></mIconList>
+                                    <!--<mIconList></mIconList>-->
                                 </Select>
                             </FormItem>
                         </Form>
