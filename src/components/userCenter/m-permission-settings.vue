@@ -254,7 +254,8 @@
                     menuOrder: 0,
                     picUrl: '',
                     parentId: '',
-                    leaf: false
+                    leaf: false,
+                    level: 1
                 },
                 powerForm: {
                     title: '',
@@ -274,7 +275,8 @@
                     menuOrder: 0,
                     icon: '',
                     parentId: '',
-                    leaf: false
+                    leaf: false,
+                    level: 0
                 },
                 roleForm: {
                     title: '',
