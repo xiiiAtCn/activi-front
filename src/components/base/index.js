@@ -97,6 +97,10 @@ const nForm = resolve =>
 
 const nInput = resolve =>
     require(['./n-input.vue'], resolve)
+
+const nDate = resolve =>
+    require(['./n-date.vue'], resolve)
+
 const nText = resolve =>
     require(['./n-text.vue'], resolve)
 const nSelect = resolve =>
@@ -142,6 +146,7 @@ Vue.component('mCode', mCode)
 // 新的
 Vue.component('nForm', nForm)
 Vue.component('nInput', nInput)
+Vue.component('nDate', nDate)
 Vue.component('nText', nText)
 Vue.component('nSelect', nSelect)
 Vue.component('nList', nList)
