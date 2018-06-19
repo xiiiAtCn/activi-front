@@ -75,9 +75,10 @@
                                 <InputNumber :min="0" v-model="menuForm.menuOrder" style="width:100%;"></InputNumber>
                             </FormItem>
                             <FormItem label="图标">
-                                <Select v-model="menuForm.icon" placeholder="请选择图标" filterable>
+                                <!--<Select v-model="menuForm.icon" placeholder="请选择图标" filterable>-->
                                     <!--<mIconList></mIconList>-->
-                                </Select>
+                                <!--</Select>-->
+                                <mIconList :p_model="menuForm.icon"></mIconList>
                             </FormItem>
                         </Form>
                     </Col>
@@ -151,9 +152,10 @@
                                 <InputNumber :min="0" v-model="editForm.menuOrder" style="width:100%;"></InputNumber>
                             </FormItem>
                             <FormItem label="图标">
-                                <Select v-model="editForm.icon" placeholder="请选择图标" filterable>
+                                <!--<Select v-model="editForm.icon" placeholder="请选择图标" filterable>-->
                                     <!--<mIconList></mIconList>-->
-                                </Select>
+                                <!--</Select>-->
+                                <mIconList :p_model="editForm.icon"></mIconList>
                             </FormItem>
                         </Form>
                     </Col>
