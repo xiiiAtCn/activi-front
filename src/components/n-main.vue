@@ -225,7 +225,6 @@
                 return this.define.leftMenu ? this.define.leftMenu : {}
             },
             formItem() {
-                debugger
                 let tmp = this.define.data || {}
                 let formItem = {}
                 for (let value of Object.values(tmp)) {

@@ -2,7 +2,7 @@
     <div>
         <Row>
             <Date-picker
-                    :value="objectModel"
+                    :value="modelData"
                     :format="format"
                     :type="type"
                     :placeholder="placeholder"
@@ -35,18 +35,33 @@
             },
             placeholder() {
                 return this.readonly ? '' : _.get(this.define, 'placeholder', '请选择日期')
+            },
+            readonly() {
+                return _.get(this.define, 'readonly', false)
             }
+
         },
-        watch: {
-            modelData() {
+        mounted() {
+            this.modelData = this.modelText
+        },
+        // watch: {
+        //     modelData() {
+        //         this.$emit('dataChange', {
+        //             form: this.form,
+        //             name: this.define.name,
+        //             data: this.modelData
+        //         })
+        //     }
+        // },
+        methods: {
+            handleChange: function () {
                 this.$emit('dataChange', {
                     form: this.form,
                     name: this.define.name,
                     data: this.modelData
                 })
             }
-        },
-        methods: {}
+        }
     }
 </script>
 
