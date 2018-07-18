@@ -10,9 +10,9 @@
                         </Breadcrumb-item>
                         <Breadcrumb v-if="define.title instanceof Array">
                             <Breadcrumb-item
-                                v-for="(item, index) in define.title"
-                                href=""
-                                :key="index">
+                                    v-for="(item, index) in define.title"
+                                    href=""
+                                    :key="index">
                                 {{item}}
                             </Breadcrumb-item>
                         </Breadcrumb>
@@ -84,33 +84,24 @@
                         <p v-if="define.forms.length > 1" slot="title">
                             {{items.ui_define.caption}}
                         </p>
-                        <Form 
-                            :model="formItem" 
-                            :label-width="120" 
-                            label-position="right"
+                        <Form
+                                :model="formItem"
+                                :label-width="120"
+                                label-position="right"
                         >
-                            <Row 
-                                v-for="(row,rowKey) in items.ui_content" 
-                                :key="rowKey"
-                            >
-                                <Col 
-                                    v-for="(col,colKey) in row.ui_content" 
-                                    :span="col.ui_define.col" 
-                                    :key="colKey">
-                                    <FormItem 
-                                        v-for="(item,key) in col.ui_content" 
-                                        :label="item.ui_define.label"
-                                        :key="key"
-                                    >
+                            {{formItem}}
+                            <Row v-for="(row,rowKey) in items.ui_content" :key="rowKey">
+                                <Col v-for="(col,colKey) in row.ui_content" :span="col.ui_define.col" :key="colKey">
+                                    <FormItem v-for="(item,key) in col.ui_content" :label="item.ui_define.label"
+                                              :key="key">
                                         <component
-                                            :key="index"
-                                            v-for="(v, index) in item.ui_content"
-                                            :is="v.ui_type"
-                                            :define="v.ui_define"
-                                            :content="v.ui_content"
-                                            :modelText="formItem[v.ui_define.name]"
-                                            :form="items.ui_define.model"
-                                            @dataChange="handleChange"
+                                                :key="index"
+                                                v-for="(v, index) in item.ui_content"
+                                                :is="v.ui_type"
+                                                :define="v.ui_define"
+                                                :content="v.ui_content"
+                                                :form="items.ui_define.model"
+                                                @dataChange="handleChange"
                                         >
                                         </component>
                                     </FormItem>
@@ -162,9 +153,9 @@
         <div>
             <transition-group name="fade" mode="out-in" tag="div">
                 <div :key="index" v-for="(item, index) in content">
-                    <component 
-                        :is="item.ui_type"
-                        :define="item.ui_define"
+                    <component
+                            :is="item.ui_type"
+                            :define="item.ui_define"
                     >
                     </component>
                 </div>
@@ -176,6 +167,7 @@
 <script>
 
     import {dispatch, getData} from '../utils/actionUtils'
+    import {deepCopy} from "../utils/utils";
 
     export default {
         props: {
@@ -225,14 +217,14 @@
                 return this.define.leftMenu ? this.define.leftMenu : {}
             },
             formItem() {
-                let tmp = this.define.data || {}
-                let formItem = {}
-                for (let value of Object.values(tmp)) {
-                    formItem = {
-                        ...formItem,
-                        ...value
-                    }
-                }
+                // let tmp = this.formData || {}
+                let formItem = deepCopy(this.formData)
+                // for (let value of Object.values(tmp)) {
+                //     formItem = {
+                //         ...formItem,
+                //         ...value
+                //     }
+                // }
                 return formItem
             }
         },
@@ -241,12 +233,12 @@
                 this.initialize(this.caption, this.define)
             },
             resource(newVal) {
-                this.formData = newVal 
+                this.formData = newVal
             }
         },
         inject: ['form'],
         mounted() {
-            this.title = this.caption ? this.caption : this.define.caption || '无标题' 
+            this.title = this.caption ? this.caption : this.define.caption || '无标题'
             this.subTitle = this.define.subTitle || ''
             this.initialize(this.title, this.define)
         },
